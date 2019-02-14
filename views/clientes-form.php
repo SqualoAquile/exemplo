@@ -182,6 +182,7 @@
                                         id="<?php echo $value['Field'] ?>"
                                         <?php echo $value['Null'] == "NO" ? "required" : "" ?>
                                         maxlength="<?php echo $value["tamanhoMax"] ?>"
+                                        data-podeZero="<?php echo array_key_exists("pode_zero", $value["Comment"]) && $value["Comment"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
                                         
                                     />
                                 <?php endif ?>

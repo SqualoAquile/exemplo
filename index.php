@@ -6,8 +6,6 @@ header("Content-Type: text/html; charset=utf-8", true);
 
 session_start();
 require_once "config.php";
-define("BASE_URL", "http://generico.squaloaquile.com.br/identifixe");
-define("NOME_EMPRESA", "Identifixe");
 
 spl_autoload_register(function($class){
     if (strpos($class, "Controller") > -1){

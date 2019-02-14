@@ -3,77 +3,77 @@ $(function () {
     //
     // Função que valida as alterações necessárias para o submit
     //
-    $('.needs-validation').submit(function (event) {
+    // $('.needs-validation').submit(function (event) { /// needs Validation 1
 
-        var form = this;
+    //     var form = this;
 
-        if (form.checkValidity() == false) {
-            // Primeira validação de todos os campos(de todos os tipos. Ex.: required, mascara, unico)
+    //     if (form.checkValidity() == false) {
+    //         // Primeira validação de todos os campos(de todos os tipos. Ex.: required, mascara, unico)
 
-            // Da foco no primeiro campo inválido
-            $(form).find('.is-invalid, :invalid').first().focus();
+    //         // Da foco no primeiro campo inválido
+    //         $(form).find('.is-invalid, :invalid').first().focus();
 
-            // Para o evento de submit
-            event.preventDefault();
-        } else {
-            // Todos os campos do formulário estão válidos quando submita
+    //         // Para o evento de submit
+    //         event.preventDefault();
+    //     } else {
+    //         // Todos os campos do formulário estão válidos quando submita
 
-            if (form.checkValidity() == false) {
-                // Segunda validação de todos os campos(de todos os tipos. Ex.: required, mascara, unico)
+    //         if (form.checkValidity() == false) {
+    //             // Segunda validação de todos os campos(de todos os tipos. Ex.: required, mascara, unico)
 
-                // Da foco no primeiro campo inválidos
-                $(form).find('.is-invalid, :invalid').first().focus();
+    //             // Da foco no primeiro campo inválidos
+    //             $(form).find('.is-invalid, :invalid').first().focus();
 
-                // Para o evento de submit
-                event.preventDefault();
-            } else {
-                // Todos os campos do formulário estão válidos novamente
+    //             // Para o evento de submit
+    //             event.preventDefault();
+    //         } else {
+    //             // Todos os campos do formulário estão válidos novamente
 
-                var $alteracoes = $('[name=alteracoes]');
+    //             var $alteracoes = $('[name=alteracoes]');
 
-                if ($alteracoes.val() != '') {
-                    // Editar
+    //             if ($alteracoes.val() != '') {
+    //                 // Editar
 
-                    // Alterações
-                    var campos_alterados = '';
-                    $(form).find('input[type=text], input[type=hidden]:not([name=alteracoes]), input[type=radio]:checked, textarea, select').each(function (index, el) {
+    //                 // Alterações
+    //                 var campos_alterados = '';
+    //                 $(form).find('input[type=text], input[type=hidden]:not([name=alteracoes]), input[type=radio]:checked, textarea, select').each(function (index, el) {
 
-                        var valorAtual = $(el).val(),
-                            dataAnterior = $(el).attr('data-anterior');
+    //                     var valorAtual = $(el).val(),
+    //                         dataAnterior = $(el).attr('data-anterior');
 
-                        valorAtual = String(valorAtual).toUpperCase();
-                        dataAnterior = String(dataAnterior).toUpperCase();
+    //                     valorAtual = String(valorAtual).toUpperCase();
+    //                     dataAnterior = String(dataAnterior).toUpperCase();
 
-                        if (dataAnterior != valorAtual) {
-                            campos_alterados += '[' + $(el).attr('name').toUpperCase() + ' de (' + $(el).attr('data-anterior') + ') para (' + $(el).val() + ')]';
-                        }
-                    });
+    //                     if (dataAnterior != valorAtual) {
+    //                         campos_alterados += '[' + $(el).attr('name').toUpperCase() + ' de (' + $(el).attr('data-anterior') + ') para (' + $(el).val() + ')]';
+    //                     }
+    //                 });
 
-                    if (campos_alterados != '') {
+    //                 if (campos_alterados != '') {
 
-                        $alteracoes.val($alteracoes.val() + '##' + campos_alterados);
+    //                     $alteracoes.val($alteracoes.val() + '##' + campos_alterados);
 
-                        if (!confirm('Tem certeza?')) {
-                            event.preventDefault();
-                        }
-                    } else {
-                        // Se o usuario entrou para editar e submitou sem alterar nada
-                        alert("Nenhuma alteração foi feita!");
-                        event.preventDefault();
-                    }
-                } else {
-                    // Adicionar
+    //                     if (!confirm('Tem certeza?')) {
+    //                         event.preventDefault();
+    //                     }
+    //                 } else {
+    //                     // Se o usuario entrou para editar e submitou sem alterar nada
+    //                     alert("Nenhuma alteração foi feita!");
+    //                     event.preventDefault();
+    //                 }
+    //             } else {
+    //                 // Adicionar
 
-                    if (!confirm('Tem certeza?')) {
-                        event.preventDefault();
-                    }
-                }
+    //                 if (!confirm('Tem certeza?')) {
+    //                     event.preventDefault();
+    //                 }
+    //             }
 
-            }
-        }
+    //         }
+    //     }
 
-        form.classList.add('was-validated');
-    });
+    //     form.classList.add('was-validated');
+    // });
 
     //
     // Campos Únicos
@@ -163,8 +163,8 @@ $(function () {
             var valorAtual = $this.val(),
                 dataAnterior = $this.attr('data-anterior');
 
-            valorAtual = String(valorAtual).toUpperCase();
-            dataAnterior = String(dataAnterior).toUpperCase();
+            valorAtual = String(valorAtual).trim().toUpperCase();
+            dataAnterior = String(dataAnterior).trim().toUpperCase();
 
             if (dataAnterior != valorAtual) {
                 temAlteracao = true;
@@ -784,33 +784,58 @@ $(function () {
         .blur(function () {
 
             var $this = $(this),
+                value = $this.val(),
+                anterior = $this.attr('data-anterior'),
                 text_label = $this.siblings('label').find('span').text();
+
+            var pode_zero  =  $this.attr('data-podeZero');
+                if(pode_zero != undefined && pode_zero == 'true'){
+                    pode_zero = true;
+                }else{
+                    pode_zero = false;
+                }    
 
             $this.removeClass('is-valid is-invalid');
             $this.siblings('.invalid-feedback').remove();
 
-            if ($this.val()) {
-                if ($this.attr('data-anterior') != $this.val()) {
+            if (value) {
 
-                    var value = $this.val().replace(',', '');
-                    value = parseFloat(value);
+                if (anterior != value) {
 
-                    if (value == 0) {
-                        $this
-                            .removeClass('is-valid')
-                            .addClass('is-invalid');
+                    var value = value.replace('.', '').replace('.', '').replace('.', '').replace('.', '').replace('.', ''), 
+                        value = value.replace(',', '.')
+                        value = parseFloat(value);
 
-                        $this[0].setCustomValidity('invalid');
+                        
+                        if (value <= parseFloat(0)) {
 
-                        $this.after('<div class="invalid-feedback">' + text_label + ' precisa ser maior que 0.</div>');
-                    } else {
-                        $this
-                            .removeClass('is-invalid')
-                            .addClass('is-valid');
+                            if ( pode_zero == true ){
+                                $this
+                                    .removeClass('is-invalid')
+                                    .addClass('is-valid');
 
-                        $this[0].setCustomValidity('');
-                    }
+                                $this[0].setCustomValidity('');
+
+                            }else{
+                                $this
+                                    .removeClass('is-valid')
+                                    .addClass('is-invalid');
+
+                                $this[0].setCustomValidity('invalid');
+
+                                $this.after('<div class="invalid-feedback">' + text_label + ' precisa ser maior que 0.</div>');
+                            }
+                        } else {
+
+                            $this
+                                .removeClass('is-invalid')
+                                .addClass('is-valid');
+
+                            $this[0].setCustomValidity('');
+                        }   
                 }
+            } else {
+                $this.val('');
             }
         });
 
@@ -832,6 +857,13 @@ $(function () {
                 anterior = $this.attr('data-anterior').replace('%', ''),
                 text_label = $this.siblings('label').find('span').text();
 
+            var pode_zero  =  $this.attr('data-podeZero');
+                if(pode_zero != undefined && pode_zero == 'true'){
+                    pode_zero = true;
+                }else{
+                    pode_zero = false;
+                }    
+
             $this.removeClass('is-valid is-invalid');
             $this.siblings('.invalid-feedback').remove();
 
@@ -839,26 +871,37 @@ $(function () {
 
                 if (anterior != value) {
 
-                    var value = value.replace(',', ''),
+                    var value = value.replace('.', ''), 
+                        value = value.replace(',', '.')
                         value = parseFloat(value);
+                     
+                        if (value <= parseFloat(0)) {
 
-                    if (value == 0) {
+                            if ( pode_zero == true ){
+                                
+                                $this
+                                    .removeClass('is-invalid')
+                                    .addClass('is-valid');
 
-                        $this
-                            .removeClass('is-valid')
-                            .addClass('is-invalid');
+                                $this[0].setCustomValidity('');
 
-                        $this[0].setCustomValidity('invalid');
+                            }else{
+                                $this
+                                    .removeClass('is-valid')
+                                    .addClass('is-invalid');
 
-                        $this.after('<div class="invalid-feedback">' + text_label + ' precisa ser maior que 0.</div>');
-                    } else {
+                                $this[0].setCustomValidity('invalid');
 
-                        $this
-                            .removeClass('is-invalid')
-                            .addClass('is-valid');
+                                $this.after('<div class="invalid-feedback">' + text_label + ' precisa ser maior que 0.</div>');
+                            }
+                        } else {
 
-                        $this[0].setCustomValidity('');
-                    }
+                            $this
+                                .removeClass('is-invalid')
+                                .addClass('is-valid');
+
+                            $this[0].setCustomValidity('');
+                        }   
                 }
             } else {
                 $this.val('');
@@ -888,48 +931,42 @@ $(function () {
     // Função que valida as alterações necessárias para o submit
     //
     $('.needs-validation').submit(function (event) {
-
         var form = this;
 
         if (form.checkValidity() == false) {
             // Primeira validação de todos os campos(de todos os tipos. Ex.: required, mascara, unico)
-
             // Da foco no primeiro campo inválido
             $(form).find('.is-invalid, :invalid').first().focus();
-
             // Para o evento de submit
             event.preventDefault();
+
         } else {
             // Todos os campos do formulário estão válidos quando submita
-
             // Executa o blur de todos os campos do formulário novamente
             $(form).find('.form-control, .form-check-input').trigger('blur');
 
             if (form.checkValidity() == false) {
                 // Segunda validação de todos os campos(de todos os tipos. Ex.: required, mascara, unico)
-
                 // Da foco no primeiro campo inválidos
                 $(form).find('.is-invalid, :invalid').first().focus();
-
                 // Para o evento de submit
                 event.preventDefault();
+
             } else {
                 // Todos os campos do formulário estão válidos novamente
-
                 var $alteracoes = $('[name=alteracoes]');
 
-                if ($alteracoes.val() != '') {
-                    // Editar
-
-                    // Alterações
+                if ($alteracoes.val() != '') { // Editar
+                    
+                    // Faz um foreach em todos os campos do formulário para ver os valores atuais e os valores anteiores
                     var campos_alterados = '';
                     $(form).find('input[type=text], input[type=hidden]:not([name=alteracoes]), input[type=radio]:checked, textarea, select').each(function (index, el) {
 
                         var valorAtual = $(el).val(),
                             dataAnterior = $(el).attr('data-anterior');
 
-                        valorAtual = String(valorAtual).toUpperCase();
-                        dataAnterior = String(dataAnterior).toUpperCase();
+                        valorAtual = String(valorAtual).trim().toUpperCase();
+                        dataAnterior = String(dataAnterior).trim().toUpperCase();
 
                         if (dataAnterior != valorAtual) {
                             campos_alterados += '[' + $(el).attr('name').toUpperCase() + ' de (' + $(el).data('anterior') + ') para (' + $(el).val() + ')]';
@@ -939,7 +976,7 @@ $(function () {
                     if (campos_alterados != '') {
 
                         $alteracoes.val($alteracoes.val() + '##' + campos_alterados);
-
+                        console.log("confirmar antes do Editar - " + $alteracoes.val());
                         if (!confirm('Tem certeza?')) {
                             event.preventDefault();
                         }
@@ -948,11 +985,11 @@ $(function () {
                         alert("Nenhuma alteração foi feita!");
                         event.preventDefault();
                     }
-                } else {
-                    // Adicionar
-
+                } else { // Adicionar
+                    console.log("confirmar antes do Adicionar");
                     if (!confirm('Tem certeza?')) {
                         event.preventDefault();
+                        
                     }
                 }
 
