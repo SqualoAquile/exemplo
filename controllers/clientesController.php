@@ -36,21 +36,16 @@ class clientesController extends controller{
         if(isset($_POST) && !empty($_POST)){ 
             
             $id = addslashes($_POST['id']);
-
             if(in_array($this->table . "_exc", $_SESSION["permissoesUsuario"]) == false || empty($id) || !isset($id)){
                 header("Location: " . BASE_URL . "/" . $this->table); 
             }
-            
-            
-
             if($this->model->idAtivo($id) == false){
                 header("Location: " . BASE_URL . "/" . $this->table); 
             }
-            
-            
             $this->model->excluir($id);
             header("Location: " . BASE_URL . "/" . $this->table);
         }
+        
         $dados['infoUser'] = $_SESSION;
         $dados["colunas"] = $this->colunas;
         $dados["labelTabela"] = $this->shared->labelTabela();

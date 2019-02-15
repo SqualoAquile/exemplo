@@ -1,81 +1,6 @@
 $(function () {
 
     //
-    // Função que valida as alterações necessárias para o submit
-    //
-    // $('.needs-validation').submit(function (event) { /// needs Validation 1
-
-    //     var form = this;
-
-    //     if (form.checkValidity() == false) {
-    //         // Primeira validação de todos os campos(de todos os tipos. Ex.: required, mascara, unico)
-
-    //         // Da foco no primeiro campo inválido
-    //         $(form).find('.is-invalid, :invalid').first().focus();
-
-    //         // Para o evento de submit
-    //         event.preventDefault();
-    //     } else {
-    //         // Todos os campos do formulário estão válidos quando submita
-
-    //         if (form.checkValidity() == false) {
-    //             // Segunda validação de todos os campos(de todos os tipos. Ex.: required, mascara, unico)
-
-    //             // Da foco no primeiro campo inválidos
-    //             $(form).find('.is-invalid, :invalid').first().focus();
-
-    //             // Para o evento de submit
-    //             event.preventDefault();
-    //         } else {
-    //             // Todos os campos do formulário estão válidos novamente
-
-    //             var $alteracoes = $('[name=alteracoes]');
-
-    //             if ($alteracoes.val() != '') {
-    //                 // Editar
-
-    //                 // Alterações
-    //                 var campos_alterados = '';
-    //                 $(form).find('input[type=text], input[type=hidden]:not([name=alteracoes]), input[type=radio]:checked, textarea, select').each(function (index, el) {
-
-    //                     var valorAtual = $(el).val(),
-    //                         dataAnterior = $(el).attr('data-anterior');
-
-    //                     valorAtual = String(valorAtual).toUpperCase();
-    //                     dataAnterior = String(dataAnterior).toUpperCase();
-
-    //                     if (dataAnterior != valorAtual) {
-    //                         campos_alterados += '[' + $(el).attr('name').toUpperCase() + ' de (' + $(el).attr('data-anterior') + ') para (' + $(el).val() + ')]';
-    //                     }
-    //                 });
-
-    //                 if (campos_alterados != '') {
-
-    //                     $alteracoes.val($alteracoes.val() + '##' + campos_alterados);
-
-    //                     if (!confirm('Tem certeza?')) {
-    //                         event.preventDefault();
-    //                     }
-    //                 } else {
-    //                     // Se o usuario entrou para editar e submitou sem alterar nada
-    //                     alert("Nenhuma alteração foi feita!");
-    //                     event.preventDefault();
-    //                 }
-    //             } else {
-    //                 // Adicionar
-
-    //                 if (!confirm('Tem certeza?')) {
-    //                     event.preventDefault();
-    //                 }
-    //             }
-
-    //         }
-    //     }
-
-    //     form.classList.add('was-validated');
-    // });
-
-    //
     // Campos Únicos
     //
     $.fn.unico = function (callback) {
@@ -234,8 +159,10 @@ $(function () {
     //
     // // campo NOME
     //
-    var $nome = $('[name=nome], [name=contato_nome]');
-
+    
+    
+    //var $nome = $('[name=nome], [name=contato_nome]');
+    var $nome = $('[data-mascara_validacao="nome"]');
     $nome
         .blur(function () {
 
@@ -282,13 +209,12 @@ $(function () {
             }
         });
 
-    $nome.addClass('has-validation');
 
     //
     // // campo RG
     //
-    var $rg = $('[name=rg]');
-
+    // var $rg = $('[name=rg]');
+    var $rg = $('[data-mascara_validacao="rg"]');    
     $rg
         .mask('0000000000')
         .blur(function () {
@@ -345,15 +271,13 @@ $(function () {
                     }
                 }
             }
-        });
-
-    $rg.addClass('has-validation');
+        });    
 
     //
     // // campo CPF
     //
-    var $cpf = $('[name=cpf]');
-
+    // var $cpf = $('[name=cpf]');
+    var $cpf = $('[data-mascara_validacao="cpf"]');    
     $cpf
         .mask('000.000.000-00')
         .blur(function () {
@@ -413,14 +337,12 @@ $(function () {
             }
         });
 
-    $cpf.addClass('has-validation');
-
 
     //
     // // campo CNPJ
     //
-    var $cnpj = $('[name=cnpj]');
-
+    // var $cnpj = $('[name=cnpj]');
+    var $cnpj = $('[data-mascara_validacao="cnpj"]');     
     $cnpj
         .mask('00.000.000/0000-00')
         .blur(function () {
@@ -481,13 +403,11 @@ $(function () {
             }
         });
 
-    $cnpj.addClass('has-validation');
-
     //
     // // campo TELEFONE
     //
-    var $telefone = $('[name=telefone], [name=contato_telefone]');
-
+    // var $telefone = $('[name=telefone], [name=contato_telefone]');
+    var $telefone = $('[data-mascara_validacao="telefone"]');       
     $telefone
         .mask('(00)0000-0000')
         .blur(function () {
@@ -521,12 +441,11 @@ $(function () {
             }
         });
 
-    $telefone.addClass('has-validation');
-
     //
     // // campo CELULAR
     //
-    var $celular = $('[name=celular], [name=contato_celular]');
+    // var $celular = $('[name=celular], [name=contato_celular]');
+    var $celular = $('[data-mascara_validacao="celular"]');   
 
     $celular
         .mask('(00)00000-0000')
@@ -560,12 +479,11 @@ $(function () {
             }
         });
 
-    $celular.addClass('has-validation');
-
     //
     // // campo DATA
     //
-    var $data = $('[name^=data_]');
+    // var $data = $('[name^=data_]');
+    var $data = $('[data-mascara_validacao="data"]');   
 
     $data
         .mask('00/00/0000')
@@ -621,12 +539,11 @@ $(function () {
             }
         });
 
-    $data.addClass('has-validation')
-
     //
     // // campo SIGLA
     //
-    $('[name=sigla]')
+    // $('[name=sigla]')
+    $('[data-mascara_validacao="sigla"]')   
         .mask('ZZZZZ', {
             translation: {
                 'Z': {
@@ -638,7 +555,8 @@ $(function () {
     //
     // // campo EMAIL
     //
-    var $email = $('[name=email], [name=contato_email]');
+    // var $email = $('[name=email], [name=contato_email]');
+    var $email = $('[data-mascara_validacao="email"]');
 
     $email
         .blur(function () {
@@ -698,12 +616,11 @@ $(function () {
             }
         });
 
-    $email.addClass('has-validation')
-
     //
     // // campo CEP
     //
-    var $cep = $('[name=cep]');
+    // var $cep = $('[name=cep]');
+    var $cep = $('[data-mascara_validacao="cep"]');
 
     $cep
         .mask('00000-000')
@@ -764,19 +681,18 @@ $(function () {
             }
         });
 
-    $cep.addClass('has-validation');
-
     //
     // // campo NUMERO
     //
-    $('[name=numero]')
+    //$('[name=numero]')
+    $('[data-mascara_validacao="numero"]')
         .mask('0#');
 
     //
     // // campo MONETÁRIO, SALÁRIO, CUSTO
     //
-    var $monetario = $('[name=salario], [name^=preco], [name=custo], [name=dinheiro]');
-
+    //var $monetario = $('[name=salario], [name^=preco], [name=custo], [name=dinheiro]');
+    var $monetario = $('[data-mascara_validacao="monetario"]');    
     $monetario
         .mask('#.##0,00', {
             reverse: true
@@ -839,12 +755,11 @@ $(function () {
             }
         });
 
-    $monetario.addClass('has-validation');
-
     //
     // // campo COMISSÃO, PORCENTAGEM 
     //
-    var $porcentagem = $('[name=comissao], [name=porcent]');
+    // var $porcentagem = $('[name=comissao], [name=porcent]');
+    var $porcentagem = $('[data-mascara_validacao="porcentagem"]');  
 
     $porcentagem
         .mask('00,00%', {
@@ -917,9 +832,6 @@ $(function () {
             $(this).attr('data-anterior', dtAnterior);
         })
         .change();
-
-    $porcentagem.addClass('has-validation');
-
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ///                                                                     
@@ -1079,7 +991,7 @@ $(function () {
     });
 
     $('input, textarea, select').on('blur', function () {
-        if (!$(this).hasClass('has-validation')) {
+        if ( $(this)[0].hasAttribute('data-mascara_validacao') && $(this).attr('data-mascara_validacao') == 'false') {
             if ($(this).val() != '' && $(this).attr('data-anterior') != $(this).val()) {
                 $(this).addClass('is-valid');
             } else {
