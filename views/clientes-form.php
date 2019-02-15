@@ -35,6 +35,7 @@
                             name="<?php echo $value["Field"] ?>" 
                             value="<?php echo isset($item) && !empty($item) ? $item[$value["Field"]] : "" ?>"
                             data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
+                            data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                             <?php echo $value["Null"] == "NO" ? "required" : "" ?>
                             
                         />
@@ -47,6 +48,7 @@
                             name="<?php echo lcfirst($value["Field"]) ?>" 
                             value="<?php echo isset($item) && !empty($item) ? $item[$value["Field"]] : "" ?>"
                             data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
+                            data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                             <?php echo $value["Null"] == "NO" ? "required" : "" ?>
                         />
                     <?php else: ?>
@@ -70,6 +72,7 @@
                                             name="<?php echo lcfirst($value['Field']);?>"
                                             class="form-control"
                                             data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
+                                            data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                             <?php echo $value['Null'] == "NO" ? "required" : "" ?>
                                             >
                                             <option value="" selected >Selecione</option>
@@ -109,7 +112,8 @@
                                                         id="<?php echo $value["Comment"]['info_relacional']['resultado'][$j];?>" 
                                                         type="checkbox" 
                                                         class="form-check-input" 
-                                                        value="<?php echo $value["Comment"]['info_relacional']['resultado'][$j];?>" 
+                                                        value="<?php echo $value["Comment"]['info_relacional']['resultado'][$j];?>"
+                                                        data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>" 
                                                         <?php
                                                         if(isset($item)){
                                                             if( in_array($opcoes[$j], $checados) == true){
@@ -126,6 +130,7 @@
                                                 name="<?php echo lcfirst($value["Field"]) ?>" 
                                                 value="<?php echo isset($item) && !empty($item) ? $item[$value["Field"]] : "" ?>"
                                                 data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
+                                                data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                                 <?php echo $value["Null"] == "NO" ? "required" : "" ?>
                                             />
                                         </div>
@@ -138,6 +143,7 @@
                                         name="<?php echo lcfirst($value['Field']);?>" 
                                         data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
                                         id="<?php echo lcfirst($value['Field']);?>"
+                                        data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                         <?php echo $value['Null'] == "NO" ? "required" : "" ?>
                                     ><?php echo isset($item) && !empty($item) ? $item[$value["Field"]] : "" ?></textarea>
 
@@ -153,6 +159,7 @@
                                                     value="<?php echo $valueRadio ?>" 
                                                     name="<?php echo $value["Field"] ?>" 
                                                     data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
+                                                    data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                                     class="form-check-input" 
                                                     <?php echo $value['Null'] == "NO" ? "required" : "" ?>
 
@@ -170,7 +177,8 @@
                                         <?php endforeach ?>
                                     </div>
                                 <?php else: ?>
-                                    <!-- Campos de texto normal -->
+
+                                    <!-- CAMPOS DO TIPO TEXT -->
                                     <input 
                                         type="text" 
                                         class="form-control" 
@@ -182,7 +190,11 @@
                                         id="<?php echo $value['Field'] ?>"
                                         <?php echo $value['Null'] == "NO" ? "required" : "" ?>
                                         maxlength="<?php echo $value["tamanhoMax"] ?>"
-                                        data-podeZero="<?php echo array_key_exists("pode_zero", $value["Comment"]) && $value["Comment"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
+                                        data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
+                                        <?php if( array_key_exists("mascara_validacao", $value["Comment"]) && 
+                                                 ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" )):?>
+                                            data-podeZero="<?php echo array_key_exists("pode_zero", $value["Comment"]) && $value["Comment"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
+                                        <?php endif?>    
                                         
                                     />
                                 <?php endif ?>

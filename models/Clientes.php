@@ -68,7 +68,7 @@ class Clientes extends model {
             $hist = explode("##", addslashes($request['alteracoes']));
 
             if(!empty($hist[1])){ 
-                $request['alteracoes'] = $hist[0]." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - ALTERACAO >> ".$hist[1];     
+                $request['alteracoes'] = $hist[0]." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - ALTERAÇÃO >> ".$hist[1];     
             }else{
                 $_SESSION["returnMessage"] = [
                     "mensagem" => "Houve uma falha, tente novamente! <br /> Registro sem histórico de alteração.",
