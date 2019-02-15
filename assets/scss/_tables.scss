@@ -2,6 +2,18 @@
     .invalid-feedback {
         font-weight: normal;
     }
+    th,
+    td {
+        padding-top: .35rem;
+        padding-bottom: .35rem;
+        vertical-align: middle;
+    }
+    td {
+        &.contatos {
+            max-height: 200px;
+            overflow-x: auto;
+        }
+    }
     &.table-nowrap {
         white-space: nowrap;
         &.first-column-fixed {
