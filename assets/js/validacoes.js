@@ -3,9 +3,13 @@ $(function () {
     //
     // Função que valida as alterações necessárias para o submit
     //
-    $('.needs-validation').submit(function (event) {
+    $('#main-form').on('click', function (event) {
 
-        var form = this;
+        var form = this.parentElement;
+
+        $(form).find('.form-control, .form-check-input').trigger('blur');
+        
+        console.log(form)
 
         if (form.checkValidity() == false) {
             // Primeira validação de todos os campos(de todos os tipos. Ex.: required, mascara, unico)
@@ -53,18 +57,20 @@ $(function () {
 
                         $alteracoes.val($alteracoes.val() + '##' + campos_alterados);
 
-                        if (!confirm('Tem certeza?')) {
+                        console.log('tem certeza 1');
+
+                        if (confirm('Tem certeza?')) {
+                            $(form).submit();
+                        } else {
                             event.preventDefault();
                         }
-                    } else {
-                        // Se o usuario entrou para editar e submitou sem alterar nada
-                        alert("Nenhuma alteração foi feita!");
-                        event.preventDefault();
                     }
                 } else {
                     // Adicionar
 
-                    if (!confirm('Tem certeza?')) {
+                    if (confirm('Tem certeza?')) {
+                        $(form).submit();
+                    } else {
                         event.preventDefault();
                     }
                 }
