@@ -8,27 +8,27 @@
                     <th class="col-lg-2">
                         <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
                         <label for="contato_nome">Nome</label>
-                        <input type="text" class="form-control" id="contato_nome" name="contato_nome" required>
+                        <input type="text" class="form-control" id="contato_nome" name="contato_nome" maxlength="40" required>
                     </th>
                     <th class="col-lg-2">
                         <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
                         <label for="contato_setor">Setor</label>
-                        <input type="text" class="form-control" id="contato_setor" name="contato_setor" required>
+                        <input type="text" class="form-control" id="contato_setor" name="contato_setor" data-mascara_validacao="false" maxlength="20" required>
                     </th>
                     <th class="col-lg-2">
                         <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
                         <label for="contato_telefone">Telefone</label>
-                        <input type="tel" class="form-control" id="contato_telefone" name="contato_telefone" required>
+                        <input type="tel" class="form-control" id="contato_telefone" name="contato_telefone" data-mascara_validacao="telefone" maxlength="13" required>
                     </th>
                     <th class="col-lg-2">
                         <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
                         <label for="contato_celular">Celular</label>
-                        <input type="tel" class="form-control" id="contato_celular" name="contato_celular" required>
+                        <input type="tel" class="form-control" id="contato_celular" name="contato_celular" data-mascara_validacao="celular" maxlength="14" required>
                     </th>
                     <th class="col-lg-2">
                         <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
                         <label for="contato_email">Email</label>
-                        <input type="email" class="form-control" id="contato_email" name="contato_email" required>
+                        <input type="email" class="form-control" id="contato_email" name="contato_email" data-mascara_validacao="email" maxlength="50" required>
                     </th>
                     <th class="col-lg-2">
                         <label>Ações</label>

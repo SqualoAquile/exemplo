@@ -14,14 +14,14 @@ class Shared extends model {
 
     private function formataacoes($id){
         $stringBtn = '';
-        $stringBtn .= '<form  method="POST" class="btn-group btn-group-sm" role="group" aria-label="Ações">';
+        $stringBtn .= '<form method="POST">';
         
         if( in_array( $this->table.'_edt' , $_SESSION["permissoesUsuario"]) ){
-            $stringBtn .=  '<a href="' . BASE_URL . '/' . $this->table . '/editar/' . $id . '" class="btn btn-primary">Editar</a>';      
+            $stringBtn .=  '<a href="' . BASE_URL . '/' . $this->table . '/editar/' . $id . '" class="btn btn-primary btn-sm mr-1"><i class="fas fa-edit"></i></a>';      
         }
 
         if(in_array($this->table."_exc", $_SESSION["permissoesUsuario"])){
-            $stringBtn .= '<input type="hidden" name="id" value="'. $id .'"><button type="submit" onclick="return confirm(\'Tem Certeza?\')"class="btn btn-secondary"">Excluir</button>';
+            $stringBtn .= '<input type="hidden" name="id" value="'. $id .'"><button type="submit" onclick="return confirm(\'Tem Certeza?\')" class="btn btn-sm btn-secondary ml-1"><i class="fas fa-trash-alt"></i></button>';
         }
         
         $stringBtn .= '</form>';
@@ -36,9 +36,6 @@ class Shared extends model {
             if(isset($value["Comment"]) && array_key_exists("ver", $value["Comment"]) && $value["Comment"]["ver"] != "false") {
                 if(array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "acoes") {
 
-                    
-                    
-                    //echo "aquiaaaa"; exit;
                     $stringBtn = '';
                     $columns[] = [
                         "db" => $value["Field"],
@@ -47,11 +44,54 @@ class Shared extends model {
                             return $this->formataacoes($id);
                         }
                     ];
+                    
+                // FORMATAÇÃO DE NÚMEROS E DATAS NA TABELA
+                } elseif (array_key_exists("mascara_validacao", $value["Comment"]) && $value["Comment"]["mascara_validacao"] == "data") {
+                    $columns[] = [
+                        "db" => $value["Field"],
+                        "dt" => $index,
+                        "formatter" => function($d,$row) {
+                            return date( 'd/m/Y', strtotime($d))
+                            ;
+                        }
+                    ];    
+                } elseif (array_key_exists("mascara_validacao", $value["Comment"]) && $value["Comment"]["mascara_validacao"] == "monetario") {
+                    $columns[] = [
+                        "db" => $value["Field"],
+                        "dt" => $index,
+                        "formatter" => function($d,$row) {
+                            return "R$  " .number_format($d,2,",",".");
+                        }
+                    ];
+                } elseif (array_key_exists("mascara_validacao", $value["Comment"]) && $value["Comment"]["mascara_validacao"] == "porcentagem") {
+                    $columns[] = [
+                        "db" => $value["Field"],
+                        "dt" => $index,
+                        "formatter" => function($d,$row) {
+                            return number_format($d,2,) ."%"
+                            ;
+                        }
+                    ]; 
+                } elseif (array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "table") {
+                    
+                    $columns[] = [
+                        "db" => $value["Field"],
+                        "dt" => $index,
+                        "formatter" => function($d,$row) {
+                            $contato = str_replace("][", " <div class='pipe-contatos'></div> ", $d);
+                            $contato = str_replace(" *", ",", $contato);
+                            $contato = str_replace("[", "", $contato);
+                            $contato = str_replace("]", "", $contato);
+                            $contato = '<div class="contatos">'.$contato.'</div>'; 
+                            
+                            return  $contato;
+                        }
+                    ]; 
                 } else {
                     $columns[] = [
                         "db" => $value["Field"],
                         "dt" => $index
-                    ];
+                    ]; 
                 }
                 $index++;
             }

@@ -881,7 +881,7 @@ $(function () {
                         dataAnterior = String(dataAnterior).trim().toUpperCase();
 
                         if (dataAnterior != valorAtual) {
-                            campos_alterados += '[' + $(el).attr('name').toUpperCase() + ' de (' + $(el).data('anterior') + ') para (' + $(el).val() + ')]';
+                            campos_alterados += '{' + $(el).attr('name').toUpperCase() + ' de (' + $(el).data('anterior') + ') para (' + $(el).val() + ')}';
                         }
                     });
 
