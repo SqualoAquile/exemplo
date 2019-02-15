@@ -204,7 +204,7 @@
                 <?php endif ?>
             <?php endforeach ?>
         </div>
-        <button type="submit" id="main-form" class="d-none"></button>
+        <button id="main-form" class="d-none"></button>
     </form>
     <?php if($table) include "_contatos_form.php" ?>
     <div class="row">

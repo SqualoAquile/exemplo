@@ -704,12 +704,12 @@ $(function () {
                 anterior = $this.attr('data-anterior'),
                 text_label = $this.siblings('label').find('span').text();
 
-            var pode_zero  =  $this.attr('data-podeZero');
-                if(pode_zero != undefined && pode_zero == 'true'){
-                    pode_zero = true;
-                }else{
-                    pode_zero = false;
-                }    
+            var pode_zero = $this.attr('data-podeZero');
+            if (pode_zero != undefined && pode_zero == 'true') {
+                pode_zero = true;
+            } else {
+                pode_zero = false;
+            }
 
             $this.removeClass('is-valid is-invalid');
             $this.siblings('.invalid-feedback').remove();
@@ -718,37 +718,37 @@ $(function () {
 
                 if (anterior != value) {
 
-                    var value = value.replace('.', '').replace('.', '').replace('.', '').replace('.', '').replace('.', ''), 
-                        value = value.replace(',', '.')
-                        value = parseFloat(value);
+                    var value = value.replace('.', '').replace('.', '').replace('.', '').replace('.', '').replace('.', ''),
+                        value = value.replace(',', '.');
 
-                        
-                        if (value <= parseFloat(0)) {
+                    value = parseFloat(value);
 
-                            if ( pode_zero == true ){
-                                $this
-                                    .removeClass('is-invalid')
-                                    .addClass('is-valid');
+                    if (value <= parseFloat(0)) {
 
-                                $this[0].setCustomValidity('');
-
-                            }else{
-                                $this
-                                    .removeClass('is-valid')
-                                    .addClass('is-invalid');
-
-                                $this[0].setCustomValidity('invalid');
-
-                                $this.after('<div class="invalid-feedback">' + text_label + ' precisa ser maior que 0.</div>');
-                            }
-                        } else {
-
+                        if (pode_zero == true) {
                             $this
                                 .removeClass('is-invalid')
                                 .addClass('is-valid');
 
                             $this[0].setCustomValidity('');
-                        }   
+
+                        } else {
+                            $this
+                                .removeClass('is-valid')
+                                .addClass('is-invalid');
+
+                            $this[0].setCustomValidity('invalid');
+
+                            $this.after('<div class="invalid-feedback">' + text_label + ' precisa ser maior que 0.</div>');
+                        }
+                    } else {
+
+                        $this
+                            .removeClass('is-invalid')
+                            .addClass('is-valid');
+
+                        $this[0].setCustomValidity('');
+                    }
                 }
             } else {
                 $this.val('');
@@ -772,12 +772,12 @@ $(function () {
                 anterior = $this.attr('data-anterior').replace('%', ''),
                 text_label = $this.siblings('label').find('span').text();
 
-            var pode_zero  =  $this.attr('data-podeZero');
-                if(pode_zero != undefined && pode_zero == 'true'){
-                    pode_zero = true;
-                }else{
-                    pode_zero = false;
-                }    
+            var pode_zero = $this.attr('data-podeZero');
+            if (pode_zero != undefined && pode_zero == 'true') {
+                pode_zero = true;
+            } else {
+                pode_zero = false;
+            }
 
             $this.removeClass('is-valid is-invalid');
             $this.siblings('.invalid-feedback').remove();
@@ -786,37 +786,37 @@ $(function () {
 
                 if (anterior != value) {
 
-                    var value = value.replace('.', ''), 
+                    var value = value.replace('.', ''),
                         value = value.replace(',', '.')
-                        value = parseFloat(value);
-                     
-                        if (value <= parseFloat(0)) {
+                    value = parseFloat(value);
 
-                            if ( pode_zero == true ){
-                                
-                                $this
-                                    .removeClass('is-invalid')
-                                    .addClass('is-valid');
+                    if (value <= parseFloat(0)) {
 
-                                $this[0].setCustomValidity('');
-
-                            }else{
-                                $this
-                                    .removeClass('is-valid')
-                                    .addClass('is-invalid');
-
-                                $this[0].setCustomValidity('invalid');
-
-                                $this.after('<div class="invalid-feedback">' + text_label + ' precisa ser maior que 0.</div>');
-                            }
-                        } else {
+                        if (pode_zero == true) {
 
                             $this
                                 .removeClass('is-invalid')
                                 .addClass('is-valid');
 
                             $this[0].setCustomValidity('');
-                        }   
+
+                        } else {
+                            $this
+                                .removeClass('is-valid')
+                                .addClass('is-invalid');
+
+                            $this[0].setCustomValidity('invalid');
+
+                            $this.after('<div class="invalid-feedback">' + text_label + ' precisa ser maior que 0.</div>');
+                        }
+                    } else {
+
+                        $this
+                            .removeClass('is-invalid')
+                            .addClass('is-valid');
+
+                        $this[0].setCustomValidity('');
+                    }
                 }
             } else {
                 $this.val('');
@@ -869,7 +869,7 @@ $(function () {
                 var $alteracoes = $('[name=alteracoes]');
 
                 if ($alteracoes.val() != '') { // Editar
-                    
+
                     // Faz um foreach em todos os campos do formulário para ver os valores atuais e os valores anteiores
                     var campos_alterados = '';
                     $(form).find('input[type=text], input[type=hidden]:not([name=alteracoes]), input[type=radio]:checked, textarea, select').each(function (index, el) {
@@ -901,7 +901,7 @@ $(function () {
                     console.log("confirmar antes do Adicionar");
                     if (!confirm('Tem certeza?')) {
                         event.preventDefault();
-                        
+
                     }
                 }
 
