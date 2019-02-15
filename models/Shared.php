@@ -30,7 +30,6 @@ class Shared extends model {
     }
 
     public function montaDataTable() {
-        //print_r($_SESSION); exit;
         $index = 0;
         foreach ($this->nomeDasColunas() as $key => $value) {
             if(isset($value["Comment"]) && array_key_exists("ver", $value["Comment"]) && $value["Comment"]["ver"] != "false") {
@@ -68,8 +67,7 @@ class Shared extends model {
                         "db" => $value["Field"],
                         "dt" => $index,
                         "formatter" => function($d,$row) {
-                            return number_format($d,2,) ."%"
-                            ;
+                            return number_format($d, 2, ",", ".") . "%";
                         }
                     ]; 
                 } elseif (array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "table") {
@@ -78,10 +76,11 @@ class Shared extends model {
                         "db" => $value["Field"],
                         "dt" => $index,
                         "formatter" => function($d,$row) {
-                            $contato = str_replace("][", " <div class='pipe-contatos'></div> ", $d);
+                            $contato = str_replace("][", "</br>", $d);
                             $contato = str_replace(" *", ",", $contato);
                             $contato = str_replace("[", "", $contato);
                             $contato = str_replace("]", "", $contato);
+                            
                             $contato = '<div class="contatos">'.$contato.'</div>'; 
                             
                             return  $contato;

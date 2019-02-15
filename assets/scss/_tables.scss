@@ -9,9 +9,12 @@
         vertical-align: middle;
     }
     td {
-        &.contatos {
-            max-height: 200px;
-            overflow-x: auto;
+        .contatos {
+            height: 1.5rem;
+            overflow-y: auto;
+            &:hover {
+                height: auto;
+            }
         }
     }
     &.table-nowrap {
