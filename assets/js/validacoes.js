@@ -1,87 +1,6 @@
 $(function () {
 
     //
-    // Função que valida as alterações necessárias para o submit
-    //
-    $('#main-form').on('click', function (event) {
-
-        var form = this.parentElement;
-
-        $(form).find('.form-control, .form-check-input').trigger('blur');
-        
-        console.log(form)
-
-        if (form.checkValidity() == false) {
-            // Primeira validação de todos os campos(de todos os tipos. Ex.: required, mascara, unico)
-
-            // Da foco no primeiro campo inválido
-            $(form).find('.is-invalid, :invalid').first().focus();
-
-            // Para o evento de submit
-            event.preventDefault();
-        } else {
-            // Todos os campos do formulário estão válidos quando submita
-
-            if (form.checkValidity() == false) {
-                // Segunda validação de todos os campos(de todos os tipos. Ex.: required, mascara, unico)
-
-                // Da foco no primeiro campo inválidos
-                $(form).find('.is-invalid, :invalid').first().focus();
-
-                // Para o evento de submit
-                event.preventDefault();
-            } else {
-                // Todos os campos do formulário estão válidos novamente
-
-                var $alteracoes = $('[name=alteracoes]');
-
-                if ($alteracoes.val() != '') {
-                    // Editar
-
-                    // Alterações
-                    var campos_alterados = '';
-                    $(form).find('input[type=text], input[type=hidden]:not([name=alteracoes]), input[type=radio]:checked, textarea, select').each(function (index, el) {
-
-                        var valorAtual = $(el).val(),
-                            dataAnterior = $(el).attr('data-anterior');
-
-                        valorAtual = String(valorAtual).toUpperCase();
-                        dataAnterior = String(dataAnterior).toUpperCase();
-
-                        if (dataAnterior != valorAtual) {
-                            campos_alterados += '[' + $(el).attr('name').toUpperCase() + ' de (' + $(el).attr('data-anterior') + ') para (' + $(el).val() + ')]';
-                        }
-                    });
-
-                    if (campos_alterados != '') {
-
-                        $alteracoes.val($alteracoes.val() + '##' + campos_alterados);
-
-                        console.log('tem certeza 1');
-
-                        if (confirm('Tem certeza?')) {
-                            $(form).submit();
-                        } else {
-                            event.preventDefault();
-                        }
-                    }
-                } else {
-                    // Adicionar
-
-                    if (confirm('Tem certeza?')) {
-                        $(form).submit();
-                    } else {
-                        event.preventDefault();
-                    }
-                }
-
-            }
-        }
-
-        form.classList.add('was-validated');
-    });
-
-    //
     // Campos Únicos
     //
     $.fn.unico = function (callback) {
@@ -169,8 +88,8 @@ $(function () {
             var valorAtual = $this.val(),
                 dataAnterior = $this.attr('data-anterior');
 
-            valorAtual = String(valorAtual).toUpperCase();
-            dataAnterior = String(dataAnterior).toUpperCase();
+            valorAtual = String(valorAtual).trim().toUpperCase();
+            dataAnterior = String(dataAnterior).trim().toUpperCase();
 
             if (dataAnterior != valorAtual) {
                 temAlteracao = true;
@@ -790,26 +709,49 @@ $(function () {
         .blur(function () {
 
             var $this = $(this),
+                value = $this.val(),
+                anterior = $this.attr('data-anterior'),
                 text_label = $this.siblings('label').find('span').text();
+
+            var pode_zero = $this.attr('data-podeZero');
+            if (pode_zero != undefined && pode_zero == 'true') {
+                pode_zero = true;
+            } else {
+                pode_zero = false;
+            }
 
             $this.removeClass('is-valid is-invalid');
             $this.siblings('.invalid-feedback').remove();
 
-            if ($this.val()) {
-                if ($this.attr('data-anterior') != $this.val()) {
+            if (value) {
 
-                    var value = $this.val().replace(',', '');
+                if (anterior != value) {
+
+                    var value = value.replace('.', '').replace('.', '').replace('.', '').replace('.', '').replace('.', ''),
+                        value = value.replace(',', '.');
+
                     value = parseFloat(value);
 
-                    if (value == 0) {
-                        $this
-                            .removeClass('is-valid')
-                            .addClass('is-invalid');
+                    if (value <= parseFloat(0)) {
 
-                        $this[0].setCustomValidity('invalid');
+                        if (pode_zero == true) {
+                            $this
+                                .removeClass('is-invalid')
+                                .addClass('is-valid');
 
-                        $this.after('<div class="invalid-feedback">' + text_label + ' precisa ser maior que 0.</div>');
+                            $this[0].setCustomValidity('');
+
+                        } else {
+                            $this
+                                .removeClass('is-valid')
+                                .addClass('is-invalid');
+
+                            $this[0].setCustomValidity('invalid');
+
+                            $this.after('<div class="invalid-feedback">' + text_label + ' precisa ser maior que 0.</div>');
+                        }
                     } else {
+
                         $this
                             .removeClass('is-invalid')
                             .addClass('is-valid');
@@ -817,6 +759,8 @@ $(function () {
                         $this[0].setCustomValidity('');
                     }
                 }
+            } else {
+                $this.val('');
             }
         });
 
@@ -838,6 +782,13 @@ $(function () {
                 anterior = $this.attr('data-anterior').replace('%', ''),
                 text_label = $this.siblings('label').find('span').text();
 
+            var pode_zero = $this.attr('data-podeZero');
+            if (pode_zero != undefined && pode_zero == 'true') {
+                pode_zero = true;
+            } else {
+                pode_zero = false;
+            }
+
             $this.removeClass('is-valid is-invalid');
             $this.siblings('.invalid-feedback').remove();
 
@@ -845,18 +796,29 @@ $(function () {
 
                 if (anterior != value) {
 
-                    var value = value.replace(',', ''),
-                        value = parseFloat(value);
+                    var value = value.replace('.', ''),
+                        value = value.replace(',', '.')
+                    value = parseFloat(value);
 
-                    if (value == 0) {
+                    if (value <= parseFloat(0)) {
 
-                        $this
-                            .removeClass('is-valid')
-                            .addClass('is-invalid');
+                        if (pode_zero == true) {
 
-                        $this[0].setCustomValidity('invalid');
+                            $this
+                                .removeClass('is-invalid')
+                                .addClass('is-valid');
 
-                        $this.after('<div class="invalid-feedback">' + text_label + ' precisa ser maior que 0.</div>');
+                            $this[0].setCustomValidity('');
+
+                        } else {
+                            $this
+                                .removeClass('is-valid')
+                                .addClass('is-invalid');
+
+                            $this[0].setCustomValidity('invalid');
+
+                            $this.after('<div class="invalid-feedback">' + text_label + ' precisa ser maior que 0.</div>');
+                        }
                     } else {
 
                         $this
@@ -894,48 +856,42 @@ $(function () {
     // Função que valida as alterações necessárias para o submit
     //
     $('.needs-validation').submit(function (event) {
-
         var form = this;
 
         if (form.checkValidity() == false) {
             // Primeira validação de todos os campos(de todos os tipos. Ex.: required, mascara, unico)
-
             // Da foco no primeiro campo inválido
             $(form).find('.is-invalid, :invalid').first().focus();
-
             // Para o evento de submit
             event.preventDefault();
+
         } else {
             // Todos os campos do formulário estão válidos quando submita
-
             // Executa o blur de todos os campos do formulário novamente
             $(form).find('.form-control, .form-check-input').trigger('blur');
 
             if (form.checkValidity() == false) {
                 // Segunda validação de todos os campos(de todos os tipos. Ex.: required, mascara, unico)
-
                 // Da foco no primeiro campo inválidos
                 $(form).find('.is-invalid, :invalid').first().focus();
-
                 // Para o evento de submit
                 event.preventDefault();
+
             } else {
                 // Todos os campos do formulário estão válidos novamente
-
                 var $alteracoes = $('[name=alteracoes]');
 
-                if ($alteracoes.val() != '') {
-                    // Editar
+                if ($alteracoes.val() != '') { // Editar
 
-                    // Alterações
+                    // Faz um foreach em todos os campos do formulário para ver os valores atuais e os valores anteiores
                     var campos_alterados = '';
                     $(form).find('input[type=text], input[type=hidden]:not([name=alteracoes]), input[type=radio]:checked, textarea, select').each(function (index, el) {
 
                         var valorAtual = $(el).val(),
                             dataAnterior = $(el).attr('data-anterior');
 
-                        valorAtual = String(valorAtual).toUpperCase();
-                        dataAnterior = String(dataAnterior).toUpperCase();
+                        valorAtual = String(valorAtual).trim().toUpperCase();
+                        dataAnterior = String(dataAnterior).trim().toUpperCase();
 
                         if (dataAnterior != valorAtual) {
                             campos_alterados += '[' + $(el).attr('name').toUpperCase() + ' de (' + $(el).data('anterior') + ') para (' + $(el).val() + ')]';
@@ -945,7 +901,7 @@ $(function () {
                     if (campos_alterados != '') {
 
                         $alteracoes.val($alteracoes.val() + '##' + campos_alterados);
-
+                        console.log("confirmar antes do Editar - " + $alteracoes.val());
                         if (!confirm('Tem certeza?')) {
                             event.preventDefault();
                         }
@@ -954,11 +910,11 @@ $(function () {
                         alert("Nenhuma alteração foi feita!");
                         event.preventDefault();
                     }
-                } else {
-                    // Adicionar
-
+                } else { // Adicionar
+                    console.log("confirmar antes do Adicionar");
                     if (!confirm('Tem certeza?')) {
                         event.preventDefault();
+
                     }
                 }
 

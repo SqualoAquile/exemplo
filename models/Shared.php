@@ -12,21 +12,39 @@ class Shared extends model {
         parent::__construct(); 
     }
 
+    private function formataacoes($id){
+        $stringBtn = '';
+        $stringBtn .= '<form  method="POST" class="btn-group btn-group-sm" role="group" aria-label="Ações">';
+        
+        if( in_array( $this->table.'_edt' , $_SESSION["permissoesUsuario"]) ){
+            $stringBtn .=  '<a href="' . BASE_URL . '/' . $this->table . '/editar/' . $id . '" class="btn btn-primary">Editar</a>';      
+        }
+
+        if(in_array($this->table."_exc", $_SESSION["permissoesUsuario"])){
+            $stringBtn .= '<input type="hidden" name="id" value="'. $id .'"><button type="submit" onclick="return confirm(\'Tem Certeza?\')"class="btn btn-secondary"">Excluir</button>';
+        }
+        
+        $stringBtn .= '</form>';
+        
+        return $stringBtn;
+    }
+
     public function montaDataTable() {
+        //print_r($_SESSION); exit;
         $index = 0;
         foreach ($this->nomeDasColunas() as $key => $value) {
             if(isset($value["Comment"]) && array_key_exists("ver", $value["Comment"]) && $value["Comment"]["ver"] != "false") {
                 if(array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "acoes") {
+
+                    
+                    
+                    //echo "aquiaaaa"; exit;
+                    $stringBtn = '';
                     $columns[] = [
                         "db" => $value["Field"],
                         "dt" => $index,
                         "formatter" => function($id, $row) {
-                            return '
-                                <div class="btn-group btn-group-sm" role="group" aria-label="Ações">
-                                    <a href="' . BASE_URL . '/' . $this->table . '/editar/' . $id . '" class="btn btn-primary">Editar</a>
-                                    <a href="' . BASE_URL . '/' . $this->table . '/excluir/' . $id . '" onclick="return confirm(\'Tem Certeza?\')" class="btn btn-secondary">Excluir</a>
-                                </div>
-                            ';
+                            return $this->formataacoes($id);
                         }
                     ];
                 } else {
@@ -37,8 +55,9 @@ class Shared extends model {
                 }
                 $index++;
             }
+            
         };
-
+        //print_r($columns); exit;
         return Ssp::complex($_POST, $this->config, $this->table, "id", $columns, null, "situacao='ativo'");
     }
 

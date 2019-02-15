@@ -107,7 +107,6 @@ $(function () {
                                     }
                                 });
                             } else {
-                                console.log('to aquiiiiiiiii 1')
                                 $this
                                     .removeClass('is-invalid')
                                     .addClass('is-valid');
@@ -137,8 +136,6 @@ $(function () {
                                             .removeClass('is-invalid')
                                             .addClass('is-valid');
 
-                                            console.log('to aquiiiiiiiii 2')
-
                                         $this[0].setCustomValidity('');
 
                                     } else {
@@ -159,8 +156,6 @@ $(function () {
                                 $this
                                     .removeClass('is-invalid')
                                     .addClass('is-valid');
-
-                                    console.log('to aquiiiiiiiii 3')
 
                                 $this[0].setCustomValidity('');
                             }
