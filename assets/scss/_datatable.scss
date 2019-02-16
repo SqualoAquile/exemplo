@@ -1,11 +1,3 @@
-table.dataTable span.highlight {
-    background-color: #FFFF88;
-    border-radius: 0.28571429rem;
-}
-table.dataTable span.column_highlight {
-    background-color: #ffcc99;
-    border-radius: 0.28571429rem;
-}
 .dataTables_wrapper {
     margin-bottom: $spacer * 2;
     .dataTables_scrollHead {
@@ -38,6 +30,10 @@ table.dataTable span.column_highlight {
                     }
                 }
             }
+        }
+        .highlight {
+            background-color: $warning;
+            border-radius: $badge-border-radius;
         }
     }
     .dataTables_paginate {
