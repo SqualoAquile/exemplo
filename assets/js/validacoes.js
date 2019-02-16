@@ -109,15 +109,16 @@ $(function () {
     // 
     // CONFIGURAÇÕES DO DATATABLE
     //
-    var dataTable = $('.dataTable').DataTable(
+    const dataTable = $('.dataTable').DataTable(
         {
             scrollX: true,
             responsive: true,
             processing: true,
             serverSide: true,
-            scrollCollapse: true,
-            conditionalPaging: true,
             autoWidth: false,
+            scrollCollapse: true,
+            searchHighlight: true,
+            conditionalPaging: true,
             order: [0, 'desc'],
             ajax: {
                 url: baselink + '/ajax/dataTableAjax',
@@ -157,13 +158,9 @@ $(function () {
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     //
-    // // campo NOME
+    // Campo Nome
     //
-
-
-    //var $nome = $('[name=nome], [name=contato_nome]');
-    var $nome = $('[data-mascara_validacao="nome"]');
-    $nome
+    $('[data-mascara_validacao="nome"]')
         .blur(function () {
 
             var $this = $(this);
@@ -211,11 +208,9 @@ $(function () {
 
 
     //
-    // // campo RG
+    // Campo RG
     //
-    // var $rg = $('[name=rg]');
-    var $rg = $('[data-mascara_validacao="rg"]');
-    $rg
+    $('[data-mascara_validacao="rg"]')
         .mask('0000000000')
         .blur(function () {
 
@@ -274,11 +269,9 @@ $(function () {
         });
 
     //
-    // // campo CPF
+    // Campo CPF
     //
-    // var $cpf = $('[name=cpf]');
-    var $cpf = $('[data-mascara_validacao="cpf"]');
-    $cpf
+    $('[data-mascara_validacao="cpf"]')
         .mask('000.000.000-00')
         .blur(function () {
 
@@ -339,11 +332,9 @@ $(function () {
 
 
     //
-    // // campo CNPJ
+    // Campo CNPJ
     //
-    // var $cnpj = $('[name=cnpj]');
-    var $cnpj = $('[data-mascara_validacao="cnpj"]');
-    $cnpj
+    $('[data-mascara_validacao="cnpj"]')
         .mask('00.000.000/0000-00')
         .blur(function () {
 
@@ -404,11 +395,9 @@ $(function () {
         });
 
     //
-    // // campo TELEFONE
+    // Campo Telefone
     //
-    // var $telefone = $('[name=telefone], [name=contato_telefone]');
-    var $telefone = $('[data-mascara_validacao="telefone"]');
-    $telefone
+    $('[data-mascara_validacao="telefone"]')
         .mask('(00)0000-0000')
         .blur(function () {
 
@@ -442,12 +431,9 @@ $(function () {
         });
 
     //
-    // // campo CELULAR
+    // Campo Celular
     //
-    // var $celular = $('[name=celular], [name=contato_celular]');
-    var $celular = $('[data-mascara_validacao="celular"]');
-
-    $celular
+    $('[data-mascara_validacao="celular"]')
         .mask('(00)00000-0000')
         .blur(function () {
 
@@ -480,12 +466,9 @@ $(function () {
         });
 
     //
-    // // campo DATA
+    // Campo Data
     //
-    // var $data = $('[name^=data_]');
-    var $data = $('[data-mascara_validacao="data"]');
-
-    $data
+    $('[data-mascara_validacao="data"]')
         .mask('00/00/0000')
         .datepicker({
             dateFormat: 'dd/mm/yy',
@@ -540,9 +523,8 @@ $(function () {
         });
 
     //
-    // // campo SIGLA
+    // Campo Sigla
     //
-    // $('[name=sigla]')
     $('[data-mascara_validacao="sigla"]')
         .mask('ZZZZZ', {
             translation: {
@@ -553,12 +535,9 @@ $(function () {
         });
 
     //
-    // // campo EMAIL
+    // Campo Email
     //
-    // var $email = $('[name=email], [name=contato_email]');
-    var $email = $('[data-mascara_validacao="email"]');
-
-    $email
+    $('[data-mascara_validacao="email"]')
         .blur(function () {
 
             var $this = $(this),
@@ -617,12 +596,9 @@ $(function () {
         });
 
     //
-    // // campo CEP
+    // Campo CEP
     //
-    // var $cep = $('[name=cep]');
-    var $cep = $('[data-mascara_validacao="cep"]');
-
-    $cep
+    $('[data-mascara_validacao="cep"]')
         .mask('00000-000')
         .blur(function () {
 
@@ -682,18 +658,45 @@ $(function () {
         });
 
     //
-    // // campo NUMERO
+    // Campo Número
     //
-    //$('[name=numero]')
     $('[data-mascara_validacao="numero"]')
-        .mask('0#');
+        .mask('0#')
+        .blur(function () {
+
+            var $this = $(this);
+
+            $this.removeClass('is-valid is-invalid');
+            $this.siblings('.invalid-feedback').remove();
+
+            if ($this.val()) {
+                if ($this.attr('data-anterior') != $this.val()) {
+                    var value = Number($this.val());
+                    if (value) {
+                        // Valido
+                        $this
+                            .removeClass('is-invalid')
+                            .addClass('is-valid');
+
+                        $this[0].setCustomValidity('');
+                    } else {
+                        // Inválido
+                        $this
+                            .removeClass('is-valid')
+                            .addClass('is-invalid');
+
+                        $this[0].setCustomValidity('invalid');
+
+                        $this.after('<div class="invalid-feedback">Número precisa ser maior que 0.</div>');
+                    }
+                }
+            }
+        });
 
     //
-    // // campo MONETÁRIO, SALÁRIO, CUSTO
+    // Campo Monetário, Salaário, Custo
     //
-    //var $monetario = $('[name=salario], [name^=preco], [name=custo], [name=dinheiro]');
-    var $monetario = $('[data-mascara_validacao="monetario"]');
-    $monetario
+    $('[data-mascara_validacao="monetario"]')
         .mask('#.##0,00', {
             reverse: true
         })
@@ -756,12 +759,9 @@ $(function () {
         });
 
     //
-    // // campo COMISSÃO, PORCENTAGEM 
+    // Campo Comissão, Porcentagem 
     //
-    // var $porcentagem = $('[name=comissao], [name=porcent]');
-    var $porcentagem = $('[data-mascara_validacao="porcentagem"]');
-
-    $porcentagem
+    $('[data-mascara_validacao="porcentagem"]')
         .mask('00,00%', {
             reverse: true
         })
@@ -888,7 +888,6 @@ $(function () {
                     if (campos_alterados != '') {
 
                         $alteracoes.val($alteracoes.val() + '##' + campos_alterados);
-                        console.log("confirmar antes do Editar - " + $alteracoes.val());
                         if (!confirm('Tem certeza?')) {
                             event.preventDefault();
                         }
@@ -898,7 +897,6 @@ $(function () {
                         event.preventDefault();
                     }
                 } else { // Adicionar
-                    console.log("confirmar antes do Adicionar");
                     if (!confirm('Tem certeza?')) {
                         event.preventDefault();
 
@@ -921,12 +919,23 @@ $(function () {
 
     // Filtrar contatos pela busca
     dataTable.on('draw', function () {
+
         $('.contatos-filtrados').each(function () {
-            $('.contatos-escondidos').removeClass('bg-danger');
+            var $display = $(this).find('span');
             $(this).find('.contatos-escondidos:contains("' + dataTable.search() + '")').each(function () {
-                $(this).addClass('active');
+                var $filtered = $(this),
+                    textFiltered = $filtered.text(),
+                    textDisplay = $display.text();
+
+                $display.text(textFiltered);
+                $filtered.text(textDisplay);
             });
         });
+
+        var body = $(dataTable.table().body());
+
+        body.unhighlight();
+        body.highlight(dataTable.search());
     });
 
     $('[data-toggle="tooltip"]').tooltip();

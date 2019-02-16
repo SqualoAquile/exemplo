@@ -172,12 +172,13 @@
 
       <script src="<?php echo BASE_URL;?>/assets/js/vendor/jquery-3.3.1.min.js" type="text/javascript"></script>
       <script src="<?php echo BASE_URL;?>/assets/js/vendor/jquery.mask.js" type="text/javascript"></script>
-
       <script src="<?php echo BASE_URL;?>/assets/js/vendor/jquery.dataTables.min.js" type="text/javascript"></script>
-      
       <script src="<?php echo BASE_URL;?>/assets/js/vendor/jquery-ui.min.js" type="text/javascript"></script>
       <script src="<?php echo BASE_URL;?>/assets/js/vendor/popper.min.js" type="text/javascript"></script>
       <script src="<?php echo BASE_URL;?>/assets/js/vendor/bootstrap.min.js" type="text/javascript"></script>
+      <script src="<?php echo BASE_URL;?>/assets/js/vendor/jquery.highlight.js" type="text/javascript"></script>
+      <script src="<?php echo BASE_URL;?>/assets/js/vendor/dataTables.searchHighlight.min.js" type="text/javascript"></script>
+
       <script src="<?php echo BASE_URL;?>/assets/js/validacoes.js" type="text/javascript"></script>
    </head>
 <body class="d-flex flex-column h-100 bg-light">

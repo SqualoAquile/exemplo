@@ -104,7 +104,7 @@ class Shared extends model {
 
                                     $return_contatos = '
                                         <div class="contatos-filtrados d-flex">
-                                            <button class="btn btn-sm btn-link" type="button" data-toggle="collapse" data-target="#collapseContato' . $row["id"] . '" aria-expanded="false" aria-controls="collapseContato' . $row["id"] . '">
+                                            <button class="btn btn-sm btn-link text-info" type="button" data-toggle="collapse" data-target="#collapseContato' . $row["id"] . '" aria-expanded="false" aria-controls="collapseContato' . $row["id"] . '">
                                                 <i class="fas fa-plus-circle"></i>
                                             </button>
                                             <div>
