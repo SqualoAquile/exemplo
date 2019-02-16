@@ -35,7 +35,7 @@ const reload = (done) => {
 
 const serve = (done) => {
     server.init({
-        proxy: 'localhost/identifixe'
+        proxy: 'localhost/generico'
     });
     done();
 }

@@ -159,8 +159,8 @@ $(function () {
     //
     // // campo NOME
     //
-    
-    
+
+
     //var $nome = $('[name=nome], [name=contato_nome]');
     var $nome = $('[data-mascara_validacao="nome"]');
     $nome
@@ -214,7 +214,7 @@ $(function () {
     // // campo RG
     //
     // var $rg = $('[name=rg]');
-    var $rg = $('[data-mascara_validacao="rg"]');    
+    var $rg = $('[data-mascara_validacao="rg"]');
     $rg
         .mask('0000000000')
         .blur(function () {
@@ -271,13 +271,13 @@ $(function () {
                     }
                 }
             }
-        });    
+        });
 
     //
     // // campo CPF
     //
     // var $cpf = $('[name=cpf]');
-    var $cpf = $('[data-mascara_validacao="cpf"]');    
+    var $cpf = $('[data-mascara_validacao="cpf"]');
     $cpf
         .mask('000.000.000-00')
         .blur(function () {
@@ -342,7 +342,7 @@ $(function () {
     // // campo CNPJ
     //
     // var $cnpj = $('[name=cnpj]');
-    var $cnpj = $('[data-mascara_validacao="cnpj"]');     
+    var $cnpj = $('[data-mascara_validacao="cnpj"]');
     $cnpj
         .mask('00.000.000/0000-00')
         .blur(function () {
@@ -407,7 +407,7 @@ $(function () {
     // // campo TELEFONE
     //
     // var $telefone = $('[name=telefone], [name=contato_telefone]');
-    var $telefone = $('[data-mascara_validacao="telefone"]');       
+    var $telefone = $('[data-mascara_validacao="telefone"]');
     $telefone
         .mask('(00)0000-0000')
         .blur(function () {
@@ -445,7 +445,7 @@ $(function () {
     // // campo CELULAR
     //
     // var $celular = $('[name=celular], [name=contato_celular]');
-    var $celular = $('[data-mascara_validacao="celular"]');   
+    var $celular = $('[data-mascara_validacao="celular"]');
 
     $celular
         .mask('(00)00000-0000')
@@ -483,7 +483,7 @@ $(function () {
     // // campo DATA
     //
     // var $data = $('[name^=data_]');
-    var $data = $('[data-mascara_validacao="data"]');   
+    var $data = $('[data-mascara_validacao="data"]');
 
     $data
         .mask('00/00/0000')
@@ -543,7 +543,7 @@ $(function () {
     // // campo SIGLA
     //
     // $('[name=sigla]')
-    $('[data-mascara_validacao="sigla"]')   
+    $('[data-mascara_validacao="sigla"]')
         .mask('ZZZZZ', {
             translation: {
                 'Z': {
@@ -692,7 +692,7 @@ $(function () {
     // // campo MONETÁRIO, SALÁRIO, CUSTO
     //
     //var $monetario = $('[name=salario], [name^=preco], [name=custo], [name=dinheiro]');
-    var $monetario = $('[data-mascara_validacao="monetario"]');    
+    var $monetario = $('[data-mascara_validacao="monetario"]');
     $monetario
         .mask('#.##0,00', {
             reverse: true
@@ -759,7 +759,7 @@ $(function () {
     // // campo COMISSÃO, PORCENTAGEM 
     //
     // var $porcentagem = $('[name=comissao], [name=porcent]');
-    var $porcentagem = $('[data-mascara_validacao="porcentagem"]');  
+    var $porcentagem = $('[data-mascara_validacao="porcentagem"]');
 
     $porcentagem
         .mask('00,00%', {
@@ -915,15 +915,22 @@ $(function () {
         $('#wrapper').toggleClass('toggled');
     });
 
-    $('[name=searchDataTable]').keyup(function () {
+    $('[name=searchDataTable]').on('input search', function () {
         dataTable.search(this.value).draw();
+    });
+
+    dataTable.on('draw', function () {
+        $('.contatos-filtrados').each(function () {
+            $('.contatos-escondidos').removeClass('bg-danger');
+            $(this).find('.contatos-escondidos:contains("' + dataTable.search() + '")').each(function () {
+                $(this).addClass('bg-danger');
+            });
+        });
     });
 
     $('[data-toggle="tooltip"]').tooltip();
 
-
-    // Todos os checkbox virão com o atributo required se obrigatório
-    $('[type=checkbox]').on('blur change invalid valid', function () {
+    $('[type=checkbox]').on('blur', function () {
 
         var $hidden = $(this).parent().siblings('[type=hidden]'),
             $checkeds = $(this).parents('.form-checkbox').find(':checked'),
@@ -971,7 +978,7 @@ $(function () {
     });
 
     var $requiredRadios = $(':radio[required]');
-    $('[type=radio]').on('change invalid valid', function () {
+    $('[type=radio]').on('blur', function () {
         if ($requiredRadios.is(':checked')) {
             $(this)
                 .parents('.form-radio')
@@ -991,11 +998,21 @@ $(function () {
     });
 
     $('input, textarea, select').on('blur', function () {
-        if ( $(this)[0].hasAttribute('data-mascara_validacao') && $(this).attr('data-mascara_validacao') == 'false') {
-            if ($(this).val() != '' && $(this).attr('data-anterior') != $(this).val()) {
-                $(this).addClass('is-valid');
+        if ($(this)[0].hasAttribute('data-mascara_validacao') && $(this).attr('data-mascara_validacao') == 'false') {
+
+            if ($(this).attr('type') == 'radio' || $(this).attr('type') == 'checkbox') {
+                var $element = $(this).parent().parent();
             } else {
-                $(this).removeClass('is-valid');
+                var $element = $(this);
+            }
+
+            if ($(this).val() != '' && $(this).attr('data-anterior') != $(this).val()) {
+
+                $element.addClass('is-valid');
+
+            } else {
+
+                $element.removeClass('is-valid');
             }
         }
     });

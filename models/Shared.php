@@ -76,14 +76,50 @@ class Shared extends model {
                         "db" => $value["Field"],
                         "dt" => $index,
                         "formatter" => function($d,$row) {
-                            $contato = str_replace("][", "</br>", $d);
-                            $contato = str_replace(" *", ",", $contato);
-                            $contato = str_replace("[", "", $contato);
-                            $contato = str_replace("]", "", $contato);
-                            
-                            $contato = '<div class="contatos">'.$contato.'</div>'; 
-                            
-                            return  $contato;
+
+                            $return_contatos = "";
+
+                            if (strlen($d)) {
+
+                                $format_contato = str_replace("][", "|", $d);
+                                $format_contato = str_replace(" *", ",", $format_contato);
+                                $format_contato = str_replace("[", "", $format_contato);
+                                $format_contato = str_replace("]", "", $format_contato);
+    
+                                $contatos = explode("|", $format_contato);
+    
+                                $first_contato = $contatos[0];
+                                $resto_contatos = array_slice($contatos, 1);
+
+                                if (count($contatos) > 1) {
+
+                                    // Coloca cada contato que ficará escondido, em volta de uma div
+                                    // Usaremos isso para depois filtrar a busca e deixar visível os contatos que o usuario esta filtrando
+                                    $resto_contatos = implode('', array_map(
+                                        function ($resto_contato) {
+                                            return sprintf("<div class='contatos-escondidos'>%s</div>", $resto_contato);
+                                        },
+                                        $resto_contatos
+                                    ));
+
+                                    $return_contatos = '
+                                        <div class="contatos-filtrados d-flex">
+                                            <button class="btn btn-sm btn-link" type="button" data-toggle="collapse" data-target="#collapseContato' . $row["id"] . '" aria-expanded="false" aria-controls="collapseContato' . $row["id"] . '">
+                                                <i class="fas fa-plus-circle"></i>
+                                            </button>
+                                            <div>
+                                                <span>' . $first_contato . '</span>
+                                                <div class="collapse" id="collapseContato' . $row["id"] . '">
+                                                    ' . $resto_contatos . '
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ';
+                                } else {
+                                    $return_contatos = '<div class="ml-3 pl-3">' . $first_contato . '</div>';
+                                }
+                            }
+                            return $return_contatos;
                         }
                     ]; 
                 } else {

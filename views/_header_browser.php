@@ -15,7 +15,7 @@
         <div class="col-lg"> 
             <div class="input-group mb-3 mb-lg-0">
                 <!--Input com os dados da tabela-->
-                <input type="text" name="searchDataTable" id="searchDataTable" aria-label="Pesquise por qualquer campo..." class="form-control" placeholder="Pesquise por qualquer campo..." aria-describedby="search-addon">
+                <input type="search" name="searchDataTable" id="searchDataTable" aria-label="Pesquise por qualquer campo..." class="form-control" placeholder="Pesquise por qualquer campo..." aria-describedby="search-addon">
                 <div class="input-group-append">
                     <span class="input-group-text" id="search-addon">
                         <i class="fas fa-search"></i>
