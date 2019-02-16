@@ -17,7 +17,7 @@ class Shared extends model {
         $stringBtn .= '<form method="POST">';
         
         if( in_array( $this->table.'_edt' , $_SESSION["permissoesUsuario"]) ){
-            $stringBtn .=  '<a href="' . BASE_URL . '/' . $this->table . '/editar/' . $id . '" class="btn btn-primary btn-sm mr-1"><i class="fas fa-edit"></i></a>';      
+            $stringBtn .=  '<a href="' . BASE_URL . '/' . $this->table . '/editar/' . $id . '" class="btn btn-primary btn-sm mr-1"><i class="fas fa-edit"></i></a>';
         }
 
         if(in_array($this->table."_exc", $_SESSION["permissoesUsuario"])){

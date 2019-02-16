@@ -919,11 +919,12 @@ $(function () {
         dataTable.search(this.value).draw();
     });
 
+    // Filtrar contatos pela busca
     dataTable.on('draw', function () {
         $('.contatos-filtrados').each(function () {
             $('.contatos-escondidos').removeClass('bg-danger');
             $(this).find('.contatos-escondidos:contains("' + dataTable.search() + '")').each(function () {
-                $(this).addClass('bg-danger');
+                $(this).addClass('active');
             });
         });
     });

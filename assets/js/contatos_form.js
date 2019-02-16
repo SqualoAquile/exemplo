@@ -4,10 +4,12 @@ $(function () {
         lastInsertId = 0,
         botoes = `
             <td class="col-lg-2">
-                <div class="btn-group" role="group" aria-label="Ações">
-                    <a href="javascript:void(0)" class="editar-contato btn btn-primary btn-sm">Editar</a>
-                    <a href="javascript:void(0)" class="excluir-contato btn btn-secondary btn-sm">Excluir</a>
-                </div>
+                <a href="javascript:void(0)" class="editar-contato btn btn-sm btn-primary">
+                    <i class="fas fa-edit"></i>
+                </a>
+                <a href="javascript:void(0)" class="excluir-contato btn btn-sm btn-secondary">
+                    <i class="fas fa-trash-alt"></i>
+                </a>
             </td>
         `;
 
