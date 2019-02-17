@@ -77,8 +77,16 @@
             }
         }
     }
+    &#contatos {
+        th,
+        td {
+            @include media-breakpoint-down(lg) {
+                min-width: 200px;
+                @include text-truncate();
+            }
+        }
+    }
 }
-
 .table-fixed {
     width: 100%;
     tbody {
@@ -93,4 +101,3 @@
         display: block;
     }
 }
-  

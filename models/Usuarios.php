@@ -212,7 +212,7 @@ class Usuarios extends model {
                 }
 
                 //$ip = $_SERVER['REMOTE_ADDR']; // usa o IP para gerar o cod_atual
-                $ip = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+                $ip = $_SERVER['REMOTE_ADDR'];
                 //coloca o ip do pc de quem acabou de logar
                 $sqlB = "UPDATE ". $this->table ." SET cod_atual = '$ip' WHERE email='$email'";
                 $this->db->query($sqlB);
@@ -231,7 +231,7 @@ class Usuarios extends model {
             
             $id = $_SESSION['idUsuario'];
             //$ip = $_SERVER['REMOTE_ADDR'];
-            $ip = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+            $ip = $_SERVER['REMOTE_ADDR'];
             
             $sql = "SELECT * FROM ". $this->table ." WHERE id='$id' AND cod_atual = '$ip' AND situacao = 'ativo'";
             $sql = $this->db->query($sql);
