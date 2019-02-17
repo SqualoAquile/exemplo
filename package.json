@@ -1,5 +1,5 @@
 {
-  "name": "identifixe",
+  "name": "generico",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MuriloEduardo/identifixe.git"
+    "url": "git+https://github.com/SqualoAquile/generico.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MuriloEduardo/identifixe/issues"
+    "url": "https://github.com/SqualoAquile/generico/issues"
   },
-  "homepage": "https://github.com/MuriloEduardo/identifixe#readme",
+  "homepage": "https://github.com/SqualoAquile/generico#readme",
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.6.3",
     "babel-core": "^6.26.3",
