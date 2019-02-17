@@ -4,7 +4,7 @@
     <div class="table-responsive mb-lg-5 mb-3">
         <table id="contatos" class="table table-striped table-hover table-fixed bg-white">
             <thead>
-                <tr role="form" class="d-flex">
+                <tr role="form" class="d-flex flex-column flex-lg-row">
                     <th class="col-lg-2">
                         <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
                         <label for="contato_nome">Nome</label>

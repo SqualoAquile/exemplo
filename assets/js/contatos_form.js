@@ -85,7 +85,7 @@ $(function () {
             lastInsertId += 1;
 
             $('#contatos tbody')
-                .prepend('<tr class="d-flex" data-id="' + lastInsertId + '">' + tds + botoes + '</tr>');
+                .prepend('<tr class="d-flex flex-column flex-lg-row" data-id="' + lastInsertId + '">' + tds + botoes + '</tr>');
 
         } else {
             // Caso tenha algum valor é por que o contato está sendo editado
