@@ -4,9 +4,11 @@
     }
     th,
     td {
-        padding-top: .35rem;
-        padding-bottom: .35rem;
         vertical-align: middle;
+        @include media-breakpoint-up(lg) {
+            padding-top: .35rem;
+            padding-bottom: .35rem;
+        }
     }
     td {
         .contatos {
@@ -74,15 +76,6 @@
                         }
                     }
                 }
-            }
-        }
-    }
-    &#contatos {
-        th,
-        td {
-            @include media-breakpoint-down(lg) {
-                min-width: 200px;
-                @include text-truncate();
             }
         }
     }

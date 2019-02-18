@@ -845,7 +845,11 @@ $(function () {
     // Função que valida as alterações necessárias para o submit
     //
     $('.needs-validation').submit(function (event) {
+        
         var form = this;
+
+        // Executa o blur de todos os campos do formulário novamente
+        $(form).find('.form-control, .form-check-input').trigger('blur');
 
         if (form.checkValidity() == false) {
             // Primeira validação de todos os campos(de todos os tipos. Ex.: required, mascara, unico)
@@ -856,8 +860,6 @@ $(function () {
 
         } else {
             // Todos os campos do formulário estão válidos quando submita
-            // Executa o blur de todos os campos do formulário novamente
-            $(form).find('.form-control, .form-check-input').trigger('blur');
 
             if (form.checkValidity() == false) {
                 // Segunda validação de todos os campos(de todos os tipos. Ex.: required, mascara, unico)
