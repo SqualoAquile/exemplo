@@ -15,42 +15,26 @@ class usuariosController extends controller{
         
         // Instanciando as classes usadas no controller
         $this->shared = new Shared($this->table);
-        $tabela = ucfirst($this->table);
-        $this->model = new $tabela();
+        $this->model = new $this->table();
         $this->usuario = new Usuarios();
     
         $this->colunas = $this->shared->nomeDasColunas();
+
+        // Verificar se o funcionário está logado ou nao
+        if($this->usuario->isLogged() == false){
+            header("Location: " . BASE_URL . "/login"); 
+        }
 
         // verifica se tem permissão para ver esse módulo
         if(in_array($this->table . "_ver", $_SESSION["permissoesUsuario"]) == false){
             header("Location: " . BASE_URL . "/home"); 
         }
-        // Verificar se está logado ou nao
-        if($this->usuario->isLogged() == false){
-            header("Location: " . BASE_URL . "/login"); 
-        }
+        
     }
      
     public function index() {
-        
-        if(isset($_POST) && !empty($_POST)){ 
-            
-            $id = addslashes($_POST['id']);
-            if(in_array($this->table . "_exc", $_SESSION["permissoesUsuario"]) == false || empty($id) || !isset($id)){
-                header("Location: " . BASE_URL . "/" . $this->table); 
-            }
-            if($this->model->idAtivo($id) == false){
-                header("Location: " . BASE_URL . "/" . $this->table); 
-            }
-            $this->model->excluir($id);
-            header("Location: " . BASE_URL . "/" . $this->table);
-        }
-        
-        
         $dados['infoUser'] = $_SESSION;
         $dados["colunas"] = $this->colunas;
-        $dados["labelTabela"] = $this->shared->labelTabela();
-        //print_r($dados["labelTabela"]); exit;
         $this->loadTemplate($this->table, $dados);      
     }
     
@@ -62,24 +46,26 @@ class usuariosController extends controller{
         
         $dados['infoUser'] = $_SESSION;
         
-        if(isset($_POST) && !empty($_POST)){ 
+        // Verifica se está adicionando ou se está apenas chamando a página
+        if(isset($_POST) && !empty($_POST)){ //adiciona
             $this->model->adicionar($_POST);
             header("Location: " . BASE_URL . "/" . $this->table);
-        }else{ 
+        }else{ //exibe
             $dados["colunas"] = $this->colunas;
             $dados["viewInfo"] = ["title" => "Adicionar"];
-            $dados["labelTabela"] = $this->shared->labelTabela();
             $this->loadTemplate($this->table . "-form", $dados);
         }
     }
     
     public function editar($id) {
+        
+        // [add][edt]criar type password via javascript no input senha do formulário
+        // [add][edt]criar input senha2 para a validação da senha
+        // [add][edt]criar a regra de criação da senha
+        // [add][edt]criar a validação dos campos de senha no editar
+        // [add][edt]
 
         if(in_array($this->table . "_edt", $_SESSION["permissoesUsuario"]) == false || empty($id) || !isset($id)){
-            header("Location: " . BASE_URL . "/" . $this->table); 
-        }
-
-        if($this->model->idAtivo($id) == false){
             header("Location: " . BASE_URL . "/" . $this->table); 
         }
 
@@ -89,13 +75,23 @@ class usuariosController extends controller{
             $this->model->editar($id, $_POST);
             header("Location: " . BASE_URL . "/" . $this->table); 
         }else{
-            $dados["item"] = $this->model->infoItem($id); 
+            $dados["item"] = $this->model->infoItem($id);
             $dados["colunas"] = $this->colunas;
             $dados["viewInfo"] = ["title" => "Editar"];
-            $dados["labelTabela"] = $this->shared->labelTabela();
-            // print_r($dados); exit;
-            $this->loadTemplate($this->table . "-form", $dados); 
+            $this->loadTemplate($this->table . "-form", $dados); // Chama a view com base no nome da tabela
         }
     }
+
+    public function excluir($id){
+
+        if(in_array($this->table . "_exc", $_SESSION["permissoesUsuario"]) == false || empty($id) || !isset($id)){
+            header("Location: " . BASE_URL . "/" . $this->table); 
+        }
+
+        $this->model->excluir($id);
+
+        header("Location: " . BASE_URL . "/" . $this->table);
+    }
+    
 }   
 ?>

@@ -4,11 +4,9 @@
         currentModule = '<?php echo $modulo ?>'
 </script>
 
-<!-- Testa se o arquivo específico do módulo existe, caso exista, requisita inclui ele -->
+<!-- Chama o arquivo específico do módulo, caso não exista,  -->
 <!-- Este javaScript serve para fazer verificações inerentes à cada módulo, por exemplo o radio de Clientes -->
 <script src="<?php echo BASE_URL?>/assets/js/<?php echo $modulo?>.js" type="text/javascript"></script>
-
-
 
 <header class="d-flex align-items-center my-5">
     <?php if(in_array($modulo . "_ver", $infoUser["permissoesUsuario"])): ?>
@@ -22,12 +20,15 @@
 <?php $table = false ?>
 
 <section class="mb-5">
-    <form method="POST" class="needs-validation" novalidate>
+    <form method="POST" class="needs-validation" autocomplete="off" novalidate>
         <div class="row">
             <?php foreach ($colunas as $key => $value): ?>
                 <?php if(isset($value["Comment"]) && array_key_exists("form", $value["Comment"]) && $value["Comment"]["form"] != "false") : ?>
+                    
+                    <!-- INÍCIO DOS TESTES PARA VER QUAL O TIPO DE CAMPO -->
+                    <!-- CAMPOS DO TIPO TABELA - Ex: CONTATOS -->
                     <?php if(array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "table"): ?> 
-                        <!-- TIPO TABELA AUXILIAR ex: contatos-->
+                        
                         <?php $table = true ?>
                         <input 
                             type="hidden" 
@@ -36,8 +37,10 @@
                             data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
                             <?php echo $value["Null"] == "NO" ? "required" : "" ?>
                         />
+
+                    <!-- CAMPOS DO TIPO HIDDEN - Ex: ALTERAÇÕES -->
                     <?php elseif(array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "hidden"): ?>
-                        <!-- Campo tipo hidden setado no banco, ex: alterações -->
+                        
                         <input 
                             type="hidden" 
                             name="<?php echo lcfirst($value["Field"]) ?>" 
@@ -48,17 +51,19 @@
                     <?php else: ?>
                         <div class="col-lg-<?php echo isset($value["Comment"]["column"]) ? $value["Comment"]["column"] : "12" ?>">
                             <div class="form-group">
+
                                 <!-- Label Geral -->
                                 <label class="<?php echo $value["Null"] == "NO" ? "font-weight-bold" : "" ?>" for="<?php echo $value['Field'] ?>">
+                                    
                                     <!-- Asterisco de campo obrigatorio -->
                                     <?php if ($value["Null"] == "NO"): ?>
                                         <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
                                     <?php endif ?>
                                     <span><?php echo array_key_exists("label", $value["Comment"]) ? $value["Comment"]["label"] : ucwords(str_replace("_", " ", $value['Field'])) ?></span>
                                 </label>
+                                
+                                <!-- CAMPOS DO TIPO RELACIONAL - SELECT -->
                                 <?php if(array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "relacional"): ?>
-                                    <!-- Campos relacionais precisa ser revisado para adicionar e editar-->
-                                    
                                     <select id="<?php echo lcfirst($value['Field']);?>" 
                                             name="<?php echo lcfirst($value['Field']);?>"
                                             class="form-control"
@@ -68,7 +73,7 @@
                                             <option value="" selected >Selecione</option>
                                             <?php for($j = 0; $j < count($value["Comment"]['info_relacional']['resultado']); $j++):?>
                                                 
-                                                <option value="<?php echo $value["Comment"]['info_relacional']['resultado'][$j][$value["Comment"]['info_relacional']['campo']];?>"
+                                                <option value="<?php echo $value["Comment"]['info_relacional']['resultado'][$j]['id'];?>"
                                                     <?php if(isset($item[$value["Field"]])):?>
                                                         <?php if(strtoupper($item[$value["Field"]]) == strtoupper($value["Comment"]['info_relacional']['resultado'][$j][$value["Comment"]['info_relacional']['campo']])):?>
                                                             <?php echo "selected"?>
@@ -79,8 +84,52 @@
                                                 
                                             <?php endfor;?>     
                                     </select>
+
+                                <!-- CAMPOS DO TIPO CHECKBOX -->    
+                                <?php elseif(array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "checkbox"): ?>
+
+                                        <?php 
+                                            $opcoes = $value['Comment']['info_relacional']['resultado'];
+                                            $opcoes =  array_map('strtolower', $opcoes);
+                                            $opcoes =  array_map('trim', $opcoes);
+                                            
+                                            $checados = array();
+                                            if(isset($item)){
+                                                $checados =     explode(",",$item[$value['Field']]);
+                                                $checados =  array_map('strtolower', $checados);
+                                                $checados =  array_map('trim', $checados);
+                                            }
+                                            
+                                        ?>        
+                                        <?php for($j = 0; $j < count($opcoes); $j++):?>
+                                           
+                                            <input 
+                                                id="<?php echo $value["Comment"]['info_relacional']['resultado'][$j];?>"
+                                                type="checkbox" 
+                                                class="form-control"  
+                                                value="<?php echo $value["Comment"]['info_relacional']['resultado'][$j];?>"                                               
+                                                
+                                                <?php   if(isset($item)){
+                                                            if( in_array($opcoes[$j], $checados) ==  true){
+                                                                echo "checked='checked'";
+                                                            }              
+                                                        }                                                    
+                                                ?>   
+                                            >
+                                            <label for="<?php echo lcfirst($value["Field"]) ?>"><?php echo $value["Comment"]['info_relacional']['resultado'][$j];?></label>
+                                        <?php endfor?>
+
+                                        <input 
+                                            type="hidden" 
+                                            name="<?php echo lcfirst($value["Field"]) ?>" 
+                                            value="<?php echo isset($item) && !empty($item) ? $item[$value["Field"]] : "" ?>"
+                                            data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
+                                            <?php echo $value["Null"] == "NO" ? "required" : "" ?>
+                                        />
+                                
+                                <!-- CAMPOS DO TIPO TEXTAREA -->
                                 <?php elseif(array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "textarea"): ?>
-                                    <!-- Campo para textos -->
+                                    
                                     <textarea
                                         class="form-control" 
                                         name="<?php echo lcfirst($value['Field']);?>" 
@@ -89,8 +138,9 @@
                                         <?php echo $value['Null'] == "NO" ? "required" : "" ?>
                                     ><?php echo isset($item) && !empty($item) ? $item[$value["Field"]] : "" ?></textarea>
 
+                                <!-- CAMPOS DO TIPO RADIO -->
                                 <?php elseif(array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "radio"): ?>
-                                    <!-- Campo tipo radio -->
+                                    
                                     <div>
                                         <?php $indexRadio = 0 ?>
                                         <?php foreach ($value["Comment"]["options"] as $valueRadio => $label): ?>
@@ -118,17 +168,20 @@
                                                 >
                                                 <label class="custom-control-label" for="<?php echo $valueRadio ?>"><?php echo $label ?></label>
                                             </div>
-                                            
                                         <?php endforeach ?>
                                     </div>
+
                                 <?php else: ?>
                                     <!-- Campos de texto normal -->
                                     <input 
-                                        type="text" 
+                                        <?php if( lcfirst($value["Field"]) == 'senha' ):?>                 
+                                            type="password" 
+                                        <?php else:?>
+                                            type="text"                 
+                                        <?php endif?>    
                                         class="form-control" 
                                         name="<?php echo lcfirst($value["Field"]) ?>" 
-                                        value="<?php echo isset($item) && !empty($item) ? $item[$value["Field"]] : "" ?>"
-                                        data-unico="<?php echo array_key_exists("Key", $value) && $value["Key"] == "UNI" ? "unico" : "" ?>"
+                                        value="<?php echo isset($item) && !empty($item) && lcfirst($value["Field"]) != 'senha' ? $item[$value["Field"]] : "" ?>"
                                         data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
                                         id="<?php echo $value['Field'] ?>"
                                         <?php echo $value['Null'] == "NO" ? "required" : "" ?>
@@ -140,10 +193,15 @@
                 <?php endif ?>
             <?php endforeach ?>
         </div>
+        <label for="senhaaux" class="font-weight-bold"><span>* Confirme a Senha:</span></label>
+        <input  type="password" 
+                class="form-control" 
+                id="senhaaux"
+        />
         <button type="submit" id="main-form" class="d-none"></button>
     </form>
     <?php if($table) include "_table_form.php" ?>
-    <div class="row">
+    <div class="row mt-5" >
         <div class="col-lg-2">
             <label for="main-form" class="btn btn-primary btn-block" tabindex="0">Salvar</label>
         </div>
