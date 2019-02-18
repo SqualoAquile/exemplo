@@ -1,7 +1,32 @@
-.list-group-filtereds-wrapper {
-    z-index: $zindex-dropdown;
-    .list-group-filtereds {
-        max-height: 200px;
-        overflow-y: auto;
+.search-body {
+    .list-group-filtereds-wrapper {
+        z-index: $zindex-dropdown;
+        .list-group-filtereds {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    }
+    .icons-search-input {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        left: auto;
+        .close-btn {
+            display: none;
+        }
+        .down-btn {
+            margin-top: -0.25rem;
+        }
+    }
+    &.active {
+        .icons-search-input {
+            .close-btn {
+                display: initial;
+            }
+            .down-btn {
+                display: none;
+            }
+        }
     }
 }

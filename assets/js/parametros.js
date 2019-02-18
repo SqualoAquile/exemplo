@@ -1,3 +1,18 @@
+function Debounce(func, wait, immediate) {
+    var timeout;
+    return function() {
+        var context = this, args = arguments;
+        var later = function() {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
+};
+
 function Ajax (url, callback, send = {}) {
     $.ajax({
         url: './parametros/' + url,
@@ -18,10 +33,10 @@ function Popula($wrapper, data, campo) {
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="text">` + element[campo] + `</span>
                     <div>
-                        <button class="editar btn btn-sm btn-primary">
+                        <button class="editar btn btn-sm btn-primary" tabindex="-1">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="excluir btn btn-sm btn-secondary">
+                        <button class="excluir btn btn-sm btn-secondary" tabindex="-1">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                     </div>
@@ -34,6 +49,12 @@ function Popula($wrapper, data, campo) {
 };
 
 $(document)
+    .on('click touchstart', '.close-btn', function () {
+        var $searchBody = $(this).parents('.search-body');
+        $searchBody.find('.list-group-filtereds-wrapper').hide();
+        $searchBody.removeClass('active');
+        $searchBody.find('.search-input').blur().trigger('input');
+    })
     .on('click touchstart', function (event) {
         
         var $currentElement = $(event.target);
@@ -41,6 +62,15 @@ $(document)
         if (!$currentElement.parents('.search-body').length) {
             $('.search-body.active .list-group-filtereds-wrapper').hide();
             $('.search-body.active').removeClass('active');
+        } else {
+
+            var $notCurrent = $('.search-body.active').not($currentElement.parents('.search-body'))
+
+            $notCurrent
+                .find('.list-group-filtereds-wrapper')
+                .hide();
+
+            $notCurrent.removeClass('active');
         }
     })
     .on('DOMNodeInserted', '.list-group-item', function (event) {
@@ -71,7 +101,7 @@ $(document)
             
             Popula($contentSearchThis, data, campo);
 
-            $this.keyup();
+            $this.trigger('input');
 
         }, {
             value: this.value,
@@ -79,15 +109,16 @@ $(document)
             campo: campo
         });
     })
-    .on('keyup', '.search-input', function () {
+    .on('input', '.search-input', Debounce(function () {
 
         var $this = $(this),
             $contentSearchThis = $this.siblings('.list-group-filtereds-wrapper').find('.list-group-filtereds'),
-            id = $(this).attr('data-id'),
+            id = $this.attr('data-id'),
             $searchBody = $this.parents('.search-body'),
             campo = $searchBody.attr('data-campo');
             tabela = $searchBody.attr('id'),
-            $elAdd = $contentSearchThis.siblings('.elements-add');
+            $elAdd = $contentSearchThis.siblings('.elements-add'),
+            $saveParametros = $this.parents('.col').siblings('.save-parametros').find('.salvar');
 
         if (id == undefined) {
             // Pesquisando
@@ -96,30 +127,24 @@ $(document)
 
                 Popula($contentSearchThis, data, campo);
 
-                var nenhumaResultado = '',
-                    htmlElAdd = '';
+                var htmlElAdd = '';
+                    
+                if (!data.length) {
+                    htmlElAdd += '<div class="p-3">Nenhum resultado encontrado</div>';
+                }
 
                 if ($this.val()) {
-                    
-                    if (!data.length) {
-                        nenhumaResultado = '<div class="pt-2">Nenhum resultado encontrado</div>';
-                    }
-
-                    if ((data.length && data[0][campo].toUpperCase() != $this.val().toUpperCase()) || !data.length) {
-                        htmlElAdd +=`
-                            <div class="p-3">
-                                <button class="btn adicionar btn-success btn-block">Criar: ` + $this.val() + `</button>
-                                    ` + nenhumaResultado + `
-                                </div>
-                            </div>
-                        `;
+                    if ((data.length && (data[0][campo].toUpperCase() != $this.val().toUpperCase())) || !data.length) {
+                        $saveParametros.removeAttr('disabled');
+                    } else {
+                        $saveParametros.attr('disabled', 'disabled');
                     }
                 }
 
                 $elAdd.html(htmlElAdd);
 
             }, {
-                value: this.value,
+                value: $this.val(),
                 tabela: tabela,
                 campo: campo
             });
@@ -127,18 +152,31 @@ $(document)
         } else {
             // Editando
 
-            if (!this.value.length) {
+            if (!$this.val().length) {
 
-                $(this)
+                $this
                     .removeAttr('data-id')
                     .focus();
 
-                $(this).parents('.col').siblings('.save-parametros').addClass('d-none');
+                $saveParametros.attr('disabled', 'disabled');
             }
             
-            $('.list-group-filtereds #' + id + ' .text').text(this.value);
+            $('.list-group-filtereds #' + id + ' .text').text($this.val());
         }
+    }, 500))
+    .on('keydown', '.search-input', function(event) {
 
+        var $this = $(this),
+            $saveParametros = $this.parents('.col').siblings('.save-parametros').find('.salvar'),
+            code = event.keyCode || event.which;
+
+        if (code == 27 || code == 9) {
+            // Esc || Tab
+            $this.parents('.search-body').find('.close-btn').click();
+        } else if (code == 13) {
+            // Enter
+            $saveParametros.click();
+        }
     })
     .on('click', '.excluir', function() {
         
@@ -163,35 +201,42 @@ $(document)
             tabela = $searchBody.attr('id'),
             campo = $searchBody.attr('data-campo');
 
-        Ajax('editar/' + $inputSearch.attr('data-id'), function(data) {
-            if (data[0] == '00000') {
-                $this.parent().addClass('d-none');
-                $inputSearch.val('').focus().removeAttr('data-id');
+        if ($inputSearch.val()) {
+            if ($inputSearch.attr('data-id') == undefined) {
+    
+                Ajax('adicionar', function(data) {
+                    if (data[0] == '00000') {
+                        $inputSearch
+                            .val('')
+                            .focus()
+                            .trigger('input');
+                    }
+                }, {
+                    value: $inputSearch.val(),
+                    campo: campo,
+                    tabela: tabela
+                });
+    
+            } else {
+    
+                Ajax('editar/' + $inputSearch.attr('data-id'), function(data) {
+                    if (data[0] == '00000') {
+                        $this.parent().addClass('d-none');
+                        $inputSearch
+                            .val('')
+                            .focus()
+                            .trigger('input')
+                            .removeAttr('data-id');
+                    }
+                }, {
+                    value: $inputSearch.val(),
+                    tabela: tabela,
+                    campo: campo
+                });
+    
             }
-        }, {
-            value: $inputSearch.val(),
-            tabela: tabela,
-            campo: campo
-        });
-    })
-    .on('click', '.adicionar', function() {
+        }
 
-        var $inputSearch = $(this).parents('.list-group-filtereds-wrapper').siblings('.search-input'),
-            $searchBody = $(this).parents('.search-body'),
-            tabela = $searchBody.attr('id'),
-            campo = $searchBody.attr('data-campo');
-
-        Ajax('adicionar', function(data) {
-            if (data[0] == '00000') {
-                $inputSearch
-                    .val('')
-                    .focus();
-            }
-        }, {
-            value: $inputSearch.val(),
-            campo: campo,
-            tabela: tabela
-        });
     })
     .on('click', '.editar', function() {
 

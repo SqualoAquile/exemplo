@@ -2,18 +2,22 @@
 class parametrosController extends controller{
 
     protected $table = "parametros";
+
     protected $model;
+    protected $shared;
+    protected $usuario;
 
     public function __construct() {
 
         parent::__construct();
 
-        $usuario = new Usuarios();
+        $this->usuario = new Usuarios();
 
+        $this->shared = new Shared($this->table);
         $tabela = ucfirst($this->table);
         $this->model = new $tabela();
 
-        if($usuario->isLogged() == false){
+        if($this->usuario->isLogged() == false){
             header("Location: ".BASE_URL."/login"); 
         }
     }
@@ -24,6 +28,7 @@ class parametrosController extends controller{
       
       $dados["infoUser"] = $_SESSION;
       $dados["tabelas"] = $this->model->index();
+      $dados["labelTabela"] = $this->shared->labelTabela();
 
       $this->loadTemplate($this->table, $dados); 
     }
