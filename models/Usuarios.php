@@ -28,23 +28,24 @@ class Usuarios extends model {
     public function adicionar($request) {
         
         $req = array();
-        
-        $idgp = $request["grupo_permissao"];
-        $sql = "SELECT nome FROM permissoes WHERE id = '$idgp' AND situacao = 'ativo'";
+
+        //$idgp = $request["grupo_permissao"];
+        $nomegp = $request["grupo_permissao"];
+
+        $sql = "SELECT id FROM permissoes WHERE nome = '$nomegp' AND situacao = 'ativo'";
         $sql = $this->db->query($sql);
             
         if($sql->rowCount() > 0){  
             $sql = $sql->fetch();
-            $request["grupo_permissao"] = $sql['nome'];
-            $request["id_grupo_permissao"] = $idgp;
+            $request["id_grupo_permissao"] = $sql['id'];
         } 
 
         $ipcliente = $this->permissoes->pegaIPcliente();
 
         $req["nome"]                = addslashes($request["nome"]);
         $req["email"]               = addslashes($request["email"]);
-        $req["grupo_permissao"]     = $request["grupo_permissao"];
-        $req["id_grupo_permissao"]  = $idgp;
+        $req["grupo_permissao"]     = addslashes($request["grupo_permissao"]);
+        $req["id_grupo_permissao"]  = $request["id_grupo_permissao"];
         $req["observacao"]          = addslashes($request["observacao"]);
         $req["senha"]               = md5(addslashes($request["senha"]));
         $req["cod_atual"]           = "";
@@ -78,6 +79,7 @@ class Usuarios extends model {
     public function editar($id, $request) {
 
         if(!empty($id)){
+            
             $ipcliente = $this->permissoes->pegaIPcliente();
             $hist = explode("##", addslashes($request['alteracoes']));
 
@@ -91,39 +93,39 @@ class Usuarios extends model {
                 return false;
             }
 
-            $req = array();
-        
-            $idgp = $request["grupo_permissao"];
-            $sql = "SELECT nome FROM permissoes WHERE id = '$idgp' AND situacao = 'ativo'";
+            $nomegp = $request["grupo_permissao"];
+            $sql = "SELECT id FROM permissoes WHERE nome = '$nomegp' AND situacao = 'ativo'";
             $sql = $this->db->query($sql);
                 
             if($sql->rowCount() > 0){  
                 $sql = $sql->fetch();
-                $request["grupo_permissao"] = $sql['nome'];
-                $request["id_grupo_permissao"] = $idgp;
+                $request["id_grupo_permissao"] = $sql['id'];
             } 
-    
+            
+            $req = array();
+
             $req["nome"]                = addslashes($request["nome"]);
             $req["email"]               = addslashes($request["email"]);
-            $req["grupo_permissao"]     = $request["grupo_permissao"];
-            $req["id_grupo_permissao"]  = $idgp;
+            $req["grupo_permissao"]     = $nomegp;
+            $req["id_grupo_permissao"]  = $request["id_grupo_permissao"];
             $req["observacao"]          = addslashes($request["observacao"]);
-            $req["senha"]               = md5(addslashes($request["senha"]));
-            $req["cod_atual"]           = "";
-            $req["alteracoes"]          = $request['alteracoes'];    
-
+            $req["alteracoes"]          = $request['alteracoes'];
+            
+            if(!empty($request["senha"])){
+                $req["senha"] = md5(addslashes($request["senha"]));
+            }
 
             // Cria a estrutura key = 'valor' para preparar a query do sql
             $output = implode(', ', array_map(
                 function ($value, $key) {
                     return sprintf("%s='%s'", $key, $value);
                 },
-                $request, //value
-                array_keys($request)  //key
+                $req, //value
+                array_keys($req)  //key
             ));
 
             $sql = "UPDATE " . $this->table . " SET " . $output . " WHERE id='" . $id . "'";
-            //echo $sql; exit;
+            
             $this->db->query($sql);
             $erro = $this->db->errorInfo();
 
@@ -177,6 +179,26 @@ class Usuarios extends model {
         }
     }
 
+    public function idAtivo($id){
+        if(!empty($id)) {
+    
+            $id = addslashes(trim($id));
+            
+            //se não achar nenhum usuario associado ao grupo - pode deletar, ou seja, tornar o cadastro situacao=excluído
+            $sql = "SELECT * FROM ". $this->table ." WHERE id = '$id' AND situacao = 'ativo'";
+            $sql = $this->db->query($sql);
+            
+            if($sql->rowCount() > 0){  
+                return true;
+            } else {
+                $_SESSION["returnMessage"] = [
+                    "mensagem" => "Erro no endereço, você foi redirecionado para ".ucwords($this->table),
+                    "class" => "alert-danger"
+                ];
+                return false;
+            }
+        }
+    }
 
     ///////////////////////////////////////////////////////////////////////////////////
     ///         A PARTIR DAQUI COMEÇAM AS FUNÇÕES DE LOGIN                          ///    

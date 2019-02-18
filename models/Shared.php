@@ -124,8 +124,11 @@ class Shared extends model {
                     ]; 
                 } else {
                     $columns[] = [
-                        "db" => $value["Field"],
-                        "dt" => $index
+                        "db" => ucwords( $value["Field"] ),
+                        "dt" => $index,
+                        "formatter" => function($d,$row) {
+                            return ucwords($d);
+                        }
                     ]; 
                 }
                 $index++;

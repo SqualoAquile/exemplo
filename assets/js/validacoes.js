@@ -91,9 +91,11 @@ $(function () {
             valorAtual = String(valorAtual).trim().toUpperCase();
             dataAnterior = String(dataAnterior).trim().toUpperCase();
 
+            
             if (dataAnterior != valorAtual) {
                 temAlteracao = true;
             }
+
         });
 
         if (temAlteracao) {
@@ -874,16 +876,29 @@ $(function () {
 
                     // Faz um foreach em todos os campos do formulário para ver os valores atuais e os valores anteiores
                     var campos_alterados = '';
-                    $(form).find('input[type=text], input[type=hidden]:not([name=alteracoes]), input[type=radio]:checked, textarea, select').each(function (index, el) {
+                    $(form).find('input[type=text], input[type=password], input[type=hidden]:not([name=alteracoes]), input[type=radio]:checked, textarea, select').each(function (index, el) {
 
                         var valorAtual = $(el).val(),
                             dataAnterior = $(el).attr('data-anterior');
+                        var text_label = $(el).siblings('label').find('span').text();    
 
                         valorAtual = String(valorAtual).trim().toUpperCase();
                         dataAnterior = String(dataAnterior).trim().toUpperCase();
+                        
+                        console.log(text_label);
 
                         if (dataAnterior != valorAtual) {
-                            campos_alterados += '{' + $(el).attr('name').toUpperCase() + ' de (' + $(el).data('anterior') + ') para (' + $(el).val() + ')}';
+
+                            if($(el).attr('id') == 'senha'){
+                                campos_alterados += '{ A SENHA foi alteradaa }';
+
+                            }else if ($(el).attr('id') == 'senhaaux'){
+                                //não faz nada
+
+                            }else{
+                                campos_alterados += '{' + text_label.toUpperCase() + ' de (' + $(el).data('anterior') + ') para (' + $(el).val() + ')}';
+                            }
+                            
                         }
                     });
 
@@ -1004,7 +1019,7 @@ $(function () {
         }
     });
 
-    var $campos = $('#form-principal').find('input[type=text], input[type=hidden]:not([name=alteracoes]), input[type=radio], textarea, select');
+    var $campos = $('#form-principal').find('input[type=text], input[type=password], input[type=hidden]:not([name=alteracoes]), input[type=radio], textarea, select');
     $campos.on('ready change blur touchstart', function () {
         habilitaBotao($campos);
     });
