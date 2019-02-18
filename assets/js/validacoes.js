@@ -161,7 +161,7 @@ $(function () {
     // Campo Nome
     //
     $('[data-mascara_validacao="nome"]')
-        .blur(function () {
+        .on('blur touchstart', function () {
 
             var $this = $(this);
 
@@ -212,7 +212,7 @@ $(function () {
     //
     $('[data-mascara_validacao="rg"]')
         .mask('0000000000')
-        .blur(function () {
+        .on('blur touchstart', function () {
 
             var $this = $(this),
                 text_label = $this.siblings('label').find('span').text();
@@ -273,7 +273,7 @@ $(function () {
     //
     $('[data-mascara_validacao="cpf"]')
         .mask('000.000.000-00')
-        .blur(function () {
+        .on('blur touchstart', function () {
 
             var $this = $(this),
                 text_label = $this.siblings('label').find('span').text();
@@ -336,7 +336,7 @@ $(function () {
     //
     $('[data-mascara_validacao="cnpj"]')
         .mask('00.000.000/0000-00')
-        .blur(function () {
+        .on('blur touchstart', function () {
 
             var $this = $(this),
                 text_label = $this.siblings('label').find('span').text();
@@ -399,7 +399,7 @@ $(function () {
     //
     $('[data-mascara_validacao="telefone"]')
         .mask('(00)0000-0000')
-        .blur(function () {
+        .on('blur touchstart', function () {
 
             var $this = $(this);
 
@@ -435,7 +435,7 @@ $(function () {
     //
     $('[data-mascara_validacao="celular"]')
         .mask('(00)00000-0000')
-        .blur(function () {
+        .on('blur touchstart', function () {
 
             var $this = $(this);
 
@@ -538,7 +538,7 @@ $(function () {
     // Campo Email
     //
     $('[data-mascara_validacao="email"]')
-        .blur(function () {
+        .on('blur touchstart', function () {
 
             var $this = $(this),
                 text_label = $this.siblings('label').find('span').text();;
@@ -600,7 +600,7 @@ $(function () {
     //
     $('[data-mascara_validacao="cep"]')
         .mask('00000-000')
-        .blur(function () {
+        .on('blur touchstart', function () {
 
             var $this = $(this);
 
@@ -662,7 +662,7 @@ $(function () {
     //
     $('[data-mascara_validacao="numero"]')
         .mask('0#')
-        .blur(function () {
+        .on('blur touchstart', function () {
 
             var $this = $(this);
 
@@ -700,7 +700,7 @@ $(function () {
         .mask('#.##0,00', {
             reverse: true
         })
-        .blur(function () {
+        .on('blur touchstart', function () {
 
             var $this = $(this),
                 value = $this.val(),
@@ -765,7 +765,7 @@ $(function () {
         .mask('00,00%', {
             reverse: true
         })
-        .blur(function () {
+        .on('blur touchstart', function () {
 
             var $this = $(this),
                 value = $this.val().replace('%', ''),
@@ -822,7 +822,7 @@ $(function () {
                 $this.val('');
             }
         })
-        .change('blur change', function () {
+        .change('blur change touchstart', function () {
 
             var dtAnterior = $(this).attr('data-anterior');
 
@@ -915,7 +915,7 @@ $(function () {
         $('#wrapper').toggleClass('toggled');
     });
 
-    $('[name=searchDataTable]').on('input search', function () {
+    $('[name=searchDataTable]').on('keyup', function () {
         dataTable.search(this.value).draw();
     });
 
@@ -942,7 +942,7 @@ $(function () {
 
     $('[data-toggle="tooltip"]').tooltip();
 
-    $('[type=checkbox]').on('blur', function () {
+    $('[type=checkbox]').on('blur touchstart', function () {
 
         var $hidden = $(this).parent().siblings('[type=hidden]'),
             $checkeds = $(this).parents('.form-checkbox').find(':checked'),
@@ -990,7 +990,7 @@ $(function () {
     });
 
     var $requiredRadios = $(':radio[required]');
-    $('[type=radio]').on('blur', function () {
+    $('[type=radio]').on('blur touchstart', function () {
         if ($requiredRadios.is(':checked')) {
             $(this)
                 .parents('.form-radio')
@@ -1005,11 +1005,11 @@ $(function () {
     });
 
     var $campos = $('#form-principal').find('input[type=text], input[type=hidden]:not([name=alteracoes]), input[type=radio], textarea, select');
-    $campos.on('ready change blur', function () {
+    $campos.on('ready change blur touchstart', function () {
         habilitaBotao($campos);
     });
 
-    $('input, textarea, select').on('blur', function () {
+    $('input, textarea, select').on('blur touchstart', function () {
         if ($(this)[0].hasAttribute('data-mascara_validacao') && $(this).attr('data-mascara_validacao') == 'false') {
 
             if ($(this).attr('type') == 'radio' || $(this).attr('type') == 'checkbox') {

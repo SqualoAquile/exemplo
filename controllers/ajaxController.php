@@ -26,11 +26,10 @@ class ajaxController extends controller{
         $valor = $_POST["valor"];
 
         $model = new Shared($_POST["module"]);
-        $dados = array();
 
         if(isset($valor) && !empty($valor)){
-            $valor = trim(addslashes($valor));
-            $dados = $model->unico($campo, $valor);
+          $valor = trim(addslashes($valor));
+          $dados = $model->unico($campo, $valor);
         }
 
         echo json_encode($dados);

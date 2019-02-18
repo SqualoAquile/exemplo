@@ -1,0 +1,7 @@
+.list-group-filtereds-wrapper {
+    z-index: $zindex-dropdown;
+    .list-group-filtereds {
+        max-height: 200px;
+        overflow-y: auto;
+    }
+}

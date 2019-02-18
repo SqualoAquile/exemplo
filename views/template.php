@@ -150,7 +150,7 @@
                "text" => "Parâmetros",
                "icon" => "fas fa-cog",
                "permissao" => "permissoes_ver",
-               "link" => "/permissoes"
+               "link" => "/parametros"
             ],            
          ]
       ]
