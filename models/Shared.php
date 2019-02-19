@@ -153,11 +153,9 @@ class Shared extends model {
         $sql = $this->db->query("SHOW FULL COLUMNS FROM " . $this->table);
         $result = $sql->fetchAll(PDO::FETCH_ASSOC);
         
-        
         foreach ($result as $key => $value) {
             $result[$key]["Comment"] = json_decode($result[$key]["Comment"], true);
-            
-            
+                
             // CRIA UMA CHAVE NOVA NO VETOR COM A INFORMAÇÃO DO TAMANHO MÁXIMO QUE O CAMPO PODE RECEBER, ALIMENTAR O MAXLEGTH
             $tipo = $result[$key]["Type"];
             $inicio = intval( strpos($tipo,"(") + 1);

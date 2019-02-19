@@ -28,7 +28,9 @@ class parametrosController extends controller{
       
         $dados["infoUser"] = $_SESSION;
         $dados["tabelas"] = $this->model->index();
+        $dados["registros"] = $this->model->pegarFixos();
         $dados["labelTabela"] = $this->shared->labelTabela();
+
         $this->loadTemplate($this->table, $dados); 
     }
 
@@ -56,6 +58,14 @@ class parametrosController extends controller{
         if (isset($_POST) && !empty($_POST)) {
             if (isset($id) && !empty($id)) {
                 echo json_encode($this->model->editar($_POST, $id));
+            }
+        }
+    }
+
+    public function editarFixos($id) {
+        if (isset($_POST) && !empty($_POST)) {
+            if (isset($id) && !empty($id)) {
+                echo json_encode($this->model->editarFixos($_POST, $id));
             }
         }
     }
