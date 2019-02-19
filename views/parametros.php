@@ -36,9 +36,11 @@
                                 <ul id="<?php echo $parametro ?>" data-campo="<?php echo $campo ?>" class="search-body list-unstyled mt-2">
                                     <li>
                                         <div class="row">
-                                            <div class="col">
+                                            <div class="col-lg">
                                                 <div class="position-relative">
-                                                    <input id="parametroRelacional<?php echo $key ?>" type="text" class="form-control search-input" placeholder="Procure por <?php echo $parametro ?>">
+                                                    <div class="form-group">
+                                                        <input id="parametroRelacional<?php echo $key ?>" type="text" class="form-control search-input" placeholder="Procure por <?php echo $parametro ?>">
+                                                    </div>
                                                     <div class="icons-search-input d-flex px-1">
                                                         <button class="btn btn-sm down-btn" tabindex="-1">
                                                             <i class="fas fa-sort-down"></i>
@@ -53,7 +55,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="save-parametros col flex-grow-0">
+                                            <div class="save-parametros col-lg flex-grow-0">
                                                 <button class="salvar btn btn-primary" tabindex="-1" disabled="disabled">Incluir</button>
                                             </div>
                                         </div>
@@ -89,28 +91,30 @@
                         </label>
 
                         <div class="row">
-                            <div class="col">
-                                <input 
-                                    type="text" 
-                                    class="form-control input-fixos" 
-                                    name="<?php echo lcfirst($value["parametro"]) ?>" 
-                                    value="<?php echo $value["valor"] ?>"
-                                    data-alteracoes="<?php echo $value["alteracoes"] ?>"
-                                    data-id="<?php echo $value["id"] ?>"
-                                    data-anterior="<?php echo $value["valor"] ?>"
-                                    <?php echo !array_key_exists("null", $value["comentarios"]) ? "required" : "" ?>
-                                    id="<?php echo $value['parametro'] ?>"
-                                    data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["comentarios"]) ? $value["comentarios"]["mascara_validacao"] : "false" ?>"
-                                    <?php if( array_key_exists("mascara_validacao", $value["comentarios"]) && 
-                                                ( $value["comentarios"]["mascara_validacao"] == "monetario" || $value["comentarios"]["mascara_validacao"] == "porcentagem" )):?>
-                                        data-podeZero="<?php echo array_key_exists("pode_zero", $value["comentarios"]) && $value["comentarios"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
-                                    <?php endif?>
-                                    <?php if(array_key_exists("maxlength", $value["comentarios"])):?>
-                                        maxlength="<?php echo $value["comentarios"]["maxlength"] ?>"
-                                    <?php endif?>
-                                />
+                            <div class="col-lg">
+                                <div class="form-group">
+                                    <input 
+                                        type="text" 
+                                        class="form-control input-fixos" 
+                                        name="<?php echo lcfirst($value["parametro"]) ?>" 
+                                        value="<?php echo $value["valor"] ?>"
+                                        data-alteracoes="<?php echo $value["alteracoes"] ?>"
+                                        data-id="<?php echo $value["id"] ?>"
+                                        data-anterior="<?php echo $value["valor"] ?>"
+                                        <?php echo !array_key_exists("null", $value["comentarios"]) ? "required" : "" ?>
+                                        id="<?php echo $value['parametro'] ?>"
+                                        data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["comentarios"]) ? $value["comentarios"]["mascara_validacao"] : "false" ?>"
+                                        <?php if( array_key_exists("mascara_validacao", $value["comentarios"]) && 
+                                                    ( $value["comentarios"]["mascara_validacao"] == "monetario" || $value["comentarios"]["mascara_validacao"] == "porcentagem" )):?>
+                                            data-podeZero="<?php echo array_key_exists("pode_zero", $value["comentarios"]) && $value["comentarios"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
+                                        <?php endif?>
+                                        <?php if(array_key_exists("maxlength", $value["comentarios"])):?>
+                                            maxlength="<?php echo $value["comentarios"]["maxlength"] ?>"
+                                        <?php endif?>
+                                    />
+                                </div>
                             </div>
-                            <div class="col flex-grow-0">
+                            <div class="col-lg flex-grow-0">
                                 <button type="submit" class="btn btn-primary" disabled="disabled">Salvar</button>
                             </div>
                         </div>

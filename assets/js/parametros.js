@@ -130,7 +130,7 @@ $(document)
             campo = $searchBody.attr('data-campo');
             tabela = $searchBody.attr('id'),
             $elAdd = $contentSearchThis.siblings('.elements-add'),
-            $saveParametros = $this.parents('.col').siblings('.save-parametros').find('.salvar');
+            $saveParametros = $searchBody.find('.salvar');
 
         if (id == undefined) {
             // Pesquisando
@@ -184,7 +184,7 @@ $(document)
     .on('keydown', '.search-input', function(event) {
 
         var $this = $(this),
-            $saveParametros = $this.parents('.col').siblings('.save-parametros').find('.salvar'),
+            $saveParametros = $this.parents('.search-body').find('.salvar'),
             code = event.keyCode || event.which;
 
         if (code == 27 || code == 9) {
