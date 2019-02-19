@@ -111,7 +111,7 @@ $(function () {
     // 
     // CONFIGURAÇÕES DO DATATABLE
     //
-    const dataTable = $('.dataTable').DataTable(
+    var dataTable = $('.dataTable').DataTable(
         {
             scrollX: true,
             responsive: true,
@@ -152,6 +152,10 @@ $(function () {
             dom: '<t><p><r><i>'
         }
     );
+
+    $('[name=searchDataTable]').on('keyup', Debounce(function () {
+        dataTable.search(this.value).draw();
+    }, 500));
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ///                                                                     
@@ -926,14 +930,6 @@ $(function () {
         form.classList.add('was-validated');
     });
 
-    $('#menu-toggle').click(function () {
-        $('#wrapper').toggleClass('toggled');
-    });
-
-    $('[name=searchDataTable]').on('keyup', function () {
-        dataTable.search(this.value).draw();
-    });
-
     // Filtrar contatos pela busca
     dataTable.on('draw', function () {
 
@@ -954,8 +950,6 @@ $(function () {
         body.unhighlight();
         body.highlight(dataTable.search());
     });
-
-    $('[data-toggle="tooltip"]').tooltip();
 
     $('[type=checkbox]').on('blur touchstart', function () {
 

@@ -1,18 +1,3 @@
-function Debounce(func, wait, immediate) {
-    var timeout;
-    return function() {
-        var context = this, args = arguments;
-        var later = function() {
-            timeout = null;
-            if (!immediate) func.apply(context, args);
-        };
-        var callNow = immediate && !timeout;
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-        if (callNow) func.apply(context, args);
-    };
-};
-
 function Ajax (url, callback, send = {}) {
     $.ajax({
         url: './parametros/' + url,
@@ -48,6 +33,22 @@ function Popula($wrapper, data, campo) {
     $wrapper.html(htmlContentSearch);
 };
 
+function Toast (options) {
+    $('body').append(`
+        <div class="position-fixed my-toast m-3 shadow-sm alert ` + options.class + ` alert-dismissible fade show" role="alert">
+            ` + options.message + `
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    `);
+
+    window.setTimeout(function() {
+        $('.alert').alert('close');
+    }, 4000);
+}
+
+// Dropdowns
 $(document)
     .on('click touchstart', '.close-btn', function () {
         var $searchBody = $(this).parents('.search-body');
@@ -251,4 +252,28 @@ $(document)
             .focus();
 
         $inputSearch.attr('data-id', $parent.attr('id'));
+    });
+
+// Fixos
+$(document)
+    .on('submit', '.form-params-fixos', function (event) {
+
+        var $this = $(this),
+            $input = $this.find('.input-fixos');
+            value = $input.val(),
+            id = $input.attr('data-id');
+
+        Ajax('editarFixos/' + id, function(data) {
+            if (data[0] == '00000') {
+                Toast({
+                    message: 'Parâmetro editado com sucesso!',
+                    class: 'alert-success'
+                });
+            }
+        }, {
+            value: value
+        });
+
+        event.preventDefault();
+        event.stopPropagation();
     });

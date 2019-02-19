@@ -51,6 +51,7 @@ class Parametros extends model {
         $sql = "SELECT * FROM " . $this->table . " WHERE situacao = 'ativo'" . $value_sql;
 
         $sql = $this->db->query($sql);
+        
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -121,5 +122,40 @@ class Parametros extends model {
         $this->db->query($sql);
 
         return $this->db->errorInfo();
+    }
+
+    public function pegarFixos() {
+
+        $this->table = "parametros";
+        
+        $sql = "SELECT * FROM " . $this->table . " WHERE situacao = 'ativo'";
+        $sql = $this->db->query($sql);
+        $result = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($result as $key => $value) {
+            $result[$key]["comentarios"] = json_decode($value["comentarios"], true);
+        }
+
+        return $result;
+    }
+
+    public function editarFixos($request, $id) {
+        
+        $this->table = "parametros";
+
+        if ($request["value"]) {
+
+            $value = trim($request["value"]);
+            $value = addslashes($value);
+        }
+
+        $id = addslashes(trim($id));
+
+        $sql = "UPDATE " . $this->table . " SET valor = '" . $value . "' WHERE id='" . $id . "'";
+             
+        $this->db->query($sql);
+
+        return $this->db->errorInfo();
+
     }
 }

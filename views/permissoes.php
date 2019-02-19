@@ -1,8 +1,6 @@
 <?php
-$modulo = str_replace(array("-add", "-edt"), "", basename(__FILE__, ".php"));
-$headerData = [
-    "titulo" => "Permissões"
-];
+$modulo = str_replace("-form", "", basename(__FILE__, ".php"));
+
 require "_header_browser.php";
 require "_table_datatable.php";
 ?>
