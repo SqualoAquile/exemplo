@@ -1,51 +1,58 @@
-
 <?php
 class Fornecedores extends model {
 
     protected $table = "fornecedores";
     protected $permissoes;
-    
+    protected $shared;
+
     public function __construct() {
         parent::__construct(); 
         $this->permissoes = new Permissoes();
+        $this->shared = new Shared($this->table);
     }
-
-    public function pegarInfo($id) {
+    
+    public function infoItem($id) {
         $array = array();
         $arrayAux = array();
 
+        $id = addslashes(trim($id));
         $sql = "SELECT * FROM " . $this->table . " WHERE id='$id' AND situacao = 'ativo'";      
         $sql = $this->db->query($sql);
+
         if($sql->rowCount()>0){
-            $array = $sql->fetch();
+            $array = $sql->fetch(PDO::FETCH_ASSOC);
+            $array = $this->shared->formataDadosDoBD($array);
         }
-        foreach ($arrayAux as $chave => $valor){
-            $array[$chave] = array(utf8_encode($valor));        
-        }
+        
         return $array; 
     }
 
     public function adicionar($request) {
-
-        $alteracoes = ucwords($_SESSION["nomeFuncionario"]) . " - " . $this->permissoes->pegaIPcliente() . " - " . date('d/m/Y H:i:s') . " - CADASTRO";
+        
+        $ipcliente = $this->permissoes->pegaIPcliente();
+        $request["alteracoes"] = ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
         
         $request["situacao"] = "ativo";
-        $request["alteracoes"] = $alteracoes;
 
         $keys = implode(",", array_keys($request));
-        $values = "'" . implode("','", array_values($this->formataDadosDb($request))) . "'";
+
+        $values = "'" . implode("','", array_values($this->shared->formataDadosParaBD($request))) . "'";
 
         $sql = "INSERT INTO " . $this->table . " (" . $keys . ") VALUES (" . $values . ")";
+        
         $this->db->query($sql);
 
-        if ($this->db->lastInsertId()) {
+        $erro = $this->db->errorInfo();
+
+        if (empty($erro[2])){
+
             $_SESSION["returnMessage"] = [
                 "mensagem" => "Registro inserido com sucesso!",
                 "class" => "alert-success"
             ];
         } else {
             $_SESSION["returnMessage"] = [
-                "mensagem" => "Houve uma falha, entre em contato conosco!",
+                "mensagem" => "Houve uma falha, tente novamente! <br /> ".$erro[2],
                 "class" => "alert-danger"
             ];
         }
@@ -53,103 +60,110 @@ class Fornecedores extends model {
 
     public function editar($id, $request) {
 
-        $output = implode(', ', array_map(
-            function ($v, $k) {
-                return sprintf("%s='%s'", $k, addslashes($v));
-            },
-            $request,
-            array_keys($request)
-        ));
-
-        $sql = "UPDATE " . $this->table . " SET " . $output . " WHERE id='" . $id . "'";
-
-        $result = $this->db->query($sql);
-
-        if ($result) {
-            $_SESSION["returnMessage"] = [
-                "mensagem" => "Registro alterado com sucesso!",
-                "class" => "alert-success"
-            ];
-        } else {
-            $_SESSION["returnMessage"] = [
-                "mensagem" => "Houve uma falha, entre em contato conosco!",
-                "class" => "alert-danger"
-            ];
-        }
-    }
-    
-    public function excluir($id){
         if(!empty($id)){
-            
-            //se não achar nenhum usuario associado ao grupo - pode deletar, ou seja, tornar o cadastro situacao=excluído
-            $sql = "SELECT alteracoes FROM " . $this->table . " WHERE id = '$id' AND situacao = 'ativo'";
-            
-            $sql = $this->db->query($sql);
-            
-            if($sql->rowCount() > 0){  
-               $sql = $sql->fetch();
-               $palter = $sql["alteracoes"];
-               $ipcliente = $this->permissoes->pegaIPcliente();
 
-               $palter = $palter . " | " . ucwords($_SESSION["nomeFuncionario"]) . " - $ipcliente - " . date('d/m/Y H:i:s') . " - EXCLUSAO";
-               
-               $sqlA = "UPDATE " . $this->table . " SET alteracoes = '$palter', situacao = 'excluido' WHERE id = '$id'";
-               $this->db->query($sqlA);
+            $id = addslashes(trim($id));
+
+            $ipcliente = $this->permissoes->pegaIPcliente();
+            $hist = explode("##", addslashes($request['alteracoes']));
+
+            if(!empty($hist[1])){ 
+                $request['alteracoes'] = $hist[0]." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - ALTERAÇÃO >> ".$hist[1];     
+            }else{
+                $_SESSION["returnMessage"] = [
+                    "mensagem" => "Houve uma falha, tente novamente! <br /> Registro sem histórico de alteração.",
+                    "class" => "alert-danger"
+                ];
+                return false;
+            }
+
+            $request = $this->shared->formataDadosParaBD($request);
+
+            // Cria a estrutura key = 'valor' para preparar a query do sql
+            $output = implode(', ', array_map(
+                function ($value, $key) {
+                    return sprintf("%s='%s'", $key, $value);
+                },
+                $request, //value
+                array_keys($request)  //key
+            ));
+
+            $sql = "UPDATE " . $this->table . " SET " . $output . " WHERE id='" . $id . "'";
+             
+            $this->db->query($sql);
+
+            $erro = $this->db->errorInfo();
+
+            if (empty($erro[2])){
 
                 $_SESSION["returnMessage"] = [
-                    "mensagem" => "Registro deletado com sucesso!",
+                    "mensagem" => "Registro alterado com sucesso!",
                     "class" => "alert-success"
+                ];
+            } else {
+                $_SESSION["returnMessage"] = [
+                    "mensagem" => "Houve uma falha, tente novamente! <br /> ".$erro[2],
+                    "class" => "alert-danger"
                 ];
             }
         }
     }
     
-    public function buscaFornPeloNomeFantasia($nome){
-        $array = array();
-        if(!empty($nome)){
-            $sql = "SELECT nomefantasia FROM fornecedores WHERE nomefantasia='$nome' AND situacao='ativo'";
+    public function excluir($id){
+        if(!empty($id)) {
+
+            $id = addslashes(trim($id));
+
+            //se não achar nenhum usuario associado ao grupo - pode deletar, ou seja, tornar o cadastro situacao=excluído
+            $sql = "SELECT alteracoes FROM ". $this->table ." WHERE id = '$id' AND situacao = 'ativo'";
             $sql = $this->db->query($sql);
-            if($sql->rowCount()>0){
-                $array = $sql->fetchAll();
-            } 
+            
+            if($sql->rowCount() > 0){  
+
+                $sql = $sql->fetch();
+                $palter = $sql["alteracoes"];
+                $ipcliente = $this->permissoes->pegaIPcliente();
+                $palter = $palter." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - EXCLUSÃO";
+
+                $sqlA = "UPDATE ". $this->table ." SET alteracoes = '$palter', situacao = 'excluido' WHERE id = '$id' ";
+                $this->db->query($sqlA);
+
+                $erro = $this->db->errorInfo();
+
+                if (empty($erro[2])){
+
+                    $_SESSION["returnMessage"] = [
+                        "mensagem" => "Registro deletado com sucesso!",
+                        "class" => "alert-success"
+                    ];
+                } else {
+                    $_SESSION["returnMessage"] = [
+                        "mensagem" => "Houve uma falha, tente novamente! <br /> ".$erro[2],
+                        "class" => "alert-danger"
+                    ];
+                }
+            }
         }
-        return $array;
     }
     
-    public function buscaFornPelaSigla($nome){
-        $array = array();
-        if(!empty($nome)){
-            $sql = "SELECT sigla FROM fornecedores WHERE sigla='$nome' AND situacao='ativo'";
-            $sql = $this->db->query($sql);
-            if($sql->rowCount()>0){
-                $array = $sql->fetchAll();
-            } 
-        }
-        return $array;
-    }
+    public function idAtivo($id){
+        if(!empty($id)) {
     
-    public function buscaFornPelaRazao($nome){
-        $array = array();
-        if(!empty($nome)){
-            $sql = "SELECT razaosocial FROM fornecedores WHERE razaosocial='$nome' AND situacao='ativo'";
+            $id = addslashes(trim($id));
+            
+            //se não achar nenhum usuario associado ao grupo - pode deletar, ou seja, tornar o cadastro situacao=excluído
+            $sql = "SELECT * FROM ". $this->table ." WHERE id = '$id' AND situacao = 'ativo'";
             $sql = $this->db->query($sql);
-            if($sql->rowCount()>0){
-                $array = $sql->fetchAll();
-            } 
+            
+            if($sql->rowCount() > 0){  
+                return true;
+            } else {
+                $_SESSION["returnMessage"] = [
+                    "mensagem" => "Erro no endereço, você foi redirecionado para ".ucwords($this->table),
+                    "class" => "alert-danger"
+                ];
+                return false;
+            }
         }
-        return $array;
     }
-    
-    public function buscaFornPeloCnpj($nome){
-        $array = array();
-        if(!empty($nome)){
-            $sql = "SELECT cnpj FROM fornecedores WHERE cnpj='$nome' AND situacao='ativo'";
-            $sql = $this->db->query($sql);
-            if($sql->rowCount()>0){
-                $array = $sql->fetchAll();
-            } 
-        }
-        return $array;
-    }
-    
 }
