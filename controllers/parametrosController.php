@@ -24,13 +24,12 @@ class parametrosController extends controller{
      
     public function index() {
 
-      $dados = array();
+        $dados = array();
       
-      $dados["infoUser"] = $_SESSION;
-      $dados["tabelas"] = $this->model->index();
-      $dados["labelTabela"] = $this->shared->labelTabela();
-
-      $this->loadTemplate($this->table, $dados); 
+        $dados["infoUser"] = $_SESSION;
+        $dados["tabelas"] = $this->model->index();
+        $dados["labelTabela"] = $this->shared->labelTabela();
+        $this->loadTemplate($this->table, $dados); 
     }
 
     public function listar() {
