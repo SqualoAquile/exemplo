@@ -8,7 +8,7 @@ function Ajax (url, callback, send = {}) {
     });
 };
 
-function Popula($wrapper, data, campo) {
+function Popula ($wrapper, data, campo) {
     
     var htmlContentSearch = '';
 
@@ -46,12 +46,17 @@ function Toast (options) {
     window.setTimeout(function() {
         $('.alert').alert('close');
     }, 4000);
-}
+};
 
 // Dropdowns
 $(document)
+    .on('click touchstart', '.down-btn', function () {
+        $(this).parents('.search-body').find('.search-input').focus();
+    })
     .on('click touchstart', '.close-btn', function () {
+
         var $searchBody = $(this).parents('.search-body');
+
         $searchBody.find('.list-group-filtereds-wrapper').hide();
         $searchBody.removeClass('active');
         $searchBody.find('.search-input').blur().trigger('input');
@@ -93,10 +98,16 @@ $(document)
         var $this = $(this),
             $contentSearchThisWrapper = $this.siblings('.list-group-filtereds-wrapper'),
             $contentSearchThis = $contentSearchThisWrapper.find('.list-group-filtereds'),
-            campo = $contentSearchThis.parents('.search-body').attr('data-campo');
+            $searchBody = $contentSearchThis.parents('.search-body'),
+            campo = $searchBody.attr('data-campo'),
+            value = $this.val();
 
-        $contentSearchThis.parents('.search-body').addClass('active');
+        $searchBody.addClass('active');
         $contentSearchThisWrapper.show();
+
+        if ($this.attr('data-id')) {
+            value = $this.attr('data-anterior');
+        }
 
         Ajax('listar', function(data) {
             
@@ -105,12 +116,12 @@ $(document)
             $this.trigger('input');
 
         }, {
-            value: this.value,
-            tabela: $contentSearchThis.parents('.search-body').attr('id'),
+            value: value,
+            tabela: $searchBody.attr('id'),
             campo: campo
         });
     })
-    .on('input', '.search-input', Debounce(function () {
+    .on('input', '.search-input', function () {
 
         var $this = $(this),
             $contentSearchThis = $this.siblings('.list-group-filtereds-wrapper').find('.list-group-filtereds'),
@@ -160,11 +171,16 @@ $(document)
                     .focus();
 
                 $saveParametros.attr('disabled', 'disabled');
+            } else {
+
+                if ($this.val() != $this.attr('data-anterior')) {
+                    $saveParametros.removeAttr('disabled');
+                }
             }
             
             $('.list-group-filtereds #' + id + ' .text').text($this.val());
         }
-    }, 500))
+    })
     .on('keydown', '.search-input', function(event) {
 
         var $this = $(this),
@@ -187,6 +203,12 @@ $(document)
         if (confirm('Tem Certeza?')) {
             Ajax('excluir/' + $parent.attr('id'), function(data) {
                 if (data[0] == '00000') {
+
+                    Toast({
+                        message: 'Parâmetro excluido com sucesso!',
+                        class: 'alert-success'
+                    });
+
                     $parent.remove();
                 }
             }, {
@@ -207,6 +229,12 @@ $(document)
     
                 Ajax('adicionar', function(data) {
                     if (data[0] == '00000') {
+
+                        Toast({
+                            message: 'Parâmetro incluso com sucesso!',
+                            class: 'alert-success'
+                        });
+
                         $inputSearch
                             .val('')
                             .focus()
@@ -222,7 +250,16 @@ $(document)
     
                 Ajax('editar/' + $inputSearch.attr('data-id'), function(data) {
                     if (data[0] == '00000') {
-                        $this.parent().addClass('d-none');
+
+                        Toast({
+                            message: 'Parâmetro editado com sucesso!',
+                            class: 'alert-success'
+                        });
+
+                        $searchBody
+                            .find('.salvar')
+                            .attr('disabled', 'disabled');
+
                         $inputSearch
                             .val('')
                             .focus()
@@ -242,38 +279,84 @@ $(document)
     .on('click', '.editar', function() {
 
         var $parent = $(this).closest('.list-group-item'),
-            $saveParametros = $parent.parents('.col').siblings('.save-parametros'),
             $inputSearch = $parent.parents('.list-group-filtereds-wrapper').siblings('.search-input');
-
-        $saveParametros.removeClass('d-none');
         
         $inputSearch
             .val($parent.find('.text').text())
+            .attr('data-id', $parent.attr('id'))
+            .attr('data-anterior', $parent.find('.text').text())
             .focus();
-
-        $inputSearch.attr('data-id', $parent.attr('id'));
     });
 
 // Fixos
 $(document)
     .on('submit', '.form-params-fixos', function (event) {
 
+        event.preventDefault();
+
         var $this = $(this),
             $input = $this.find('.input-fixos');
             value = $input.val(),
-            id = $input.attr('data-id');
+            campos_alterados = '',
+            id = $input.attr('data-id'),
+            $label = $this.find('label span');
 
-        Ajax('editarFixos/' + id, function(data) {
-            if (data[0] == '00000') {
-                Toast({
-                    message: 'Parâmetro editado com sucesso!',
-                    class: 'alert-success'
+        $input.blur();
+
+        if (this.checkValidity() == false) {
+
+            $this
+                .find('.is-invalid, :invalid')
+                .first()
+                .focus();
+
+        } else {
+
+            if ($input.val() != $input.attr('data-anterior')) {
+                campos_alterados += '{' + $label.text().toUpperCase() + ' de (' + $input.attr('data-anterior') + ') para (' + $input.val() + ')}';
+                campos_alterados = $input.attr('data-alteracoes') + '##' + campos_alterados;
+            }
+    
+            if (confirm('Tem Certeza?')) {
+                Ajax('editarFixos/' + id, function(data) {
+    
+                    if (data.erro[0] == '00000') {
+    
+                        Toast({
+                            message: 'Parâmetro editado com sucesso!',
+                            class: 'alert-success'
+                        });
+
+                        $this
+                            .removeClass('was-validated');
+        
+                        $input
+                            .attr('data-anterior', value)
+                            .attr('data-alteracoes', data.result.alteracoes)
+                            .removeClass('is-valid is-invalid')
+                            .keyup();
+    
+                    }
+    
+                }, {
+                    value: value,
+                    alteracoes: campos_alterados
                 });
             }
-        }, {
-            value: value
-        });
 
-        event.preventDefault();
-        event.stopPropagation();
+        }
+
+        $this.addClass('was-validated');
+
+    })
+    .on('keyup', '.input-fixos', function () {
+        
+        var $this = $(this),
+            $submit = $this.parents('form').find('[type=submit]');
+
+        if ($this.val() != $this.attr('data-anterior')) {
+            $submit.removeAttr('disabled');
+        } else {
+            $submit.attr('disabled', 'disabled');
+        }
     });

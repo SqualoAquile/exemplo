@@ -153,9 +153,9 @@ $(function () {
         }
     );
 
-    $('[name=searchDataTable]').on('keyup', Debounce(function () {
+    $('[name=searchDataTable]').on('keyup', function () {
         dataTable.search(this.value).draw();
-    }, 500));
+    });
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ///                                                                     

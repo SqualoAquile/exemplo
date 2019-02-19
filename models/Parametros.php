@@ -143,19 +143,37 @@ class Parametros extends model {
         
         $this->table = "parametros";
 
-        if ($request["value"]) {
+        $ipcliente = $this->permissoes->pegaIPcliente();
+        $hist = explode("##", addslashes($request['alteracoes']));
 
+        if(!empty($hist[1])){ 
+            $alteracoes = $hist[0]." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - ALTERAÇÃO >> ".$hist[1];     
+        }
+
+        $value = "";
+        if ($request["value"]) {
             $value = trim($request["value"]);
             $value = addslashes($value);
         }
 
         $id = addslashes(trim($id));
 
-        $sql = "UPDATE " . $this->table . " SET valor = '" . $value . "' WHERE id='" . $id . "'";
+        $update = "UPDATE " . $this->table . " SET valor = '" . $value . "', alteracoes = '" . $alteracoes . "' WHERE id='" . $id . "'";
              
-        $this->db->query($sql);
+        $update = $this->db->query($update);
 
-        return $this->db->errorInfo();
+        $erro = $this->db->errorInfo();
+
+        if (empty($erro[2])){
+            $select = "SELECT * FROM " . $this->table . " WHERE situacao = 'ativo' AND id = '" . $id . "'";
+            $select = $this->db->query($select);
+            $select = $select->fetch(PDO::FETCH_ASSOC);
+        }
+
+        return [
+            "result" => $select,
+            "erro" => $erro
+        ];
 
     }
 }

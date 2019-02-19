@@ -76,11 +76,18 @@
         <?php foreach ($registros as $key => $value): ?>
             <div class="col-lg-<?php echo isset($value["comentarios"]["column"]) ? $value["comentarios"]["column"] : "12" ?>">
                 <div class="card card-body my-3">
-                    <label for="<?php echo $value['parametro'] ?>">
-                        <!-- Asterisco de campo obrigatorio -->
-                        <span class="h3"><?php echo array_key_exists("label", $value["comentarios"]) ? $value["comentarios"]["label"] : ucwords(str_replace("_", " ", $value['Field'])) ?></span>
-                    </label>
                     <form novalidate autocomplete="off" class="form-params-fixos">
+
+                        <!-- Label Geral -->
+                        <label class="<?php echo !array_key_exists("null", $value["comentarios"]) ? "font-weight-bold" : "" ?>" for="<?php echo $value['parametro'] ?>">
+                            
+                            <!-- Asterisco de campo obrigatorio -->
+                            <?php if (!array_key_exists("null", $value["comentarios"])): ?>
+                                <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
+                            <?php endif ?>
+                            <span class="h3"><?php echo array_key_exists("label", $value["comentarios"]) ? $value["comentarios"]["label"] : ucwords(str_replace("_", " ", $value['parametro'])) ?></span>
+                        </label>
+
                         <div class="row">
                             <div class="col">
                                 <input 
@@ -88,19 +95,23 @@
                                     class="form-control input-fixos" 
                                     name="<?php echo lcfirst($value["parametro"]) ?>" 
                                     value="<?php echo $value["valor"] ?>"
+                                    data-alteracoes="<?php echo $value["alteracoes"] ?>"
                                     data-id="<?php echo $value["id"] ?>"
                                     data-anterior="<?php echo $value["valor"] ?>"
+                                    <?php echo !array_key_exists("null", $value["comentarios"]) ? "required" : "" ?>
                                     id="<?php echo $value['parametro'] ?>"
                                     data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["comentarios"]) ? $value["comentarios"]["mascara_validacao"] : "false" ?>"
                                     <?php if( array_key_exists("mascara_validacao", $value["comentarios"]) && 
                                                 ( $value["comentarios"]["mascara_validacao"] == "monetario" || $value["comentarios"]["mascara_validacao"] == "porcentagem" )):?>
                                         data-podeZero="<?php echo array_key_exists("pode_zero", $value["comentarios"]) && $value["comentarios"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
-                                    <?php endif?>    
-                                    
+                                    <?php endif?>
+                                    <?php if(array_key_exists("maxlength", $value["comentarios"])):?>
+                                        maxlength="<?php echo $value["comentarios"]["maxlength"] ?>"
+                                    <?php endif?>
                                 />
                             </div>
                             <div class="col flex-grow-0">
-                                <button type="submit" class="btn btn-primary">Salvar</button>
+                                <button type="submit" class="btn btn-primary" disabled="disabled">Salvar</button>
                             </div>
                         </div>
                     </form>
