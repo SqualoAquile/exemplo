@@ -17,7 +17,6 @@ class servicosController extends controller{
         $tabela = ucfirst($this->table);
         $this->model = new $tabela();
         $this->usuario = new Usuarios();
-
         $this->colunas = $this->shared->nomeDasColunas();
 
         // verifica se tem permissão para ver esse módulo
