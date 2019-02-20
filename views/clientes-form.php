@@ -176,6 +176,7 @@
                                             </div>
                                         <?php endforeach ?>
                                     </div>
+                                    
                                 <!-- CAMPOS DO TIPO DROPDOWN -->
                                 <?php elseif(array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "dropdown"): ?>
                                     <div class="relacional-dropdown-wrapper dropdown">
