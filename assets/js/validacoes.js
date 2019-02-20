@@ -93,6 +93,7 @@ $(function () {
 
             
             if (dataAnterior != valorAtual) {
+                console.log($(el))
                 temAlteracao = true;
             }
 
@@ -832,10 +833,13 @@ $(function () {
 
             var dtAnterior = $(this).attr('data-anterior');
 
-            dtAnterior = dtAnterior.replace('%', '');
-            dtAnterior = dtAnterior + '%';
-
-            $(this).attr('data-anterior', dtAnterior);
+            if (dtAnterior.length) {
+                
+                dtAnterior = dtAnterior.replace('%', '');
+                dtAnterior = dtAnterior + '%';
+    
+                $(this).attr('data-anterior', dtAnterior);
+            }
         })
         .change();
 
@@ -1014,7 +1018,11 @@ $(function () {
     });
 
     var $campos = $('#form-principal').find('input[type=text], input[type=password], input[type=hidden]:not([name=alteracoes]), input[type=radio], textarea, select');
-    $campos.on('ready change blur touchstart', function () {
+    $campos
+    .ready(function () {
+        habilitaBotao($campos);
+    })
+    .on('change blur touchstart', function () {
         habilitaBotao($campos);
     });
 

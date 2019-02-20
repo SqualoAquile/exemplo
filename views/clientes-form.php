@@ -179,6 +179,7 @@
                                 <!-- CAMPOS DO TIPO DROPDOWN -->
                                 <?php elseif(array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "dropdown"): ?>
                                     <div class="relacional-dropdown-wrapper dropdown">
+                                        <label class="d-none"><span><?php echo array_key_exists("label", $value["Comment"]) ? $value["Comment"]["label"] : ucwords(str_replace("_", " ", $value['Field'])) ?></span></label>
                                         <input 
                                         id="<?php echo $value['Field'] ?>" 
                                         name="<?php echo $value['Field'] ?>" 
