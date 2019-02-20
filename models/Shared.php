@@ -151,19 +151,13 @@ class Shared extends model {
 
     public function relacionalDropdown($request) {
 
-        $value_sql = "";
-        if ($request["value"] && $request["campo"]) {
-
-            $value = trim($request["value"]);
-            $value = addslashes($value);
+        if ($request["campo"]) {
             
             $campo = trim($request["campo"]);
             $campo = addslashes($campo);
-
-            $value_sql = " AND " . $campo . " LIKE '%" . $value . "%'";
         }
 
-        $sql = "SELECT " . $request["campo"] . " FROM " . $this->table . " WHERE situacao = 'ativo'" . $value_sql;
+        $sql = "SELECT " . $request["campo"] . " FROM " . $this->table . " WHERE situacao = 'ativo'";
 
         $sql = $this->db->query($sql);
         

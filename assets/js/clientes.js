@@ -8,7 +8,10 @@ $(function () {
 
             var $input = $('[name=cpf_cnpj]'),
                 $contatosForm = $('#contatos-form'),
-                $hiddenContatos = $('[name=contatos]');
+                $hiddenContatos = $('[name=contatos]'),
+                $nome = $('[name=nome]'),
+                $dtNascimento = $('[name=data_nascimento]'),
+                $razaoSocial = $('[name=razao_social]');
 
             $input.removeClass('is-valid is-invalid');
             $input.siblings('.invalid-feedback').remove();
@@ -27,7 +30,7 @@ $(function () {
                     .mask('00.000.000/0000-00')
                     .siblings('label')
                     .find('span')
-                    .text('Cnpj');
+                    .text('CNPJ');
 
 
                 var dadosAnteriores = '';
@@ -40,13 +43,26 @@ $(function () {
                 $contatosForm.show();
                 $hiddenContatos.val(dadosAnteriores);
 
+                $nome
+                    .siblings('label')
+                    .find('span')
+                    .text('Nome Fantasia');
+
+                $razaoSocial
+                    .parents('[class^=col-]')
+                    .show();
+
+                $dtNascimento
+                    .parents('[class^=col-]')
+                    .hide();
+
             } else {
 
                 $input
                     .mask('000.000.000-00')
                     .siblings('label')
                     .find('span')
-                    .text('Cpf');
+                    .text('CPF');
 
                 $contatosForm.hide();
                 $contatosForm[0].reset();
@@ -61,6 +77,19 @@ $(function () {
                     .removeAttr('data-anterior');
 
                 $hiddenContatos.val('');
+
+                $nome
+                    .siblings('label')
+                    .find('span')
+                    .text('Nome');
+
+                $razaoSocial
+                    .parents('[class^=col-]')
+                    .hide();
+
+                $dtNascimento
+                    .parents('[class^=col-]')
+                    .show();
             }
         }
     }).change();
