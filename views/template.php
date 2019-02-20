@@ -39,8 +39,8 @@
             [
                "text" => "Serviços",
                "icon" => "fas fa-hammer",
-               "permissao" => "produtos_ver",
-               "link" => "/produtos"
+               "permissao" => "servicos_ver",
+               "link" => "/servicos"
             ],
             [
                "text" => "Serviços Complementares",

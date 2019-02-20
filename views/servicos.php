@@ -1,72 +1,68 @@
-<link href="<?php echo BASE_URL;?>/assets/css/servicos.css" rel="stylesheet" type="text/css"/>
-<script src="<?php echo BASE_URL;?>/assets/js/servicos.js" type="text/javascript"></script>
-    <h1 class="titulo_sv">SERVIÇOS</h1>
+<?php $modulo = str_replace("-form", "", basename(__FILE__, ".php")) ?>
+<script type="text/javascript">
+    var baselink = '<?php echo BASE_URL;?>',
+        currentModule = '<?php echo $modulo ?>'
+</script>
 
-<div class="aviso_sv"><?php if(!empty($aviso)){echo $aviso;}?></div>
-<div class="input-pai"><div class="input-filho">
-    <?php if(in_array("servicos_add", $infoFunc["permissoesFuncionario"])):?>
-        <a href="<?php echo BASE_URL;?>/servicos/adicionar" class="botao_sv">Adicionar</a>
-    <?php endif;?>
-</div></div>
-    
-    
-    <div class="input-pai">
-        <div class="input-filho">
-            <label class="label-block"> Procurar Por:
-                <select class="select-block" id="icampo">
-                    <option value="">Todos As Colunas</option>
-                    <?php for($i = 2; $i< count($listaColunas)-2; $i++):?>
-                    <option value="<?php echo ($i-1);?>"><?php echo ucwords(str_replace("_", " ", $listaColunas[$i]['nomecol']))?></option>
-                <?php endfor;?>
-                </select>
-            </label>    
-        </div>
-        <div class="input-filho">            
-            <label class="label-block" for="ifiltro">Texto Procurado:<input type="text" id="ifiltro" class="input-block" /></label>
-        </div>
+<!-- Chama o arquivo específico do módulo, caso não exista,  -->
+<!-- Este javaScript serve para fazer verificações inerentes à cada módulo, por exemplo o radio de Clientes -->
+<script src="<?php echo BASE_URL?>/assets/js/<?php echo $modulo?>.js" type="text/javascript"></script>
+
+<header class="d-lg-flex align-items-center my-5">
+    <h1 class="display-4 m-0 text-capitalize font-weight-bold"><?php echo $viewInfo["title"]." ".ucfirst($labelTabela["labelForm"]); ?></h1>
+</header>
+
+<section class="mb-5">
+    <div class="row">
+        <?php foreach ($registros as $key => $value): ?>
+            <div class="col-lg-<?php echo isset($value["comentarios"]["column"]) ? $value["comentarios"]["column"] : "12" ?>">
+                <div class="card card-body my-3">
+                    <form class="form-servicos" novalidate autocomplete="off" data-alteracoes="<?php echo $value["alteracoes"] ?>" data-id="<?php echo $value["id"] ?>">
+
+                        <h3 class="pb-4"><?php echo array_key_exists("label", $value["comentarios"]) ? $value["comentarios"]["label"] : ucwords(str_replace("_", " ", $value['parametro'])) ?></h3>
+
+                        <div class="row align-items-end">
+                            <?php foreach ($colunas as $key_coluna => $value_coluna): ?>
+                                <?php if(isset($value_coluna["Comment"]) && array_key_exists("form", $value_coluna["Comment"]) && $value_coluna["Comment"]["form"] != "false") : ?>
+                                    <div class="col-lg">
+                                        <div class="form-group mb-lg-0">
+                                            <!-- Label Geral -->
+                                            <label class="<?php echo $value_coluna["Null"] == "NO" ? "font-weight-bold" : "" ?>" for="<?php echo lcfirst($value_coluna["Field"] . $value["descricao"]) ?>">
+                                                <!-- Asterisco de campo obrigatorio -->
+                                                <?php if ($value_coluna["Null"] == "NO"): ?>
+                                                    <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
+                                                <?php endif ?>
+                                                <span><?php echo array_key_exists("label", $value_coluna["Comment"]) ? $value_coluna["Comment"]["label"] : ucwords(str_replace("_", " ", $value_coluna['Field'])) ?></span>
+                                            </label>
+                                            <input 
+                                                type="text" 
+                                                class="form-control input-servicos" 
+                                                name="<?php echo lcfirst($value_coluna["Field"]) ?>" 
+                                                value="<?php echo $value[$value_coluna["Field"]] ?>"
+                                                data-unico="<?php echo array_key_exists("unico", $value["comentarios"]) && $value["comentarios"]["unico"]  == true ? "unico" : "" ?>"
+                                                data-anterior="<?php echo $value[$value_coluna["Field"]] ?>"
+                                                id="<?php echo lcfirst($value_coluna["Field"] . $value["descricao"]) ?>" 
+                                                maxlength="<?php echo $value_coluna["tamanhoMax"] ?>"
+                                                data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["comentarios"]) ? $value["comentarios"]["mascara_validacao"] : "false" ?>"
+                                                <?php echo $value_coluna['Null'] == "NO" ? "required" : "" ?>
+                                                <?php if( array_key_exists("mascara_validacao", $value["comentarios"]) && 
+                                                        ( $value["comentarios"]["mascara_validacao"] == "monetario" || $value["comentarios"]["mascara_validacao"] == "porcentagem" )):?>
+                                                    data-podeZero="<?php echo array_key_exists("pode_zero", $value["comentarios"]) && $value["comentarios"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
+                                                <?php endif?>
+                                            />
+                                        </div>
+                                    </div>
+                                <?php endif ?>
+                            <?php endforeach ?>
+
+                            <div class="col-lg flex-grow-0">
+                                <button type="submit" class="btn btn-primary">Salvar</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        <?php endforeach ?>
     </div>
-
-    <table id="tabelaservicos" class="display nowrap" cellspacing="0"  style="width: 100%" >
-    <thead>
-        <tr>
-            <th>Ações</th>
-            <?php for($i = 2; $i< count($listaColunas)-2; $i++):?>
-                <th><?php echo ucwords(str_replace("_", " ", $listaColunas[$i]['nomecol']))?></th>
-            <?php endfor;?>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($listaServicos as $chave => $valor ):?>
-            <tr>
-                <td width="100px">
-                    <?php if(in_array("servicos_edt", $infoFunc["permissoesFuncionario"])):?>
-                        <a href="<?php echo BASE_URL;?>/servicos/editar/<?php echo $valor["id"];?>" class="botao_peq_sv">Editar</a>
-                    <?php endif;?>
-                    <?php if(in_array("servicos_exc", $infoFunc["permissoesFuncionario"])):?>
-                        <a href="<?php echo BASE_URL;?>/servicos/excluir/<?php echo $valor["id"];?>" class="botao_peq_sv" onclick="return confirm('Tem Certeza?')">Excluir</a>
-                    <?php endif;?>
-                </td>
-
-                <?php for($col = 2; $col < count($listaColunas)-2; $col++):?>
-                    <?php if($listaColunas[$col]["tipo"] == "date"):?>
-                        
-                        <?php if(floatval(str_replace("-", "",$listaServicos[$chave][$col])) == 0):?>
-                            <td></td>
-                        <?php else:?>
-                            <td><?php $dtaux = explode("-",$listaServicos[$chave][$col]); echo $dtaux[2]."/".$dtaux[1]."/".$dtaux[0];?></td>
-                        <?php endif;?> 
-                        
-                    <?php elseif ($listaColunas[$col]["tipo"] == "float"):?>
-                        
-                            <td><?php echo number_format($listaServicos[$chave][$col],2,",",".");?></td>
-                        
-                    <?php else:?>
-                        
-                        <td><?php echo ucwords($listaServicos[$chave][$col]);?></td>
-                        
-                    <?php endif;?>
-                <?php endfor;?>              
-            </tr>
-        <?php endforeach;?>
-    </tbody>
-</table>
+</section>

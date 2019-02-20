@@ -1,3 +1,18 @@
+function Toast (options) {
+    $('body').append(`
+        <div class="position-fixed my-toast m-3 shadow-sm alert ` + options.class + ` alert-dismissible fade show" role="alert">
+            ` + options.message + `
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    `);
+
+    window.setTimeout(function() {
+        $('.alert').alert('close');
+    }, 4000);
+};
+
 $(function () {
     
     $('[data-toggle="tooltip"]').tooltip();

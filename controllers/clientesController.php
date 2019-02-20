@@ -50,7 +50,7 @@ class clientesController extends controller{
         $dados["colunas"] = $this->colunas;
         $dados["labelTabela"] = $this->shared->labelTabela();
 
-        $this->loadTemplate($this->table, $dados);      
+        $this->loadTemplate($this->table, $dados);
     }
     
     public function adicionar() {

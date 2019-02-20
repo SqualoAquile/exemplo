@@ -228,8 +228,7 @@
                                         <?php if( array_key_exists("mascara_validacao", $value["Comment"]) && 
                                                  ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" )):?>
                                             data-podeZero="<?php echo array_key_exists("pode_zero", $value["Comment"]) && $value["Comment"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
-                                        <?php endif?>    
-                                        
+                                        <?php endif?>                                        
                                     />
                                 <?php endif ?>
                             </div>
