@@ -45,8 +45,8 @@
             [
                "text" => "Serviços Complementares",
                "icon" => "fas fa-toolbox",
-               "permissao" => "produtos_ver",
-               "link" => "/produtos"
+               "permissao" => "servicoscomplementares_ver",
+               "link" => "/servicoscomplementares"
             ],
          ]
       ],
