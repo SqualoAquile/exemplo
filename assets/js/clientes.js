@@ -54,7 +54,7 @@ $(function () {
 
                 $dtNascimento
                     .parents('[class^=col-]')
-                    .show();
+                    .hide();
 
             } else {
 
@@ -89,7 +89,7 @@ $(function () {
 
                 $dtNascimento
                     .parents('[class^=col-]')
-                    .hide();
+                    .show();
             }
         }
     }).change();
