@@ -188,6 +188,7 @@
                                         aria-expanded="false" 
                                         class="dropdown-toggle form-control relacional-dropdown-input" 
                                         maxlength="<?php echo $value["tamanhoMax"] ?>"
+                                        value="<?php echo isset($item) && !empty($item) ? $item[$value["Field"]] : "" ?>"
                                         data-tabela="<?php echo $value["Comment"]["info_relacional"]["tabela"] ?>" 
                                         data-campo="<?php echo $value["Comment"]["info_relacional"]["campo"] ?>" 
                                         data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
