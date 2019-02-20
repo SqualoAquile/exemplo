@@ -93,7 +93,6 @@ $(function () {
 
             
             if (dataAnterior != valorAtual) {
-                console.log($(el))
                 temAlteracao = true;
             }
 
@@ -892,8 +891,6 @@ $(function () {
 
                         valorAtual = String(valorAtual).trim().toUpperCase();
                         dataAnterior = String(dataAnterior).trim().toUpperCase();
-                        
-                        console.log(text_label);
 
                         if (dataAnterior != valorAtual) {
 
@@ -1046,6 +1043,7 @@ $(function () {
         }
     });
 
+    // Eventos responsáveis pelo: Select Dropdown com Pesquisa
     $(document)
         .ready(function () {
 
@@ -1059,7 +1057,6 @@ $(function () {
                     url: baselink + '/ajax/relacionalDropdown',
                     type: 'POST',
                     data: {
-                        value: $this.val(),
                         tabela: $this.attr('data-tabela'),
                         campo: campo
                     },
@@ -1096,14 +1093,14 @@ $(function () {
                 $dropdownMenu = $this.siblings('.dropdown-menu'),
                 $nenhumResult = $dropdownMenu.find('.nenhum-result');
 
-            if (!$('.relacional-dropdown-element:contains(' + $(this).val() + ')').length) {
+            if (!$('.relacional-dropdown-element:contains(' + $this.val() + ')').length) {
                 $nenhumResult.removeClass('d-none');
             } else {
                 $nenhumResult.addClass('d-none');
             }
 
             $('.relacional-dropdown-element').show();
-            $('.relacional-dropdown-element:not(:contains(' + $(this).val() + '))').hide();
+            $('.relacional-dropdown-element:not(:contains(' + $this.val() + '))').hide();
         })
         .on('focusout', '.relacional-dropdown-input', function () {
 
