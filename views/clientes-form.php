@@ -176,6 +176,38 @@
                                             </div>
                                         <?php endforeach ?>
                                     </div>
+                                <!-- CAMPOS DO TIPO DROPDOWN -->
+                                <?php elseif(array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "dropdown"): ?>
+                                    <div class="relacional-dropdown-wrapper dropdown">
+                                        <input 
+                                        id="<?php echo $value['Field'] ?>" 
+                                        name="<?php echo $value['Field'] ?>" 
+                                        type="text" 
+                                        data-toggle="dropdown" 
+                                        aria-haspopup="true" 
+                                        aria-expanded="false" 
+                                        class="dropdown-toggle form-control relacional-dropdown-input" 
+                                        maxlength="<?php echo $value["tamanhoMax"] ?>"
+                                        data-tabela="<?php echo $value["Comment"]["info_relacional"]["tabela"] ?>" 
+                                        data-campo="<?php echo $value["Comment"]["info_relacional"]["campo"] ?>" 
+                                        data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
+                                        data-unico="<?php echo array_key_exists("unico", $value["Comment"]) && $value["Comment"]["unico"]  == true ? "unico" : "" ?>"
+                                        data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
+                                        <?php echo $value['Null'] == "NO" ? "required" : "" ?>
+                                        <?php if( array_key_exists("mascara_validacao", $value["Comment"]) && 
+                                                 ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" )):?>
+                                            data-podeZero="<?php echo array_key_exists("pode_zero", $value["Comment"]) && $value["Comment"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
+                                        <?php endif?> 
+                                        />
+                                        <label for="<?php echo $value['Field'] ?>" class="btn btn-sm text-secondary icon-dropdown my-0 mx-1 close-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+                                            <i class="fas fa-times-circle icon-close"></i>
+                                        </label>
+                                        <div class="invalid-feedback">Selecione um item existente.</div>
+                                        <div class="dropdown-menu w-100 p-0 list-group-flush relacional-dropdown" aria-labelledby="<?php echo $value["Field"] ?>">
+                                            <div class="p-3 nenhum-result d-none">Nenhum resultado encontrado</div>
+                                            <div class="dropdown-menu-wrapper"></div>
+                                        </div>
+                                    </div>
                                 <?php else: ?>
 
                                     <!-- CAMPOS DO TIPO TEXT -->
@@ -184,7 +216,6 @@
                                         class="form-control" 
                                         name="<?php echo lcfirst($value["Field"]) ?>" 
                                         value="<?php echo isset($item) && !empty($item) ? $item[$value["Field"]] : "" ?>"
-                                        <?php // echo array_key_exists("Key", $value) && $value["Key"] == "UNI" ? "unico" : "" ?>
                                         data-unico="<?php echo array_key_exists("unico", $value["Comment"]) && $value["Comment"]["unico"]  == true ? "unico" : "" ?>"
                                         data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
                                         id="<?php echo $value['Field'] ?>"

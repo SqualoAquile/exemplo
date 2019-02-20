@@ -49,7 +49,7 @@ class clientesController extends controller{
         $dados['infoUser'] = $_SESSION;
         $dados["colunas"] = $this->colunas;
         $dados["labelTabela"] = $this->shared->labelTabela();
-        //print_r($dados["labelTabela"]); exit;
+
         $this->loadTemplate($this->table, $dados);      
     }
     
@@ -95,19 +95,5 @@ class clientesController extends controller{
             $this->loadTemplate($this->table . "-form", $dados); 
         }
     }
-
-    // public function excluir($id){
-    //     if(in_array($this->table . "_exc", $_SESSION["permissoesUsuario"]) == false || empty($id) || !isset($id)){
-    //         header("Location: " . BASE_URL . "/" . $this->table); 
-    //     }
-
-    //     if($this->model->idAtivo($id) == false){
-    //         header("Location: " . BASE_URL . "/" . $this->table); 
-    //     }
-        
-    //     $this->model->excluir($id);
-    //     header("Location: " . BASE_URL . "/" . $this->table);
-    // }
-    
 }   
 ?>

@@ -34,3 +34,57 @@
         }
     }
 }
+.relacional-dropdown-wrapper {
+    z-index: $zindex-dropdown;
+    .relacional-dropdown {
+        max-height: 200px;
+        overflow-y: auto;
+        .list-group-item-action {
+            cursor: pointer;
+        }
+    }
+    .icon-dropdown {
+        position: absolute;
+        right: 0;
+        top: 0.35rem;
+        bottom: 0;
+        .icon-close {
+            display: none;
+        }
+    }
+    .relacional-dropdown-input {
+        &::-webkit-contacts-auto-fill-button {
+            visibility: hidden;
+            display: none !important;
+            pointer-events: none;
+            position: absolute;
+            right: 0;
+        }
+        &:focus {
+            & ~ .close-btn {
+                .icon-close {
+                    display: inherit;
+                }
+                &:after {
+                    display: none;
+                }
+            }
+        }
+        &.is-invalid,
+        &.is-valid {
+            & ~ .close-btn {
+                right: 1.5rem;
+            }
+        }
+    }
+    &.active {
+        .icons-search-input {
+            .close-btn {
+                display: initial;
+            }
+            .down-btn {
+                display: none;
+            }
+        }
+    }
+}

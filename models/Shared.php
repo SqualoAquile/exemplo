@@ -149,6 +149,27 @@ class Shared extends model {
         return $array;
     }
 
+    public function relacionalDropdown($request) {
+
+        $value_sql = "";
+        if ($request["value"] && $request["campo"]) {
+
+            $value = trim($request["value"]);
+            $value = addslashes($value);
+            
+            $campo = trim($request["campo"]);
+            $campo = addslashes($campo);
+
+            $value_sql = " AND " . $campo . " LIKE '%" . $value . "%'";
+        }
+
+        $sql = "SELECT " . $request["campo"] . " FROM " . $this->table . " WHERE situacao = 'ativo'" . $value_sql;
+
+        $sql = $this->db->query($sql);
+        
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function nomeDasColunas(){
         $sql = $this->db->query("SHOW FULL COLUMNS FROM " . $this->table);
         $result = $sql->fetchAll(PDO::FETCH_ASSOC);

@@ -1,6 +1,6 @@
 function Ajax (url, callback, send = {}) {
     $.ajax({
-        url: './parametros/' + url,
+        url: baselink + '/parametros/' + url,
         type: 'POST',
         data: send,
         dataType: 'json',
@@ -96,9 +96,9 @@ $(document)
     .on('focus', '.search-input', function () {
 
         var $this = $(this),
-            $contentSearchThisWrapper = $this.siblings('.list-group-filtereds-wrapper'),
+            $searchBody = $this.parents('.search-body'),
+            $contentSearchThisWrapper = $searchBody.find('.list-group-filtereds-wrapper'),
             $contentSearchThis = $contentSearchThisWrapper.find('.list-group-filtereds'),
-            $searchBody = $contentSearchThis.parents('.search-body'),
             campo = $searchBody.attr('data-campo'),
             value = $this.val();
 
@@ -181,7 +181,7 @@ $(document)
             $('.list-group-filtereds #' + id + ' .text').text($this.val());
         }
     })
-    .on('keydown', '.search-input', function(event) {
+    .on('keyup', '.search-input', function(event) {
 
         var $this = $(this),
             $saveParametros = $this.parents('.search-body').find('.salvar'),
@@ -197,7 +197,9 @@ $(document)
     })
     .on('click', '.excluir', function() {
         
-        var $parent = $(this).closest('.list-group-item'),
+        var $this = $(this),
+            $parent = $this.closest('.list-group-item'),
+            $input = $this.parents('.search-body').find('.search-input')
             tabela = $parent.parents('.search-body').attr('id');
 
         if (confirm('Tem Certeza?')) {
@@ -210,6 +212,7 @@ $(document)
                     });
 
                     $parent.remove();
+                    $input.focus();
                 }
             }, {
                 tabela: tabela
@@ -220,7 +223,7 @@ $(document)
         
         var $this = $(this),
             $searchBody = $this.parents('.search-body'),
-            $inputSearch = $this.parents('.search-body').find('.search-input'),
+            $inputSearch = $searchBody.find('.search-input'),
             tabela = $searchBody.attr('id'),
             campo = $searchBody.attr('data-campo');
 

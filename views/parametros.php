@@ -38,9 +38,7 @@
                                         <div class="row">
                                             <div class="col-lg">
                                                 <div class="position-relative">
-                                                    <div class="form-group">
-                                                        <input id="parametroRelacional<?php echo $key ?>" type="text" class="form-control search-input" placeholder="Procure por <?php echo $parametro ?>">
-                                                    </div>
+                                                    <input id="parametroRelacional<?php echo $key ?>" type="text" class="form-control search-input mb-3 mb-lg-0" placeholder="Procure por <?php echo $parametro ?>">
                                                     <div class="icons-search-input d-flex px-1">
                                                         <button class="btn btn-sm down-btn" tabindex="-1">
                                                             <i class="fas fa-sort-down"></i>
@@ -51,7 +49,7 @@
                                                     </div>
                                                     <div class="list-group-filtereds-wrapper position-absolute w-100 shadow bg-white">
                                                         <div class="elements-add"></div>
-                                                        <div class="list-group-filtereds list-group-flush"></div>
+                                                        <div class="list-group-filtereds list-group list-group-flush"></div>
                                                     </div>
                                                 </div>
                                             </div>
