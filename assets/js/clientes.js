@@ -12,6 +12,8 @@ $(function () {
                 $nome = $('[name=nome]'),
                 $dtNascimento = $('[name=data_nascimento]'),
                 $razaoSocial = $('[name=razao_social]');
+                $telefone = $('[name=telefone]');
+                $celular = $('[name=celular]');
 
             $input.removeClass('is-valid is-invalid');
             $input.siblings('.invalid-feedback').remove();
@@ -32,6 +34,21 @@ $(function () {
                     .find('span')
                     .text('CNPJ');
 
+                    // Telefone é obrigatório para PJ, celular não
+                $telefone
+                    .attr('required');
+                $telefone
+                    .siblings('label')  
+                    .addClass('font-weight-bold')
+                    .before('<i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="" data-original-title="Campo Obrigatório">*</i>');   
+
+                $celular
+                    .removeAttr('required');
+                $celular
+                    .siblings('label')
+                    .removeClass('font-weight-bold')
+                    .find('i')
+                    .remove();
 
                 var dadosAnteriores = '';
                 if ($hiddenContatos.attr('data-anterior-aux') != undefined) {
@@ -56,40 +73,61 @@ $(function () {
                     .parents('[class^=col-]')
                     .hide();
 
-            } else {
+                } else {
+                    
+                    $input
+                        .mask('000.000.000-00')
+                        .siblings('label')
+                        .find('span')
+                        .text('CPF');
+                    
+                    $telefone
+                        .removeAttr('required')
 
-                $input
-                    .mask('000.000.000-00')
-                    .siblings('label')
-                    .find('span')
-                    .text('CPF');
+                    $telefone
+                        .siblings('label')
+                        .removeClass('font-weight-bold')
+                        .find('i')
+                        .remove();
+                        
 
-                $contatosForm.hide();
-                $contatosForm[0].reset();
+                    // Celular é obrigatório para PF, telefone não
+                    $celular
+                        .attr('required');
+                    $celular
+                        .siblings('label')  
+                        .addClass('font-weight-bold')
+                        .before('<i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="" data-original-title="Campo Obrigatório">*</i>');             
 
-                $contatosForm
-                    .find('.disabled')
-                    .removeClass('disabled')
+                        //<i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="" data-original-title="Campo Obrigatório">*</i>
 
-                $('table#contatos thead tr[role=form]')
-                    .removeAttr('data-current-id')
-                    .find('[data-anterior]')
-                    .removeAttr('data-anterior');
+                    $contatosForm.hide();
+                    $contatosForm[0].reset();
 
-                $hiddenContatos.val('');
+                    $contatosForm
+                        .find('.disabled')
+                        .removeClass('disabled')
 
-                $nome
-                    .siblings('label')
-                    .find('span')
-                    .text('Nome');
+                    $('table#contatos thead tr[role=form]')
+                        .removeAttr('data-current-id')
+                        .find('[data-anterior]')
+                        .removeAttr('data-anterior');
 
-                $razaoSocial
-                    .parents('[class^=col-]')
-                    .hide();
+                    $hiddenContatos.val('');
 
-                $dtNascimento
-                    .parents('[class^=col-]')
-                    .show();
+                    $nome
+                        .siblings('label')
+                        .find('span')
+                        .text('Nome');
+
+                    $razaoSocial
+                        .parents('[class^=col-]')
+                        .hide();
+
+                    $dtNascimento
+                        .parents('[class^=col-]')
+                        .show();
+
             }
         }
     }).change();

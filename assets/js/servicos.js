@@ -134,7 +134,7 @@ $(function () {
         if( $custo.val() == "" && $preco.val() != "" ){
             $preco.removeClass('is-valid').addClass('is-invalid');
             $preco[0].setCustomValidity('invalid');
-            $preco.after('<div class="invalid-feedback">O valor do preço deve ser maior do que o valor do custo..</div>');
+            $preco.after('<div class="invalid-feedback">O valor do preço deve ser maior do que o valor do custo.</div>');
             $preco.val("");
             return;
         }
@@ -162,7 +162,7 @@ $(function () {
         if( $custo.val() == "" && $preco.val() != "" ){
             $preco.removeClass('is-valid').addClass('is-invalid');
             $preco[0].setCustomValidity('invalid');
-            $preco.after('<div class="invalid-feedback">O valor do preço deve ser maior do que o valor do custo..</div>');
+            $preco.after('<div class="invalid-feedback">O valor do preço deve ser maior do que o valor do custo.</div>');
             $preco.val("");
             return;
         }
@@ -190,7 +190,7 @@ $(function () {
         if( $custo.val() == "" && $preco.val() != "" ){
             $preco.removeClass('is-valid').addClass('is-invalid');
             $preco[0].setCustomValidity('invalid');
-            $preco.after('<div class="invalid-feedback">O valor do preço deve ser maior do que o valor do custo..</div>');
+            $preco.after('<div class="invalid-feedback">O valor do preço deve ser maior do que o valor do custo.</div>');
             $preco.val("");
             return;
         }
@@ -218,7 +218,7 @@ $(function () {
         if( $custo.val() == "" && $preco.val() != "" ){
             $preco.removeClass('is-valid').addClass('is-invalid');
             $preco[0].setCustomValidity('invalid');
-            $preco.after('<div class="invalid-feedback">O valor do preço deve ser maior do que o valor do custo..</div>');
+            $preco.after('<div class="invalid-feedback">O valor do preço deve ser maior do que o valor do custo.</div>');
             $preco.val("");
             return;
         }
@@ -246,7 +246,7 @@ $(function () {
         if( $custo.val() == "" && $preco.val() != "" ){
             $preco.removeClass('is-valid').addClass('is-invalid');
             $preco[0].setCustomValidity('invalid');
-            $preco.after('<div class="invalid-feedback">O valor do preço deve ser maior do que o valor do custo..</div>');
+            $preco.after('<div class="invalid-feedback">O valor do preço deve ser maior do que o valor do custo.</div>');
             $preco.val("");
             return;
         }
