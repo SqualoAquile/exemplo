@@ -1,17 +1,13 @@
 <?php
 
 class Unidades extends model {
-    
-    public function __construct($id = "") {
-        parent::__construct(); 
-    }
         
     public function pegarLista() {
        $array = array();
        $arrayAux = array();
        
        $sql = "SELECT id, unidades FROM unidades WHERE situacao = 'ativo'";      
-       $sql = $this->db->query($sql);
+       $sql = self::db()->query($sql);
        if($sql->rowCount()>0){
          $arrayAux = $sql->fetchAll(); 
        }

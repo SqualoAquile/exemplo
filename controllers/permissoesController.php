@@ -9,8 +9,6 @@ class permissoesController extends controller{
     protected $usuario;
 
     public function __construct() {
-
-        parent::__construct();
         
         // Instanciando as classes usadas no controller
         $this->shared = new Shared($this->table);

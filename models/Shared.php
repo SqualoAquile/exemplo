@@ -8,8 +8,7 @@ class Shared extends model {
     public function __construct($table) {
         global $config;
         $this->config = $config;
-        $this->table = $table;
-        parent::__construct(); 
+        $this->table = $table; 
     }
 
     private function formataacoes($id){
@@ -142,7 +141,7 @@ class Shared extends model {
     public function unico($campo, $valor) {
         $array = array();
         $sql = "SELECT " . $campo . " FROM $this->table WHERE $campo = '$valor' AND situacao = 'ativo'";      
-        $sql = $this->db->query($sql);
+        $sql = self::db()->query($sql);
         if($sql->rowCount()>0){
             $array = $sql->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -159,13 +158,13 @@ class Shared extends model {
 
         $sql = "SELECT " . $request["campo"] . " FROM " . $this->table . " WHERE situacao = 'ativo'";
 
-        $sql = $this->db->query($sql);
+        $sql = self::db()->query($sql);
         
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function nomeDasColunas(){
-        $sql = $this->db->query("SHOW FULL COLUMNS FROM " . $this->table);
+        $sql = self::db()->query("SHOW FULL COLUMNS FROM " . $this->table);
         $result = $sql->fetchAll(PDO::FETCH_ASSOC);
         
         foreach ($result as $key => $value) {
@@ -188,7 +187,7 @@ class Shared extends model {
                 $campo = lcfirst($result[$key]["Comment"]["info_relacional"]["campo"]);
 
                 $sql = "SELECT id, ". $campo ." FROM  ". $tabela ." WHERE situacao = 'ativo'";      
-                $sql = $this->db->query($sql);
+                $sql = self::db()->query($sql);
 
                 if($sql->rowCount()>0){
                     $arrayAux = $sql->fetchAll(PDO::FETCH_ASSOC); 
@@ -209,7 +208,7 @@ class Shared extends model {
                 $campo = lcfirst($result[$key]["Comment"]["info_relacional"]["campo"]);
 
                 $sql = "SELECT ". $campo ." FROM  ". $tabela ." WHERE situacao = 'ativo'";      
-                $sql = $this->db->query($sql);
+                $sql = self::db()->query($sql);
 
                 if($sql->rowCount()>0){
                     $arrayAux = $sql->fetchAll(PDO::FETCH_ASSOC); 
@@ -231,7 +230,7 @@ class Shared extends model {
     public function pegarListas($table) {
         $array = array();
         $sql = "SELECT * FROM " . $table . " WHERE situacao = 'ativo' ORDER BY id DESC";
-        $sql = $this->db->query($sql);
+        $sql = self::db()->query($sql);
         if($sql->rowCount()>0){
             $array = $sql->fetchAll(); 
         }
@@ -312,7 +311,7 @@ class Shared extends model {
     }
     public function labelTabela() {
         $sql = "SELECT table_comment as table_comment FROM INFORMATION_SCHEMA.TABLES WHERE table_name = '" . $this->table."'";
-        $sql = $this->db->query($sql);
+        $sql = self::db()->query($sql);
         $sql = $sql->fetch(PDO::FETCH_ASSOC);
         
         $labels = array();

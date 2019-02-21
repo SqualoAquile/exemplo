@@ -5,21 +5,20 @@ class Parametros extends model {
     protected $permissoes;
     
     public function __construct() {
-        parent::__construct();
         $this->permissoes = new Permissoes();
     }
 
     public function index() {
 
         $sql = "SHOW TABLES";
-        $sql = $this->db->query($sql);
+        $sql = self::db()->query($sql);
         $tabelas = $sql->fetchAll();
 
         $infosTabelas = [];
         foreach ($tabelas as $key => $value) {
 
             $sqlB = "SHOW TABLE STATUS WHERE Name='" . $value[0] . "'";
-            $sqlB = $this->db->query($sqlB);
+            $sqlB = self::db()->query($sqlB);
             $infoTabela = $sqlB->fetchAll();
 
             foreach ($infoTabela as $key => $value) {
@@ -50,7 +49,7 @@ class Parametros extends model {
 
         $sql = "SELECT * FROM " . $this->table . " WHERE situacao = 'ativo'" . $value_sql;
 
-        $sql = $this->db->query($sql);
+        $sql = self::db()->query($sql);
         
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -73,9 +72,9 @@ class Parametros extends model {
 
         $sql = "INSERT INTO " . $this->table . " (" . $campo . ", alteracoes, situacao) VALUES ('" . $value . "', '" . $alteracoes . "', 'ativo')";
         
-        $this->db->query($sql);
+        self::db()->query($sql);
 
-        return $this->db->errorInfo();
+        return self::db()->errorInfo();
     }
 
     public function excluir($request, $id) {
@@ -85,7 +84,7 @@ class Parametros extends model {
         $id = addslashes(trim($id));
 
         $sql = "SELECT alteracoes FROM ". $this->table ." WHERE id = '$id' AND situacao = 'ativo'";
-        $sql = $this->db->query($sql);
+        $sql = self::db()->query($sql);
 
         if ($sql->rowCount() > 0) {
             
@@ -96,10 +95,10 @@ class Parametros extends model {
             $palter = $palter." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - EXCLUSÃO";
 
             $sqlA = "UPDATE ". $this->table ." SET alteracoes = '$palter', situacao = 'excluido' WHERE id = '$id' ";
-            $this->db->query($sqlA);
+            self::db()->query($sqlA);
         }
 
-        return $this->db->errorInfo();
+        return self::db()->errorInfo();
     }
 
     public function editar($request, $id) {
@@ -119,9 +118,9 @@ class Parametros extends model {
 
         $sql = "UPDATE " . $this->table . " SET " . $campo . " = '" . $value . "' WHERE id='" . $id . "'";
              
-        $this->db->query($sql);
+        self::db()->query($sql);
 
-        return $this->db->errorInfo();
+        return self::db()->errorInfo();
     }
 
     public function pegarFixos() {
@@ -129,7 +128,7 @@ class Parametros extends model {
         $this->table = "parametros";
         
         $sql = "SELECT * FROM " . $this->table . " WHERE situacao = 'ativo'";
-        $sql = $this->db->query($sql);
+        $sql = self::db()->query($sql);
         $result = $sql->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($result as $key => $value) {
@@ -160,13 +159,13 @@ class Parametros extends model {
 
         $update = "UPDATE " . $this->table . " SET valor = '" . $value . "', alteracoes = '" . $alteracoes . "' WHERE id='" . $id . "'";
              
-        $update = $this->db->query($update);
+        $update = self::db()->query($update);
 
-        $erro = $this->db->errorInfo();
+        $erro = self::db()->errorInfo();
 
         if (empty($erro[2])){
             $select = "SELECT * FROM " . $this->table . " WHERE situacao = 'ativo' AND id = '" . $id . "'";
-            $select = $this->db->query($select);
+            $select = self::db()->query($select);
             $select = $select->fetch(PDO::FETCH_ASSOC);
         }
 

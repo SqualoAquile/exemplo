@@ -6,7 +6,6 @@ class Usuarios extends model {
     protected $shared;
 
     public function __construct() {
-        parent::__construct(); 
         $this->permissoes = new Permissoes();
         $this->shared = new Shared($this->table);
     }
@@ -16,7 +15,7 @@ class Usuarios extends model {
         $arrayAux = array();
 
         $sql = "SELECT * FROM " . $this->table . " WHERE id='$id' AND situacao = 'ativo'";      
-        $sql = $this->db->query($sql);
+        $sql = self::db()->query($sql);
 
         if($sql->rowCount()>0){
             $array = $sql->fetch(PDO::FETCH_ASSOC);
@@ -33,7 +32,7 @@ class Usuarios extends model {
         $nomegp = $request["grupo_permissao"];
 
         $sql = "SELECT id FROM permissoes WHERE nome = '$nomegp' AND situacao = 'ativo'";
-        $sql = $this->db->query($sql);
+        $sql = self::db()->query($sql);
             
         if($sql->rowCount() > 0){  
             $sql = $sql->fetch();
@@ -59,8 +58,8 @@ class Usuarios extends model {
 
         $sql = "INSERT INTO " . $this->table . " (" . $keys . ") VALUES (" . $values . ")";
 
-        $this->db->query($sql);
-        $erro = $this->db->errorInfo();
+        self::db()->query($sql);
+        $erro = self::db()->errorInfo();
 
         if (empty($erro[2])){
 
@@ -95,7 +94,7 @@ class Usuarios extends model {
 
             $nomegp = $request["grupo_permissao"];
             $sql = "SELECT id FROM permissoes WHERE nome = '$nomegp' AND situacao = 'ativo'";
-            $sql = $this->db->query($sql);
+            $sql = self::db()->query($sql);
                 
             if($sql->rowCount() > 0){  
                 $sql = $sql->fetch();
@@ -126,8 +125,8 @@ class Usuarios extends model {
 
             $sql = "UPDATE " . $this->table . " SET " . $output . " WHERE id='" . $id . "'";
             
-            $this->db->query($sql);
-            $erro = $this->db->errorInfo();
+            self::db()->query($sql);
+            $erro = self::db()->errorInfo();
 
             if (empty($erro[2])){
 
@@ -149,7 +148,7 @@ class Usuarios extends model {
 
             //se não achar nenhum usuario associado ao grupo - pode deletar, ou seja, tornar o cadastro situacao=excluído
             $sql = "SELECT alteracoes FROM ". $this->table ." WHERE id = '$id' AND situacao = 'ativo'";
-            $sql = $this->db->query($sql);
+            $sql = self::db()->query($sql);
             
             if($sql->rowCount() > 0){  
 
@@ -159,9 +158,9 @@ class Usuarios extends model {
                 $palter = $palter." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - EXCLUSÃO";
 
                 $sqlA = "UPDATE ". $this->table ." SET alteracoes = '$palter', situacao = 'excluido' WHERE id = '$id' ";
-                $this->db->query($sqlA);
+                self::db()->query($sqlA);
 
-                $erro = $this->db->errorInfo();
+                $erro = self::db()->errorInfo();
 
                 if (empty($erro[2])){
 
@@ -186,7 +185,7 @@ class Usuarios extends model {
             
             //se não achar nenhum usuario associado ao grupo - pode deletar, ou seja, tornar o cadastro situacao=excluído
             $sql = "SELECT * FROM ". $this->table ." WHERE id = '$id' AND situacao = 'ativo'";
-            $sql = $this->db->query($sql);
+            $sql = self::db()->query($sql);
             
             if($sql->rowCount() > 0){  
                 return true;
@@ -214,7 +213,7 @@ class Usuarios extends model {
             $sql = "SELECT * FROM ". $this->table ." WHERE email='$email' AND senha = '$senha' AND situacao = 'ativo'";
 
 
-            $sql = $this->db->query($sql);
+            $sql = self::db()->query($sql);
             if($sql->rowCount()>0){
                 $sql = $sql->fetch(PDO::FETCH_ASSOC);
 
@@ -238,7 +237,7 @@ class Usuarios extends model {
                 $_SESSION["codigoAtual"] = $codAtual;
                 //coloca o ip do pc de quem acabou de logar
                 $sqlB = "UPDATE ". $this->table ." SET cod_atual = '$codAtual' WHERE email='$email'";
-                $this->db->query($sqlB);
+                self::db()->query($sqlB);
 
                 return true;
             }else{
@@ -253,10 +252,11 @@ class Usuarios extends model {
             isset($_SESSION["permissoesUsuario"]) && !empty($_SESSION["permissoesUsuario"])){
             
             $id = $_SESSION['idUsuario'];
-            //$ip = $_SERVER['REMOTE_ADDR'];
+
             $codAtual = $_SESSION["codigoAtual"];
             $sql = "SELECT * FROM ". $this->table ." WHERE id='$id' AND cod_atual = '$codAtual' AND situacao = 'ativo'";
-            $sql = $this->db->query($sql);
+
+            $sql = self::db()->query($sql);
             if($sql->rowCount()>0){
                 //identificou que o ip salvo é igual ao ip que acabou de logar
                 return true; 

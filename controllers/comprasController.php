@@ -5,8 +5,6 @@ class comprasController extends controller{
     protected $colunas;
 
     public function __construct() {
-
-        parent::__construct();
     
        $func = new Funcionarios();
 

@@ -1,33 +1,37 @@
 <?php
-class model{
+class model {
 
-    protected $db = null;
+    private static $Connect = null;
 
-    public function __construct() {
+    private function Conn() {
         
         global $config;
         
         // Conexão com o banco de dados
         try{
             
-            if ($this->db === null) {
+            if (self::$Connect == null) {
                 
-                $this->db = new PDO(
+                self::$Connect = new PDO(
                     "mysql:dbname=" . $config["db"] . ";host=" . $config["host"] . ";",
                     $config["user"],
                     $config["pass"]
                 );
 
-                $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $this->db->exec('SET NAMES utf8');
+                self::$Connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                self::$Connect->exec('SET NAMES utf8');
             }
-
-            return $this->db;
 
         } catch (PDOException $e){
             // Exibir mensagem de erro caso não seja possível a conexão com o banco
-            echo "FALHA : ".$e->getMessage()."<br/> Entre em contato com o administrador do sistema.";
+            echo "FALHA: " . $e->getMessage() . "<br/> Entre em contato com o administrador do sistema.";
         }
+
+        return self::$Connect;
+    }
+
+    public function db() {
+        return self::Conn();
     }
 }
 ?>

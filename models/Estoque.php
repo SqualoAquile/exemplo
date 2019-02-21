@@ -2,17 +2,12 @@
 
 class Estoque extends model {
     
-
-    public function __construct($id = "") {
-        parent::__construct(); 
-    }
-    
     public function buscaProdsForn($nome,$empresa){
         $array = array();
         $string = '';
         if(!empty($nome) && !empty($empresa)){
             $sql = "SELECT produto FROM estoque WHERE fornecedor='$nome' AND id_empresa = '$empresa' AND situacao='ativo'";
-            $sql = $this->db->query($sql);
+            $sql = self::db()->query($sql);
             if($sql->rowCount()>0){
                 $sql = $sql->fetchAll();
                 foreach ($sql as $valor){
@@ -31,7 +26,7 @@ class Estoque extends model {
         if(!empty($nome) && !empty($empresa)){
             $nome = strtoupper($nome);
             $sql = "SELECT quant_atual FROM estoque WHERE codigo='$nome' AND id_empresa = '$empresa' AND situacao='ativo'";
-            $sql = $this->db->query($sql);
+            $sql = self::db()->query($sql);
             if($sql->rowCount()>0){
                 $sql = $sql->fetch();
                 $quant = $sql['quant_atual'];
@@ -45,13 +40,13 @@ class Estoque extends model {
         $array = array();
         if(!empty($cod) && !empty($forn) && !empty($empresa)){
             $sqlA = "SELECT sigla FROM fornecedores WHERE nomefantasia='$forn' AND id_empresa='$empresa'";
-            $sqlA = $this->db->query($sqlA);
+            $sqlA = self::db()->query($sqlA);
             if($sqlA->rowCount()>0){
                 $sqlA = $sqlA->fetch();
                 $sigla = $sqlA[0];
                 $cod = $cod.$sigla;
                 $sqlB = "SELECT codigo FROM estoque WHERE codigo='$cod' AND id_empresa = '$empresa' AND situacao='ativo'";
-                $sqlB = $this->db->query($sqlB);
+                $sqlB = self::db()->query($sqlB);
                 if($sqlB->rowCount()>0){
                     $array = $sqlB->fetchAll();
                 } 
@@ -79,7 +74,7 @@ class Estoque extends model {
 
             }
             
-            $resp = $this->db->query($sqlAux);
+            $resp = self::db()->query($sqlAux);
             
             if($resp->rowCount()<=0){
                 $resp = 0;
@@ -96,7 +91,7 @@ class Estoque extends model {
             $resp = array();
             $forn = trim(addslashes($txts[0]));
             $sqlA = "SELECT sigla FROM fornecedores WHERE nomefantasia='$forn' AND id_empresa='$empresa'";
-            $sqlA = $this->db->query($sqlA);
+            $sqlA = self::db()->query($sqlA);
             if($sqlA->rowCount()>0){
                 $sqlA = $sqlA->fetch();
                 $sigla = $sqlA[0];
@@ -142,8 +137,8 @@ class Estoque extends model {
                 "'ativo')";
                 
                 //echo $sql; exit;
-                $sql = $this->db->query($sql);
-                $resp["id"] = $this->db->lastInsertId();
+                $sql = self::db()->query($sql);
+                $resp["id"] = self::db()->lastInsertId();
                 $resp["alter"] = $alteracoes;
                 $resp["sigla"] = $sigla;
                 return $resp;
@@ -157,7 +152,7 @@ public function editarItem($info,$empresa){
         if(!empty($info) && !empty($empresa)){
             $forn = trim(addslashes($info[1]));
             $sqlA = "SELECT sigla FROM fornecedores WHERE nomefantasia='$forn' AND id_empresa='$empresa'";
-            $sqlA = $this->db->query($sqlA);
+            $sqlA = self::db()->query($sqlA);
             
             if($sqlA->rowCount()>0){
                 $sqlA = $sqlA->fetch();
@@ -190,7 +185,7 @@ public function editarItem($info,$empresa){
                         "WHERE id = '$id' AND id_empresa = '$empresa'";
                 
 //                echo $sql; exit;
-                $resp = $this->db->query($sql);
+                $resp = self::db()->query($sql);
 
                 if($resp->rowCount()<=0){
                     $resp = 0;

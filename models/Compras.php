@@ -1,25 +1,19 @@
 <?php
 
 class Compras extends model {
-    
 
-    public function __construct($id = "") {
-        parent::__construct(); 
-    }
-     
-//    
     public function nomeDasColunas(){
        $array = array();
        
        $sql = "SHOW COLUMNS FROM compras";      
-       $sql = $this->db->query($sql);
+       $sql = self::db()->query($sql);
        if($sql->rowCount()>0){
          $sql = $sql->fetchAll(); 
          foreach ($sql as $chave => $valor){
             $array[$chave] = array("nomecol" => utf8_encode(ucwords($valor["Field"])), "tipo" => $valor["Type"]);        
          }
        }
-//       print_r($array);exit;
+       
        return $array;
     }
     
@@ -27,7 +21,7 @@ class Compras extends model {
        $array = array();
        
        $sql = "SHOW COLUMNS FROM compra_itens";      
-       $sql = $this->db->query($sql);
+       $sql = self::db()->query($sql);
        if($sql->rowCount()>0){
          $sql = $sql->fetchAll(); 
          foreach ($sql as $chave => $valor){
@@ -42,7 +36,7 @@ class Compras extends model {
        $array = array();
        
        $sql = "SELECT * FROM compras WHERE id_empresa = '$empresa' AND situacao = 'ativo' ORDER BY id DESC";      
-       $sql = $this->db->query($sql);
+       $sql = self::db()->query($sql);
        if($sql->rowCount()>0){
          $array = $sql->fetchAll(); 
        }
@@ -53,7 +47,7 @@ class Compras extends model {
         $array = array();
         if(!empty($nome) && !empty($empresa)){
             $sql = "SELECT nome FROM compras WHERE nome='$nome' AND id_empresa = '$empresa' AND situacao='ativo'";
-            $sql = $this->db->query($sql);
+            $sql = self::db()->query($sql);
             if($sql->rowCount()>0){
                 $array = $sql->fetchAll();
             } 
@@ -65,7 +59,7 @@ class Compras extends model {
         $array = array();
         if(!empty($nome) && !empty($empresa)){
             $sql = "SELECT email FROM compras WHERE email='$nome' AND id_empresa = '$empresa' AND situacao='ativo'";
-            $sql = $this->db->query($sql);
+            $sql = self::db()->query($sql);
             if($sql->rowCount()>0){
                 $array = $sql->fetchAll();
             } 
@@ -77,7 +71,7 @@ class Compras extends model {
         $array = array();
         if(!empty($nome) && !empty($empresa)){
             $sql = "SELECT cpf_cnpj FROM compras WHERE cpf_cnpj='$nome' AND id_empresa = '$empresa' AND situacao='ativo'";
-            $sql = $this->db->query($sql);
+            $sql = self::db()->query($sql);
             if($sql->rowCount()>0){
                 $array = $sql->fetchAll();
             } 
@@ -131,7 +125,7 @@ class Compras extends model {
             "'$alteracoes', ".
             "'ativo')";
             
-            $this->db->query($sql);
+            self::db()->query($sql);
 
         }
     }    
@@ -140,7 +134,7 @@ class Compras extends model {
        $array = array();
        
        $sql = "SELECT * FROM compras WHERE id='$id' AND id_empresa = '$empresa' AND situacao = 'ativo'";      
-       $sql = $this->db->query($sql);
+       $sql = self::db()->query($sql);
        if($sql->rowCount()>0){
          $array = $sql->fetchAll(); 
        }
@@ -196,7 +190,7 @@ class Compras extends model {
                 "contatos =    '$txt14', ".
                 "alteracoes = '$altera' WHERE id = '$id' AND id_empresa = '$empresa'";
             
-            $this->db->query($sql);
+            self::db()->query($sql);
 
         }
     }
@@ -207,7 +201,7 @@ class Compras extends model {
             //se não achar nenhum usuario associado ao grupo - pode deletar, ou seja, tornar o cadastro situacao=excluído
             $sql = "SELECT alteracoes FROM compras WHERE id = '$id' AND id_empresa = '$empresa' AND situacao = 'ativo'";
             
-            $sql = $this->db->query($sql);
+            $sql = self::db()->query($sql);
             
             if($sql->rowCount() > 0){  
                $sql = $sql->fetch();
@@ -218,7 +212,7 @@ class Compras extends model {
                $palter = $palter." | ".ucwords($_SESSION["nomeFuncionario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - EXCLUSAO";
                
                $sqlA = "UPDATE compras SET alteracoes = '$palter', situacao = 'excluido' WHERE id = '$id' AND id_empresa = '$empresa'";
-               $this->db->query($sqlA);
+               self::db()->query($sqlA);
                
             }
         }

@@ -3,7 +3,6 @@
 class Permissoes extends model {
     
     public function __construct($id = "") {
-        parent::__construct(); 
     }
         
     public function getPermissoes($id_grupopermissao){
@@ -12,7 +11,7 @@ class Permissoes extends model {
         if(!empty($id_grupopermissao)){
            //busca os id dos parametros correspondentes do grupo de permissao pesquisado 
            $sql = "SELECT parametros FROM permissoes WHERE id = '$id_grupopermissao' AND situacao = 'ativo'";
-           $sql = $this->db->query($sql);
+           $sql = self::db()->query($sql);
            if($sql->rowCount() > 0){
                 $pr = $sql->fetch();
                 //caso não tenha nenhum parametro, é setado como 0 para não dar erro na pesquisa sequente
@@ -22,7 +21,7 @@ class Permissoes extends model {
                 
                 //busca os nomes dos parametros de permissão do grupo de permissao pesquisado
                 $sqlA = "SELECT nome FROM permissoes_parametros WHERE id IN (".$pr["parametros"].")";
-                $sqlA = $this->db->query($sqlA);
+                $sqlA = self::db()->query($sqlA);
                 if($sqlA->rowCount()>0){
                     foreach ($sqlA->fetchAll() as $item){
                         $array[] = $item["nome"];
@@ -37,7 +36,7 @@ class Permissoes extends model {
        $array = array();
        
        $sql = "SELECT id, nome FROM permissoes_parametros";
-       $sql = $this->db->query($sql);
+       $sql = self::db()->query($sql);
        if($sql->rowCount()>0){
          $array = $sql->fetchAll(); 
        }
@@ -48,7 +47,7 @@ class Permissoes extends model {
        $array = array();
        
        $sql = "SELECT id, nome FROM permissoes as pg WHERE situacao = 'ativo' ORDER BY id DESC";      
-       $sql = $this->db->query($sql);
+       $sql = self::db()->query($sql);
        
        if($sql->rowCount()>0){
          $array = $sql->fetchAll(); 
@@ -66,7 +65,7 @@ class Permissoes extends model {
 
             $alteracoes = ucwords($_SESSION["nomeFuncionario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
             $sql = "INSERT INTO permissoes (id,id_empresa,nome,parametros,alteracoes,situacao) VALUES (DEFAULT, '$empresa', '$nome', '$params','$alteracoes', 'ativo')";
-            $this->db->query($sql); 
+            self::db()->query($sql); 
         }           
     }
 
@@ -74,7 +73,7 @@ class Permissoes extends model {
        $array = array();
        if(!empty($id_grupo)){
             $sql = "SELECT * FROM permissoes WHERE id = '$id_grupo' AND situacao = 'ativo'";
-            $sql = $this->db->query($sql);
+            $sql = self::db()->query($sql);
                 
             if($sql->rowCount() > 0){
                 $array = $sql->fetch();
@@ -91,7 +90,7 @@ class Permissoes extends model {
             $ipcliente = $p->pegaIPcliente();
             $palter = $palter." | ".ucwords($_SESSION["nomeFuncionario"])." - ".$ipcliente." - ".date('d/m/Y H:i:s')." - ALTERACAO";
             $sql = "UPDATE permissoes SET nome = '$pnome', parametros = '$params', alteracoes = '$palter' WHERE id = '$id_grupo' AND id_empresa = '$empresa'";
-            $this->db->query($sql);             
+            self::db()->query($sql);             
         }
     }
 
@@ -105,7 +104,7 @@ class Permissoes extends model {
                 
                 //se não achar nenhum usuario associado ao grupo - pode deletar, ou seja, tornar o cadastro situacao=excluído
                 $sql = "SELECT alteracoes FROM permissoes WHERE id = '$id_grupo' AND id_empresa = '$empresa' AND situacao = 'ativo'";
-                $sql = $this->db->query($sql);
+                $sql = self::db()->query($sql);
                 
                 if($sql->rowCount() > 0){ 
                    $sql = $sql->fetch(); 
@@ -114,7 +113,7 @@ class Permissoes extends model {
                    $ipcliente = $p->pegaIPcliente();
                    $palter = $palter." | ".ucwords($_SESSION["nomeFuncionario"])." - ".$ipcliente." - ".date('d/m/Y H:i:s')." - EXCLUSAO";
                    $sqlA = "UPDATE permissoes SET alteracoes = '$palter', situacao = 'excluido' WHERE id = '$id_grupo' AND id_empresa = '$empresa'";
-                   $this->db->query($sqlA);  
+                   self::db()->query($sqlA);  
                 }         
             }
             return $numFunc; 

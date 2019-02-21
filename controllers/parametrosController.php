@@ -9,8 +9,6 @@ class parametrosController extends controller{
 
     public function __construct() {
 
-        parent::__construct();
-
         $this->usuario = new Usuarios();
 
         $this->shared = new Shared($this->table);

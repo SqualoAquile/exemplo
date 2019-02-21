@@ -6,7 +6,6 @@ class Clientes extends model {
     protected $shared;
 
     public function __construct() {
-        parent::__construct(); 
         $this->permissoes = new Permissoes();
         $this->shared = new Shared($this->table);
     }
@@ -17,7 +16,7 @@ class Clientes extends model {
 
         $id = addslashes(trim($id));
         $sql = "SELECT * FROM " . $this->table . " WHERE id='$id' AND situacao = 'ativo'";      
-        $sql = $this->db->query($sql);
+        $sql = self::db()->query($sql);
 
         if($sql->rowCount()>0){
             $array = $sql->fetch(PDO::FETCH_ASSOC);
@@ -40,9 +39,9 @@ class Clientes extends model {
 
         $sql = "INSERT INTO " . $this->table . " (" . $keys . ") VALUES (" . $values . ")";
         
-        $this->db->query($sql);
+        self::db()->query($sql);
 
-        $erro = $this->db->errorInfo();
+        $erro = self::db()->errorInfo();
 
         if (empty($erro[2])){
 
@@ -90,9 +89,9 @@ class Clientes extends model {
 
             $sql = "UPDATE " . $this->table . " SET " . $output . " WHERE id='" . $id . "'";
              
-            $this->db->query($sql);
+            self::db()->query($sql);
 
-            $erro = $this->db->errorInfo();
+            $erro = self::db()->errorInfo();
 
             if (empty($erro[2])){
 
@@ -116,7 +115,7 @@ class Clientes extends model {
 
             //se não achar nenhum usuario associado ao grupo - pode deletar, ou seja, tornar o cadastro situacao=excluído
             $sql = "SELECT alteracoes FROM ". $this->table ." WHERE id = '$id' AND situacao = 'ativo'";
-            $sql = $this->db->query($sql);
+            $sql = self::db()->query($sql);
             
             if($sql->rowCount() > 0){  
 
@@ -126,9 +125,9 @@ class Clientes extends model {
                 $palter = $palter." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - EXCLUSÃO";
 
                 $sqlA = "UPDATE ". $this->table ." SET alteracoes = '$palter', situacao = 'excluido' WHERE id = '$id' ";
-                $this->db->query($sqlA);
+                self::db()->query($sqlA);
 
-                $erro = $this->db->errorInfo();
+                $erro = self::db()->errorInfo();
 
                 if (empty($erro[2])){
 
@@ -153,7 +152,7 @@ class Clientes extends model {
             
             //se não achar nenhum usuario associado ao grupo - pode deletar, ou seja, tornar o cadastro situacao=excluído
             $sql = "SELECT * FROM ". $this->table ." WHERE id = '$id' AND situacao = 'ativo'";
-            $sql = $this->db->query($sql);
+            $sql = self::db()->query($sql);
             
             if($sql->rowCount() > 0){  
                 return true;

@@ -10,8 +10,6 @@ class administradorasController extends controller{
 
     public function __construct() {
 
-        parent::__construct();
-
         $this->shared = new Shared($this->table);
         $this->logs = new Logs($this->table);
         $this->funcionarios = new Funcionarios();
