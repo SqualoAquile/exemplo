@@ -16,7 +16,7 @@
 <form method="POST" class="mb-5">
 
     <div class="form-group pb-4">
-        <input type="text" name="enome" id="inome" placeholder="Nome do Grupo" class="form-control" value="<?php echo $permAtivas["nome"];?>" required/>
+        <input type="text" name="enome" id="inome" placeholder="Nome do Grupo" class="form-control" value="<?php echo isset($permAtivas) ? $permAtivas["nome"] : "" ?>" required/>
     </div>
         
     <table class="table table-striped table-hover bg-white table-nowrap">

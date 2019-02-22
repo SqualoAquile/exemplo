@@ -27,36 +27,58 @@ class permissoesController extends controller{
             header("Location: " . BASE_URL . "/login"); 
         }
     }
-     
+
     public function index() {
-        $dados["infoUser"] = $_SESSION;
-        $dados["colunas"] = $this->colunas;
-        $dados["labelTabela"] = $this->shared->labelTabela();
-        $this->loadTemplate($this->table, $dados);
-    } 
-    
-    public function adicionar() {
         
-        if(in_array("permissoes_add",$_SESSION["permissoesFuncionario"]) == FALSE){
-            header("Location: ".BASE_URL."/permissoes"); 
+        if(isset($_POST) && !empty($_POST)){
+            
+            $id = addslashes($_POST['id']);
+            if(in_array($this->table . "_exc", $_SESSION["permissoesUsuario"]) == false || empty($id) || !isset($id)){
+                header("Location: " . BASE_URL . "/" . $this->table); 
+            }
+            if($this->shared->idAtivo($id) == false){
+                header("Location: " . BASE_URL . "/" . $this->table); 
+            }
+            
+            $this->model->excluirGrupo($id);
+            header("Location: " . BASE_URL . "/" . $this->table);
+
+        } else {
+
+            $dados['infoUser'] = $_SESSION;
+            $dados["colunas"] = $this->colunas;
+            $dados["labelTabela"] = $this->shared->labelTabela();
+    
+            $this->loadTemplate($this->table, $dados);
         }
         
-        $array = array();
-        $dados['infoUser'] = $_SESSION;
-        $p = new Permissoes();
-           
-        if(isset($_POST["nome"]) && !empty($_POST["nome"]) && isset($_POST["permissoes"]) && !empty($_POST["permissoes"])){
-             
-             $pnome = addslashes($_POST["nome"]);
-             $pLista = $_POST["permissoes"];
-             $p->adicionarGrupo($pnome,$pLista,$_SESSION["idEmpresaFuncionario"]);
-             header("Location: ".BASE_URL."/permissoes");
-        }else{
+    }
 
-             $dados["listaPermissoes"] = $p->pegarListaPermissoes();
-             $dados["viewInfo"] = ["title" => "Adicionar"];
-             $this->loadTemplate("permissoes-form",$dados);
-        }  
+    public function adicionar() {
+        
+        if(in_array($this->table. "_add", $_SESSION["permissoesUsuario"]) == false){
+            header("Location: " . BASE_URL . "/" . $this->table); 
+        }
+        
+        $dados['infoUser'] = $_SESSION;
+        
+        if(isset($_POST["enome"]) && !empty($_POST["enome"]) && isset($_POST["epermissoes"]) && !empty($_POST["epermissoes"])){
+
+            $pnome = addslashes($_POST["enome"]);
+            $pLista = $_POST["epermissoes"];
+
+            $this->model->adicionarGrupo($pnome, $pLista);
+
+            header("Location: " . BASE_URL . "/" . $this->table);
+
+        } else {
+            
+            $dados["listaPermissoes"] = $this->model->pegarListaPermissoes();
+            $dados["viewInfo"] = ["title" => "Adicionar"];
+            $dados["labelTabela"] = $this->shared->labelTabela();
+
+            $this->loadTemplate($this->table . "-form", $dados);
+        }
     }
     
     public function editar($id) {
@@ -65,48 +87,28 @@ class permissoesController extends controller{
         }
         $array = array();
         $dados['infoUser'] = $_SESSION;
-        $p = new Permissoes();
         
         $id = addslashes($id);
+        
         if(isset($_POST["enome"]) && !empty($_POST["enome"]) && isset($_POST["epermissoes"]) && !empty($_POST["epermissoes"])){
             
             $pnome = addslashes($_POST["enome"]);
             $pLista = $_POST["epermissoes"];
             $palter = addslashes($_POST["alter"]);
-            $p->editarGrupo($pnome,$pLista,$palter,$id,$_SESSION["idEmpresaFuncionario"]);
+            
+            $this->model->editarGrupo($pnome, $pLista, $palter, $id);
+
             header("Location: ".BASE_URL."/permissoes");
         }else{
-            
-            $dados["listaPermissoes"] = $p->pegarListaPermissoes();
-            $dados["permAtivas"] = $p->pegarPermissoesAtivas($id);
+
+            $dados["listaPermissoes"] = $this->model->pegarListaPermissoes();
+            $dados["permAtivas"] = $this->model->pegarPermissoesAtivas($id);
             $dados["viewInfo"] = ["title" => "Editar"];
             $dados["labelTabela"] = $this->shared->labelTabela();
-            $this->loadTemplate("permissoes-form",$dados);
+
+            $this->loadTemplate($this->table . "-form", $dados); 
         } 
 
     }
-      
-
-    public function excluirGrupo($id) {
-        if(in_array("permissoes_exc",$_SESSION["permissoesFuncionario"]) == FALSE || empty($id) || !isset($id)){
-            header("Location: ".BASE_URL."/permissoes"); 
-        }
-        
-        $p = new Permissoes();
-        $id_grupo = addslashes($id);
-        $numFunc = $p->excluirGrupo($id_grupo,$_SESSION["idEmpresaFuncionario"]);  
-        
-        $dados = array();
-        $dados["aviso"] = "";
-        if($numFunc != 0){
-            $dados["aviso"] = "Nenhum funcionário pode estar associado ao grupo para ocorrer a exclusão.<br/>".$numFunc." funcionário(s) está(ão) associado(s) ao grupo.";
-        }
-                
-        $dados['infoUser'] = $_SESSION;       
-        $dados["listaGrupoPermissoes"]  = $p->pegarListaGrupos();
-        $this->loadTemplate("permissoes",$dados);  
-      }
-    }   
-  
+}
 ?>
-

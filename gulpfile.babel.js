@@ -1,6 +1,19 @@
 import gulp from 'gulp';
 import sass from 'gulp-sass';
 import browserSync from 'browser-sync';
+import autoprefixer from 'gulp-autoprefixer';
+
+const AUTOPREFIXER_BROWSERS = [
+    'ie >= 10',
+    'ie_mob >= 10',
+    'ff >= 30',
+    'chrome >= 34',
+    'safari >= 7',
+    'opera >= 23',
+    'ios >= 7',
+    'android >= 4.4',
+    'bb >= 10'
+];
 
 const server = browserSync.create();
 
@@ -25,6 +38,7 @@ const styles = () => {
             onError: console.error.bind(console, 'Sass error:')
         }))
         .on('error', sass.logError)
+        .pipe(autoprefixer({browsers: AUTOPREFIXER_BROWSERS}))
         .pipe(gulp.dest(paths.styles.dest))
 }
 

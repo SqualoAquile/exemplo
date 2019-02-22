@@ -1,6 +1,8 @@
 <?php
 
 class Permissoes extends model {
+
+    protected $table = "permissoes";
     
     public function __construct($id = "") {
     }
@@ -55,16 +57,15 @@ class Permissoes extends model {
        return $array; 
     }
 
-    public function adicionarGrupo($nome,$permLista,$empresa){
+    public function adicionarGrupo($nome,$permLista){
         
-        if(!empty($nome) && !empty($permLista) && !empty($empresa)){
+        if(!empty($nome) && !empty($permLista)){
             
             $params = implode(",", $permLista);
-            $p = new Permissoes();
-            $ipcliente = $p->pegaIPcliente();
+            $ipcliente = $this->pegaIPcliente();
 
-            $alteracoes = ucwords($_SESSION["nomeFuncionario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
-            $sql = "INSERT INTO permissoes (id,id_empresa,nome,parametros,alteracoes,situacao) VALUES (DEFAULT, '$empresa', '$nome', '$params','$alteracoes', 'ativo')";
+            $alteracoes = ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
+            $sql = "INSERT INTO " . $this->table . " (nome,parametros,alteracoes,situacao) VALUES ('$nome', '$params','$alteracoes', 'ativo')";
             self::db()->query($sql); 
         }           
     }
@@ -83,58 +84,61 @@ class Permissoes extends model {
         return $array;
     }  
     
-    public function editarGrupo($pnome,$pLista,$palter,$id_grupo,$empresa){
-        if(!empty($pnome) && !empty($pLista) && !empty($palter) && !empty($id_grupo) && !empty($empresa)){
+    public function editarGrupo($pnome, $pLista, $palter, $id_grupo){
+        
+        if(!empty($pnome) && !empty($pLista) && !empty($palter) && !empty($id_grupo)){
+
             $params = implode(",", $pLista);
-            $p = new Permissoes();
-            $ipcliente = $p->pegaIPcliente();
-            $palter = $palter." | ".ucwords($_SESSION["nomeFuncionario"])." - ".$ipcliente." - ".date('d/m/Y H:i:s')." - ALTERACAO";
-            $sql = "UPDATE permissoes SET nome = '$pnome', parametros = '$params', alteracoes = '$palter' WHERE id = '$id_grupo' AND id_empresa = '$empresa'";
+            $ipcliente = $this->pegaIPcliente();
+            $palter = $palter." | ".ucwords($_SESSION["nomeUsuario"])." - ".$ipcliente." - ".date('d/m/Y H:i:s')." - ALTERACAO";
+            
+            $sql = "UPDATE permissoes SET nome = '$pnome', parametros = '$params', alteracoes = '$palter' WHERE id = '$id_grupo'";
+
             self::db()->query($sql);             
         }
     }
 
-    public function excluirGrupo($id_grupo,$empresa){
-        if(!empty($id_grupo) && !empty($empresa)){
+    public function excluirGrupo($id_grupo){
+        if(!empty($id_grupo)){
             
             $numFunc = 0;
-            $f =  new Funcionarios();
-            $numFunc = $f->qtdFuncionariosGrupo($id_grupo,$empresa);
+            $usuario = new Usuarios();
+            $numFunc = $usuario->qtdFuncionariosGrupo($id_grupo);
+            
             if($numFunc == 0){
                 
-                //se não achar nenhum usuario associado ao grupo - pode deletar, ou seja, tornar o cadastro situacao=excluído
-                $sql = "SELECT alteracoes FROM permissoes WHERE id = '$id_grupo' AND id_empresa = '$empresa' AND situacao = 'ativo'";
+                // Se não achar nenhum usuario associado ao grupo - pode deletar, ou seja, tornar o cadastro situacao=excluído
+                $sql = "SELECT alteracoes FROM " . $this->table . " WHERE id = '$id_grupo' AND situacao = 'ativo'";
+
                 $sql = self::db()->query($sql);
                 
                 if($sql->rowCount() > 0){ 
-                   $sql = $sql->fetch(); 
-                   $palter = $sql["alteracoes"];
-                   $p = new Permissoes();
-                   $ipcliente = $p->pegaIPcliente();
-                   $palter = $palter." | ".ucwords($_SESSION["nomeFuncionario"])." - ".$ipcliente." - ".date('d/m/Y H:i:s')." - EXCLUSAO";
-                   $sqlA = "UPDATE permissoes SET alteracoes = '$palter', situacao = 'excluido' WHERE id = '$id_grupo' AND id_empresa = '$empresa'";
-                   self::db()->query($sqlA);  
-                }         
+
+                    $sql = $sql->fetch(); 
+                    $palter = $sql["alteracoes"];
+                    $ipcliente = $this->pegaIPcliente();
+                    $palter = $palter." | ".ucwords($_SESSION["nomeUsuario"])." - ".$ipcliente." - ".date('d/m/Y H:i:s')." - EXCLUSAO";
+                    $sqlA = "UPDATE " . $this->table . " SET alteracoes = '$palter', situacao = 'excluido' WHERE id = '$id_grupo'";
+                    self::db()->query($sqlA);
+
+                    $_SESSION["returnMessage"] = [
+                        "mensagem" => "Registro deletado com sucesso!",
+                        "class" => "alert-success"
+                    ];
+                }
+            } else {
+                $_SESSION["returnMessage"] = [
+                    "mensagem" => "Nenhum funcionário pode estar associado ao grupo para ocorrer a exclusão.<br/>" . $numFunc . " funcionário(s) está(ão) associado(s) ao grupo.",
+                    "class" => "alert-danger"
+                ];
             }
-            return $numFunc; 
         }
     }
     
     public function pegaIPcliente(){
-//        $http_client_ip       = $_SERVER['HTTP_CLIENT_IP'];
-//        $http_x_forwarded_for = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        $remote_addr          = $_SERVER['REMOTE_ADDR'];
-        $ip = '000.00.00.00';
-        /* VERIFICO SE O IP REALMENTE EXISTE NA INTERNET */
-//        if(!empty($http_client_ip)){
-//            $ip = $http_client_ip;
-//            /* VERIFICO SE O ACESSO PARTIU DE UM SERVIDOR PROXY */
-//        } elseif(!empty($http_x_forwarded_for)){
-//            $ip = $http_x_forwarded_for;
-//        } else {
-            /* CASO EU NÃO ENCONTRE NAS DUAS OUTRAS MANEIRAS, RECUPERO DA FORMA TRADICIONAL */
-            $ip = $remote_addr;
-//        }
+        $remote_addr = $_SERVER["REMOTE_ADDR"];
+        $ip = "000.00.00.00";
+        $ip = $remote_addr;
         return $ip ;
     }
 

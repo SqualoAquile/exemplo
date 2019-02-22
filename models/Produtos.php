@@ -144,25 +144,4 @@ class Produtos extends model {
             }
         }
     }
-    
-    public function idAtivo($id){
-        if(!empty($id)) {
-    
-            $id = addslashes(trim($id));
-            
-            //se não achar nenhum usuario associado ao grupo - pode deletar, ou seja, tornar o cadastro situacao=excluído
-            $sql = "SELECT * FROM ". $this->table ." WHERE id = '$id' AND situacao = 'ativo'";
-            $sql = self::db()->query($sql);
-            
-            if($sql->rowCount() > 0){  
-                return true;
-            } else {
-                $_SESSION["returnMessage"] = [
-                    "mensagem" => "Erro no endereço, você foi redirecionado para ".ucwords($this->table),
-                    "class" => "alert-danger"
-                ];
-                return false;
-            }
-        }
-    }
 }

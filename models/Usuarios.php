@@ -9,6 +9,18 @@ class Usuarios extends model {
         $this->permissoes = new Permissoes();
         $this->shared = new Shared($this->table);
     }
+
+    public function qtdFuncionariosGrupo($id_grupo){ // função usada no model de permissões
+        if(!empty($id_grupo)){
+           $numFunc = 0;
+           $sql = "SELECT COUNT(*) as contagem FROM " . $this->table . " WHERE id_grupo_permissao = '$id_grupo'";
+           $sql = self::db()->query($sql);
+           $sql = $sql->fetch(PDO::FETCH_ASSOC);
+           $numFunc = $sql["contagem"];
+ 
+           return $numFunc;
+        }
+    }
     
     public function infoItem($id) {
         $array = array();
@@ -178,27 +190,6 @@ class Usuarios extends model {
         }
     }
 
-    public function idAtivo($id){
-        if(!empty($id)) {
-    
-            $id = addslashes(trim($id));
-            
-            //se não achar nenhum usuario associado ao grupo - pode deletar, ou seja, tornar o cadastro situacao=excluído
-            $sql = "SELECT * FROM ". $this->table ." WHERE id = '$id' AND situacao = 'ativo'";
-            $sql = self::db()->query($sql);
-            
-            if($sql->rowCount() > 0){  
-                return true;
-            } else {
-                $_SESSION["returnMessage"] = [
-                    "mensagem" => "Erro no endereço, você foi redirecionado para ".ucwords($this->table),
-                    "class" => "alert-danger"
-                ];
-                return false;
-            }
-        }
-    }
-
     ///////////////////////////////////////////////////////////////////////////////////
     ///         A PARTIR DAQUI COMEÇAM AS FUNÇÕES DE LOGIN                          ///    
     ///                                                                             ///
@@ -244,7 +235,7 @@ class Usuarios extends model {
                 return false;     
             }
         }
-        }
+    }
 
     public function isLogged(){
         if( isset($_SESSION["idUsuario"]) && !empty($_SESSION["idUsuario"]) &&

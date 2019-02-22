@@ -35,7 +35,7 @@ class servicosController extends controller{
             if(in_array($this->table . "_exc", $_SESSION["permissoesUsuario"]) == false || empty($id) || !isset($id)){
                 header("Location: " . BASE_URL . "/" . $this->table); 
             }
-            if($this->model->idAtivo($id) == false){
+            if($this->shared->idAtivo($id) == false){
                 header("Location: " . BASE_URL . "/" . $this->table); 
             }
             $this->model->excluir($id);
