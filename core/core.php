@@ -80,12 +80,14 @@ class core {
             }
         }else{
             //echo 'O Controller não existe!';exit;
+            // echo "Estamos aquiiiii";
+            // echo $currentAction; exit;
             echo $this->redirectMessage();
             $currentController = "homeController";
             $currentAction = "index";
         }
-        ////////////////////////////////////////
-               
+        ////////////////////////////////////////       
+        
         $c = new $currentController();
         call_user_func_array(array($c,$currentAction), $params);
         

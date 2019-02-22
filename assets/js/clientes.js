@@ -38,9 +38,10 @@ $(function () {
                 $telefone
                     .attr('required');
                 $telefone
-                    .siblings('label')  
+                    .siblings('label')
                     .addClass('font-weight-bold')
-                    .before('<i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="" data-original-title="Campo Obrigatório">*</i>');   
+                    .find('i')
+                    .show();
 
                 $celular
                     .removeAttr('required');
@@ -48,7 +49,7 @@ $(function () {
                     .siblings('label')
                     .removeClass('font-weight-bold')
                     .find('i')
-                    .remove();
+                    .hide();
 
                 var dadosAnteriores = '';
                 if ($hiddenContatos.attr('data-anterior-aux') != undefined) {
@@ -88,7 +89,7 @@ $(function () {
                         .siblings('label')
                         .removeClass('font-weight-bold')
                         .find('i')
-                        .remove();
+                        .hide();
                         
 
                     // Celular é obrigatório para PF, telefone não
@@ -97,9 +98,8 @@ $(function () {
                     $celular
                         .siblings('label')  
                         .addClass('font-weight-bold')
-                        .before('<i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="" data-original-title="Campo Obrigatório">*</i>');             
-
-                        //<i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="" data-original-title="Campo Obrigatório">*</i>
+                        .find('i')
+                        .show();             
 
                     $contatosForm.hide();
                     $contatosForm[0].reset();
