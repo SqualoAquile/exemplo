@@ -6,7 +6,6 @@ class Servicos extends model {
     protected $shared;
 
     public function __construct() {
-        parent::__construct(); 
         $this->permissoes = new Permissoes();
         $this->shared = new Shared($this->table);
     }
@@ -14,7 +13,7 @@ class Servicos extends model {
     public function listar() {
         
         $sql = "SELECT * FROM " . $this->table . " WHERE situacao = 'ativo'";
-        $sql = $this->db->query($sql);
+        $sql = self::db()->query($sql);
         $result = $sql->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($result as $key => $value) {
@@ -30,7 +29,7 @@ class Servicos extends model {
 
         $id = addslashes(trim($id));
         $sql = "SELECT * FROM " . $this->table . " WHERE id='$id' AND situacao = 'ativo'";      
-        $sql = $this->db->query($sql);
+        $sql = self::db()->query($sql);
 
         if($sql->rowCount()>0){
             $array = $sql->fetch(PDO::FETCH_ASSOC);
@@ -64,13 +63,13 @@ class Servicos extends model {
 
             $update = "UPDATE " . $this->table . " SET " . $output . " WHERE id='" . $id . "'";
                 
-            $update = $this->db->query($update);
+            $update = self::db()->query($update);
 
-            $erro = $this->db->errorInfo();
+            $erro = self::db()->errorInfo();
 
             if (empty($erro[2])){
                 $select = "SELECT * FROM " . $this->table . " WHERE situacao = 'ativo' AND id = '" . $id . "'";
-                $select = $this->db->query($select);
+                $select = self::db()->query($select);
                 $select = $select->fetch(PDO::FETCH_ASSOC);
             }
 
@@ -88,7 +87,7 @@ class Servicos extends model {
             
             //se não achar nenhum usuario associado ao grupo - pode deletar, ou seja, tornar o cadastro situacao=excluído
             $sql = "SELECT * FROM ". $this->table ." WHERE id = '$id' AND situacao = 'ativo'";
-            $sql = $this->db->query($sql);
+            $sql = self::db()->query($sql);
             
             if($sql->rowCount() > 0){  
                 return true;

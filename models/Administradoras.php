@@ -3,15 +3,11 @@
 
 class Administradoras extends model {
     
-    public function __construct($id = "") {
-        parent::__construct(); 
-    }
-    
     public function pegarListaBandeiras() {
        $array = array();
        
        $sql = "SELECT id, nome FROM bandeiras WHERE situacao = 'ativo'";      
-       $sql = $this->db->query($sql);
+       $sql = self::db()->query($sql);
        if($sql->rowCount()>0){
          $array = $sql->fetchAll(); 
        }
@@ -27,10 +23,10 @@ class Administradoras extends model {
             $alteracoes = ucwords($_SESSION["nomeFuncionario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
             //inserir a administradora e depois inserir as bandeiras aceitas////////////////////////////////////////////////////
             $sql = "INSERT INTO administradoras (id, nome, alteracoes, situacao) VALUES (DEFAULT, '$nome', '$alteracoes', 'ativo')";
-            $this->db->query($sql);
+            self::db()->query($sql);
             
             //inserir as bandeiras //////////////////////////////////////////////////////////////////////////////////////////////
-            $id_adm = $this->db->lastInsertId();
+            $id_adm = self::db()->lastInsertId();
             
             $sqlA = "INSERT INTO bandeiras_aceitas (id, nome, informacoes, txantecipacao, txcredito, id_adm, alteracoes, situacao) VALUES ";
             $sqlAux = "";
@@ -39,7 +35,7 @@ class Administradoras extends model {
                     }
                     $sqlAux = substr_replace($sqlAux,"", strrpos($sqlAux, ","));
                     $sqlA = $sqlA.$sqlAux.";";
-                    $this->db->query($sqlA);
+                    self::db()->query($sqlA);
         }           
     }
 
@@ -47,7 +43,7 @@ class Administradoras extends model {
        $array = array();
        if(!empty($id_adm)){
             $sql = "SELECT * FROM bandeiras_aceitas WHERE id_adm = '$id_adm' AND situacao = 'ativo'";
-            $sql = $this->db->query($sql);
+            $sql = self::db()->query($sql);
                 
             if($sql->rowCount() > 0){
                 $array = $sql->fetchAll();
@@ -62,7 +58,7 @@ class Administradoras extends model {
             $sqlA = "SELECT ba.id, ba.informacoes, ba.txantecipacao, ba.txcredito, b.nome ".
                     "FROM bandeiras_aceitas as ba INNER JOIN bandeiras as b ON ba.nome = b.id ".
                     "WHERE ba.id_adm ='$idadm'";
-            $sqlA = $this->db->query($sqlA);
+            $sqlA = self::db()->query($sqlA);
             if($sqlA->rowCount()>0){
                 $sqlA = $sqlA->fetchAll();
                 foreach ($sqlA as $chave => $valor){
@@ -78,7 +74,7 @@ class Administradoras extends model {
         $array = array();
        if(!empty($id_adm)){         
             $sql = "SELECT * FROM administradoras WHERE id = '$id_adm' AND situacao = 'ativo'";
-            $sql = $this->db->query($sql);
+            $sql = self::db()->query($sql);
                 
             if($sql->rowCount() > 0){
                 $array = $sql->fetch();
@@ -96,13 +92,13 @@ class Administradoras extends model {
             
             /////// atualiza o nome e as alterações da administradora
             $sql = "UPDATE administradoras SET nome='$nome', alteracoes='$altera' WHERE id='$id_adm'";          
-            $this->db->query($sql);
+            self::db()->query($sql);
             
             //busca as informações das bandeiras cadastradas
             $idCad = array();
             $alterCad = array();
             $sql = "SELECT id, alteracoes FROM bandeiras_aceitas WHERE id_adm = '$id_adm' AND situacao = 'ativo'";
-            $sql = $this->db->query($sql);
+            $sql = self::db()->query($sql);
             if($sql->rowCount() > 0){
                foreach ($sql->fetchAll() as $idChave => $idValor){
                     $idCad[] = $idValor["id"];
@@ -120,14 +116,14 @@ class Administradoras extends model {
                     $altera1 = $altera1." | ".ucwords($_SESSION["nomeFuncionario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - ALTERACAO";
                     $sqlA = "UPDATE bandeiras_aceitas SET  informacoes='$informacoes[$idBand]', txantecipacao='$txantecipacoes[$idBand]', txcredito='$txcreditos[$idBand]',".
                             " alteracoes='$altera1' WHERE id='$idBand' AND id_adm='$id_adm'";
-                    $sqlA = $this->db->query($sqlA);
+                    $sqlA = self::db()->query($sqlA);
                 }else{
                     
                     //não foi encontrada deve ser inserida
                     $alteracoes = ucwords($_SESSION["nomeFuncionario"])." - (ipcliente) - ".date('d/m/Y H:i:s')." - CADASTRO";
                     $sqlB ="INSERT INTO bandeiras_aceitas (id, nome, informacoes, txantecipacao, txcredito, id_adm, alteracoes, situacao) VALUES".
                     " (DEFAULT, '$nomeBand', '$informacoes[$idBand]','$txantecipacoes[$idBand]', '$txcreditos[$idBand]', '$id_adm', '$alteracoes', 'ativo')";                   
-                    $sqlB = $this->db->query($sqlB);
+                    $sqlB = self::db()->query($sqlB);
                 }
             }
             
@@ -141,7 +137,7 @@ class Administradoras extends model {
                      $alterac =  $aux1[0];
                      $alterac = $alterac." | ".ucwords($_SESSION["nomeFuncionario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - EXCLUSAO";
                      $sqlC = "UPDATE bandeiras_aceitas SET alteracoes='$alterac', situacao='excluido' WHERE id='$idVal' AND id_adm='$id_adm'";
-                     $sqlC = $this->db->query($sqlC);
+                     $sqlC = self::db()->query($sqlC);
                  }
              } 
             
@@ -153,7 +149,7 @@ class Administradoras extends model {
             
             //se não achar nenhum usuario associado ao grupo - pode deletar, ou seja, tornar o cadastro situacao=excluído
             $sql = "SELECT alteracoes FROM administradoras WHERE id = '$id_adm' AND situacao = 'ativo'";
-            $sql = $this->db->query($sql);
+            $sql = self::db()->query($sql);
 
             if($sql->rowCount() > 0){ 
                $sql = $sql->fetch(); 
@@ -163,11 +159,11 @@ class Administradoras extends model {
                //exclui a administradora
                $palter = $palter." | ".ucwords($_SESSION["nomeFuncionario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - EXCLUSAO";
                $sqlA = "UPDATE administradoras SET alteracoes = '$palter', situacao = 'excluido' WHERE id = '$id_adm'";
-               $this->db->query($sqlA);
+               self::db()->query($sqlA);
                
                
                $sqlB = "SELECT * FROM bandeiras_aceitas WHERE id_adm = '$id_adm' AND situacao = 'ativo'";
-               $sqlB = $this->db->query($sqlB);
+               $sqlB = self::db()->query($sqlB);
                 if($sqlB->rowCount() > 0){
                     $sqlB = $sqlB->fetchAll();
                                      
@@ -177,7 +173,7 @@ class Administradoras extends model {
                         $alter = $valorBand["alteracoes"];
                         $alter = $alter." | ".ucwords($_SESSION["nomeFuncionario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - EXCLUSAO";
                         $sqlC = "UPDATE bandeiras_aceitas SET alteracoes = '$alter', situacao = 'excluido' WHERE id_adm = '$id_adm' AND id=".$valorBand['id'];
-                        $this->db->query($sqlC);  
+                        self::db()->query($sqlC);  
                     }
                }
             }         
@@ -188,7 +184,7 @@ class Administradoras extends model {
         $array = array();
         if(!empty($nome)){
             $sql = "SELECT nome FROM administradoras WHERE nome='$nome' AND situacao='ativo'";
-            $sql = $this->db->query($sql);
+            $sql = self::db()->query($sql);
             if($sql->rowCount()>0){
                 $array = $sql->fetchAll();
             } 

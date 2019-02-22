@@ -1,7 +1,6 @@
 <?php
 class homeController extends controller{
     public function __construct() {
-        parent::__construct();
     
        $usuario = new Usuarios();
        

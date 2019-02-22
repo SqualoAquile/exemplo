@@ -2,10 +2,6 @@
 <?php
 
 class Lancamentos extends model {
-    
-    public function __construct($id = "") {
-        parent::__construct(); 
-    }
         
     public function adicionar($descricao, $valortotal, $formapgto, $condpgto, $nroparc, $dtvenc, $valorpago, $dtquit, $status, $dtop, $nropedido, $mov, $sintetica, $analitica,
                                 $cc, $bandeira, $favorecido, $observ, $empresa){
@@ -50,7 +46,7 @@ class Lancamentos extends model {
                 }
                 $sqlAux = substr_replace($sqlAux,"", strrpos($sqlAux, ","));
                 $sqlA = $sqlA.$sqlAux.";";
-                $this->db->query($sqlA);
+                self::db()->query($sqlA);
         }           
     }
     
@@ -58,7 +54,7 @@ class Lancamentos extends model {
         $array = array();
         if(!empty($empresa)){
             $sqlA = "SELECT * FROM fluxo WHERE id_empresa = '$empresa' AND status = 'A Quitar' AND situacao = 'ativo' ORDER BY dt_vencimento ASC";
-            $sqlA = $this->db->query($sqlA);
+            $sqlA = self::db()->query($sqlA);
             if($sqlA->rowCount()>0){
                 $array = $sqlA->fetchAll();
             }
@@ -71,7 +67,7 @@ class Lancamentos extends model {
        $array = array();
        
        $sql = "SHOW COLUMNS FROM fluxo";      
-       $sql = $this->db->query($sql);
+       $sql = self::db()->query($sql);
        if($sql->rowCount()>0){
          $sql = $sql->fetchAll(); 
          foreach ($sql as $chave => $valor){
@@ -105,7 +101,7 @@ class Lancamentos extends model {
 
             }
                       
-            $resp = $this->db->query($sqlAux);
+            $resp = self::db()->query($sqlAux);
             
             if($resp->rowCount()<=0){
                 $resp = 0;
@@ -143,7 +139,7 @@ class Lancamentos extends model {
                                     "forma_pgto = '$forma', cond_pgto = '$cond', dt_vencimento = '$dtvenc', valor_pago = '$vpago', observacao = '$observ', alteracoes = '$altera' ".
                    "WHERE id = '$id' AND id_empresa = '$empresa'";
                       
-            $resp = $this->db->query($sql);
+            $resp = self::db()->query($sql);
             
             if($resp->rowCount()<=0){
                 $resp = 0;

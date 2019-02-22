@@ -6,7 +6,6 @@ class controlecaixaController extends controller{
     protected $shared;
 
     public function __construct() {
-        parent::__construct();
     
        $func = new Funcionarios();
        $this->shared = new Shared($this->table);

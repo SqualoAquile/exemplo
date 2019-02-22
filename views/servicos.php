@@ -21,36 +21,33 @@
 
                         <h3 class="pb-4"><?php echo array_key_exists("label", $value["comentarios"]) ? $value["comentarios"]["label"] : ucwords(str_replace("_", " ", $value['parametro'])) ?></h3>
 
-                        <div class="row align-items-end">
+                        <div class="form-group row">
                             <?php foreach ($colunas as $key_coluna => $value_coluna): ?>
                                 <?php if(isset($value_coluna["Comment"]) && array_key_exists("form", $value_coluna["Comment"]) && $value_coluna["Comment"]["form"] != "false") : ?>
                                     <div class="col-lg">
-                                        <div class="form-group mb-lg-0">
-                                            <!-- Label Geral -->
-                                            <label class="<?php echo $value_coluna["Null"] == "NO" ? "font-weight-bold" : "" ?>" for="<?php echo lcfirst($value_coluna["Field"] . $value["descricao"]) ?>">
-                                                <!-- Asterisco de campo obrigatorio -->
-                                                <?php if ($value_coluna["Null"] == "NO"): ?>
-                                                    <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
-                                                <?php endif ?>
-                                                <span><?php echo array_key_exists("label", $value_coluna["Comment"]) ? $value_coluna["Comment"]["label"] : ucwords(str_replace("_", " ", $value_coluna['Field'])) ?></span>
-                                            </label>
-                                            <input 
-                                                type="text" 
-                                                class="form-control input-servicos" 
-                                                name="<?php echo lcfirst($value_coluna["Field"]) ?>" 
-                                                value="<?php echo $value[$value_coluna["Field"]] ?>"
-                                                data-unico="<?php echo array_key_exists("unico", $value["comentarios"]) && $value["comentarios"]["unico"]  == true ? "unico" : "" ?>"
-                                                data-anterior="<?php echo $value[$value_coluna["Field"]] ?>"
-                                                id="<?php echo lcfirst($value_coluna["Field"] . $value["descricao"]) ?>" 
-                                                maxlength="<?php echo $value_coluna["tamanhoMax"] ?>"
-                                                data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["comentarios"]) ? $value["comentarios"]["mascara_validacao"] : "false" ?>"
-                                                <?php echo $value_coluna['Null'] == "NO" ? "required" : "" ?>
-                                                <?php if( array_key_exists("mascara_validacao", $value["comentarios"]) && 
-                                                        ( $value["comentarios"]["mascara_validacao"] == "monetario" || $value["comentarios"]["mascara_validacao"] == "porcentagem" )):?>
-                                                    data-podeZero="<?php echo array_key_exists("pode_zero", $value["comentarios"]) && $value["comentarios"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
-                                                <?php endif?>
-                                            />
-                                        </div>
+                                        <label class="<?php echo $value_coluna["Null"] == "NO" ? "font-weight-bold" : "" ?>" for="<?php echo lcfirst($value_coluna["Field"] . $value["descricao"]) ?>">
+                                            <!-- Asterisco de campo obrigatorio -->
+                                            <?php if ($value_coluna["Null"] == "NO"): ?>
+                                                <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
+                                            <?php endif ?>
+                                            <span><?php echo array_key_exists("label", $value_coluna["Comment"]) ? $value_coluna["Comment"]["label"] : ucwords(str_replace("_", " ", $value_coluna['Field'])) ?></span>
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            class="form-control input-servicos" 
+                                            name="<?php echo lcfirst($value_coluna["Field"]) ?>" 
+                                            value="<?php echo $value[$value_coluna["Field"]] ?>"
+                                            data-unico="<?php echo array_key_exists("unico", $value["comentarios"]) && $value["comentarios"]["unico"]  == true ? "unico" : "" ?>"
+                                            data-anterior="<?php echo $value[$value_coluna["Field"]] ?>"
+                                            id="<?php echo lcfirst($value_coluna["Field"] . $value["descricao"]) ?>" 
+                                            maxlength="<?php echo $value_coluna["tamanhoMax"] ?>"
+                                            data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["comentarios"]) ? $value["comentarios"]["mascara_validacao"] : "false" ?>"
+                                            <?php echo $value_coluna['Null'] == "NO" ? "required" : "" ?>
+                                            <?php if( array_key_exists("mascara_validacao", $value["comentarios"]) && 
+                                                    ( $value["comentarios"]["mascara_validacao"] == "monetario" || $value["comentarios"]["mascara_validacao"] == "porcentagem" )):?>
+                                                data-podeZero="<?php echo array_key_exists("pode_zero", $value["comentarios"]) && $value["comentarios"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
+                                            <?php endif?>
+                                        />
                                     </div>
                                 <?php endif ?>
                             <?php endforeach ?>
