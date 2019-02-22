@@ -12,6 +12,8 @@ $(function () {
                 $nome = $('[name=nome]'),
                 $dtNascimento = $('[name=data_nascimento]'),
                 $razaoSocial = $('[name=razao_social]');
+                $telefone = $('[name=telefone]');
+                $celular = $('[name=celular]');
 
             $input.removeClass('is-valid is-invalid');
             $input.siblings('.invalid-feedback').remove();
@@ -32,6 +34,22 @@ $(function () {
                     .find('span')
                     .text('CNPJ');
 
+                    // Telefone é obrigatório para PJ, celular não
+                $telefone
+                    .attr('required');
+                $telefone
+                    .siblings('label')
+                    .addClass('font-weight-bold')
+                    .find('i')
+                    .show();
+
+                $celular
+                    .removeAttr('required');
+                $celular
+                    .siblings('label')
+                    .removeClass('font-weight-bold')
+                    .find('i')
+                    .hide();
 
                 var dadosAnteriores = '';
                 if ($hiddenContatos.attr('data-anterior-aux') != undefined) {
@@ -56,40 +74,60 @@ $(function () {
                     .parents('[class^=col-]')
                     .hide();
 
-            } else {
+                } else {
+                    
+                    $input
+                        .mask('000.000.000-00')
+                        .siblings('label')
+                        .find('span')
+                        .text('CPF');
+                    
+                    $telefone
+                        .removeAttr('required')
 
-                $input
-                    .mask('000.000.000-00')
-                    .siblings('label')
-                    .find('span')
-                    .text('CPF');
+                    $telefone
+                        .siblings('label')
+                        .removeClass('font-weight-bold')
+                        .find('i')
+                        .hide();
+                        
 
-                $contatosForm.hide();
-                $contatosForm[0].reset();
+                    // Celular é obrigatório para PF, telefone não
+                    $celular
+                        .attr('required');
+                    $celular
+                        .siblings('label')  
+                        .addClass('font-weight-bold')
+                        .find('i')
+                        .show();             
 
-                $contatosForm
-                    .find('.disabled')
-                    .removeClass('disabled')
+                    $contatosForm.hide();
+                    $contatosForm[0].reset();
 
-                $('table#contatos thead tr[role=form]')
-                    .removeAttr('data-current-id')
-                    .find('[data-anterior]')
-                    .removeAttr('data-anterior');
+                    $contatosForm
+                        .find('.disabled')
+                        .removeClass('disabled')
 
-                $hiddenContatos.val('');
+                    $('table#contatos thead tr[role=form]')
+                        .removeAttr('data-current-id')
+                        .find('[data-anterior]')
+                        .removeAttr('data-anterior');
 
-                $nome
-                    .siblings('label')
-                    .find('span')
-                    .text('Nome');
+                    $hiddenContatos.val('');
 
-                $razaoSocial
-                    .parents('[class^=col-]')
-                    .hide();
+                    $nome
+                        .siblings('label')
+                        .find('span')
+                        .text('Nome');
 
-                $dtNascimento
-                    .parents('[class^=col-]')
-                    .show();
+                    $razaoSocial
+                        .parents('[class^=col-]')
+                        .hide();
+
+                    $dtNascimento
+                        .parents('[class^=col-]')
+                        .show();
+
             }
         }
     }).change();

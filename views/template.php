@@ -77,8 +77,8 @@
             [
                "text" => "Controle de Saldos",
                "icon" => "fas fa-chart-line",
-               "permissao" => "controlecaixa_ver",
-               "link" => "/controlecaixa"
+               "permissao" => "controle_saldos_ver",
+               "link" => "/controle_saldos"
             ]
          ]
       ],
