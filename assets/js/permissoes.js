@@ -1,97 +1,75 @@
-$(function(){
-   $('.table_pm input').click(function(){
-        var nomep = $(this).closest('td').children('label').html();
-        var valp = $(this).val();
-        var idp = '';
-        var valpaux = '';
-        
-        if(nomep.indexOf('_ver') == -1){
-            if(nomep.indexOf('relatorios') == -1){
-                if(nomep.indexOf('_add') !== -1){
-                    valp = valp - 1;
-                    idp = '#p_'+valp;
-                    if($(idp).is(':checked') == false){
-                        $(idp).click();
-                    }
-                }else if (nomep.indexOf('_edt') !== -1){
-                    valp = valp - 2;
-                    idp = '#p_'+valp;
-                    if($(idp).is(':checked') == false){
-                        $(idp).click();
-                    }
+$(function () {
 
-                }else if (nomep.indexOf('_exc') !== -1){
-                    valp = valp - 3;
-                    idp = '#p_'+valp;
-                    if($(idp).is(':checked') == false){
-                        $(idp).click();
-                    }
+    function checkboxs() {
+
+        $('[type=checkbox]').each(function () {
+                    
+            var $this = $(this),
+                textPermissao = $this.attr('id');
+    
+            textPermissaoSplit = textPermissao.split('_');
+    
+            var nome = textPermissaoSplit[0],
+                permissao = textPermissaoSplit[1],
+                $brothers = $('[type=checkbox][id^=' + nome + ']:not(#' + textPermissao + ')');
+    
+                
+            if (permissao == 'ver') {
+    
+                if ($this.is(':checked')) {
+                    $brothers.removeAttr('disabled');
+                } else {
+                    $brothers.attr('disabled', 'disabled');
+                    $brothers.prop('checked', false);
                 }
-            }else{
-                valp = valp - 1;
-                idp = '#p_'+valp;
-                if($(idp).is(':checked') == false){
-                    $(idp).click();
-                }
-            }    
-        }else{
-            if($(this).is(':checked') == false){
-               var idp1 = '#p_'+(parseInt(valp)+1);
-               var idp2 = '#p_'+(parseInt(valp)+2);
-               var idp3 = '#p_'+(parseInt(valp)+3);
-               if($(idp1).is(':checked')){
-                  $(idp1).prop('checked', false); 
-               }
-               if($(idp2).is(':checked')){
-                  $(idp2).prop('checked', false); 
-               }
-               if($(idp3).is(':checked')){
-                  $(idp3).prop('checked', false); 
-               }
-               
             }
-        }
-   });
-   
-   $('#igrupos').DataTable( 
-        {
-            scrollY: '100vh',
-            scrollCollapse: true,
-            "scrollX": true,
-            
-            responsive:true,
-            
-            "language": {
-                "decimal": ",",
-                "thousands": ".",
-                "sEmptyTable": "Nenhum registro encontrado",
-                "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
-                "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
-                "sInfoFiltered": "(Filtrados de _MAX_ registros)",
-                "sInfoPostFix": "",
-                "sInfoThousands": ".",
-                "sLengthMenu": "_MENU_ Resultados por página",
-                "sLoadingRecords": "Carregando...",
-                "sProcessing": "Processando...",
-                "sZeroRecords": "Nenhum registro encontrado",
-                "sSearch": "Pesquisar",
-                "oPaginate": {
-                    "sNext": "Próximo",
-                    "sPrevious": "Anterior",
-                    "sFirst": "Primeiro",
-                    "sLast": "Último"
-                },
-                "oAria": {
-                    "sSortAscending": ": Ordenar colunas de forma ascendente",
-                    "sSortDescending": ": Ordenar colunas de forma descendente"
+        });
+    }
+
+    $(this)
+        .ready(function () {
+            checkboxs();
+        })
+        .on('change', '[type=checkbox]', function () {
+            checkboxs();
+        })
+        .on('submit', 'form', function (e) {
+
+            var $alteracoes = $('[name=alteracoes]');
+
+            if ($alteracoes.val() != '') {
+
+                var campos_alterados = '';
+                $('[type=checkbox]').each(function () {
+
+                    let $this = $(this),
+                        text_label = $this.siblings('label').text();
+
+                    if (!!$this.attr('data-anterior') != $this.prop('checked')) {
+                        
+                        let dataAnterior = $this.attr('data-anterior') == 'true' ? 'Tem Permissão' : 'Não Tem Permissão',
+                            valorAtual = $this.prop('checked') ? 'Tem Permissão' : 'Não Tem Permissão';
+
+                        campos_alterados += '{' + text_label.toUpperCase() + ' de (' + dataAnterior + ') para (' + valorAtual + ')}';
+                    }
+                });
+
+                $('[type=text]').each(function () {
+
+                    let $this = $(this),
+                        text_label = $this.siblings('label').find('span').text(),
+                        dataAnterior = $this.attr('data-anterior'),
+                        valorAtual = $this.val();
+
+                    if (dataAnterior != valorAtual) {
+                        campos_alterados += '{' + text_label.toUpperCase() + ' de (' + dataAnterior + ') para (' + valorAtual + ')}';
+                    }
+                });
+
+                if (campos_alterados != '') {
+
+                    $alteracoes.val($alteracoes.val() + '##' + campos_alterados);
                 }
-            },
-        
-            "lengthMenu": [[10, 20, 30, -1], [10, 20, 30, "All"]],
-            
-            "dom": '<l><t><ip>'
-        }
-        
-    );
-   
+            }
+        });;
 });

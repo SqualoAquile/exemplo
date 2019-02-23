@@ -84,17 +84,46 @@ class Permissoes extends model {
         return $array;
     }  
     
-    public function editarGrupo($pnome, $pLista, $palter, $id_grupo){
+    public function editarGrupo($id, $request){
         
-        if(!empty($pnome) && !empty($pLista) && !empty($palter) && !empty($id_grupo)){
+        if(!empty($id)){
 
-            $params = implode(",", $pLista);
+            $id = addslashes(trim($id));
+            $nome = addslashes(trim($request["nome"]));
+
             $ipcliente = $this->pegaIPcliente();
-            $palter = $palter." | ".ucwords($_SESSION["nomeUsuario"])." - ".$ipcliente." - ".date('d/m/Y H:i:s')." - ALTERACAO";
-            
-            $sql = "UPDATE permissoes SET nome = '$pnome', parametros = '$params', alteracoes = '$palter' WHERE id = '$id_grupo'";
+            $hist = explode("##", addslashes($request['alteracoes']));
 
-            self::db()->query($sql);             
+            if(!empty($hist[1])){ 
+                $alteracoes = $hist[0]." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - ALTERAÇÃO >> ".$hist[1];
+            }else{
+                $_SESSION["returnMessage"] = [
+                    "mensagem" => "Houve uma falha, tente novamente! <br /> Registro sem histórico de alteração.",
+                    "class" => "alert-danger"
+                ];
+                return false;
+            }
+
+            $params = implode(",", $request["permissoes"]);
+            
+            $sql = "UPDATE " . $this->table . " SET nome = '$nome', parametros = '$params', alteracoes = '$alteracoes' WHERE id = '$id'";
+
+            self::db()->query($sql);
+            
+            $erro = self::db()->errorInfo();
+
+            if (empty($erro[2])){
+
+                $_SESSION["returnMessage"] = [
+                    "mensagem" => "Grupo de permissão alterado com sucesso!",
+                    "class" => "alert-success"
+                ];
+            } else {
+                $_SESSION["returnMessage"] = [
+                    "mensagem" => "Houve uma falha, tente novamente! <br /> ".$erro[2],
+                    "class" => "alert-danger"
+                ];
+            }
         }
     }
 

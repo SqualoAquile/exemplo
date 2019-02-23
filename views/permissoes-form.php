@@ -1,8 +1,12 @@
 <?php $modulo = str_replace("-form", "", basename(__FILE__, ".php")) ?>
 <script type="text/javascript">
-    var baselink = '<?php echo BASE_URL;?>',
+    var baselink = '<?php echo BASE_URL ?>',
         currentModule = '<?php echo $modulo ?>'
 </script>
+
+<!-- Chama o arquivo específico do módulo, caso não exista,  -->
+<!-- Este javaScript serve para fazer verificações inerentes à cada módulo, por exemplo o radio de Clientes -->
+<script src="<?php echo BASE_URL?>/assets/js/<?php echo $modulo?>.js" type="text/javascript"></script>
 
 <header class="d-lg-flex align-items-center my-5">
     <?php if(in_array($modulo . "_ver", $infoUser["permissoesUsuario"])): ?>
@@ -16,58 +20,74 @@
 <form method="POST" class="mb-5">
 
     <div class="form-group pb-4">
-        <input type="text" name="enome" id="inome" placeholder="Nome do Grupo" class="form-control" value="<?php echo isset($permAtivas) ? $permAtivas["nome"] : "" ?>" required/>
+        <label for="nome" class="font-weight-bold">
+            <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
+            <span>Nome do Grupo</span>
+        </label>
+        <input type="text" data-anterior="<?php echo $permAtivas["nome"] ?>" name="nome" id="nome" class="form-control" value="<?php echo isset($permAtivas) ? $permAtivas["nome"] : "" ?>" required/>
     </div>
-        
-    <table class="table table-striped table-hover bg-white table-nowrap">
-        <thead>
-            <tr>
-                <th>Ver</th>
-                <th>Adicionar</th>
-                <th>Editar</th>
-                <th>Excluir</th>
-            </tr>
-        </thead>
-        <tbody>
-                
-            <?php for($i=0;$i<= count($listaPermissoes)-3;$i+=4):?>
-            <tr>
-                <td>
-                    <input type="checkbox" name='epermissoes[]' value="<?php echo $listaPermissoes[$i+0]["id"];?>" id="p_<?php echo $listaPermissoes[$i+0]["id"];?>" <?php echo (isset($permAtivas) && in_array($listaPermissoes[$i+0]["id"], $permAtivas["params"]))?'checked="checked"':'';?>/>
-                    <label for="p_<?php echo $listaPermissoes[$i+0]["id"];?>"><?php echo $listaPermissoes[$i+0]["nome"];?></label><br/>
-                </td>
-                <td>
-                    <input type="checkbox" name='epermissoes[]' value="<?php echo $listaPermissoes[$i+1]["id"];?>" id="p_<?php echo $listaPermissoes[$i+1]["id"];?>" <?php echo (isset($permAtivas) && in_array($listaPermissoes[$i+1]["id"], $permAtivas["params"]))?'checked="checked"':'';?>/>
-                    <label for="p_<?php echo $listaPermissoes[$i+1]["id"];?>"><?php echo $listaPermissoes[$i+1]["nome"];?></label><br/>
-                </td>
-                <td>
-                    <input type="checkbox" name='epermissoes[]' value="<?php echo $listaPermissoes[$i+2]["id"];?>" id="p_<?php echo $listaPermissoes[$i+2]["id"];?>" <?php echo (isset($permAtivas) && in_array($listaPermissoes[$i+2]["id"], $permAtivas["params"]))?'checked="checked"':'';?>/>
-                    <label for="p_<?php echo $listaPermissoes[$i+2]["id"];?>"><?php echo $listaPermissoes[$i+2]["nome"];?></label><br/>
-                </td>
-                <td>
-                    <input type="checkbox" name='epermissoes[]' value="<?php echo $listaPermissoes[$i+3]["id"];?>" id="p_<?php echo $listaPermissoes[$i+3]["id"];?>" <?php echo (isset($permAtivas) && in_array($listaPermissoes[$i+3]["id"], $permAtivas["params"]))?'checked="checked"':'';?>/>
-                    <label for="p_<?php echo $listaPermissoes[$i+3]["id"];?>"><?php echo $listaPermissoes[$i+3]["nome"];?></label><br/>
-                </td>
-            </tr>  
-            <?php endfor;?>
-            <tr>
-                <td>
-                    <input type="checkbox" name='epermissoes[]' value="<?php echo $listaPermissoes[count($listaPermissoes)-2]["id"];?>" id="p_<?php echo $listaPermissoes[count($listaPermissoes)-2]["id"];?>" <?php echo (isset($permAtivas) && in_array($listaPermissoes[count($listaPermissoes)-2]["id"], $permAtivas["params"]))?'checked="checked"':'';?>/>
-                    <label for="p_<?php echo $listaPermissoes[count($listaPermissoes)-2]["id"];?>"><?php echo $listaPermissoes[count($listaPermissoes)-2]["nome"];?></label><br/>
-                </td>
-                <td>
-                    <input type="checkbox" name='epermissoes[]' value="<?php echo $listaPermissoes[count($listaPermissoes)-1]["id"];?>" id="p_<?php echo $listaPermissoes[count($listaPermissoes)-1]["id"];?>" <?php echo (isset($permAtivas) && in_array($listaPermissoes[count($listaPermissoes)-1]["id"], $permAtivas["params"]))?'checked="checked"':'';?>/>
-                    <label for="p_<?php echo $listaPermissoes[count($listaPermissoes)-1]["id"];?>"><?php echo $listaPermissoes[count($listaPermissoes)-1]["nome"];?></label><br/>
-                </td>
 
-            </tr>
+    <div class="table-responsive mb-lg-5 mb-3">
+        <table class="table table-striped table-hover bg-white table-nowrap">
+            <thead>
+                <tr>
+                    <th>Ver</th>
+                    <th>Adicionar</th>
+                    <th>Editar</th>
+                    <th>Excluir</th>
+                </tr>
+            </thead>
+            <tbody>
+                    
+                <?php for($i=0;$i<= count($listaPermissoes)-3;$i+=4):?>
+                <tr>
+                    <td>
+                        <div class="form-check">
+                            <input data-anterior="<?php echo (isset($permAtivas) && in_array($listaPermissoes[$i+0]["id"], $permAtivas["params"])) ? 'true' : '' ?>" type="checkbox" name='permissoes[]' class="form-check-input" value="<?php echo $listaPermissoes[$i+0]["id"] ?>" id="<?php echo $listaPermissoes[$i+0]["nome"] ?>" <?php echo (isset($permAtivas) && in_array($listaPermissoes[$i+0]["id"], $permAtivas["params"])) ? 'checked="checked"' : '' ?>/>
+                            <label for="<?php echo $listaPermissoes[$i+0]["nome"] ?>" class="form-check-label"><?php echo $listaPermissoes[$i+0]["nome"] ?></label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-check">
+                            <input data-anterior="<?php echo (isset($permAtivas) && in_array($listaPermissoes[$i+1]["id"], $permAtivas["params"])) ? 'true' : '' ?>" type="checkbox" name='permissoes[]' class="form-check-input" value="<?php echo $listaPermissoes[$i+1]["id"] ?>" id="<?php echo $listaPermissoes[$i+1]["nome"] ?>" <?php echo (isset($permAtivas) && in_array($listaPermissoes[$i+1]["id"], $permAtivas["params"])) ? 'checked="checked"' : '' ?>/>
+                            <label for="<?php echo $listaPermissoes[$i+1]["nome"] ?>" class="form-check-label"><?php echo $listaPermissoes[$i+1]["nome"] ?></label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-check">
+                            <input data-anterior="<?php echo (isset($permAtivas) && in_array($listaPermissoes[$i+2]["id"], $permAtivas["params"])) ? 'true' : '' ?>" type="checkbox" name='permissoes[]' class="form-check-input" value="<?php echo $listaPermissoes[$i+2]["id"] ?>" id="<?php echo $listaPermissoes[$i+2]["nome"] ?>" <?php echo (isset($permAtivas) && in_array($listaPermissoes[$i+2]["id"], $permAtivas["params"])) ? 'checked="checked"' : '' ?>/>
+                            <label for="<?php echo $listaPermissoes[$i+2]["nome"] ?>" class="form-check-label"><?php echo $listaPermissoes[$i+2]["nome"] ?></label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-check">
+                            <input data-anterior="<?php echo (isset($permAtivas) && in_array($listaPermissoes[$i+3]["id"], $permAtivas["params"])) ? 'true' : '' ?>" type="checkbox" name='permissoes[]' class="form-check-input" value="<?php echo $listaPermissoes[$i+3]["id"] ?>" id="<?php echo $listaPermissoes[$i+3]["nome"] ?>" <?php echo (isset($permAtivas) && in_array($listaPermissoes[$i+3]["id"], $permAtivas["params"])) ? 'checked="checked"' : '' ?>/>
+                            <label for="<?php echo $listaPermissoes[$i+3]["nome"] ?>" class="form-check-label"><?php echo $listaPermissoes[$i+3]["nome"] ?></label>
+                        </div>
+                    </td>
+                </tr>  
+                <?php endfor ?>
 
-        </tbody>
+            </tbody>
 
-    </table>
+        </table>
+    </div>
 
-    <input type="hidden" name="alter" value="<?php echo $permAtivas["alteracoes"];?>">
+    <input type="hidden" name="alteracoes" value="<?php echo $permAtivas["alteracoes"] ?>">
 
-    <button type="submit" class="btn btn-primary" onclick="return confirm('Tem certeza?')">Editar</button>
-   
+    <div class="row">
+        <div class="col-xl-2 col-lg-3">
+            <button type="submit" class="btn btn-primary btn-block mb-2" onclick="return confirm('Tem certeza?')">Salvar</button>
+        </div>
+
+        <?php if (isset($permAtivas)): ?>
+            <?php $item["alteracoes"] = $permAtivas["alteracoes"] ?>
+            <div class="col-xl-2 col-lg-3">
+                <button class="btn btn-dark btn-block" type="button" data-toggle="collapse" data-target="#historico" aria-expanded="false" aria-controls="historico">Histórico de Alterações</button>
+            </div>
+        <?php endif ?>
+    </div>
+
+    <?php include "_historico.php" ?>
+
 </form>
