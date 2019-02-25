@@ -3,7 +3,7 @@
         <?php
         function breadcrumbs() {
             
-            $url = str_replace(strtolower(NOME_EMPRESA), "", parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+            $url = str_replace(dirname($_SERVER['PHP_SELF']), "", parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
             $url = preg_replace("/\d+/u", "", $url);
             
             $path = array_filter(explode('/', $url));

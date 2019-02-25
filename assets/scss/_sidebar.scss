@@ -2,12 +2,14 @@
 	padding-left: 0;
 	transition: all 0.5s ease;
 	&.toggled {
-		padding-left: $sidebar-width;
 		#sidebar-wrapper {
 			width: $sidebar-width;
 		}
-		#page-content-wrapper {
-			margin-right: -$sidebar-width;
+		@include media-breakpoint-up(md) {
+			padding-left: $sidebar-width;
+			#page-content-wrapper {
+				margin-right: -$sidebar-width;
+			}
 		}
 	}
 }

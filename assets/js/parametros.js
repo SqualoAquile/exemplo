@@ -1,3 +1,14 @@
+const parametrosSemAcoes = [
+    'dinheiro',
+    'cartão débito',
+    'cartão crédito',
+    'boleto',
+    'cheque',
+    'transferência',
+    'TED',
+    'DOC'
+];
+
 function Ajax (url, callback, send = {}) {
     $.ajax({
         url: baselink + '/parametros/' + url,
@@ -10,22 +21,31 @@ function Ajax (url, callback, send = {}) {
 
 function Popula ($wrapper, data, campo) {
     
-    var htmlContentSearch = '';
+    let htmlContentSearch = '';
 
     data.forEach(element => {
+
+        let htmlAcoes = '';
+
+        if (parametrosSemAcoes.indexOf(element[campo]) == -1) {
+            htmlAcoes = `
+                <div>
+                    <button class="editar btn btn-sm btn-primary" tabindex="-1">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="excluir btn btn-sm btn-secondary" tabindex="-1">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            `;
+        }
+        
         htmlContentSearch += `
             <div id="` + element.id + `" class="list-group-item">
                 <div class="d-flex justify-content-between align-items-center">
-                    <span class="text">` + element[campo] + `</span>
-                    <div>
-                        <button class="editar btn btn-sm btn-primary" tabindex="-1">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="excluir btn btn-sm btn-secondary" tabindex="-1">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </div>
-                </div>
+                    <span class="text">` + element[campo] + `</span>`
+                    + htmlAcoes +
+                `</div>
             </div>
         `;
     });

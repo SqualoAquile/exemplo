@@ -901,7 +901,7 @@ $(function () {
                                 //não faz nada
 
                             }else{
-                                campos_alterados += '{' + text_label.toUpperCase() + ' de (' + $(el).data('anterior') + ') para (' + $(el).val() + ')}';
+                                campos_alterados += '{' + text_label.toUpperCase() + ' de (' + $(el).attr('data-anterior') + ') para (' + $(el).val() + ')}';
                             }
                             
                         }

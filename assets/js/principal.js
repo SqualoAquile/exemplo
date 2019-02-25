@@ -18,6 +18,7 @@ $(function () {
     $('[data-toggle="tooltip"]').tooltip();
 
     $('#menu-toggle').click(function () {
+        $(this).toggleClass('is-active');
         $('#wrapper').toggleClass('toggled');
     });
 

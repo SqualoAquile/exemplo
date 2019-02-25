@@ -80,35 +80,29 @@ class permissoesController extends controller{
             $this->loadTemplate($this->table . "-form", $dados);
         }
     }
-    
+
     public function editar($id) {
-        if(in_array("permissoes_edt",$_SESSION["permissoesUsuario"]) == FALSE || empty($id) || !isset($id)){
-            header("Location: ".BASE_URL."/permissoes"); 
+
+        if(in_array($this->table . "_edt", $_SESSION["permissoesUsuario"]) == false || empty($id) || !isset($id)){
+            header("Location: " . BASE_URL . "/" . $this->table); 
         }
-        $array = array();
+
+        if($this->shared->idAtivo($id) == false){
+            header("Location: " . BASE_URL . "/" . $this->table); 
+        }
+
         $dados['infoUser'] = $_SESSION;
         
-        $id = addslashes($id);
-        
-        if(isset($_POST["enome"]) && !empty($_POST["enome"]) && isset($_POST["epermissoes"]) && !empty($_POST["epermissoes"])){
-            
-            $pnome = addslashes($_POST["enome"]);
-            $pLista = $_POST["epermissoes"];
-            $palter = addslashes($_POST["alter"]);
-            
-            $this->model->editarGrupo($pnome, $pLista, $palter, $id);
-
-            header("Location: ".BASE_URL."/permissoes");
+        if(isset($_POST) && !empty($_POST)){
+            $this->model->editarGrupo($id, $_POST);
+            header("Location: " . BASE_URL . "/" . $this->table); 
         }else{
-
             $dados["listaPermissoes"] = $this->model->pegarListaPermissoes();
             $dados["permAtivas"] = $this->model->pegarPermissoesAtivas($id);
             $dados["viewInfo"] = ["title" => "Editar"];
             $dados["labelTabela"] = $this->shared->labelTabela();
-
             $this->loadTemplate($this->table . "-form", $dados); 
-        } 
-
+        }
     }
 }
 ?>
