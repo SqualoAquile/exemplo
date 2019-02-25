@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="h-100">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -13,10 +13,10 @@
     <script src="<?php echo BASE_URL;?>/assets/js/vendor/bootstrap.min.js" type="text/javascript"></script>
   </head>
 
-  <body class="text-center">
+  <body class="text-center h-100 d-flex align-items-center bg-light">
     <div class="container">
         <div class="row">
-            <div class="col-lg-5 mx-auto">
+            <div class="col-lg-4 mx-auto">
                 <form method="POST" class="form-signin">
                     <?php if(!empty($aviso)):?>
                         <div class="alert alert-danger alert-dismissible mb-5" role="alert">
@@ -33,7 +33,7 @@
                     <label for="inputPassword" class="sr-only">Senha</label>
                     <input type="password" id="inputPassword" class="form-control" name="senha" placeholder="Senha" required>
                     <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">Entrar</button>
-                    <p class="mt-5 mb-3 text-muted">&copy; <strong>SqualoAquile</strong> 2019</p>
+                    <p class="mt-5 mb-3 text-muted">&copy; <strong>Leme</strong> 2019</p>
                 </form>
             </div>
         </div>
