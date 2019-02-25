@@ -53,9 +53,24 @@
                             <?php endforeach ?>
 
                             <div class="col-lg flex-grow-0">
+                                <label>&nbsp;</label>
                                 <button type="submit" class="btn btn-primary">Salvar</button>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <?php if (isset($value["alteracoes"]) && strlen($value["alteracoes"])): ?>
+                                <?php
+                                    $item = $value;
+                                    $iteracao = $key;
+                                ?>
+                                <div class="col">
+                                    <button class="btn btn-dark" type="button" data-toggle="collapse" data-target="#historico<?php echo $iteracao ?>" aria-expanded="false" aria-controls="historico<?php echo $iteracao ?>">Histórico de Alterações</button>
+                                </div>
+                            <?php endif ?>
+                        </div>
+
+                        <?php include "_historico.php" ?>
 
                     </form>
                 </div>

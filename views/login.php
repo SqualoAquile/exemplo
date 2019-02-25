@@ -33,7 +33,7 @@
                     <label for="inputPassword" class="sr-only">Senha</label>
                     <input type="password" id="inputPassword" class="form-control" name="senha" placeholder="Senha" required>
                     <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">Entrar</button>
-                    <p class="mt-5 mb-3 text-muted">&copy; <strong>SqualoAquile</strong> 2018 - 2019</p>
+                    <p class="mt-5 mb-3 text-muted">&copy; <strong>SqualoAquile</strong> 2019</p>
                 </form>
             </div>
         </div>

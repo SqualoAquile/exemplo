@@ -59,6 +59,9 @@ $(function () {
     }
 
     $(document)
+        .ready(function () {
+            $('.input-servicos').keyup();
+        })
         .on('submit', '.form-servicos', function (event) {
     
             event.preventDefault();
@@ -79,66 +82,69 @@ $(function () {
                     .focus();
     
             } else {
-    
-                if (confirm('Tem Certeza?')) {
                     
-                    $inputs.each(function () {
-        
-                        let $input = $(this),
-                            $label = $input.siblings('label').find('span');
-        
-                        objSend[$input.attr('name')] = $input.val();
-        
-                        $input.attr('data-anterior', $input.val())
-        
-                        if ($input.val() != $input.attr('data-anterior')) {
-                            campos_alterados += '{' + $label.text().toUpperCase() + ' de (' + $input.attr('data-anterior') + ') para (' + $input.val() + ')}';
-                        }
-                    });
-        
+                $inputs.each(function () {
+    
+                    let $input = $(this),
+                        $label = $input.siblings('label').find('span');
+    
+                    objSend[$input.attr('name')] = $input.val();
+    
+                    if ($input.val() != $input.attr('data-anterior')) {
+                        campos_alterados += '{' + $label.text().toUpperCase() + ' de (' + $input.attr('data-anterior') + ') para (' + $input.val() + ')}';
+                    }
+
+                    $input.attr('data-anterior', $input.val());
+
+                });
+
+                if (campos_alterados.length) {
                     campos_alterados = $this.attr('data-alteracoes') + '##' + campos_alterados;
                     objSend['alteracoes'] = campos_alterados;
-    
-                    $.ajax({
-                        url: baselink + '/servicos/editar/' + id,
-                        type: 'POST',
-                        data: objSend,
-                        dataType: 'json',
-                        success: function (data) {
-    
-                            if (data.erro[0] == '00000') {
-    
-                                Toast({
-                                    message: 'Serviço editado com sucesso!',
-                                    class: 'alert-success'
-                                });
-    
-                                $this
-                                    .attr('data-alteracoes', data.result.alteracoes)
-                                    .removeClass('was-validated');
-    
-                                $inputs.each(function () {
-                                    
-                                    let $input = $(this);
-    
-                                    $input
-                                        .removeClass('is-valid is-invalid')
-                                        .keyup();
-    
-                                });
-    
+
+                    if (confirm('Tem Certeza?')) {
+                    
+                        $.ajax({
+                            url: baselink + '/servicos/editar/' + id,
+                            type: 'POST',
+                            data: objSend,
+                            dataType: 'json',
+                            success: function (data) {
+        
+                                if (data.erro[0] == '00000') {
+        
+                                    Toast({
+                                        message: 'Serviço editado com sucesso!',
+                                        class: 'alert-success'
+                                    });
+        
+                                    $this
+                                        .attr('data-alteracoes', data.result.alteracoes)
+                                        .removeClass('was-validated');
+        
+                                    $inputs.each(function () {
+                                        
+                                        let $input = $(this);
+        
+                                        $input
+                                            .removeClass('is-valid is-invalid')
+                                            .keyup();
+        
+                                    });
+        
+                                }
                             }
-                        }
-                    });
-                
+                        });
+
+                    }
                 }
-    
+                
             }
     
             $this.addClass('was-validated');
     
         })
-        .on('keyup', '.input-fixos', function () {
+        .on('keyup', '.input-servicos', function () {
             
             var $this = $(this),
                 $submit = $this.parents('form').find('[type=submit]');

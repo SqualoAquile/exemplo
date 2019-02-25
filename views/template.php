@@ -184,10 +184,12 @@
    </head>
 <body class="d-flex flex-column h-100 bg-light">
    <nav class="navbar bg-white shadow-sm fixed-top">
-      <ul class="nav">
+      <ul class="nav align-items-center">
          <li>
-            <button class="btn btn-link px-0 border-0" id="menu-toggle">
-               <i class="fas fa-bars"></i>
+            <button class="hamburger hamburger--collapse d-flex" tabindex="-1" id="menu-toggle" type="button" aria-label="Menu" aria-controls="sidebar-wrapper">
+               <span class="hamburger-box">
+                  <span class="hamburger-inner"></span>
+               </span>
             </button>
          </li>
          <li> <!--Nome da Empresa-->
@@ -201,7 +203,7 @@
                <span><?php echo ucfirst($infoUser["nomeUsuario"]);?></span>
             </a>
             <div class="dropdown-menu dropdown-menu-right position-absolute" aria-labelledby="navbarDropdown">
-               <a class="dropdown-item" onclick="return confirm('Confirmar sua saída?')" href="<?php echo BASE_URL;?>/login/sair">Sair</a>
+               <a class="dropdown-item text-danger" onclick="return confirm('Confirmar sua saída?')" href="<?php echo BASE_URL;?>/login/sair">Sair</a>
             </div>
          </li>
       </ul>
@@ -263,7 +265,7 @@
       </div>
       <footer class="py-3 bg-white mt-auto shadow-sm">
          <div class="container-fluid">
-            <div class="text-muted text-center small">Todos os direitos reservados <strong>Aquarium</strong><br/>Estamos à disposição: <a href="mailto:contato@squaloaquile.com.br" class="text-muted font-italic">contato@squaloaquile.com.br</a></div>
+            <div class="text-muted text-center small">Todos os direitos reservados <strong>Leme</strong><br/>Estamos à disposição: <a href="mailto:contato@leme.com.br" class="text-muted font-italic">contato@leme.com.br</a></div>
          </div>
       </footer>
    </body> 

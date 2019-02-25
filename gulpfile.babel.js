@@ -2,6 +2,7 @@ import gulp from 'gulp';
 import sass from 'gulp-sass';
 import browserSync from 'browser-sync';
 import autoprefixer from 'gulp-autoprefixer';
+import gcmq from 'gulp-group-css-media-queries';
 
 const AUTOPREFIXER_BROWSERS = [
     'ie >= 10',
@@ -39,6 +40,7 @@ const styles = () => {
         }))
         .on('error', sass.logError)
         .pipe(autoprefixer({browsers: AUTOPREFIXER_BROWSERS}))
+        .pipe(gcmq())
         .pipe(gulp.dest(paths.styles.dest))
 }
 

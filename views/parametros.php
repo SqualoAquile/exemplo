@@ -17,21 +17,26 @@
     <div class="row">
         <?php foreach ($tabelas as $key => $value): ?>
 
-            <?php $parametro = $value[0]["Name"] ?>
+            <?php
+                $parametro = $value[0]["Name"];
+                $comment = $value[0]["Comment"];
+            ?>
             
-            <?php if (isset($value[0]["Comment"])): ?>
+            <?php if (isset($comment)): ?>
 
-                <?php if (array_key_exists("parametro", $value[0]["Comment"])): ?>
+                <?php if (array_key_exists("parametro", $comment)): ?>
                     
-                    <?php $campo = $value[0]["Comment"]["parametro_campo"] ?>
+                    <?php $campo = $comment["parametro_campo"] ?>
 
-                    <?php if ($value[0]["Comment"]["parametro"] == "true"): ?>
+                    <?php if ($comment["parametro"] == "true"): ?>
 
-                        <div class="col-lg-<?php echo isset($value[0]["Comment"]["column"]) ? $value[0]["Comment"]["column"] : "12" ?>">
+                        <div class="col-lg-<?php echo isset($comment["column"]) ? $comment["column"] : "12" ?>">
 
                             <div class="card card-body my-3">
 
-                                <label for="parametroRelacional<?php echo $key ?>" class="h3 text-capitalize"><?php echo $parametro ?></label>
+                                <label for="parametroRelacional<?php echo $key ?>" class="h3 text-capitalize">
+                                    <?php echo array_key_exists("label", $comment) ? $comment["label"] : $parametro ?>
+                                </label>
                                 
                                 <ul id="<?php echo $parametro ?>" data-campo="<?php echo $campo ?>" class="search-body list-unstyled mt-2">
                                     <li>

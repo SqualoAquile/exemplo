@@ -25,7 +25,9 @@
     "browser-sync": "^2.26.3",
     "gulp": "^4.0.0",
     "gulp-autoprefixer": "^6.0.0",
-    "gulp-sass": "^4.0.2"
+    "gulp-group-css-media-queries": "^1.2.2",
+    "gulp-sass": "^4.0.2",
+    "hamburgers": "^1.1.3"
   },
   "dependencies": {}
 }
