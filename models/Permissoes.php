@@ -22,7 +22,7 @@ class Permissoes extends model {
                 }
                 
                 //busca os nomes dos parametros de permissão do grupo de permissao pesquisado
-                $sqlA = "SELECT nome FROM permissoes_parametros WHERE id IN (".$pr["parametros"].")";
+                $sqlA = "SELECT nome FROM permissoesparametros WHERE id IN (".$pr["parametros"].")";
                 $sqlA = self::db()->query($sqlA);
                 if($sqlA->rowCount()>0){
                     foreach ($sqlA->fetchAll() as $item){
@@ -37,7 +37,7 @@ class Permissoes extends model {
     public function pegarListaPermissoes(){
        $array = array();
        
-       $sql = "SELECT id, nome FROM permissoes_parametros";
+       $sql = "SELECT id, nome FROM permissoesparametros";
        $sql = self::db()->query($sql);
        if($sql->rowCount()>0){
          $array = $sql->fetchAll(); 

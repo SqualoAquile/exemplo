@@ -14,29 +14,60 @@ class Administradoras extends model {
        return $array; 
     }
 
-    public function adicionar($nome,$bandeiras,$informacoes,$txantecipacoes,$txcreditos){
+    // public function adicionar($nome,$bandeiras,$informacoes,$txantecipacoes,$txcreditos){
         
-        if(!empty($nome) && !empty($bandeiras) && !empty($informacoes) && !empty($txantecipacoes) && !empty($txcreditos)){
+    //     if(!empty($nome) && !empty($bandeiras) && !empty($informacoes) && !empty($txantecipacoes) && !empty($txcreditos)){
             
-            $p = new Permissoes();
-            $ipcliente = $p->pegaIPcliente();
-            $alteracoes = ucwords($_SESSION["nomeFuncionario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
-            //inserir a administradora e depois inserir as bandeiras aceitas////////////////////////////////////////////////////
-            $sql = "INSERT INTO administradoras (id, nome, alteracoes, situacao) VALUES (DEFAULT, '$nome', '$alteracoes', 'ativo')";
-            self::db()->query($sql);
+    //         $p = new Permissoes();
+    //         $ipcliente = $p->pegaIPcliente();
+    //         $alteracoes = ucwords($_SESSION["nomeFuncionario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
+    //         //inserir a administradora e depois inserir as bandeiras aceitas////////////////////////////////////////////////////
+    //         $sql = "INSERT INTO administradoras (id, nome, alteracoes, situacao) VALUES (DEFAULT, '$nome', '$alteracoes', 'ativo')";
+    //         self::db()->query($sql);
             
-            //inserir as bandeiras //////////////////////////////////////////////////////////////////////////////////////////////
-            $id_adm = self::db()->lastInsertId();
+    //         //inserir as bandeiras //////////////////////////////////////////////////////////////////////////////////////////////
+    //         $id_adm = self::db()->lastInsertId();
             
-            $sqlA = "INSERT INTO bandeiras_aceitas (id, nome, informacoes, txantecipacao, txcredito, id_adm, alteracoes, situacao) VALUES ";
-            $sqlAux = "";
-                    foreach ($bandeiras as $idBand => $nomeBand){
-                        $sqlAux = $sqlAux."(DEFAULT, '$idBand', '$informacoes[$idBand]','$txantecipacoes[$idBand]', '$txcreditos[$idBand]', '$id_adm', '$alteracoes', 'ativo'), ";
-                    }
-                    $sqlAux = substr_replace($sqlAux,"", strrpos($sqlAux, ","));
-                    $sqlA = $sqlA.$sqlAux.";";
-                    self::db()->query($sqlA);
-        }           
+    //         $sqlA = "INSERT INTO bandeiras_aceitas (id, nome, informacoes, txantecipacao, txcredito, id_adm, alteracoes, situacao) VALUES ";
+    //         $sqlAux = "";
+    //                 foreach ($bandeiras as $idBand => $nomeBand){
+    //                     $sqlAux = $sqlAux."(DEFAULT, '$idBand', '$informacoes[$idBand]','$txantecipacoes[$idBand]', '$txcreditos[$idBand]', '$id_adm', '$alteracoes', 'ativo'), ";
+    //                 }
+    //                 $sqlAux = substr_replace($sqlAux,"", strrpos($sqlAux, ","));
+    //                 $sqlA = $sqlA.$sqlAux.";";
+    //                 self::db()->query($sqlA);
+    //     }           
+    // }
+
+    public function adicionar($request) {
+        
+        $ipcliente = $this->permissoes->pegaIPcliente();
+        $request["alteracoes"] = ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
+        
+        $request["situacao"] = "ativo";
+
+        $keys = implode(",", array_keys($request));
+
+        $values = "'" . implode("','", array_values($this->shared->formataDadosParaBD($request))) . "'";
+
+        $sql = "INSERT INTO " . $this->table . " (" . $keys . ") VALUES (" . $values . ")";
+        
+        self::db()->query($sql);
+
+        $erro = self::db()->errorInfo();
+
+        if (empty($erro[2])){
+
+            $_SESSION["returnMessage"] = [
+                "mensagem" => "Registro inserido com sucesso!",
+                "class" => "alert-success"
+            ];
+        } else {
+            $_SESSION["returnMessage"] = [
+                "mensagem" => "Houve uma falha, tente novamente! <br /> ".$erro[2],
+                "class" => "alert-danger"
+            ];
+        }
     }
 
     public function pegarBandeirasAceitas($id_adm){

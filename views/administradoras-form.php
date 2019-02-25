@@ -1,17 +1,20 @@
-<script src="<?php echo BASE_URL;?>/assets/js/administradoras.js" type="text/javascript"></script>
-
+<?php $modulo = str_replace("-form", "", basename(__FILE__, ".php")) ?>
 <script type="text/javascript">
     var baselink = '<?php echo BASE_URL;?>',
-        currentModule = '<?php echo str_replace("-form", "", basename(__FILE__, ".php")) ?>'
+        currentModule = '<?php echo $modulo ?>'
 </script>
 
-<header class="d-flex align-items-center my-5">
-    <?php if(in_array("administradoras_ver", $infoFunc["permissoesFuncionario"])): ?>
-        <a href="<?php echo BASE_URL . '/administradoras' ?>" class="btn btn-secondary mr-4" title="Voltar">
+<!-- Chama o arquivo específico do módulo, caso não exista,  -->
+<!-- Este javaScript serve para fazer verificações inerentes à cada módulo, por exemplo o radio de Clientes -->
+<script src="<?php echo BASE_URL?>/assets/js/<?php echo $modulo?>.js" type="text/javascript"></script>
+
+<header class="d-lg-flex align-items-center my-5">
+    <?php if(in_array($modulo . "_ver", $infoUser["permissoesUsuario"])): ?>
+        <a href="<?php echo BASE_URL . '/' . $modulo ?>" class="btn btn-secondary mr-lg-4" title="Voltar">
             <i class="fas fa-chevron-left"></i>
         </a>
     <?php endif ?>
-    <h1 class="display-4 m-0">Adicionar Administradora</h1>
+    <h1 class="display-4 m-0 text-capitalize font-weight-bold"><?php echo $viewInfo["title"]." ".ucfirst($labelTabela["labelForm"]); ?></h1>
 </header>
 
 <section class="mb-5">
