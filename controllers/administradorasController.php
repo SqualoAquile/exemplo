@@ -1,71 +1,93 @@
 <?php
 class administradorasController extends controller{
-    
+
     protected $table = "administradoras";
     protected $colunas;
-
+    
+    protected $model;
     protected $shared;
-    protected $logs;
-    protected $funcionarios;
+    protected $usuario;
 
     public function __construct() {
-
-        $this->shared = new Shared($this->table);
-        $this->logs = new Logs($this->table);
-        $this->funcionarios = new Funcionarios();
         
-        if($this->funcionarios->isLogged() == false){
-            header("Location: " . BASE_URL . "/login"); 
-        }
-
+        // Instanciando as classes usadas no controller
+        $this->shared = new Shared($this->table);
+        $tabela = ucfirst($this->table);
+        $this->model = new $tabela();
+        $this->usuario = new Usuarios();
+    
         $this->colunas = $this->shared->nomeDasColunas();
 
         // verifica se tem permissão para ver esse módulo
-        if(in_array($this->table . "_ver", $_SESSION["permissoesFuncionario"]) == false){
+        if(in_array($this->table . "_ver", $_SESSION["permissoesUsuario"]) == false){
             header("Location: " . BASE_URL . "/home"); 
+        }
+        // Verificar se está logado ou nao
+        if($this->usuario->isLogged() == false){
+            header("Location: " . BASE_URL . "/login"); 
         }
     }
      
     public function index() {
         $dados = array();
-        $dados['infoFunc'] = $_SESSION;
-        $dados["listaColunas"] = $this->colunas;
-        $this->loadTemplate($this->table,$dados);      
+        $dados["infoUser"] = $_SESSION;
+        $dados["colunas"] = $this->colunas;
+        $dados["labelTabela"] = $this->shared->labelTabela();
+        $this->loadTemplate($this->table, $dados);      
     }
     
+    // public function adicionar() {
+        
+    //     if(in_array("administradoras_add",$_SESSION["permissoesUsuario"]) == FALSE){
+    //         header("Location: ".BASE_URL."/administradoras"); 
+    //     }
+        
+    //     $array = array();
+    //     $dados['infoUser'] = $_SESSION;
+    //     $a = new Administradoras();
+        
+    //     if(isset($_POST["nome"]) && !empty($_POST["nome"]) && isset($_POST["bandeira"]) && isset($_POST["infos"]) && isset($_POST["txant"]) && isset($_POST["txcre"])){
+            
+    //         $nome = addslashes($_POST["nome"]);
+    //         $bandeiras = $_POST["bandeira"]; //ids de cadastro das bandeiras 
+    //         $informacoes = $_POST["infos"];
+    //         $txantecipacoes = $_POST["txant"];
+    //         $txcreditos = $_POST["txcre"];
+    //         $a->adicionar($nome,$bandeiras,$informacoes,$txantecipacoes,$txcreditos);
+    //         header("Location: ".BASE_URL."/administradoras");
+    //     }else{
+
+    //         $dados["listaBandeiras"] = $a->pegarListaBandeiras();
+    //         $this->loadTemplate("administradoras-form",$dados);
+    //     }  
+    // }
+
     public function adicionar() {
         
-        if(in_array("administradoras_add",$_SESSION["permissoesFuncionario"]) == FALSE){
-            header("Location: ".BASE_URL."/administradoras"); 
+        if(in_array($this->table. "_add", $_SESSION["permissoesUsuario"]) == false){
+            header("Location: " . BASE_URL . "/" . $this->table); 
         }
         
-        $array = array();
-        $dados['infoFunc'] = $_SESSION;
-        $a = new Administradoras();
+        $dados['infoUser'] = $_SESSION;
         
-        
-        if(isset($_POST["nome"]) && !empty($_POST["nome"]) && isset($_POST["bandeira"]) && isset($_POST["infos"]) && isset($_POST["txant"]) && isset($_POST["txcre"])){
-            
-            $nome = addslashes($_POST["nome"]);
-            $bandeiras = $_POST["bandeira"]; //ids de cadastro das bandeiras 
-            $informacoes = $_POST["infos"];
-            $txantecipacoes = $_POST["txant"];
-            $txcreditos = $_POST["txcre"];
-            $a->adicionar($nome,$bandeiras,$informacoes,$txantecipacoes,$txcreditos);
-            header("Location: ".BASE_URL."/administradoras");
-        }else{
-
-            $dados["listaBandeiras"] = $a->pegarListaBandeiras();
-            $this->loadTemplate("administradoras-add",$dados);
-        }  
+        if(isset($_POST) && !empty($_POST)){ 
+            $this->model->adicionar($_POST);
+            header("Location: " . BASE_URL . "/" . $this->table);
+        }else{ 
+            $dados["colunas"] = $this->colunas;
+            $dados["viewInfo"] = ["title" => "Adicionar"];
+            $dados["labelTabela"] = $this->shared->labelTabela();
+            $dados["listaBandeiras"] = $this->model->pegarListaBandeiras();
+            $this->loadTemplate($this->table . "-form", $dados);
+        }
     }
     
     public function editar($id) {
-        if(in_array("administradoras_edt",$_SESSION["permissoesFuncionario"]) == FALSE || empty($id) || !isset($id)){
+        if(in_array("administradoras_edt",$_SESSION["permissoesUsuario"]) == FALSE || empty($id) || !isset($id)){
             header("Location: ".BASE_URL."/administradoras"); 
         }
         $array = array();
-        $dados['infoFunc'] = $_SESSION;
+        $dados['infoUser'] = $_SESSION;
         $a = new Administradoras();
         
         $id = addslashes($id); // id da administradora de cartão
@@ -91,7 +113,7 @@ class administradorasController extends controller{
     }
 
     public function excluir($id) {
-        if(in_array("administradoras_exc",$_SESSION["permissoesFuncionario"]) == FALSE || empty($id) || !isset($id)){
+        if(in_array("administradoras_exc",$_SESSION["permissoesUsuario"]) == FALSE || empty($id) || !isset($id)){
             header("Location: ".BASE_URL."/administradoras"); 
         }
         
