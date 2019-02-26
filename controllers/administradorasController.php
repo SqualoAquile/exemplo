@@ -29,38 +29,25 @@ class administradorasController extends controller{
     }
      
     public function index() {
-        $dados = array();
+
+        if(isset($_POST) && !empty($_POST)){ 
+            
+            $id = addslashes($_POST['id']);
+            if(in_array($this->table . "_exc", $_SESSION["permissoesUsuario"]) == false || empty($id) || !isset($id)){
+                header("Location: " . BASE_URL . "/" . $this->table); 
+            }
+            if($this->shared->idAtivo($id) == false){
+                header("Location: " . BASE_URL . "/" . $this->table); 
+            }
+            $this->model->excluir($id);
+            header("Location: " . BASE_URL . "/" . $this->table);
+        }
+        
         $dados["infoUser"] = $_SESSION;
         $dados["colunas"] = $this->colunas;
         $dados["labelTabela"] = $this->shared->labelTabela();
         $this->loadTemplate($this->table, $dados);      
     }
-    
-    // public function adicionar() {
-        
-    //     if(in_array("administradoras_add",$_SESSION["permissoesUsuario"]) == FALSE){
-    //         header("Location: ".BASE_URL."/administradoras"); 
-    //     }
-        
-    //     $array = array();
-    //     $dados['infoUser'] = $_SESSION;
-    //     $a = new Administradoras();
-        
-    //     if(isset($_POST["nome"]) && !empty($_POST["nome"]) && isset($_POST["bandeira"]) && isset($_POST["infos"]) && isset($_POST["txant"]) && isset($_POST["txcre"])){
-            
-    //         $nome = addslashes($_POST["nome"]);
-    //         $bandeiras = $_POST["bandeira"]; //ids de cadastro das bandeiras 
-    //         $informacoes = $_POST["infos"];
-    //         $txantecipacoes = $_POST["txant"];
-    //         $txcreditos = $_POST["txcre"];
-    //         $a->adicionar($nome,$bandeiras,$informacoes,$txantecipacoes,$txcreditos);
-    //         header("Location: ".BASE_URL."/administradoras");
-    //     }else{
-
-    //         $dados["listaBandeiras"] = $a->pegarListaBandeiras();
-    //         $this->loadTemplate("administradoras-form",$dados);
-    //     }  
-    // }
 
     public function adicionar() {
         
@@ -86,7 +73,7 @@ class administradorasController extends controller{
         if(in_array("administradoras_edt",$_SESSION["permissoesUsuario"]) == FALSE || empty($id) || !isset($id)){
             header("Location: ".BASE_URL."/administradoras"); 
         }
-        $array = array();
+
         $dados['infoUser'] = $_SESSION;
         $a = new Administradoras();
         
@@ -100,29 +87,17 @@ class administradorasController extends controller{
             $txcreditos = $_POST["txcre"];
             $alter = addslashes($_POST["alter"]);
             
-            $a->editar($id, $nome,$bandeiras,$informacoes,$txantecipacoes,$txcreditos,$alter);
+            $this->model->editar($id, $nome,$bandeiras,$informacoes,$txantecipacoes,$txcreditos,$alter);
             header("Location: ".BASE_URL."/administradoras");
         }else{
             
-            $dados["infoAdm"] = $a->pegarInfoAdm($id);
-            $dados["listaBandeiras"] = $a->pegarListaBandeiras();
-            $dados["bandeirasAceitas"] = $a->pegarBandeirasAceitas($id);
-            $this->loadTemplate("administradoras-edt",$dados);
-        } 
-
-    }
-
-    public function excluir($id) {
-        if(in_array("administradoras_exc",$_SESSION["permissoesUsuario"]) == FALSE || empty($id) || !isset($id)){
-            header("Location: ".BASE_URL."/administradoras"); 
+            $dados["infoAdm"] = $this->model->pegarInfoAdm($id);
+            $dados["listaBandeiras"] = $this->model->pegarListaBandeiras();
+            $dados["bandeirasAceitas"] = $this->model->pegarBandeirasAceitas($id);
+            $dados["viewInfo"] = ["title" => "Editar"];
+            $dados["labelTabela"] = $this->shared->labelTabela();
+            $this->loadTemplate("administradoras-form",$dados);
         }
-        
-        $a = new Administradoras();
-        $id = addslashes($id);
-
-        $a->excluir($id);
-        header("Location: ".BASE_URL."/administradoras");  
-      }
-    }   
-  
+    }
+}
 ?>

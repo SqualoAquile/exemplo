@@ -10,8 +10,6 @@
 
     </div>
 
-    <?php $_SESSION["returnMessage"]["show"] = true ?>
-
 <?php endif?>
 
 <div class="table-responsive">

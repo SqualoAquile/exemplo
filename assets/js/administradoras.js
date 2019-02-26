@@ -18,10 +18,21 @@ $(function () {
 
     $('#form-bandeiras').submit(function (event) {
         event.preventDefault();
-        if ($(this)[0].checkValidity()) {
+        if (this.checkValidity()) {
             Save();
         }
     });
+
+    $(document)
+        .ready(function() {
+            console.log('bandeirasAceitas', bandeirasAceitas);
+            $inclusoes.show();
+
+            bandeirasAceitas.forEach(bandeiraAceita => {
+                let id_bandeira = bandeiraAceita.id,
+                    bandeira = '';
+            });
+        });
 
     $('.percent-mask').mask('00,00%', { reverse: true });
     $('.number-mask').mask('00');
@@ -50,7 +61,9 @@ $(function () {
         }
     }).change();
 
-    $('#incluir').click(() => Save());
+    $('#incluir').click(function () {
+        Save();
+    });
 
     function Save() {
         
