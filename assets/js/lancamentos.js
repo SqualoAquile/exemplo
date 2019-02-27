@@ -30,7 +30,7 @@ window.onload = function () {
     $("#infocusto").hide();
 
 };
-
+}
 function limpaCondPgto() {
     $("#icondpgto").val("");
     $("#icondpgto").css("background-color", "#CCC");
