@@ -1,7 +1,7 @@
 <?php
-class Fluxo_caixa extends model {
+class Fluxocaixa extends model {
 
-    protected $table = "fluxo_caixa";
+    protected $table = "fluxocaixa";
     protected $permissoes;
     protected $shared;
 

@@ -49,8 +49,11 @@ class Shared extends model {
                         "db" => $value["Field"],
                         "dt" => $index,
                         "formatter" => function($d,$row) {
-                            return date( 'd/m/Y', strtotime($d))
-                            ;
+                            if(empty(strtotime($d))){
+                                return '';
+                            }else{
+                                return date( 'd/m/Y', strtotime($d));
+                            }
                         }
                     ];    
                 } elseif (array_key_exists("mascara_validacao", $value["Comment"]) && $value["Comment"]["mascara_validacao"] == "monetario") {
@@ -183,24 +186,33 @@ class Shared extends model {
 
             if(array_key_exists("type", $result[$key]["Comment"]) && $result[$key]["Comment"]["type"] == "relacional"){
 
+                
                 $tabela =  lcfirst($result[$key]["Comment"]["info_relacional"]["tabela"]);
                 $campo = lcfirst($result[$key]["Comment"]["info_relacional"]["campo"]);
 
-                $sql = "SELECT id, ". $campo ." FROM  ". $tabela ." WHERE situacao = 'ativo'";      
-                $sql = self::db()->query($sql);
+                
+                if( !empty($tabela) && !empty($campo) ){
 
-                if($sql->rowCount()>0){
-                    $arrayAux = $sql->fetchAll(PDO::FETCH_ASSOC); 
+                    $sql = "SELECT id, ". $campo ." FROM  ". $tabela ." WHERE situacao = 'ativo'";      
+                    $sql = self::db()->query($sql);
 
-                    foreach ($arrayAux as $chave => $valor){
-                        $lista[] = [
-                            "id" => $valor["id"], 
-                            "$campo" => ucwords($valor["$campo"])
-                        ];
+                    if($sql->rowCount()>0){
+                        $arrayAux = $sql->fetchAll(PDO::FETCH_ASSOC); 
+
+                        foreach ($arrayAux as $chave => $valor){
+                            $lista[] = [
+                                "id" => $valor["id"], 
+                                "$campo" => ucwords($valor["$campo"])
+                            ];
+                        }
+
+                        $result[$key]['Comment']['info_relacional']['resultado'] = $lista;
                     }
 
+                }else{
                     $result[$key]['Comment']['info_relacional']['resultado'] = $lista;
                 }
+                   
             }
             if(array_key_exists("type", $result[$key]["Comment"]) && $result[$key]["Comment"]["type"] == "checkbox"){
 

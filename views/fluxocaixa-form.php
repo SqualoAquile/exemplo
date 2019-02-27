@@ -20,7 +20,7 @@
 <?php $table = false ?>
 
 <section class="mb-5">
-    <form id="form-principal" method="POST" class="needs-validation" autocomplete="off" novalidate>
+    <form id="form-principal" method="DELETE" class="needs-validation" autocomplete="off" novalidate>
         <div class="row">
             <?php foreach ($colunas as $key => $value): ?>
                 <?php if(isset($value["Comment"]) && array_key_exists("form", $value["Comment"]) && $value["Comment"]["form"] != "false") : ?>
@@ -52,7 +52,8 @@
                             <?php echo $value["Null"] == "NO" ? "required" : "" ?>
                         />
                     <?php else: ?>
-                        <div class="col-lg-<?php echo isset($value["Comment"]["column"]) ? $value["Comment"]["column"] : "12" ?>">
+                        <div    class="col-lg-<?php echo isset($value["Comment"]["column"]) ? $value["Comment"]["column"] : "12" ?>" 
+                                style="order:<?php echo isset($value["Comment"]["ordem_form"]) ? $value["Comment"]["ordem_form"] : 100 ?>;">
                             <div class="form-group">
 
                                 <!-- Label Geral -->
@@ -72,6 +73,7 @@
                                             name="<?php echo lcfirst($value['Field']);?>"
                                             class="form-control"
                                             data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
+                                            tabindex="<?php echo isset($value["Comment"]["ordem_form"]) ? $value["Comment"]["ordem_form"] : "" ?>"
                                             data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                             <?php echo $value['Null'] == "NO" ? "required" : "" ?>
                                             >
@@ -112,6 +114,7 @@
                                                         id="<?php echo $value["Comment"]['info_relacional']['resultado'][$j];?>" 
                                                         type="checkbox" 
                                                         class="form-check-input" 
+                                                        tabindex="<?php echo isset($value["Comment"]["ordem_form"]) ? $value["Comment"]["ordem_form"] : "" ?>"
                                                         value="<?php echo $value["Comment"]['info_relacional']['resultado'][$j];?>"
                                                         data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>" 
                                                         <?php
@@ -142,6 +145,7 @@
                                         class="form-control" 
                                         name="<?php echo lcfirst($value['Field']);?>" 
                                         data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
+                                        tabindex="<?php echo isset($value["Comment"]["ordem_form"]) ? $value["Comment"]["ordem_form"] : "" ?>"
                                         id="<?php echo lcfirst($value['Field']);?>"
                                         data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                         <?php echo $value['Null'] == "NO" ? "required" : "" ?>
@@ -158,6 +162,7 @@
                                                     id="<?php echo $valueRadio ?>" 
                                                     value="<?php echo $valueRadio ?>" 
                                                     name="<?php echo $value["Field"] ?>" 
+                                                    tabindex="<?php echo isset($value["Comment"]["ordem_form"]) ? $value["Comment"]["ordem_form"] : "" ?>"
                                                     data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
                                                     data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                                     class="form-check-input" 
@@ -196,6 +201,7 @@
                                         data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                         data-unico="<?php echo array_key_exists("unico", $value["Comment"]) && $value["Comment"]["unico"]  == true ? "unico" : "" ?>"
                                         data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
+                                        tabindex="<?php echo isset($value["Comment"]["ordem_form"]) ? $value["Comment"]["ordem_form"] : "" ?>"
                                         <?php echo $value['Null'] == "NO" ? "required" : "" ?>
                                         <?php if( array_key_exists("mascara_validacao", $value["Comment"]) && 
                                                  ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" )):?>
@@ -224,6 +230,7 @@
                                         id="<?php echo $value['Field'] ?>"
                                         <?php echo $value['Null'] == "NO" ? "required" : "" ?>
                                         maxlength="<?php echo $value["tamanhoMax"] ?>"
+                                        tabindex="<?php echo isset($value["Comment"]["ordem_form"]) ? $value["Comment"]["ordem_form"] : "" ?>"
                                         data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                         <?php if( array_key_exists("mascara_validacao", $value["Comment"]) && 
                                                  ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" )):?>
@@ -236,14 +243,65 @@
                     <?php endif ?>
                 <?php endif ?>
             <?php endforeach ?>
+            <div class="col-lg-6" style="order:14;">
+                <div class="form-group">
+                    <label for="dia_venc" class="font-weight-bold" ><span>* Dia Vencimento</span></label>
+                    <select id="dia_venc" 
+                            name="dia_venc"
+                            class="form-control"
+                            data-anterior=""
+                            tabindex="14"
+                            data-mascara_validacao = "false"   
+                    >
+                        <option value="" selected >Selecione</option>
+                        <?php for($j = 1; $j <= 31; $j++):?>
+                            <option value="<?php echo $j;?>"><?php echo $j;?></option>        
+                        <?php endfor;?>     
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-lg-6" style="order:16;">
+                <div class="form-group">
+                    <label for="taxa-cartao" class="font-weight-bold"><span>* Taxa do Cartão</span></label>
+                    <input type="text" class="form-control" name="taxa-cartao" value="" id="taxa-cartao" maxlength="20" tabindex="17" data-mascara_validacao="porcentagem" data-podeZero="true" disabled="disabled" data-anterior=""/>
+                </div>
+            </div>
+
+            <div class="col-lg-6" style="order:16;">
+                <div class="form-group">
+                    <label for="custo_financ" class="font-weight-bold" ><span>* Custo Financeiro</span></label>
+                    <input type="text" class="form-control" name="custo_financ" value="" id="custo_financ" maxlength="20" tabindex="17" data-mascara_validacao="monetario" data-podeZero="true" disabled="disabled" data-anterior=""/>
+                </div>
+            </div>
+            <div class="col-lg-3" style="order:18;">
+                 <div class="form-group">
+                    <div class="btn btn-primary btn-block" tabindex="18" > Incluir </div>                                                 
+                 </div>                                       
+            </div>
+            
         </div>
-        <button id="main-form" class="d-none"></button>
     </form>
-    <?php if($table) include "_contatos_form.php" ?>
+    
+    
+    <div class="my-5 table-responsive" id="tabela_lancamento">
+        <table class="table table-striped table-hover bg-white table-nowrap first-column-fixed">
+            <thead>
+                <tr>
+                    <?php foreach ($colunas as $key => $value): ?> 
+                        <?php if(isset($value["Comment"]) && array_key_exists("ver", $value["Comment"]) && $value["Comment"]["ver"] != "false") : ?>
+                            <th class="border-top-0">
+                                <span><?php echo (isset($value["Comment"]["label"]) && !is_null($value["Comment"]["label"]) && !empty($value["Comment"]["label"])) ? $value["Comment"]["label"] : ucwords(str_replace("_", " ", $value['Field'])) ?></span>
+                                <i class="small text-muted fas fa-sort ml-2"></i>
+                            </th>
+                        <?php endif ?>
+                    <?php endforeach ?>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    
     <div class="row">
-        <div class="col-xl-2 col-lg-3">
-            <label for="main-form" class="btn btn-primary btn-block" tabindex="0">Salvar</label>
-        </div>
         <?php if (isset($item)): ?>
         <div class="col-xl-2 col-lg-3">
             <button class="btn btn-dark btn-block" type="button" data-toggle="collapse" data-target="#historico" aria-expanded="false" aria-controls="historico">Histórico de Alterações</button>

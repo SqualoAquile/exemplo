@@ -66,7 +66,7 @@
                "text" => "Lançamentos de Caixa",
                "icon" => "fas fa-cart-plus",
                "permissao" => "lancamentos_ver",
-               "link" => "/lancamentos"
+               "link" => "/fluxocaixa"
             ],
             [
                "text" => "Controle de Caixa",
