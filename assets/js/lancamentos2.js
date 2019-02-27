@@ -1,5 +1,4 @@
 window.onload = function () {
-    window.onload = function () {
 
     //ativa as opções de despesas
     $('#ireceita').click();
@@ -30,7 +29,7 @@ window.onload = function () {
     $("#infocusto").hide();
 
 };
-}
+
 function limpaCondPgto() {
     $("#icondpgto").val("");
     $("#icondpgto").css("background-color", "#CCC");

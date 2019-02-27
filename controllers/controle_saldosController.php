@@ -1,8 +1,8 @@
 <?php
-class controle_saldosController extends controller{
+class controlesaldosController extends controller{
 
     // Protected - estas variaveis só podem ser usadas nesse arquivo
-    protected $table = "controle_saldos";
+    protected $table = "controlesaldos";
     protected $colunas;
     
     protected $model;

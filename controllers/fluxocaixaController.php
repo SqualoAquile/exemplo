@@ -1,8 +1,8 @@
 <?php
-class usuariosController extends controller{
+class fluxocaixaController extends controller{
 
     // Protected - estas variaveis só podem ser usadas nesse arquivo
-    protected $table = "usuarios";
+    protected $table = "fluxocaixa";
     protected $colunas;
     
     protected $model;
@@ -13,27 +13,42 @@ class usuariosController extends controller{
         
         // Instanciando as classes usadas no controller
         $this->shared = new Shared($this->table);
-        $this->model = new $this->table();
+        $tabela = ucfirst($this->table);
+        $this->model = new $tabela();
         $this->usuario = new Usuarios();
     
         $this->colunas = $this->shared->nomeDasColunas();
-
-        // Verificar se o funcionário está logado ou nao
-        if($this->usuario->isLogged() == false){
-            header("Location: " . BASE_URL . "/login"); 
-        }
 
         // verifica se tem permissão para ver esse módulo
         if(in_array($this->table . "_ver", $_SESSION["permissoesUsuario"]) == false){
             header("Location: " . BASE_URL . "/home"); 
         }
-        
+        // Verificar se está logado ou nao
+        if($this->usuario->isLogged() == false){
+            header("Location: " . BASE_URL . "/login"); 
+        }
     }
      
     public function index() {
+        
+        if(isset($_POST) && !empty($_POST)){ 
+            
+            $id = addslashes($_POST['id']);
+            if(in_array($this->table . "_exc", $_SESSION["permissoesUsuario"]) == false || empty($id) || !isset($id)){
+                header("Location: " . BASE_URL . "/" . $this->table); 
+            }
+            if($this->shared->idAtivo($id) == false){
+                header("Location: " . BASE_URL . "/" . $this->table); 
+            }
+            $this->model->excluir($id);
+            header("Location: " . BASE_URL . "/" . $this->table);
+        }
+        
         $dados['infoUser'] = $_SESSION;
         $dados["colunas"] = $this->colunas;
-        $this->loadTemplate($this->table, $dados);      
+        $dados["labelTabela"] = $this->shared->labelTabela();
+
+        $this->loadTemplate($this->table, $dados);
     }
     
     public function adicionar() {
@@ -44,26 +59,24 @@ class usuariosController extends controller{
         
         $dados['infoUser'] = $_SESSION;
         
-        // Verifica se está adicionando ou se está apenas chamando a página
-        if(isset($_POST) && !empty($_POST)){ //adiciona
+        if(isset($_POST) && !empty($_POST)){ 
             $this->model->adicionar($_POST);
             header("Location: " . BASE_URL . "/" . $this->table);
-        }else{ //exibe
+        }else{ 
             $dados["colunas"] = $this->colunas;
             $dados["viewInfo"] = ["title" => "Adicionar"];
+            $dados["labelTabela"] = $this->shared->labelTabela();
             $this->loadTemplate($this->table . "-form", $dados);
         }
     }
     
     public function editar($id) {
-        
-        // [add][edt]criar type password via javascript no input senha do formulário
-        // [add][edt]criar input senha2 para a validação da senha
-        // [add][edt]criar a regra de criação da senha
-        // [add][edt]criar a validação dos campos de senha no editar
-        // [add][edt]
 
         if(in_array($this->table . "_edt", $_SESSION["permissoesUsuario"]) == false || empty($id) || !isset($id)){
+            header("Location: " . BASE_URL . "/" . $this->table); 
+        }
+
+        if($this->shared->idAtivo($id) == false){
             header("Location: " . BASE_URL . "/" . $this->table); 
         }
 
@@ -73,23 +86,12 @@ class usuariosController extends controller{
             $this->model->editar($id, $_POST);
             header("Location: " . BASE_URL . "/" . $this->table); 
         }else{
-            $dados["item"] = $this->model->infoItem($id);
+            $dados["item"] = $this->model->infoItem($id); 
             $dados["colunas"] = $this->colunas;
             $dados["viewInfo"] = ["title" => "Editar"];
-            $this->loadTemplate($this->table . "-form", $dados); // Chama a view com base no nome da tabela
+            $dados["labelTabela"] = $this->shared->labelTabela();
+            $this->loadTemplate($this->table . "-form", $dados); 
         }
     }
-
-    public function excluir($id){
-
-        if(in_array($this->table . "_exc", $_SESSION["permissoesUsuario"]) == false || empty($id) || !isset($id)){
-            header("Location: " . BASE_URL . "/" . $this->table); 
-        }
-
-        $this->model->excluir($id);
-
-        header("Location: " . BASE_URL . "/" . $this->table);
-    }
-    
 }   
 ?>
