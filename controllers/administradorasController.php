@@ -70,8 +70,13 @@ class administradorasController extends controller{
     }
     
     public function editar($id) {
-        if(in_array("administradoras_edt",$_SESSION["permissoesUsuario"]) == FALSE || empty($id) || !isset($id)){
-            header("Location: ".BASE_URL."/administradoras"); 
+
+        if(in_array($this->table . "_edt", $_SESSION["permissoesUsuario"]) == false || empty($id) || !isset($id)){
+            header("Location: " . BASE_URL . "/" . $this->table); 
+        }
+
+        if($this->shared->idAtivo($id) == false){
+            header("Location: " . BASE_URL . "/" . $this->table); 
         }
 
         $dados['infoUser'] = $_SESSION;
@@ -87,8 +92,9 @@ class administradorasController extends controller{
             $txcreditos = $_POST["txcre"];
             $alter = addslashes($_POST["alter"]);
             
-            $this->model->editar($id, $nome,$bandeiras,$informacoes,$txantecipacoes,$txcreditos,$alter);
-            header("Location: ".BASE_URL."/administradoras");
+            $this->model->editar($id, $nome, $bandeiras, $informacoes, $txantecipacoes, $txcreditos, $alter);
+            header("Location: " . BASE_URL . "/administradoras");
+
         }else{
             
             $dados["infoAdm"] = $this->model->pegarInfoAdm($id);

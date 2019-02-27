@@ -69,16 +69,11 @@ class Administradoras extends model {
     }
 
     public function pegarBandeirasAceitas($id_adm){
-       $array = array();
-       if(!empty($id_adm)){
+        if(!empty($id_adm)) {
             $sql = "SELECT * FROM bandeirasaceitas WHERE id_adm = '$id_adm' AND situacao = 'ativo'";
             $sql = self::db()->query($sql);
-                
-            if($sql->rowCount() > 0){
-                $array = $sql->fetchAll();
-            }
+            return $sql->fetchAll();
         }
-        return $array;
     }  
     
     public function pegarListaBandeirasAceitas($idadm){
@@ -107,11 +102,11 @@ class Administradoras extends model {
         }
     }
     
-    public function editar($id_adm, $nome,$bandeiras,$informacoes,$txantecipacoes,$txcreditos, $alter){
+    public function editar($id_adm, $nome, $bandeiras, $informacoes, $txantecipacoes, $txcreditos, $alter){
+
         if(!empty($id_adm) && !empty($nome) && !empty($bandeiras) && !empty($informacoes) && !empty($txantecipacoes) && !empty($txcreditos) && !empty($alter)){
             
-            $p = new Permissoes();
-            $ipcliente = $p->pegaIPcliente();
+            $ipcliente = $this->permissoes->pegaIPcliente();
             $altera = $alter." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - ALTERACAO";
             
             /////// atualiza o nome e as alterações da administradora
@@ -119,52 +114,46 @@ class Administradoras extends model {
             self::db()->query($sql);
             
             //busca as informações das bandeiras cadastradas
-            $idCad = array();
-            $alterCad = array();
+            $idCad = [];
+            $alterCad = [];
+
             $sql = "SELECT id, alteracoes FROM bandeirasaceitas WHERE id_adm = '$id_adm' AND situacao = 'ativo'";
             $sql = self::db()->query($sql);
+            $bandeirasAceitas = $sql->fetchAll();
+
             if($sql->rowCount() > 0){
-               foreach ($sql->fetchAll() as $idChave => $idValor){
+                foreach ($bandeirasAceitas as $idChave => $idValor){
                     $idCad[] = $idValor["id"];
-                    $alterCad[] = array($idValor["id"] => $idValor["alteracoes"]);
-                } 
+                    $alterCad[] = [
+                        $idValor["id"] => $idValor["alteracoes"]
+                    ];
+                }
             }
 
             //// atualiza as bandeiras da administradora >>>> se já existe atualiza >>> se não existe insere
             foreach ($bandeiras as $idBand => $nomeBand){
-                if(in_array($idBand, $idCad)){
+
+                $bandeiraaceita_id = $_POST["bandeiraaceita_id" . $idBand];
+
+                if(in_array($bandeiraaceita_id, $idCad)){
                     
                     //foi encontrada deve ser atualizada
-                    $aux = array_column($alterCad, intval($idBand));
+                    $aux = array_column($alterCad, intval($bandeiraaceita_id));
                     $altera1 =  $aux[0];
-                    $altera1 = $altera1." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - ALTERACAO";
-                    $sqlA = "UPDATE bandeirasaceitas SET  informacoes='$informacoes[$idBand]', txantecipacao='$txantecipacoes[$idBand]', txcredito='$txcreditos[$idBand]',".
-                            " alteracoes='$altera1' WHERE id='$idBand' AND id_adm='$id_adm'";
+                    $altera1 = $altera1 . " | " . ucwords($_SESSION["nomeUsuario"]) . " - $ipcliente - " . date('d/m/Y H:i:s') . " - ALTERACAO";
+                    $sqlA = "UPDATE bandeirasaceitas SET nome='$idBand', informacoes='$informacoes[$idBand]', txantecipacao='$txantecipacoes[$idBand]', txcredito='$txcreditos[$idBand]'," . " alteracoes='$altera1' WHERE id='$bandeiraaceita_id' AND id_adm='$id_adm'";
                     $sqlA = self::db()->query($sqlA);
-                }else{
-                    
+
+                } else {
+
                     //não foi encontrada deve ser inserida
-                    $alteracoes = ucwords($_SESSION["nomeUsuario"])." - (ipcliente) - ".date('d/m/Y H:i:s')." - CADASTRO";
-                    $sqlB ="INSERT INTO bandeirasaceitas (id, nome, informacoes, txantecipacao, txcredito, id_adm, alteracoes, situacao) VALUES".
-                    " (DEFAULT, '$nomeBand', '$informacoes[$idBand]','$txantecipacoes[$idBand]', '$txcreditos[$idBand]', '$id_adm', '$alteracoes', 'ativo')";                   
+                    $alteracoes = ucwords($_SESSION["nomeUsuario"])." - " . $ipcliente . " - " . date('d/m/Y H:i:s') . " - CADASTRO";
+                    $sqlB ="INSERT INTO bandeirasaceitas (nome, informacoes, txantecipacao, txcredito, id_adm, alteracoes, situacao) VALUES" . " ('$idBand', '$informacoes[$idBand]','$txantecipacoes[$idBand]', '$txcreditos[$idBand]', '$id_adm', '$alteracoes', 'ativo')";
                     $sqlB = self::db()->query($sqlB);
+
                 }
+                
             }
-            
-            ///exclui as bandeiras que forasm cadastradas anteriormente, mas foram excluidas do cadastro
-            foreach ($idCad as $idVal){
-                 if(array_key_exists($idVal, $bandeiras)){ 
-                     //foi encontrada e já foi atualizada
-                 }else{
-                     //não foi encontrada deve ser excluida
-                     $aux1 = array_column($alterCad, intval($idVal));
-                     $alterac =  $aux1[0];
-                     $alterac = $alterac." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - EXCLUSAO";
-                     $sqlC = "UPDATE bandeirasaceitas SET alteracoes='$alterac', situacao='excluido' WHERE id='$idVal' AND id_adm='$id_adm'";
-                     $sqlC = self::db()->query($sqlC);
-                 }
-             } 
-            
         }
     }
 

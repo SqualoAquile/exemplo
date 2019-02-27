@@ -19,18 +19,19 @@
 
 <section class="mb-5">
 
-    <form id="main-form" method="POST">
+    <form id="main-form" method="POST" class="needs-validation" autocomplete="off" novalidate>
+        <input type="hidden" name="alteracoes" value="<?php echo isset($infoAdm) ? $infoAdm["alteracoes"] : "" ?>">
         <div class="form-group pb-3">
             <label for="inome" class="font-weight-bold">
                 <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
                 <span>Nome da Administradora</span>
             </label>
-            <input type="text" name="nome" id="inome" class="form-control" value="<?php echo $infoAdm["nome"] ?>" required/>
+            <input type="text" name="nome" id="inome" class="form-control" data-anterior="<?php echo isset($infoAdm) ? $infoAdm["nome"] : "" ?>" value="<?php echo isset($infoAdm) ? $infoAdm["nome"] : "" ?>" required/>
         </div>
         <input id="form-send" type="submit" class="d-none">
     </form>
 
-    <form id="form-bandeiras" class="needs-validation" novalidate>
+    <form id="form-bandeiras" class="needs-validation" autocomplete="off" novalidate>
         <div class="card card-body">
             <div class="form-group">
                 <label for="iband" class="font-weight-bold">
@@ -128,7 +129,7 @@
                             <input type="text" id="itxantecip_<?php echo $i ?>" placeholder="Taxa de recebimento com antecipação <?php echo $i ?>x" class="form-control percent-mask taxas taxas-antecipacao" required />
                         </td>
                         <td>
-                            <input type="text" id="itxcredsemjuros_<?php echo 12 + $i ?>" placeholder="Taxa de recebimento no crédito sem juros <?php echo $i ?>x" class="form-control percent-mask taxas taxas-credito" required />
+                            <input type="text" id="itxcredsemjuros_<?php echo $i ?>" placeholder="Taxa de recebimento no crédito sem juros <?php echo $i ?>x" class="form-control percent-mask taxas taxas-credito" required />
                         </td>
                     </tr>
                 <?php endfor;?>
@@ -168,5 +169,7 @@
     </form>
 </section>
 <script>
-    var bandeirasAceitas = <?php echo json_encode($bandeirasAceitas) ?>;  
+    var bandeirasAceitas = <?php echo isset($bandeirasAceitas) ? json_encode($bandeirasAceitas) : "undefined" ?>,
+        listaBandeiras = <?php echo isset($listaBandeiras) ? json_encode($listaBandeiras) : "undefined" ?>,
+        infoAdm = <?php echo isset($infoAdm) ? json_encode($infoAdm) : "undefined" ?>;
 </script>
