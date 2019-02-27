@@ -21,8 +21,11 @@
 
     <form id="main-form" method="POST">
         <div class="form-group pb-3">
-            <label for="inome" class="font-weight-bold">Nome da Administradora</label>
-            <input type="text" name="nome" id="inome" class="form-control" autofocus required/>
+            <label for="inome" class="font-weight-bold">
+                <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
+                <span>Nome da Administradora</span>
+            </label>
+            <input type="text" name="nome" id="inome" class="form-control" value="<?php echo $infoAdm["nome"] ?>" required/>
         </div>
         <input id="form-send" type="submit" class="d-none">
     </form>
@@ -30,7 +33,10 @@
     <form id="form-bandeiras" class="needs-validation" novalidate>
         <div class="card card-body">
             <div class="form-group">
-                <label for="iband" class="font-weight-bold">Bandeira</label>
+                <label for="iband" class="font-weight-bold">
+                    <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
+                    <span>Bandeira</span>
+                </label>
                 <select id="iband" name="band" class="form-control" required>
                     <option disabled selected value>Selecione</option>
                     <?php foreach ($listaBandeiras as $p):?>
@@ -41,37 +47,55 @@
             <div class="row">
                 <div class="col">
                     <div class="form-group">
-                        <label for="itxdebito">Taxa de Recebimento no Débito</label>
-                        <input type="text" name="txdebito" id="itxdebito" class="form-control percent-mask" />
+                        <label for="itxdebito" class="font-weight-bold">
+                            <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
+                            <span>Taxa de Recebimento no Débito</span>
+                        </label>
+                        <input type="text" name="txdebito" id="itxdebito" class="form-control percent-mask" required/>
                     </div>
                 </div>
                 <div class="col">
-                    <label for="idiasdebito">Dias de Recebimento no Débito</label>
-                    <input type="text" name="diasdebito" id="idiasdebito" class="form-control number-mask" />
+                    <label for="idiasdebito" class="font-weight-bold">
+                        <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
+                        <span>Dias de Recebimento no Débito</span>
+                    </label>
+                    <input type="text" name="diasdebito" id="idiasdebito" class="form-control number-mask" required/>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
                     <div class="form-group">
-                        <label for="itxcredcom">Taxa Recebimento Crédito c/ Juros</label>
-                        <input type="text" name="txcredcom" id="itxcredcom" class="form-control percent-mask" />
+                        <label for="itxcredcom" class="font-weight-bold">
+                            <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
+                            <span>Taxa Recebimento Crédito c/ Juros</span>
+                        </label>
+                        <input type="text" name="txcredcom" id="itxcredcom" class="form-control percent-mask" required/>
                     </div>
                 </div>
                 <div class="col">
-                    <label for="idiascredcom">Dias Recebimento Crédito c/ Juros</label>
-                    <input type="text" name="diascredcom" id="idiascredcom" class="form-control number-mask" />
+                    <label for="idiascredcom" class="font-weight-bold">
+                        <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
+                        <span>Dias Recebimento Crédito c/ Juros</span>
+                    </label>
+                    <input type="text" name="diascredcom" id="idiascredcom" class="form-control number-mask" required/>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
                     <div class="form-group">
-                        <label for="idiasantecip">Dias Recebimento Antecipação</label>
-                        <input type="text" name="diasantecip" id="idiasantecip" class="form-control number-mask" />
+                        <label for="idiasantecip" class="font-weight-bold">
+                            <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
+                            <span>Dias Recebimento Antecipação</span>
+                        </label>
+                        <input type="text" name="diasantecip" id="idiasantecip" class="form-control number-mask" required/>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-group">
-                        <label for="inroparc">Número Máximo Parcelas</label>
+                        <label for="inroparc" class="font-weight-bold">
+                            <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
+                            <span>Número Máximo Parcelas</span>
+                        </label>
                         <select id="inroparc" name="nroparc"  class="form-control" required>
                             <option disabled selected value>Selecione</option>
                             <option value="1">1</option>
@@ -143,3 +167,6 @@
         </div>
     </form>
 </section>
+<script>
+    var bandeirasAceitas = <?php echo json_encode($bandeirasAceitas) ?>;  
+</script>

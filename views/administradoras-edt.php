@@ -5,7 +5,7 @@
 
 <form method="POST">
    
-    <input type="text" name="nome" id="inome" placeholder="Nome da Administradora" class="input-100" required value="<?php echo ucfirst($infoAdm["nome"]);?>" /><br/>
+    <input type="text" name="nome" id="inome" placeholder="Nome da Administradora" class="input-100" required value="" /><br/>
     
     <input type="button" value="Limpar Campos" class="botao_admAux" onclick="limparPreenchimento()"/><br/>
 

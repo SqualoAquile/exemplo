@@ -30,9 +30,13 @@ class core {
                $currentAction = $url[0];
                array_shift($url) ;
            }else{ //Assim que uma mensagem de erro foi exibida no navegador, unsetar pra que ela suma no resto da sessão
-               if (isset($_SESSION["returnMessage"]["show"]) && $_SESSION["returnMessage"]["show"]) {
-                   unset($_SESSION["returnMessage"]);
-               }
+                if (isset($_SESSION["returnMessage"])) {
+                    if (array_key_exists("show", $_SESSION["returnMessage"]) && $_SESSION["returnMessage"]["show"]) {
+                        unset($_SESSION["returnMessage"]);
+                    } else {
+                        $_SESSION["returnMessage"]["show"] = true;
+                    }
+                }
                $currentAction = "index"; 
            }
            

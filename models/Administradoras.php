@@ -2,6 +2,15 @@
 <?php
 
 class Administradoras extends model {
+
+    protected $table = "administradoras";
+    protected $permissoes;
+    protected $shared;
+
+    public function __construct() {
+        $this->permissoes = new Permissoes();
+        $this->shared = new Shared($this->table);
+    }
     
     public function pegarListaBandeiras() {
        $array = array();
@@ -14,46 +23,35 @@ class Administradoras extends model {
        return $array; 
     }
 
-    // public function adicionar($nome,$bandeiras,$informacoes,$txantecipacoes,$txcreditos){
-        
-    //     if(!empty($nome) && !empty($bandeiras) && !empty($informacoes) && !empty($txantecipacoes) && !empty($txcreditos)){
-            
-    //         $p = new Permissoes();
-    //         $ipcliente = $p->pegaIPcliente();
-    //         $alteracoes = ucwords($_SESSION["nomeFuncionario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
-    //         //inserir a administradora e depois inserir as bandeiras aceitas////////////////////////////////////////////////////
-    //         $sql = "INSERT INTO administradoras (id, nome, alteracoes, situacao) VALUES (DEFAULT, '$nome', '$alteracoes', 'ativo')";
-    //         self::db()->query($sql);
-            
-    //         //inserir as bandeiras //////////////////////////////////////////////////////////////////////////////////////////////
-    //         $id_adm = self::db()->lastInsertId();
-            
-    //         $sqlA = "INSERT INTO bandeiras_aceitas (id, nome, informacoes, txantecipacao, txcredito, id_adm, alteracoes, situacao) VALUES ";
-    //         $sqlAux = "";
-    //                 foreach ($bandeiras as $idBand => $nomeBand){
-    //                     $sqlAux = $sqlAux."(DEFAULT, '$idBand', '$informacoes[$idBand]','$txantecipacoes[$idBand]', '$txcreditos[$idBand]', '$id_adm', '$alteracoes', 'ativo'), ";
-    //                 }
-    //                 $sqlAux = substr_replace($sqlAux,"", strrpos($sqlAux, ","));
-    //                 $sqlA = $sqlA.$sqlAux.";";
-    //                 self::db()->query($sqlA);
-    //     }           
-    // }
-
     public function adicionar($request) {
         
         $ipcliente = $this->permissoes->pegaIPcliente();
-        $request["alteracoes"] = ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
+        $alteracoes = ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
+
+        // INSERT 1
+        $nome = addslashes(trim($request["nome"]));
         
-        $request["situacao"] = "ativo";
-
-        $keys = implode(",", array_keys($request));
-
-        $values = "'" . implode("','", array_values($this->shared->formataDadosParaBD($request))) . "'";
-
-        $sql = "INSERT INTO " . $this->table . " (" . $keys . ") VALUES (" . $values . ")";
+        $insertAdministradoras = "INSERT INTO " . $this->table . " (nome, alteracoes, situacao) VALUES ('" . $nome . "', '" . $alteracoes . "', 'ativo')";
         
-        self::db()->query($sql);
+        self::db()->query($insertAdministradoras);
 
+        // INSERT 2
+        $id_adm = self::db()->lastInsertId();
+        
+        $insertBandeirasAceitasKeys = "INSERT INTO bandeirasaceitas (nome, informacoes, txantecipacao, txcredito, id_adm, alteracoes, situacao) VALUES ";
+        
+        $insertBandeirasAceitasValues = [];
+        foreach ($request["bandeira"] as $idBandeira => $nomeBandeira) {
+            $insertBandeirasAceitasValues[] = "('" . $idBandeira . "', '" . $request["infos"][$idBandeira] . "', '" . $request["txant"][$idBandeira] . "', '" . $request["txcre"][$idBandeira] . "', '" . $id_adm . "', '" . $alteracoes . "', 'ativo')";
+        }
+
+        $insertBandeirasAceitasValues = implode(",", $insertBandeirasAceitasValues);
+
+        $insertBandeirasAceitas = $insertBandeirasAceitasKeys . $insertBandeirasAceitasValues;
+
+        self::db()->query($insertBandeirasAceitas);
+
+        // RETURN
         $erro = self::db()->errorInfo();
 
         if (empty($erro[2])){
@@ -73,7 +71,7 @@ class Administradoras extends model {
     public function pegarBandeirasAceitas($id_adm){
        $array = array();
        if(!empty($id_adm)){
-            $sql = "SELECT * FROM bandeiras_aceitas WHERE id_adm = '$id_adm' AND situacao = 'ativo'";
+            $sql = "SELECT * FROM bandeirasaceitas WHERE id_adm = '$id_adm' AND situacao = 'ativo'";
             $sql = self::db()->query($sql);
                 
             if($sql->rowCount() > 0){
@@ -87,7 +85,7 @@ class Administradoras extends model {
         $array = array();
         if(!empty($idadm)){
             $sqlA = "SELECT ba.id, ba.informacoes, ba.txantecipacao, ba.txcredito, b.nome ".
-                    "FROM bandeiras_aceitas as ba INNER JOIN bandeiras as b ON ba.nome = b.id ".
+                    "FROM bandeirasaceitas as ba INNER JOIN bandeiras as b ON ba.nome = b.id ".
                     "WHERE ba.id_adm ='$idadm'";
             $sqlA = self::db()->query($sqlA);
             if($sqlA->rowCount()>0){
@@ -102,16 +100,11 @@ class Administradoras extends model {
     }
     
     public function pegarInfoAdm($id_adm){
-        $array = array();
-       if(!empty($id_adm)){         
-            $sql = "SELECT * FROM administradoras WHERE id = '$id_adm' AND situacao = 'ativo'";
+       if(!empty($id_adm)){
+            $sql = "SELECT * FROM " . $this->table . " WHERE id = '$id_adm' AND situacao = 'ativo'";
             $sql = self::db()->query($sql);
-                
-            if($sql->rowCount() > 0){
-                $array = $sql->fetch();
-            }
+            return $sql->fetch();
         }
-        return $array;
     }
     
     public function editar($id_adm, $nome,$bandeiras,$informacoes,$txantecipacoes,$txcreditos, $alter){
@@ -119,7 +112,7 @@ class Administradoras extends model {
             
             $p = new Permissoes();
             $ipcliente = $p->pegaIPcliente();
-            $altera = $alter." | ".ucwords($_SESSION["nomeFuncionario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - ALTERACAO";
+            $altera = $alter." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - ALTERACAO";
             
             /////// atualiza o nome e as alterações da administradora
             $sql = "UPDATE administradoras SET nome='$nome', alteracoes='$altera' WHERE id='$id_adm'";          
@@ -128,7 +121,7 @@ class Administradoras extends model {
             //busca as informações das bandeiras cadastradas
             $idCad = array();
             $alterCad = array();
-            $sql = "SELECT id, alteracoes FROM bandeiras_aceitas WHERE id_adm = '$id_adm' AND situacao = 'ativo'";
+            $sql = "SELECT id, alteracoes FROM bandeirasaceitas WHERE id_adm = '$id_adm' AND situacao = 'ativo'";
             $sql = self::db()->query($sql);
             if($sql->rowCount() > 0){
                foreach ($sql->fetchAll() as $idChave => $idValor){
@@ -144,15 +137,15 @@ class Administradoras extends model {
                     //foi encontrada deve ser atualizada
                     $aux = array_column($alterCad, intval($idBand));
                     $altera1 =  $aux[0];
-                    $altera1 = $altera1." | ".ucwords($_SESSION["nomeFuncionario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - ALTERACAO";
-                    $sqlA = "UPDATE bandeiras_aceitas SET  informacoes='$informacoes[$idBand]', txantecipacao='$txantecipacoes[$idBand]', txcredito='$txcreditos[$idBand]',".
+                    $altera1 = $altera1." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - ALTERACAO";
+                    $sqlA = "UPDATE bandeirasaceitas SET  informacoes='$informacoes[$idBand]', txantecipacao='$txantecipacoes[$idBand]', txcredito='$txcreditos[$idBand]',".
                             " alteracoes='$altera1' WHERE id='$idBand' AND id_adm='$id_adm'";
                     $sqlA = self::db()->query($sqlA);
                 }else{
                     
                     //não foi encontrada deve ser inserida
-                    $alteracoes = ucwords($_SESSION["nomeFuncionario"])." - (ipcliente) - ".date('d/m/Y H:i:s')." - CADASTRO";
-                    $sqlB ="INSERT INTO bandeiras_aceitas (id, nome, informacoes, txantecipacao, txcredito, id_adm, alteracoes, situacao) VALUES".
+                    $alteracoes = ucwords($_SESSION["nomeUsuario"])." - (ipcliente) - ".date('d/m/Y H:i:s')." - CADASTRO";
+                    $sqlB ="INSERT INTO bandeirasaceitas (id, nome, informacoes, txantecipacao, txcredito, id_adm, alteracoes, situacao) VALUES".
                     " (DEFAULT, '$nomeBand', '$informacoes[$idBand]','$txantecipacoes[$idBand]', '$txcreditos[$idBand]', '$id_adm', '$alteracoes', 'ativo')";                   
                     $sqlB = self::db()->query($sqlB);
                 }
@@ -166,8 +159,8 @@ class Administradoras extends model {
                      //não foi encontrada deve ser excluida
                      $aux1 = array_column($alterCad, intval($idVal));
                      $alterac =  $aux1[0];
-                     $alterac = $alterac." | ".ucwords($_SESSION["nomeFuncionario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - EXCLUSAO";
-                     $sqlC = "UPDATE bandeiras_aceitas SET alteracoes='$alterac', situacao='excluido' WHERE id='$idVal' AND id_adm='$id_adm'";
+                     $alterac = $alterac." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - EXCLUSAO";
+                     $sqlC = "UPDATE bandeirasaceitas SET alteracoes='$alterac', situacao='excluido' WHERE id='$idVal' AND id_adm='$id_adm'";
                      $sqlC = self::db()->query($sqlC);
                  }
              } 
@@ -175,39 +168,65 @@ class Administradoras extends model {
         }
     }
 
-    public function excluir($id_adm){
-        if(!empty($id_adm)){
-            
-            //se não achar nenhum usuario associado ao grupo - pode deletar, ou seja, tornar o cadastro situacao=excluído
-            $sql = "SELECT alteracoes FROM administradoras WHERE id = '$id_adm' AND situacao = 'ativo'";
-            $sql = self::db()->query($sql);
+    public function excluir($id){
+        if(!empty($id)) {
 
-            if($sql->rowCount() > 0){ 
-               $sql = $sql->fetch(); 
-               $palter = $sql["alteracoes"];
-               $p = new Permissoes();
-               $ipcliente = $p->pegaIPcliente();
-               //exclui a administradora
-               $palter = $palter." | ".ucwords($_SESSION["nomeFuncionario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - EXCLUSAO";
-               $sqlA = "UPDATE administradoras SET alteracoes = '$palter', situacao = 'excluido' WHERE id = '$id_adm'";
-               self::db()->query($sqlA);
-               
-               
-               $sqlB = "SELECT * FROM bandeiras_aceitas WHERE id_adm = '$id_adm' AND situacao = 'ativo'";
-               $sqlB = self::db()->query($sqlB);
-                if($sqlB->rowCount() > 0){
-                    $sqlB = $sqlB->fetchAll();
-                                     
-                    foreach ($sqlB as $valorBand) {
-                        //exclui as bandeiras da administradora
-                         
-                        $alter = $valorBand["alteracoes"];
-                        $alter = $alter." | ".ucwords($_SESSION["nomeFuncionario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - EXCLUSAO";
-                        $sqlC = "UPDATE bandeiras_aceitas SET alteracoes = '$alter', situacao = 'excluido' WHERE id_adm = '$id_adm' AND id=".$valorBand['id'];
-                        self::db()->query($sqlC);  
+            $id = addslashes(trim($id));
+
+            //se não achar nenhum usuario associado ao grupo - pode deletar, ou seja, tornar o cadastro situacao=excluído
+            $sql = "SELECT alteracoes FROM ". $this->table ." WHERE id = '$id' AND situacao = 'ativo'";
+            $sql = self::db()->query($sql);
+            
+            if($sql->rowCount() > 0){
+
+                $sql = $sql->fetch();
+                $palter = $sql["alteracoes"];
+                $ipcliente = $this->permissoes->pegaIPcliente();
+                $palter = $palter." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - EXCLUSÃO";
+
+                $sqlA = "UPDATE ". $this->table ." SET alteracoes = '$palter', situacao = 'excluido' WHERE id = '$id' ";
+                self::db()->query($sqlA);
+
+                $erroA = self::db()->errorInfo();
+
+                if (empty($erroA[2])){
+
+                    $sqlB = "SELECT id, alteracoes FROM bandeirasaceitas WHERE id_adm = '$id' AND situacao = 'ativo'";
+                    $sqlB = self::db()->query($sqlB);
+
+                    if($sqlB->rowCount() > 0){
+
+                        $sqlB = $sqlB->fetchAll(PDO::FETCH_ASSOC);
+
+                        foreach ($sqlB as $valorBand) {
+
+                            $alter = $valorBand["alteracoes"];
+                            $alter = $alter." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - EXCLUSAO";
+                            $sqlC = "UPDATE bandeirasaceitas SET alteracoes = '$alter', situacao = 'excluido' WHERE id_adm = '$id' AND id=" . $valorBand['id'];
+                            self::db()->query($sqlC);
+                        }
+
+                        $erroB = self::db()->errorInfo();
+
+                        if (empty($erroB[2])){
+                            $_SESSION["returnMessage"] = [
+                                "mensagem" => "Registro deletado com sucesso!",
+                                "class" => "alert-success"
+                            ];
+                        } else {
+                            $_SESSION["returnMessage"] = [
+                                "mensagem" => "Houve uma falha, tente novamente! <br /> ".$erroB[2],
+                                "class" => "alert-danger"
+                            ];
+                        }
                     }
-               }
-            }         
+                } else {
+                    $_SESSION["returnMessage"] = [
+                        "mensagem" => "Houve uma falha, tente novamente! <br /> ".$erroA[2],
+                        "class" => "alert-danger"
+                    ];
+                }
+            }
         }
     }
     
@@ -222,5 +241,4 @@ class Administradoras extends model {
         }
         return $array;
     }
-    
 }
