@@ -57,7 +57,7 @@
                             <div class="form-group">
 
                                 <!-- Label Geral -->
-                                <label class="<?php echo $value["Null"] == "NO" ? "font-weight-bold" : "" ?>" for="<?php echo $value['Field'] ?>">
+                                <label class="fluxocaixa <?php echo $value["Null"] == "NO" ? "font-weight-bold" : "" ?>" for="<?php echo $value['Field'] ?>">
                                     
                                     <!-- Asterisco de campo obrigatorio -->
                                     <?php if ($value["Null"] == "NO"): ?>
@@ -185,7 +185,6 @@
                                 <!-- CAMPOS DO TIPO DROPDOWN -->
                                 <?php elseif(array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "dropdown"): ?>
                                     <div class="relacional-dropdown-wrapper dropdown">
-                                        <label class="d-none"><span><?php echo array_key_exists("label", $value["Comment"]) ? $value["Comment"]["label"] : ucwords(str_replace("_", " ", $value['Field'])) ?></span></label>
                                         <input 
                                         id="<?php echo $value['Field'] ?>" 
                                         name="<?php echo $value['Field'] ?>" 
@@ -245,7 +244,7 @@
             <?php endforeach ?>
             <div class="col-lg-6" style="order:14;">
                 <div class="form-group">
-                    <label for="dia_venc" class="font-weight-bold" ><span>* Dia Vencimento</span></label>
+                    <label for="dia_venc" class="fluxocaixa font-weight-bold" ><span>* Dia Vencimento</span></label>
                     <select id="dia_venc" 
                             name="dia_venc"
                             class="form-control"
@@ -263,15 +262,15 @@
 
             <div class="col-lg-6" style="order:16;">
                 <div class="form-group">
-                    <label for="taxa-cartao" class="font-weight-bold"><span>* Taxa do Cartão</span></label>
-                    <input type="text" class="form-control" name="taxa-cartao" value="" id="taxa-cartao" maxlength="20" tabindex="17" data-mascara_validacao="porcentagem" data-podeZero="true" disabled="disabled" data-anterior=""/>
+                    <label for="taxa-cartao" class="fluxocaixa font-weight-bold"><span>* Taxa do Cartão</span></label>
+                    <input type="text" class="form-control" name="taxa-cartao" value="" id="taxa-cartao" maxlength="20" tabindex="16" data-mascara_validacao="porcentagem" data-podeZero="true" disabled="disabled" data-anterior=""/>
                 </div>
             </div>
 
             <div class="col-lg-6" style="order:16;">
                 <div class="form-group">
-                    <label for="custo_financ" class="font-weight-bold" ><span>* Custo Financeiro</span></label>
-                    <input type="text" class="form-control" name="custo_financ" value="" id="custo_financ" maxlength="20" tabindex="17" data-mascara_validacao="monetario" data-podeZero="true" disabled="disabled" data-anterior=""/>
+                    <label for="custo_financ" class="fluxocaixa font-weight-bold" ><span>* Custo Financeiro</span></label>
+                    <input type="text" class="form-control" name="custo_financ" value="" id="custo_financ" maxlength="20" tabindex="16" data-mascara_validacao="monetario" data-podeZero="true" disabled="disabled" data-anterior=""/>
                 </div>
             </div>
             <div class="col-lg-3" style="order:18;">
@@ -285,6 +284,7 @@
     
     
     <div class="my-5 table-responsive" id="tabela_lancamento">
+        
         <table class="table table-striped table-hover bg-white table-nowrap first-column-fixed">
             <thead>
                 <tr>
@@ -298,6 +298,11 @@
                     <?php endforeach ?>
                 </tr>
             </thead>
+            <form  method="POST" autocomplete="off" novalidate>
+                <tbody>
+
+                </tbody>                                       
+            </form>
         </table>
     </div>
     
