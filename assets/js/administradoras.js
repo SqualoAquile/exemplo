@@ -1,6 +1,6 @@
 $(function () {
 
-    var $inclusoes = $('#inclusoes'),
+    let $inclusoes = $('#inclusoes'),
         $taxa_debito = $('[name=txdebito]'),
         $taxa_credito = $('[name=txcredcom]'),
         $bandeira = $('[name=band]'),
@@ -9,19 +9,33 @@ $(function () {
         $dias_antecipacao = $('[name=diasantecip]'),
         $formBandeiras = $('#form-bandeiras'),
         $mainForm = $('#main-form'),
+        $nroparc = $('[name="nroparc"]');
         indexTrTable = 0;
     
     $inclusoes.hide();
 
-    $('#form-bandeiras').submit(function (event) {
-        event.preventDefault();
-        if (this.checkValidity()) {
-            Save();
-        }
-    });
+    $('#form-bandeiras')
+        .submit(function (event) {
+            
+            event.preventDefault();
+            
+            if (this.checkValidity()) {
+                Save();
+            }
+        });
+
+    $('label[for="form-send"]')
+        .click(function (event) {
+            if (!$('#table-inclusoes tbody tr').length) {
+                alert('É necessário ter ao menos uma bandeira!');
+                event.stopPropagation();
+                event.preventDefault();
+                event.stopImmediatePropagation();
+            }
+        });
 
     $(document)
-        .ready(function() {
+        .ready(function () {
 
             if (!infoAdm) return;
 
@@ -49,8 +63,8 @@ $(function () {
                     antecipacoes = [],
                     creditos = [];
 
-                txRcbDeb = txRcbDeb.replace('.', ',');
-                txRcbCred = txRcbCred.replace('.', ',');
+                if (txRcbDeb) txRcbDeb = txRcbDeb.replace('.', ',');
+                if (txRcbCred) txRcbCred = txRcbCred.replace('.', ',');
 
                 txAntecipacao.forEach(function(antecipacao, index) {
                     antecipacao = antecipacao.replace('.', ',');
@@ -69,6 +83,7 @@ $(function () {
                 });
 
                 Popula(
+                    false,
                     idBandeira,
                     bandeira,
                     txRcbDeb,
@@ -90,10 +105,7 @@ $(function () {
             Delete(this);
         });
 
-    $('.percent-mask').mask('00,00%', { reverse: true });
-    $('.number-mask').mask('00');
-
-    $('[name=nroparc]')
+    $nroparc
         .change(function () {
             
             $taxas = $('#tabela-taxas'),
@@ -103,17 +115,26 @@ $(function () {
 
                 var $taxasTr = $taxas.find('tbody tr');
 
-                $taxasTr.hide()
+                $taxasTr.hide();
                 
                 $taxasTr.not(':lt(' + value + ')').find('input')
-                    .val(0)
-                    .removeClass('active');
+                    .val('0%')
+                    .removeClass('is-valid is-invalid active');
                 
                 $taxas
-                    .find('tbody tr:lt(' + value + ')').show()
-                    .find('.taxas').addClass('active');
+                    .find('tbody tr:lt(' + value + ')')
+                    .show()
+                    .find('.taxas')
+                    .addClass('active');
+
+                $taxas.find('.taxas.active').each(function () {
+                    if ($(this).val() == '0%') {
+                        $(this).val('');
+                    }
+                });
 
                 $taxas.show();
+
             } else {
                 $taxas.hide();
             }
@@ -121,7 +142,7 @@ $(function () {
         .change();
 
     $('#iband')
-        .change(function() {
+        .change(function () {
 
             var $this = $(this);
 
@@ -145,9 +166,10 @@ $(function () {
             }
         });
 
-    $('#incluir').click(function () {
-        Save();
-    });
+    $('#incluir')
+        .click(function () {
+            Save();
+        });
 
     function Save() {
         
@@ -182,7 +204,10 @@ $(function () {
             taxa_debito_clean = $taxa_debito.val().replace('%', ''),
             taxa_credito_clean = $taxa_credito.val().replace('%', '');
 
+        $('.conteudos-escondidos').removeClass('sendo-editado');
+
         Popula(
+            true,
             id_bandeira,
             bandeira,
             taxa_debito_clean,
@@ -196,9 +221,11 @@ $(function () {
         );
     };
 
-    function Popula(paramIdBandeira, bandeira, taxa_debito, dias_debito, taxa_credito, dias_credito, dias_antecipacao, parcelas, antecipacoes, creditos, bandeiraAceitaId) {
+    function Popula(adicionando, paramIdBandeira, bandeira, taxa_debito, dias_debito, taxa_credito, dias_credito, dias_antecipacao, parcelas, antecipacoes, creditos, bandeiraAceitaId) {
 
-        let infos = taxa_debito.replace(',', '.') + '-' + dias_debito + '-' + taxa_credito.replace(',', '.') + '-' + dias_credito + '-' + dias_antecipacao + '-' + parcelas,
+        let taxa_debitoRpl = taxa_credito ? taxa_credito.replace(',', '.') : '',
+            taxa_creditoRpl = taxa_credito ? taxa_credito.replace(',', '.') : '',
+            infos = taxa_debitoRpl + '-' + dias_debito + '-' + taxa_creditoRpl + '-' + dias_credito + '-' + dias_antecipacao + '-' + parcelas,
             txantecipacao = [],
             antecipacoesHtml = '',
             txcredito = [],
@@ -256,8 +283,8 @@ $(function () {
                 <td>` + dias_antecipacao + `</td>
                 <td>
                     <div class="btn-group" role="group" aria-label="Ações">
-                        <a href="javascript:void(0)" class="editar-inclusao btn btn-primary btn-sm">Editar</a>
-                        <a href="javascript:void(0)" class="excluir-inclusao btn btn-secondary btn-sm">Excluir</a>
+                        <button class="editar-inclusao btn btn-primary btn-sm">Editar</button>
+                        <button class="excluir-inclusao btn btn-secondary btn-sm">Excluir</button>
                     </div>
                 </td>
             `;
@@ -265,7 +292,7 @@ $(function () {
         txantecipacaojoin = txantecipacao.join('-');
         txcreditojoin = txcredito.join('-');
 
-        SetInput(paramIdBandeira, bandeira, infos, txantecipacaojoin, txcreditojoin, bandeiraAceitaId);
+        SetInput(adicionando, paramIdBandeira, bandeira, infos, txantecipacaojoin, txcreditojoin, bandeiraAceitaId);
 
         $('#form-bandeiras').trigger('reset');
         $('[name="nroparc"]').change();
@@ -281,21 +308,97 @@ $(function () {
         }
     };
 
-    function SetInput(paramIdBandeira, bandeira, infos, txantecipacao, txcredito, bandeiraAceitaId) {
+    function SetInput(adicionando, paramIdBandeira, bandeira, infos, txantecipacao, txcredito, bandeiraAceitaId) {
 
-        var indexEditando = $formBandeiras.attr('data-editando');
+        let indexEditando = $formBandeiras.attr('data-editando'),
+            arrInfos = infos.split('-'),
+            arrTxAntecipacao = txantecipacao.split('-'),
+            arrTxCredito = txcredito.split('-'),
+            taxaDebitoAlteracoes = arrInfos[0].replace('.', ',') + '%',
+            taxaCreditoAlteracoes = arrInfos[2].replace('.', ',') + '%',
+            alt_dias_debito = arrInfos[1],
+            alt_dias_credito = arrInfos[3],
+            alt_dias_antecipacao = arrInfos[4],
+            alt_numero_parcelas = arrInfos[5];
 
         if (paramIdBandeira) {
+
             if (!indexEditando) {
+
+                let htmlTaxaParcelas = '';
+                for (let index = 1; index <= 12; index++) {
+                    
+                    let $inputTxAntecipacao = $('#itxantecip_' + index),
+                        $inputTxCredito = $('#itxcredsemjuros_' + index),
+                        currentAntecipacao = arrTxAntecipacao[index - 1],
+                        currentCredito = arrTxCredito[index - 1],
+                        dataAnteriorTxAtencipacao = !adicionando && !indexEditando ? currentAntecipacao + '%' : '',
+                        dataAnteriorTxCredito = !adicionando && !indexEditando ? currentCredito + '%' : '';
+
+                    if (currentAntecipacao == '0') dataAnteriorTxAtencipacao = '0%';
+                    if (currentCredito == '0') dataAnteriorTxCredito = '0%';
+                        
+                    htmlTaxaParcelas += `
+                        <div class="envolta-inputs-alteracoes">
+                            <div>
+                                <label><span>` + bandeira + ` - ` + $inputTxAntecipacao.attr('placeholder') + `</span></label>
+                                <input id="alt_itxantecip_` + index + `" type="text" data-anterior="` + dataAnteriorTxAtencipacao + `" class="alteracao-parcelas-antecipacao" value="` + arrTxAntecipacao[index - 1] + `%" readonly>
+                            </div>
+                            <div>
+                                <label><span>` + bandeira + ` - ` + $inputTxCredito.attr('placeholder') + `</span></label>
+                                <input id="alt_itxcredsemjuros_` + index + `" type="text" data-anterior="` + dataAnteriorTxCredito + `" class="alteracao-parcelas-antecipacao" value="` + arrTxCredito[index - 1] + `%" readonly>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Se estiver criando uma nova bandeira, nao coloca nenhum conteudo no data-anterior
+                let dataAnteriorBandeira = !adicionando && !indexEditando ? bandeira : '',
+                    dataAnteriorTaxaDebitoAlteracoes = !adicionando && !indexEditando ? taxaDebitoAlteracoes : '',
+                    dataAnteriorTaxaCreditoAlteracoes = !adicionando && !indexEditando ? taxaCreditoAlteracoes : '',
+                    dataAnteriorAlt_dias_credito = !adicionando && !indexEditando ? alt_dias_credito : '',
+                    dataAnteriorAlt_dias_antecipacao = !adicionando && !indexEditando ? alt_dias_antecipacao : '',
+                    dataAnteriorAlt_numero_parcelas = !adicionando && !indexEditando ? alt_numero_parcelas : '',
+                    dataAnteriorAlt_dias_debito = !adicionando && !indexEditando ? alt_dias_debito : '',
+                    textoAlteracao = !dataAnteriorBandeira.length ? 'Criou A ' : '';
+
                 $mainForm
                     .append(`
-                        <div class="conteudos-escondidos" data-tr-index="` + indexTrTable + `">
-                            <input type="text" data-bandeira="` + paramIdBandeira + `" class="bandeiraaceita_id" name="bandeiraaceita_id` + paramIdBandeira + `" value="` + bandeiraAceitaId + `" required>
-                            <input type="text" data-bandeira="` + paramIdBandeira + `" class="flag" name="flag` + paramIdBandeira + `" value="` + paramIdBandeira + `" required>
-                            <input type="text" data-bandeira="` + paramIdBandeira + `" class="bandeira" name="bandeira[` + paramIdBandeira + `]" value="` + bandeira + `" required>
-                            <input type="text" data-bandeira="` + paramIdBandeira + `" class="infos" name="infos[` + paramIdBandeira + `]" value="` + infos + `" required>
-                            <input type="text" data-bandeira="` + paramIdBandeira + `" class="txant" name="txant[` + paramIdBandeira + `]" value="` + txantecipacao + `" required>
-                            <input type="text" data-bandeira="` + paramIdBandeira + `" class="txcre" name="txcre[` + paramIdBandeira + `]" value="` + txcredito + `" required>
+                        <div class="conteudos-escondidos d-none" data-tr-index="` + indexTrTable + `">
+                            <div class="envolta-inputs-alteracoes">
+                                <label class="labelBandeira" for="bandeira` + paramIdBandeira + `"><span>` + textoAlteracao + `Bandeira</span></label>
+                                <input type="text" data-anterior="` + dataAnteriorBandeira + `" data-bandeira="` + paramIdBandeira + `" class="bandeira" id="bandeira` + paramIdBandeira + `" name="bandeira[` + paramIdBandeira + `]" value="` + bandeira + `" required readonly />
+                            </div>
+                            <div class="envolta-inputs-alteracoes">
+                                <label><span>` + bandeira + ` - ` + $taxa_debito.siblings('label').find('span').text() + `</span></label>
+                                <input type="text" data-anterior="` + dataAnteriorTaxaDebitoAlteracoes + `" class="alteracao-taxa-debito" value="` + taxaDebitoAlteracoes + `" readonly>
+                            </div>
+                            <div class="envolta-inputs-alteracoes">
+                                <label><span>` + bandeira + ` - ` + $dias_debito.siblings('label').find('span').text() + `</span></label>
+                                <input type="text" data-anterior="` + dataAnteriorAlt_dias_debito + `" class="alteracao-dias-debito" value="` + alt_dias_debito + `" readonly>
+                            </div>
+                            <div class="envolta-inputs-alteracoes">
+                                <label><span>` + bandeira + ` - ` + $taxa_credito.siblings('label').find('span').text() + `</span></label>
+                                <input type="text" data-anterior="` + dataAnteriorTaxaCreditoAlteracoes + `" class="alteracao-taxa-credito" value="` + taxaCreditoAlteracoes + `" readonly>
+                            </div>
+                            <div class="envolta-inputs-alteracoes">
+                                <label><span>` + bandeira + ` - ` + $dias_credito.siblings('label').find('span').text() + `</span></label>
+                                <input type="text" data-anterior="` + dataAnteriorAlt_dias_credito + `" class="alteracao-dias-credito" value="` + alt_dias_credito + `" readonly>
+                            </div>
+                            <div class="envolta-inputs-alteracoes">
+                                <label><span>` + bandeira + ` - ` + $dias_antecipacao.siblings('label').find('span').text() + `</span></label>
+                                <input type="text" data-anterior="` + dataAnteriorAlt_dias_antecipacao + `" class="alteracao-dias-antecipacao" value="` + alt_dias_antecipacao + `" readonly>
+                            </div>
+                            <div class="envolta-inputs-alteracoes">
+                                <label><span>` + bandeira + ` - ` + $nroparc.siblings('label').find('span').text() + `</span></label>
+                                <input type="text" data-anterior="` + dataAnteriorAlt_numero_parcelas + `" class="alteracao-parcelas" value="` + alt_numero_parcelas + `" readonly>
+                            </div>
+                            ` + htmlTaxaParcelas + `
+                            <input type="search" data-bandeira="` + paramIdBandeira + `" class="bandeiraaceita_id" id="bandeiraaceita_id` + paramIdBandeira + `" name="bandeiraaceita_id` + paramIdBandeira + `" value="` + bandeiraAceitaId + `" required readonly />
+                            <input type="search" data-bandeira="` + paramIdBandeira + `" class="flag" name="flag` + paramIdBandeira + `" value="` + paramIdBandeira + `" required readonly />
+                            <input type="search" data-bandeira="` + paramIdBandeira + `" class="infos" name="infos[` + paramIdBandeira + `]" value="` + infos + `" required readonly />
+                            <input type="search" data-bandeira="` + paramIdBandeira + `" class="txant" name="txant[` + paramIdBandeira + `]" value="` + txantecipacao + `" required readonly />
+                            <input type="search" data-bandeira="` + paramIdBandeira + `" class="txcre" name="txcre[` + paramIdBandeira + `]" value="` + txcredito + `" required readonly />
                         </div>
                     `);
             } else {
@@ -325,6 +428,53 @@ $(function () {
                     .attr('data-bandeira', paramIdBandeira)
                     .val(infos);
 
+                $divHiddensEditando.find('label:not(.labelBandeira) span').each(function (i, el) {
+                    let $elementSpan = $(el),
+                        txtElSpan = $elementSpan.text(),
+                        arrTxtElSpan = txtElSpan.split(' -');
+
+                    $elementSpan.text($elementSpan.text().replace(arrTxtElSpan[0], bandeira));
+                });
+
+                // Taxa de Recebimento no Crédito
+                $divHiddensEditando
+                    .find('.alteracao-taxa-credito')
+                    .val(taxaCreditoAlteracoes);
+
+                // Taxa de Recebimento Débito
+                $divHiddensEditando
+                    .find('.alteracao-taxa-debito')
+                    .val(taxaDebitoAlteracoes);
+
+                // Dias de Recebimento no Débito
+                $divHiddensEditando
+                    .find('.alteracao-dias-debito')
+                    .val(alt_dias_debito);
+
+                // Dias de Recebimento no Crédito
+                $divHiddensEditando
+                    .find('.alteracao-dias-credito')
+                    .val(alt_dias_credito);
+
+                // Dias Recebimento Antecipação
+                $divHiddensEditando
+                    .find('.alteracao-dias-antecipacao')
+                    .val(alt_dias_antecipacao);
+
+                // Número Máximo Parcelas
+                $divHiddensEditando
+                    .find('.alteracao-parcelas')
+                    .val(alt_numero_parcelas);
+
+                for (let index = 1; index <= 12; index++) {
+                    
+                    let $inputTxAntecipacao = $('#itxantecip_' + index),
+                        $inputTxCredito = $('#itxcredsemjuros_' + index);
+                    
+                    $('#alt_itxantecip_' + index).val($inputTxAntecipacao.val());
+                    $('#alt_itxcredsemjuros_' + index).val($inputTxCredito.val());
+                }
+
                 $divHiddensEditando
                     .find('.txant')
                     .attr('name', 'txant[' + paramIdBandeira + ']')
@@ -349,7 +499,9 @@ $(function () {
             index_editando = $(par).attr('data-index'),
             $divHiddensEditando = $('.conteudos-escondidos[data-tr-index="' + index_editando + '"]');
 
-        par.find('.btn').addClass('disabled');
+        par.find('.btn').addClass('disabled').attr('disabled', 'disabled');
+
+        $divHiddensEditando.addClass('sendo-editado');
 
         $bandeira.val(id_bandeira).focus();
 
@@ -371,7 +523,7 @@ $(function () {
         $dias_credito.val(dias_credito);
         $dias_antecipacao.val(dias_antecipacao);
         
-        $('[name="nroparc"]').val(parcelas).change();
+        $nroparc.val(parcelas).change();
 
         taxas_antecipacao.forEach(function (taxa, index) {
             $('#itxantecip_' + (index + 1)).val(taxa.replace('.', ',') + '%');
@@ -385,20 +537,51 @@ $(function () {
 
     function Delete(_this) {
 
-        var par = $(_this).closest('tr'),
-            id_bandeira = par.find('.id_bandeira input').val();
+        let $par = $(_this).closest('tr'),
+            id_bandeira = $par.find('.id_bandeira input').val(),
+            $envolta = $('.conteudos-escondidos').find('label.labelBandeira[for="bandeira' + id_bandeira + '"]').parents('.envolta-inputs-alteracoes'),
+            $bandeira = $envolta.find('input.bandeira'),
+            $conteudoEscondido = $envolta.parent('.conteudos-escondidos');
 
-        $('[data-bandeira=' + id_bandeira + ']').remove();
-        par.remove();
+        $envolta.siblings('.envolta-inputs-alteracoes').remove();
+        $par.remove();
+
+        $conteudoEscondido.addClass('excluido');
+
+        $bandeira.siblings('label.labelBandeira').find('span').text('BANDEIRA ' + $bandeira.val());
+        $bandeira.val('EXCLUIDA');
+
+        $conteudoEscondido.find('input.bandeira').attr('name', 'bandeira[excluida]');
+        $conteudoEscondido.find('input.bandeiraaceita_id').attr('name', 'bandeiraaceita_idexcluida');
+        $conteudoEscondido.find('input.flag').attr('name', 'flagexcluida');
     };
 
     function BandeiraSendoUsada(idCompare) {
         let exist = false;
-        $('.conteudos-escondidos').each(function () {
+        $('.conteudos-escondidos:not(.sendo-editado):not(.excluido)').each(function () {
             if ($(this).find('.flag').val() == idCompare) {
                 exist = true;
             }
         });
         return exist;
-    }
+    };
+    
+    $('#historico').on('shown.bs.collapse', function () {
+        
+        let $div = $(this).find('.cada-alteracao .card.card-body .card-text > div'),
+            $span = $div.find('span'),
+            $delVazio = $span.siblings('del:contains(∅)');
+
+        $div.each(function () {
+            let content = $(this).text();
+            if (content.indexOf('EXCLUIDA') != -1) {
+                $(this).find('strong, del').hide();
+            }
+        });
+
+        $delVazio.hide();
+        $delVazio.siblings('strong').hide();
+        
+        $delVazio.parent().addClass('text-uppercase');
+    });
 });

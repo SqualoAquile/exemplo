@@ -107,11 +107,22 @@ class Administradoras extends model {
         if(!empty($id_adm) && !empty($nome) && !empty($bandeiras) && !empty($informacoes) && !empty($txantecipacoes) && !empty($txcreditos) && !empty($alter)){
             
             $ipcliente = $this->permissoes->pegaIPcliente();
-            $altera = $alter." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - ALTERACAO";
+
+            $hist = explode("##", addslashes($alter));
+
+            if(!empty($hist[1])) {
+                $altera = $hist[0]." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - ALTERAÇÃO >> ".$hist[1];
+            } else {
+                $_SESSION["returnMessage"] = [
+                    "mensagem" => "Houve uma falha, tente novamente! <br /> Registro sem histórico de alteração.",
+                    "class" => "alert-danger"
+                ];
+                return false;
+            }
             
             /////// atualiza o nome e as alterações da administradora
-            $sql = "UPDATE administradoras SET nome='$nome', alteracoes='$altera' WHERE id='$id_adm'";          
-            self::db()->query($sql);
+            $sqlAdm = "UPDATE administradoras SET nome='$nome', alteracoes='$altera' WHERE id='$id_adm'";          
+            $sqlAdm = self::db()->query($sqlAdm);
             
             //busca as informações das bandeiras cadastradas
             $idCad = [];
@@ -132,27 +143,52 @@ class Administradoras extends model {
 
             //// atualiza as bandeiras da administradora >>>> se já existe atualiza >>> se não existe insere
             foreach ($bandeiras as $idBand => $nomeBand){
-
+                
                 $bandeiraaceita_id = $_POST["bandeiraaceita_id" . $idBand];
 
-                if(in_array($bandeiraaceita_id, $idCad)){
+                if (intval($idBand)) {
+                    $aux = array_column($alterCad, intval($bandeiraaceita_id));
+                    $altera1 = $aux[0];
+                }
+
+                if ($nomeBand == "EXCLUIDA") {
+
+                    $alteracoesDelete = $altera1 . " | " . ucwords($_SESSION["nomeUsuario"]) . " - $ipcliente - " . date('d/m/Y H:i:s') . " - EXCLUSÃO";
+                    $sqlDelete = "UPDATE bandeirasaceitas SET situacao='excluido', alteracoes='$alteracoesDelete' WHERE id='$bandeiraaceita_id' AND id_adm='$id_adm'";
+                    $sqlDelete = self::db()->query($sqlDelete);
+
+                    
+                } elseif (in_array($bandeiraaceita_id, $idCad)) {
                     
                     //foi encontrada deve ser atualizada
-                    $aux = array_column($alterCad, intval($bandeiraaceita_id));
-                    $altera1 =  $aux[0];
                     $altera1 = $altera1 . " | " . ucwords($_SESSION["nomeUsuario"]) . " - $ipcliente - " . date('d/m/Y H:i:s') . " - ALTERACAO";
                     $sqlA = "UPDATE bandeirasaceitas SET nome='$idBand', informacoes='$informacoes[$idBand]', txantecipacao='$txantecipacoes[$idBand]', txcredito='$txcreditos[$idBand]'," . " alteracoes='$altera1' WHERE id='$bandeiraaceita_id' AND id_adm='$id_adm'";
                     $sqlA = self::db()->query($sqlA);
 
                 } else {
 
-                    //não foi encontrada deve ser inserida
+                    // não foi encontrada deve ser inserida
                     $alteracoes = ucwords($_SESSION["nomeUsuario"])." - " . $ipcliente . " - " . date('d/m/Y H:i:s') . " - CADASTRO";
-                    $sqlB ="INSERT INTO bandeirasaceitas (nome, informacoes, txantecipacao, txcredito, id_adm, alteracoes, situacao) VALUES" . " ('$idBand', '$informacoes[$idBand]','$txantecipacoes[$idBand]', '$txcreditos[$idBand]', '$id_adm', '$alteracoes', 'ativo')";
-                    $sqlB = self::db()->query($sqlB);
+                    $sqlInsert ="INSERT INTO bandeirasaceitas (nome, informacoes, txantecipacao, txcredito, id_adm, alteracoes, situacao) VALUES" . " ('$idBand', '$informacoes[$idBand]','$txantecipacoes[$idBand]', '$txcreditos[$idBand]', '$id_adm', '$alteracoes', 'ativo')";
+                    $sqlInsert = self::db()->query($sqlInsert);
 
                 }
-                
+            }
+
+            // RETURN
+            $erro = self::db()->errorInfo();
+
+            if (empty($erro[2])){
+
+                $_SESSION["returnMessage"] = [
+                    "mensagem" => "Registro alterado com sucesso!",
+                    "class" => "alert-success"
+                ];
+            } else {
+                $_SESSION["returnMessage"] = [
+                    "mensagem" => "Houve uma falha, tente novamente! <br /> ".$erro[2],
+                    "class" => "alert-danger"
+                ];
             }
         }
     }

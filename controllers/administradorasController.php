@@ -80,7 +80,6 @@ class administradorasController extends controller{
         }
 
         $dados['infoUser'] = $_SESSION;
-        $a = new Administradoras();
         
         $id = addslashes($id); // id da administradora de cartão
         if(isset($_POST["nome"]) && !empty($_POST["nome"]) && isset($_POST["bandeira"]) && isset($_POST["infos"]) && isset($_POST["txant"]) && isset($_POST["txcre"])){
@@ -90,7 +89,7 @@ class administradorasController extends controller{
             $informacoes = $_POST["infos"];
             $txantecipacoes = $_POST["txant"];
             $txcreditos = $_POST["txcre"];
-            $alter = addslashes($_POST["alter"]);
+            $alter = addslashes($_POST["alteracoes"]);
             
             $this->model->editar($id, $nome, $bandeiras, $informacoes, $txantecipacoes, $txcreditos, $alter);
             header("Location: " . BASE_URL . "/administradoras");
