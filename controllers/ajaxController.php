@@ -83,7 +83,7 @@ class ajaxController extends controller{
     $a = new Administradoras();
     if(isset($_POST["q"]) && !empty($_POST["q"])){
         $idadm = trim(addslashes($_POST["q"]));
-        $dados = $a->pegarListaBandeirasAceitas($idadm,$_SESSION["idEmpresaFuncionario"]);
+        $dados = $a->pegarListaBandeirasAceitas($idadm);
     }
     echo json_encode($dados);
   }

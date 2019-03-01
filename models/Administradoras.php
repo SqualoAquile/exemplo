@@ -79,16 +79,24 @@ class Administradoras extends model {
     public function pegarListaBandeirasAceitas($idadm){
         $array = array();
         if(!empty($idadm)){
-            $sqlA = "SELECT ba.id, ba.informacoes, ba.txantecipacao, ba.txcredito, b.nome ".
-                    "FROM bandeirasaceitas as ba INNER JOIN bandeiras as b ON ba.nome = b.id ".
-                    "WHERE ba.id_adm ='$idadm'";
-            $sqlA = self::db()->query($sqlA);
-            if($sqlA->rowCount()>0){
-                $sqlA = $sqlA->fetchAll();
-                foreach ($sqlA as $chave => $valor){
-                    $array[$chave] = array("id" => $valor["id"], "nome" => utf8_encode(ucwords($valor["nome"])), "informacoes" => $valor["informacoes"],
-                                            "txantecipacao" => $valor["txantecipacao"], "txcredito" => $valor["txcredito"]);
-                }   
+            $sql = "SELECT id FROM administradoras WHERE nome = '$idadm'";
+            $sql = self::db()->query($sql);
+            if($sql->rowCount()>0){
+                $sql = $sql->fetch();
+                $idadmaux = $sql['id'];
+                
+                $sqlA = "SELECT bandeirasaceitas.id, bandeirasaceitas.informacoes, bandeirasaceitas.txantecipacao, bandeirasaceitas.txcredito, bandeiras.nome ".
+                    "FROM bandeirasaceitas INNER JOIN bandeiras ON bandeirasaceitas.nome = bandeiras.id ".
+                    "WHERE bandeirasaceitas.id_adm ='$idadmaux'";
+                    
+                    $sqlA = self::db()->query($sqlA);
+                    if($sqlA->rowCount()>0){
+                        $sqlA = $sqlA->fetchAll();
+                        foreach ($sqlA as $chave => $valor){
+                            $array[$chave] = array("id" => $valor["id"], "nome" => utf8_encode(ucwords($valor["nome"])), "informacoes" => $valor["informacoes"],
+                                                    "txantecipacao" => $valor["txantecipacao"], "txcredito" => $valor["txcredito"]);
+                        }   
+                    }    
             }
         }
         return $array;
