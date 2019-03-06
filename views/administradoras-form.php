@@ -128,13 +128,13 @@
                         <?php for($i=1;$i<=12;$i++):?>
                             <tr>
                                 <td>
-                                    <div class="d-flex align-items-center" data-placeholder="<?php echo $i ?>x">
+                                    <div data-placeholder="<?php echo $i ?>x">
                                         <label class="d-none" for="itxantecip_<?php echo $i ?>"><span>Taxa de recebimento com antecipação <?php echo $i ?>x</span></label>
                                         <input type="text" id="itxantecip_<?php echo $i ?>" class="form-control taxas taxas-antecipacao" data-anterior="" data-mascara_validacao="porcentagem" required />
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="d-flex align-items-center" data-placeholder="<?php echo $i ?>x">
+                                    <div data-placeholder="<?php echo $i ?>x">
                                         <label class="d-none" for="itxcredsemjuros_<?php echo $i ?>"><span>Taxa de recebimento no crédito sem juros <?php echo $i ?>x</span></label>
                                         <input type="text" id="itxcredsemjuros_<?php echo $i ?>" class="form-control taxas taxas-credito" data-anterior="" data-mascara_validacao="porcentagem" required />
                                     </div>

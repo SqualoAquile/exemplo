@@ -31,7 +31,7 @@ $(function () {
         }
     }
 
-    function comparar ($custo, $preco) {
+    function comparar ($custo, $preco, $element) {
 
         if( $custo.val() != "" && $preco.val() == "" ){
             return;
@@ -40,8 +40,7 @@ $(function () {
         if( $custo.val() == "" && $preco.val() != "" ){
             $preco.removeClass('is-valid').addClass('is-invalid');
             $preco[0].setCustomValidity('invalid');
-            $preco.after('<div class="invalid-feedback">O valor do preço deve ser maior do que o valor do custo.</div>');
-            $preco.val("");
+            $preco.after('<div class="invalid-feedback feedback-maiorque">O valor do preço deve ser maior do que o valor do custo.</div>');
             return;
         }
         
@@ -50,9 +49,8 @@ $(function () {
                 //custo não é maior que
                 $preco.removeClass('is-valid').addClass('is-invalid');
                 $preco[0].setCustomValidity('invalid');
-                $('.invalid-feedback').remove();
-                $preco.after('<div class="invalid-feedback">O valor do preço deve ser maior do que o valor do custo.</div>');
-                $preco.val("");
+                $preco.siblings('.feedback-maiorque').remove();
+                $preco.after('<div class="invalid-feedback feedback-maiorque">O valor do preço deve ser maior do que o valor do custo.</div>');
                 return;
             }    
         }
@@ -131,7 +129,8 @@ $(function () {
                                             .keyup();
         
                                     });
-        
+
+                                    location.reload();
                                 }
                             }
                         });
@@ -156,44 +155,12 @@ $(function () {
             }
         });
     
-    $("#custocriacao_arte, #preco_vendacriacao_arte").blur(function(){
-        
-        var $custo = $("#custocriacao_arte"),
-            $preco = $("#preco_vendacriacao_arte");
+    $('[name="custo"], [name="preco_venda"]').on('blur', function(){
 
-        comparar($custo, $preco);
+        let $pai = $(this).parents('form'),
+            $custo = $pai.find('[name="custo"]'),
+            $preco = $pai.find('[name="preco_venda"]');
+
+        comparar($custo, $preco, $(this));
     });
-    
-    $("#custovetorizacao, #preco_vendavetorizacao").blur(function(){
-        
-        var $custo = $("#custovetorizacao"),
-            $preco = $("#preco_vendavetorizacao");
-
-        comparar($custo, $preco);
-    });
-    
-    $("#custocorte, #preco_vendacorte").blur(function(){
-
-        var $custo = $("#custocorte"),
-            $preco = $("#preco_vendacorte");
-
-        comparar($custo, $preco);
-    });
-    
-    $("#custorefile, #preco_vendarefile").blur(function(){
-
-        var $custo = $("#custorefile"),
-            $preco = $("#preco_vendarefile");
-
-        comparar($custo, $preco);
-    });
-    
-    $("#custoaplicacao, #preco_vendaaplicacao").blur(function(){
-
-        var $custo = $("#custoaplicacao"),
-            $preco = $("#preco_vendaaplicacao");
-
-        comparar($custo, $preco);
-    });
-
 });
