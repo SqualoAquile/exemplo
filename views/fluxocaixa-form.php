@@ -275,7 +275,7 @@
             </div>
             <div class="col-lg-3" style="order:18;">
                  <div class="form-group">
-                    <div class="btn btn-primary btn-block" tabindex="18" > Incluir </div>                                                 
+                    <div class="btn btn-primary btn-block" tabindex="18" id="btn_incluir"> Incluir </div>                                                 
                  </div>                                       
             </div>
             
@@ -284,26 +284,27 @@
     
     
     <div class="my-5 table-responsive" id="tabela_lancamento">
-        
-        <table class="table table-striped table-hover bg-white table-nowrap first-column-fixed">
-            <thead>
-                <tr>
-                    <?php foreach ($colunas as $key => $value): ?> 
-                        <?php if(isset($value["Comment"]) && array_key_exists("ver", $value["Comment"]) && $value["Comment"]["ver"] != "false") : ?>
-                            <th class="border-top-0">
-                                <span><?php echo (isset($value["Comment"]["label"]) && !is_null($value["Comment"]["label"]) && !empty($value["Comment"]["label"])) ? $value["Comment"]["label"] : ucwords(str_replace("_", " ", $value['Field'])) ?></span>
-                                <i class="small text-muted fas fa-sort ml-2"></i>
-                            </th>
-                        <?php endif ?>
-                    <?php endforeach ?>
-                </tr>
-            </thead>
-            <form  method="POST" autocomplete="off" novalidate>
-                <tbody>
+        <form  method="POST" autocomplete="off" novalidate>
+            <table class="table table-striped table-hover bg-white table-nowrap first-column-fixed">
+                <thead>
+                    <tr>
+                        <?php foreach ($colunas as $key => $value): ?> 
+                            <?php if(isset($value["Comment"]) && array_key_exists("ver", $value["Comment"]) && $value["Comment"]["ver"] != "false") : ?>
+                                <th class="border-top-0">
+                                    <span><?php echo (isset($value["Comment"]["label"]) && !is_null($value["Comment"]["label"]) && !empty($value["Comment"]["label"])) ? $value["Comment"]["label"] : ucwords(str_replace("_", " ", $value['Field'])) ?></span>
+                                    <i class="small text-muted fas fa-sort ml-2"></i>
+                                </th>
+                            <?php endif ?>
+                        <?php endforeach ?>
+                    </tr>
+                </thead>
+                
+                    <tbody>
 
-                </tbody>                                       
-            </form>
-        </table>
+                    </tbody>                                            
+            
+            </table>
+        </form>
     </div>
     
     <div class="row">
