@@ -485,7 +485,9 @@ $(function () {
             monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
             showButtonPanel: true,
             changeMonth: true,
-            changeYear: true
+            changeYear: true,
+            closeText: 'Pronto',
+            currentText: 'Hoje'
         })
         .change(function () {
 
