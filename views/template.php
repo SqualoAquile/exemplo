@@ -183,7 +183,7 @@
       <script src="<?php echo BASE_URL;?>/assets/js/principal.js" type="text/javascript"></script>
    </head>
 <body class="d-flex flex-column h-100 bg-light">
-   <nav class="navbar bg-white shadow-sm fixed-top">
+   <nav id="nav" class="navbar bg-white shadow-sm fixed-top flex-nowrap">
       <ul class="nav align-items-center">
          <li>
             <button class="hamburger hamburger--collapse d-flex" tabindex="-1" id="menu-toggle" type="button" aria-label="Menu" aria-controls="sidebar-wrapper">
@@ -198,11 +198,11 @@
       </ul>
       <ul class="navbar-nav">
          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link dropdown-toggle text-truncate" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                <span>Olá, </span>
                <span><?php echo ucfirst($infoUser["nomeUsuario"]);?></span>
             </a>
-            <div class="dropdown-menu dropdown-menu-right position-absolute" aria-labelledby="navbarDropdown">
+            <div class="dropdown-menu text-truncate dropdown-menu-right position-absolute" aria-labelledby="navbarDropdown">
                <a class="dropdown-item text-danger" onclick="return confirm('Confirmar sua saída?')" href="<?php echo BASE_URL;?>/login/sair">Sair</a>
             </div>
          </li>

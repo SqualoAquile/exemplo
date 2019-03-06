@@ -832,7 +832,7 @@ $(function () {
 
             var dtAnterior = $(this).attr('data-anterior');
 
-            if (dtAnterior.length) {
+            if (dtAnterior && dtAnterior.length) {
                 
                 dtAnterior = dtAnterior.replace('%', '');
                 dtAnterior = dtAnterior + '%';

@@ -1,5 +1,6 @@
+$width-closed: calc(30px + 2rem);
 #wrapper {
-	padding-left: 0;
+	padding-left: $width-closed;
 	transition: all 0.5s ease;
 	&.toggled {
 		#sidebar-wrapper {
@@ -12,22 +13,40 @@
 			}
 		}
 	}
+	&:not(.toggled) {
+		#sidebar-wrapper {
+			@extend .shadow-sm;
+			.sidebar-nav {
+				.nav-item {
+					.nav-link {
+						text-align: center;
+						span,
+						&:after {
+							display: none;
+						}
+						i {
+							margin: auto!important;
+						}
+					}
+				}
+			}
+		}
+	}
 }
 #sidebar-wrapper {
 	z-index: 1000;
 	position: fixed;
-	left: $sidebar-width;
-	width: 0;
+	left: 0;
+	width: $width-closed;
 	top: $navbar-height;
 	bottom: 0;
-	margin-left: -$sidebar-width;
 	overflow-y: auto;
 	transition: all 0.5s ease;
 }
 .sidebar-nav {
 	position: absolute;
 	top: 0;
-	width: $sidebar-width;
+	width: 100%;
 	margin: 0;
 	padding: 0;
 	.dropdown-menu {
@@ -48,7 +67,7 @@
 		}
 	}
 	#sidebar-wrapper {
-		width: 0;
+		width: $width-closed;
 	}
 	#page-content-wrapper {
 		position: relative;

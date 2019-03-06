@@ -14,12 +14,25 @@ function Toast (options) {
 };
 
 $(function () {
+
+    let $menuToggle = $('#menu-toggle'),
+        $wrapper = $('#wrapper');
+
+    $(this)
+        .on('click', function (e) {
+            if (
+                (e.target.id != 'sidebar-wrapper' && !$(e.target).parents('#sidebar-wrapper').length) &&
+                (e.target.id != 'nav' && !$(e.target).parents('#nav').length)
+            ) {
+                $('#menu-toggle.is-active').click();
+            }
+        });
     
     $('[data-toggle="tooltip"]').tooltip();
 
-    $('#menu-toggle').click(function () {
+    $menuToggle.click(function () {
         $(this).toggleClass('is-active');
-        $('#wrapper').toggleClass('toggled');
+        $wrapper.toggleClass('toggled');
     });
 
     $('.dataTable').on('shown.bs.collapse hidden.bs.collapse', '.contatos-filtrados .collapse', function () {

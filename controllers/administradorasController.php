@@ -70,12 +70,16 @@ class administradorasController extends controller{
     }
     
     public function editar($id) {
-        if(in_array("administradoras_edt",$_SESSION["permissoesUsuario"]) == FALSE || empty($id) || !isset($id)){
-            header("Location: ".BASE_URL."/administradoras"); 
+
+        if(in_array($this->table . "_edt", $_SESSION["permissoesUsuario"]) == false || empty($id) || !isset($id)){
+            header("Location: " . BASE_URL . "/" . $this->table); 
+        }
+
+        if($this->shared->idAtivo($id) == false){
+            header("Location: " . BASE_URL . "/" . $this->table); 
         }
 
         $dados['infoUser'] = $_SESSION;
-        $a = new Administradoras();
         
         $id = addslashes($id); // id da administradora de cartão
         if(isset($_POST["nome"]) && !empty($_POST["nome"]) && isset($_POST["bandeira"]) && isset($_POST["infos"]) && isset($_POST["txant"]) && isset($_POST["txcre"])){
@@ -85,10 +89,11 @@ class administradorasController extends controller{
             $informacoes = $_POST["infos"];
             $txantecipacoes = $_POST["txant"];
             $txcreditos = $_POST["txcre"];
-            $alter = addslashes($_POST["alter"]);
+            $alter = addslashes($_POST["alteracoes"]);
             
-            $this->model->editar($id, $nome,$bandeiras,$informacoes,$txantecipacoes,$txcreditos,$alter);
-            header("Location: ".BASE_URL."/administradoras");
+            $this->model->editar($id, $nome, $bandeiras, $informacoes, $txantecipacoes, $txcreditos, $alter);
+            header("Location: " . BASE_URL . "/administradoras");
+
         }else{
             
             $dados["infoAdm"] = $this->model->pegarInfoAdm($id);
