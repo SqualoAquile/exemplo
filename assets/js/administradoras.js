@@ -282,10 +282,12 @@ $(function () {
                 <td>` + dias_credito + `</td>
                 <td>` + dias_antecipacao + `</td>
                 <td>
-                    <div class="btn-group" role="group" aria-label="Ações">
-                        <button class="editar-inclusao btn btn-primary btn-sm">Editar</button>
-                        <button class="excluir-inclusao btn btn-secondary btn-sm">Excluir</button>
-                    </div>
+                    <button class="editar-inclusao btn btn-primary btn-sm">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="excluir-inclusao btn btn-secondary btn-sm">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
                 </td>
             `;
 

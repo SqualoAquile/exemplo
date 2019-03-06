@@ -11,14 +11,17 @@ $hamburger-layer-color: $primary;
 
 @import "node_modules/hamburgers/_sass/hamburgers/hamburgers";
 
+@import "nav";
 @import "sidebar";
 @import "dashboard";
 @import "datatable";
 @import "tables";
 @import "historico";
 @import "form";
-@import "parametros";
 @import "toast";
+
+@import "parametros";
+@import "administradoras";
 
 body {
     padding-top: $navbar-height;
