@@ -112,6 +112,31 @@ $(function () {
         })
         .on('click', '.excluir-inclusao', function () {
             Delete(this);
+        })
+        .on('DOMNodeInserted DOMNodeRemoved change', '#main-form, #inclusoes, #main-form input', function () {
+            
+            let $inputs = $('#main-form input'),
+                $label = $('[for="form-send"]'),
+                $submit = $('#form-send'),
+                temAlteracao = false;
+
+            $inputs.each(function (i, el) {
+                if ($(el).attr('data-anterior') && ($(el).attr('data-anterior') != $(el).val())) {
+                    temAlteracao = true;
+                }
+            });
+
+            if (bandeirasAceitas.length != $('.conteudos-escondidos:not(.excluido)').length) {
+                temAlteracao = true;
+            }
+
+            if (!temAlteracao) {
+                $label.addClass('disabled');
+                $submit.attr('disabled', 'disabled');
+            } else {
+                $label.removeClass('disabled');
+                $submit.removeAttr('disabled');
+            }
         });
 
     $nroparc
