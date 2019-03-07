@@ -1,12 +1,20 @@
 $(function () {
     //só para teste de programação
-    $("#data_operacao").val('17/02/2019');
-    $("#valor_total").val('100');
+    $('#Receita').click();
+    $("#data_operacao").val('06/03/2019');
+    $("#valor_total").val('1.000,00');
+    $('#nro_pedido').val('123');
+    $('#nro_nf').val('45/2019');
+    $('#data_emissao_nf').val('05/03/2019');
+    $('#conta_analitica').val('Venda');
+    $('#conta_corrente').val('Caixa Da Empresa');
+    $('#detalhe').val('Material de escritório');
+    $('#quem_lancou').val('Funcionário 1');
+    $('#favorecido').val('Identifixe envelopamentos');
+
+    calcularesumo();
 
     ///////////////////////////////////////CONDIÇÕES INICIAIS DA TELA
-    $('#Receita').click();
-    $('#Receita').change();
-    $('#Despesa').click();
 
     $("#adm_cartao").parent().parent().hide();
     $labeladm = $("#adm_cartao");
@@ -559,10 +567,16 @@ $(function () {
         quemlancou = $("#quem_lancou").find(":selected").val();
         favorecido = $("#favorecido").val();
         dtoperacao = $("#data_operacao").val();
-        valortotal = floatParaPadraoInternacional($('#valor_total'));   
+        valortotal = floatParaPadraoInternacional($('#valor_total').val());   
         formapgto = $("#forma_pgto").find(":selected").val();
         condpgto = $("#cond_pgto").find(":selected").val();
-        nroparcela = parseInt($("#nro_parcela").find(":selected").val());
+        
+        if($("#nro_parcela").find(":selected").val() == ""){
+            nroparcela = '';
+        }else{
+            nroparcela = parseInt($("#nro_parcela").find(":selected").val());
+        }
+        
         diavenc = parseInt($("#dia_venc").find(":selected").val());
         
 
@@ -571,12 +585,29 @@ $(function () {
             bandeira = "";
         } else {
             admcartao = $("#adm_cartao").find(":selected").val();
-            bandeira = $("#bandeira").find(":selected").val();
+            bandeira = $("#bandeira").find(":selected").text();
         }
         
-         txcartao = floatParaPadraoInternacional($("#taxa-cartao")) / 100;
-         custofinanc = floatParaPadraoInternacional($("#custo_financ"));
-         observacao = $("#observacao").val().trim();
+        var txcartao;
+        if(movimentacao == 'Receita' && (formapgto == 'Cartão Débito' || formapgto == 'Cartão Crédito' ) ){
+            if($("#taxa-cartao").val() == ''){
+                txcartao = parseFloat(0);
+            }else{
+                txcartao = floatParaPadraoInternacional($("#taxa-cartao").val()) / 100;   
+            }    
+            if( parseFloat(txcartao) <= parseFloat(0)){
+                alert('A bandeira escolhida não permite essa forma / condição de pagamento. A taxa de cartão deve ter um valor diferente de zero (0).');
+                return;
+            }
+        }else{
+            txcartao = parseFloat(0);
+        }
+        
+            
+        
+
+        custofinanc = floatParaPadraoInternacional($("#custo_financ").val());
+        observacao = $("#observacao").val().trim();
     
         if ($("#Receita").is(":checked")) {
             if (formapgto == "Cartão Débito" & condpgto == "À Vista") {
@@ -600,7 +631,30 @@ $(function () {
         } else {
             distdias = 0;
         }
-    
+        
+        // var valores = new Array();
+        // valores['despesa_receita'] = movimentacao;
+        // valores['conta_analitica'] = analitica; 
+        // valores['detalhe'] = detalhe; 
+        // valores['data_operacao'] = dtoperacao; 
+        // valores['valortotal'] = valortotal; 
+        // valores['data_vencimento'] = '';
+        // valores['formapgto'] = formapgto; 
+        // valores['condpgto'] = condpgto; 
+        // valores['nroparc'] = nroparcela; 
+        // valores['data_quitacao'] = '';
+        // valores['nro_pedido'] = nropedido;
+        // valores['conta_corrente'] = contacorrente; 
+        // valores['adm_cartao'] = admcartao; 
+        // valores['bandeira'] = bandeira; 
+        // valores['favorecido'] = favorecido;
+        // valores['status'] = '';
+        // valores['quem_lancou'] = quemlancou; 
+        // valores['data_entrada_sistema'] = '';
+        // valores['nro_nf'] = nronf;
+        // valores['data_emissao_nf'] = dtemissaonf;
+        // valores['observacao'] = observacao; 
+
         //testar se já tem na tabela os itens selecionados
         if ($("#tabela_lancamento tbody").length > 0) {
             var max = 0;
@@ -615,11 +669,11 @@ $(function () {
             max = 1;
         }
         
-        console.log(admcartao);
+        console.log('adm cartao ' + admcartao);
         // lança o valor da receita ou despesa
         var linha = new Array();
         linha = lancaFluxo(max, movimentacao, nropedido, nronf, dtemissaonf, analitica, contacorrente, detalhe, quemlancou, favorecido, dtoperacao, valortotal, formapgto, condpgto, nroparcela, diavenc, admcartao, bandeira, observacao, distdias); 
-
+          
         if (linha.length > 1) {
             for (var i = 0; i < linha.length; i++) {
                 $('#tabela_lancamento tbody').append(linha[i]);
@@ -629,7 +683,7 @@ $(function () {
         }
     
         //lança o custo financeiro caso ele exista
-        var custoAux = floatParaPadraoInternacional($('#custo_financ'));
+        var custoAux = floatParaPadraoInternacional($('#custo_financ').val());
         console.log(custoAux);
         if (custoAux > 0) {
             //testar se já tem na tabela os itens selecionados
@@ -657,9 +711,11 @@ $(function () {
             }
         }
     
-        // calcularesumo();
+        calcularesumo();
+        botarMascaraInputs();
         // formataTabela();
         // limparPreenchimento();
+
     
     }
 
@@ -758,14 +814,13 @@ $(function () {
 
     function proximoDiaUtilParcela(dataInicial, nroParcelas, diavenc){
         var dtaux = dataInicial.split("/");
-        var dtvencaux = new Date(dtaux[2], parseInt(dtaux[1]) - 1, dtaux[0]);
+        var dtvenc = new Date(dtaux[2], parseInt(dtaux[1]) - 1, dtaux[0]);
 
         //soma a quantidade de meses para o recebimento/pagamento
-        dtvencaux.setMonth(dtvencaux.getMonth() + nroParcelas);
-        
+        dtvenc.setMonth(dtvenc.getMonth() + (nroParcelas + 1));
         //transforma em data para verificar o dia da semana
-        var dtvenc = new Date(dtaux[2], dtvencaux.getMonth(), diavenc);
-        
+        dtvenc.setDate(diavenc);
+
         //verifica se a data final cai no final de semana, se sim, coloca para o primeiro dia útil seguinte
         if (dtvenc.getDay() == 6) {
             dtvenc.setDate(dtvenc.getDate() + 2);
@@ -825,61 +880,318 @@ $(function () {
 
     function floatParaPadraoBrasileiro(valor){
         var valortotal = valor;
-        valortotal = parseFloat(valortotal).toFixed(2);
-        valortotal = valortotal.replace(",", "").replace(",", "").replace(",", "").replace(",", "");
-        valortotal = valortotal.replace(".", ",");
+        valortotal = number_format(valortotal,2,',','.');
         return valortotal;
     }
 
     function floatParaPadraoInternacional(valor){
-        var valorFloat = valor;
-        var valortotal = valorFloat.val();
+        
+        var valortotal = valor;
         valortotal = valortotal.replace(".", "").replace(".", "").replace(".", "").replace(".", "");
         valortotal = valortotal.replace(",", ".");
         valortotal = parseFloat(valortotal).toFixed(2);
         return valortotal;
     }
 
+    function number_format( numero, decimal, decimal_separador, milhar_separador ){ 
+            numero = (numero + '').replace(/[^0-9+\-Ee.]/g, '');
+            var n = !isFinite(+numero) ? 0 : +numero,
+                prec = !isFinite(+decimal) ? 0 : Math.abs(decimal),
+                sep = (typeof milhar_separador === 'undefined') ? ',' : milhar_separador,
+                dec = (typeof decimal_separador === 'undefined') ? '.' : decimal_separador,
+                s = '',
+                toFixedFix = function (n, prec) {
+                    var k = Math.pow(10, prec);
+                    return '' + Math.round(n * k) / k;
+                };
+     
+            // Fix para IE: parseFloat(0.55).toFixed(0) = 0;
+            s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+            if (s[0].length > 3) {
+                s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+            }
+            if ((s[1] || '').length < prec) {
+                s[1] = s[1] || '';
+                s[1] += new Array(prec - s[1].length + 1).join('0');
+            }
+            return s.join(dec);
+    }
+    
+    function calcularesumo() {
+        if ($("#tabela_lancamento tbody").length > 0) {
+            var receita = 0;
+            var recaux = 0;
+            var despesa = 0;
+            var despaux = 0;
+            var total = 0;
+            var mov = "";
+    
+            $("#tabela_lancamento tbody tr").each(function () {
+                mov = "";
+                recaux = 0;
+                despaux = 0;
+                mov = $(this).closest('tr').children('td:eq(1)').children('input:eq(0)').attr('value');
+                if (mov == "Despesa") {
+                    despaux = $(this).closest('tr').children('td:eq(5)').children('input:eq(0)').val();
+                    despaux = floatParaPadraoInternacional(despaux);
+                    despaux = parseFloat(despaux);
+                    despesa = despesa + despaux;
+                } else {
+                    recaux = $(this).closest('tr').children('td:eq(5)').children('input:eq(0)').val();
+                    recaux = floatParaPadraoInternacional(recaux);
+                    recaux = parseFloat(recaux);
+                    receita = receita + recaux;
+                }
+    
+                total = (receita - despesa);
+            });
+    
+            receita = parseFloat(receita).toFixed(2);
+            receita = floatParaPadraoBrasileiro(receita);
+    
+    
+            despesa = parseFloat(despesa).toFixed(2);
+            despesa = floatParaPadraoBrasileiro(despesa);
+    
+    
+            total = parseFloat(total).toFixed(2);
+            total = floatParaPadraoBrasileiro(total);
+    
+            console.log("disparou o calcularresumo");
+            console.log('receita: '+receita);
+            console.log('despesa: '+despesa);
+            console.log('total: '+total);
+    
+            $("label#receita_lanc").html("<i>Receita   (R$):</i> " + receita);
+            $("label#receita_lanc").css('color', '#265f3d');
+    
+            $("label#despesa_lanc").html("<i>Despesa (R$):</i> " + despesa);
+            $("label#despesa_lanc").css('color', '#910309');
+    
+            $("label#total_lanc").html("<i>Total   (R$):</i> " + total);
+    
+            if (parseFloat(total) < 0) {
+                $("label#total_lanc").css('color', '#910309');
+            } else if (parseFloat(total) > 0) {
+                $("label#total_lanc").css('color', '#265f3d');
+            } else {
+                $("label#total_lanc").css('color', '#000');
+            }
+    
+        } else {
+            $("label#receita_lanc").html("<i>Receita   (R$):</i> 0,00");
+            $("label#receita_lanc").css('color', '#265f3d');
+            $("label#despesa_lanc").html("<i>Despesa (R$):</i> 0,00");
+            $("label#despesa_lanc").css('color', '#910309');
+            $("label#total_lanc").html("<i>Total   (R$):</i> 0,00");
+            $("label#total_lanc").css('color', 'black');
+        }
+        
+        if ($('#tabela_lancamento tbody tr').length <= 0) {
+            $('#resumo_lancamento').hide();    
+        }else{
+            $('#resumo_lancamento').show();    
+        }
+    }
+
+    function excluir(obj) {
+        $(obj).closest('tr').remove();
+        calcularesumo();
+        // formataTabela();
+        // limparPreenchimento();    
+    }
+
+    function botarMascaraInputs(){
+        $("#tabela_lancamento tbody tr td:eq(5) input:eq(0)").each(function () {
+            // $(this).closest('tr').children('td:eq(5)').children('input:eq(0)').val();
+            $('[data-mascara_validacao="monetario"]')
+            .mask('#.##0,00', {
+                reverse: true
+            })
+            .on('blur touchstart', function () {
+    
+                var $this = $(this),
+                    value = $this.val(),
+                    anterior = $this.attr('data-anterior'),
+                    text_label = $this.siblings('label').find('span').text();
+    
+                var pode_zero = $this.attr('data-podeZero');
+                if (pode_zero != undefined && pode_zero == 'true') {
+                    pode_zero = true;
+                } else {
+                    pode_zero = false;
+                }
+    
+                $this.removeClass('is-valid is-invalid');
+                $this.siblings('.invalid-feedback').remove();
+    
+                if (value) {
+    
+                    if (anterior != value) {
+    
+                        var value = value.replace('.', '').replace('.', '').replace('.', '').replace('.', '').replace('.', ''),
+                            value = value.replace(',', '.');
+    
+                        value = parseFloat(value);
+    
+                        if (value <= parseFloat(0)) {
+    
+                            if (pode_zero == true) {
+                                $this
+                                    .removeClass('is-invalid')
+                                    .addClass('is-valid');
+    
+                                $this[0].setCustomValidity('');
+    
+                            } else {
+                                $this
+                                    .removeClass('is-valid')
+                                    .addClass('is-invalid');
+    
+                                $this[0].setCustomValidity('invalid');
+    
+                                $this.after('<div class="invalid-feedback">' + text_label + ' precisa ser maior que 0.</div>');
+                            }
+                        } else {
+    
+                            $this
+                                .removeClass('is-invalid')
+                                .addClass('is-valid');
+    
+                            $this[0].setCustomValidity('');
+                        }
+                    }
+                } else {
+                    $this.val('');
+                }
+            });
+        });
+
+        $('[data-mascara_validacao="data"]')
+        .mask('00/00/0000')
+        .datepicker({
+            dateFormat: 'dd/mm/yy',
+            dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
+            dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+            showButtonPanel: true,
+            changeMonth: true,
+            changeYear: true
+        })
+        .change(function () {
+
+            var $this = $(this),
+                valor = $this.val();
+
+            valor = valor.split('/');
+
+            var data = valor[0] + '/' + valor[1] + '/' + valor[2];
+
+            $this.removeClass('is-valid is-invalid');
+            $this.siblings('.invalid-feedback').remove();
+
+            if (valor != '') {
+                if ($this.attr('data-anterior') != $this.val()) {
+                    if (
+                        (typeof valor[1] == 'undefined' || typeof valor[2] == 'undefined') ||
+                        (valor[2].length > 4 || valor[0].length > 2 || valor[1].length > 2) ||
+                        (validaDat(data) == false)
+                    ) {
+                        // Inválido
+
+                        $this
+                            .removeClass('is-valid')
+                            .addClass('is-invalid');
+
+                        $this[0].setCustomValidity('invalid');
+
+                        $this.after('<div class="invalid-feedback">Data inválida.</div>');
+                    } else {
+                        // Valido
+
+                        $this
+                            .removeClass('is-invalid')
+                            .addClass('is-valid');
+
+                        $this[0].setCustomValidity('');
+                    }
+                }
+            }
+        });
+    }
+
+    function validaDat(valor) {
+        var date = valor;
+        var ardt = new Array;
+        var ExpReg = new RegExp('(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/[12][0-9]{3}');
+        ardt = date.split('/');
+        erro = false;
+        if (date.search(ExpReg) == -1) {
+            erro = true;
+        }
+        else if (((ardt[1] == 4) || (ardt[1] == 6) || (ardt[1] == 9) || (ardt[1] == 11)) && (ardt[0] > 30))
+            erro = true;
+        else if (ardt[1] == 2) {
+            if ((ardt[0] > 28) && ((ardt[2] % 4) != 0))
+                erro = true;
+            if ((ardt[0] > 29) && ((ardt[2] % 4) == 0))
+                erro = true;
+        }
+        if (erro) {
+            return false;
+        }
+        return true;
+    }
 
     function lancaFluxo(proxid, movimentacao, nropedido, nronf, dataemissaonf, analitica, contacorrente, detalhe, quemlancou, favorecido, dtoperacao, valortotal, formapgto, condpgto, nroparcela, diavenc, admcartao, bandeira, observacao, distdias = 0) {
         console.log('entrei na funcao lancafluxo');
         /////////////////////////// LANÇAMENTO INTEIRO FEITO A VISTA - EXCLUINDO RECEITA DE CARTÃO DÉBITO
-        if (condpgto == "À Vista" && (formapgto != "Cartão Débito" || formapgto != "Cartão Crédito")) {
+        if (condpgto == "À Vista" && formapgto != "Cartão Débito" && formapgto != "Cartão Crédito" ){
             console.log('lancamento à vista que não cartao');
-            var dtentrada = dataAtual();
+            console.log('forma de pgto: '+ formapgto);
+            dtentrada = dataAtual();
             valortotal = floatParaPadraoBrasileiro(valortotal);
+            
             var arraylinhas = new Array();
             var linha = "<tr>";
-            linha += "<td>" + "<a href='#' class='botao_peq_lc' onclick='editar(this) data-ident=" + proxid + " '>Editar</a>" + "</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='despesa_receita[" + proxid + "]'  value='" + movimentacao + "' />" +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='conta_analitica[" + proxid + "]'  value='" + analitica + "' />"    +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='detalhe[" + proxid + "]'          value='" + detalhe + "' />"      +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='data_operacao[" + proxid + "]'    value='" + dtoperacao + "' />"   +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='valortotal[" + proxid + "]'       value='" + valortotal + "' />"   +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='data_vencimento[" + proxid + "]'  value='" + dtoperacao + "' />"   +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='formapgto[" + proxid + "]'        value='" + formapgto + "' />"    +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='condpgto[" + proxid + "]'         value='" + condpgto + "' />"     +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='nroparc[" + proxid + "]'          value=     '1|1' />"             +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='data_quitacao[" + proxid + "]'    value='" + dtoperacao + "' />"   +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='nro_pedido[" + proxid + "]'       value='" + nropedido + "' />"    +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='conta_corrente[" + proxid + "]'   value='" + contacorrente + "'/>" +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='adm_cartao[" + proxid + "]'       value='" + admcartao +"' />"     +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='bandeira[" + proxid + "]'         value='" + bandeira +"' />"      +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='favorecido[" + proxid + "]'       value='" + favorecido +"' />"    +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='status[" + proxid + "]'           value=     'Quitado' />"         +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='quem_lancou[" + proxid + "]'      value='" + quemlancou +"' />"    +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='data_entrada_sistema[" + proxid + "]' value='" +dtentrada+"'/>"    +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='nro_nf[" + proxid + "]'           value='" + nronf +"'/>"          +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='data_emissao_nf[" + proxid + "]'  value='" + dataemissaonf +"'/>"  +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='observacao[" + proxid + "]'       value='" + observacao +"' />"    +"</td>";
-            linha += "</tr>";
-            console.log(condpgto);
+                linha   += "<td>" + "<div class='btn btn-sm btn-secondary mr-1' onclick='excluir(this)' data-ident=" + proxid + " '><i class='fas fa-trash-alt'></i></div>" 
+                                  + "<div class='btn btn-primary btn-sm ml-1' onclick='editar(this)' data-ident=" + proxid + " '><i class='fas fa-edit'></i></div>" 
+                        + "</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='despesa_receita[" + proxid + "]'  value='" + movimentacao + "' />" +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='conta_analitica[" + proxid + "]'  value='" + analitica + "'    />" +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='detalhe[" + proxid + "]'          value='" + detalhe + "' />"      +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='data_operacao[" + proxid + "]'    value='" + dtoperacao + "' />"   +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control' data-mascara_validacao='monetario' data-podeZero='false' required maxlenght='20' "
+                                + "name='valortotal[" + proxid + "]' value='" + valortotal + "' data-anterior='"+ valortotal +"' />"
+                      +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control' data-mascara_validacao='data' maxlenght='10' required "
+                                + "name='data_vencimento[" + proxid + "]' value ='" + dtoperacao + "' data-anterior='"+ dtoperacao +"' />"   
+                      +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='formapgto[" + proxid + "]'        value='" + formapgto + "' />"    +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='condpgto[" + proxid + "]'         value='" + condpgto + "' />"     +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='nroparc[" + proxid + "]'          value=     '1|1' />"             +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='data_quitacao[" + proxid + "]'    value='" + dtoperacao + "' />"   +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='nro_pedido[" + proxid + "]'       value='" + nropedido + "' />"    +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='conta_corrente[" + proxid + "]'   value='" + contacorrente + "'/>" +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='adm_cartao[" + proxid + "]'       value='" + admcartao +"' />"     +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='bandeira[" + proxid + "]'         value='" + bandeira +"' />"      +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='favorecido[" + proxid + "]'       value='" + favorecido +"' />"    +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='status[" + proxid + "]'           value=     'Quitado' />"         +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='quem_lancou[" + proxid + "]'      value='" + quemlancou +"' />"    +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='data_entrada_sistema[" + proxid + "]' value='" +dtentrada+"'/>"    +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='nro_nf[" + proxid + "]'           value='" + nronf +"'/>"          +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='data_emissao_nf[" + proxid + "]'  value='" + dataemissaonf +"'/>"  +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='observacao[" + proxid + "]'       value='" + observacao +"' />"    +"</td>";
+            
+            
             arraylinhas.push(linha);
             console.log(arraylinhas);
             return arraylinhas;
         
         /////////////////////////// LANÇAMENTO INTEIRO FEITO EM UMA VEZ - DISTÂNCIA DO VENCIMENTO EM DIAS
-        } else if (formapgto == "Cartão Débito" | (formapgto == "Cartão Crédito" & condpgto == "Com Juros") | (formapgto == "Cartão Crédito" & condpgto == "Antecipado")) {
+        } else if ( formapgto == "Cartão Débito" || (formapgto == "Cartão Crédito" && condpgto == "Com Juros") || (formapgto == "Cartão Crédito" && condpgto == "Antecipado")) {
         
             console.log('lancamento debito, com juros e antecipado');
             var arraylinhas = new Array();
@@ -888,35 +1200,37 @@ $(function () {
             var dtvenc = proximoDiaUtil(dtoperacao, distdias);
 
             var linha = "<tr>";
-            linha += "<td>" + "<a href='#' class='botao_peq_lc' onclick='editar(this) data-ident=" + proxid + " '>Editar</a>" + "</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='despesa_receita[" + proxid + "]'  value='" + movimentacao + "' />" +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='conta_analitica[" + proxid + "]'  value='" + analitica + "' />"    +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='detalhe[" + proxid + "]'          value='" + detalhe + "' />"      +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='data_operacao[" + proxid + "]'    value='" + dtoperacao + "' />"   +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='valortotal[" + proxid + "]'       value='" + valortotal + "' />"   +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='data_vencimento[" + proxid + "]'  value='" + dtvenc + "' />"       +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='formapgto[" + proxid + "]'        value='" + formapgto + "' />"    +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='condpgto[" + proxid + "]'         value='" + condpgto + "' />"     +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='nroparc[" + proxid + "]'          value=     '1|1' />"             +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='data_quitacao[" + proxid + "]'    value=     ''    />"             +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='nro_pedido[" + proxid + "]'       value='" + nropedido + "' />"    +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='conta_corrente[" + proxid + "]'   value='" + contacorrente + "'/>" +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='adm_cartao[" + proxid + "]'       value='" + admcartao +"' />"     +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='bandeira[" + proxid + "]'         value='" + bandeira +"' />"      +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='favorecido[" + proxid + "]'       value='" + favorecido +"' />"    +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='status[" + proxid + "]'           value=     'A Quitar' />"        +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='quem_lancou[" + proxid + "]'      value='" + quemlancou +"' />"    +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='data_entrada_sistema[" + proxid + "]' value='" +dtentrada+"'/>"    +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='nro_nf[" + proxid + "]'           value='" + nronf +"'/>"          +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='data_emissao_nf[" + proxid + "]'  value='" + dataemissaonf +"'/>"  +"</td>";
-            linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='observacao[" + proxid + "]'       value='" + observacao +"' />"    +"</td>";
+                linha += "<td>" + "<div class='btn btn-sm btn-secondary mr-1' onclick='excluir(this)' data-ident=" + proxid + " '><i class='fas fa-trash-alt'></i></div>" 
+                                + "<div class='btn btn-primary btn-sm ml-1' onclick='editar(this)' data-ident=" + proxid + " '><i class='fas fa-edit'></i></div>" 
+                      + "</td>";
+            linha += "<td>" + "<input name='despesa_receita[" + proxid + "]'       value='" + movimentacao + "'  type='text' class='form-control-plaintext' readonly='readonly' required  />" +"</td>";
+            linha += "<td>" + "<input name='conta_analitica[" + proxid + "]'       value='" + analitica + "'     type='text' class='form-control-plaintext' readonly='readonly' required  />" +"</td>";
+            linha += "<td>" + "<input name='detalhe[" + proxid + "]'               value='" + detalhe + "'       size ='auto' type='text' class='form-control-plaintext' readonly='readonly' required  />" +"</td>";
+            linha += "<td>" + "<input name='data_operacao[" + proxid + "]'         value='" + dtoperacao + "'    type='text' class='form-control-plaintext' readonly='readonly' required  />" +"</td>";
+            linha += "<td>" + "<input name='valortotal[" + proxid + "]'            value='" + valortotal + "'    type='text' class='form-control-plaintext' readonly='readonly' required  />" +"</td>";
+            linha += "<td>" + "<input name='data_vencimento[" + proxid + "]'       value='" + dtvenc + "'        type='text' class='form-control-plaintext' readonly='readonly' required  />" +"</td>";
+            linha += "<td>" + "<input name='formapgto[" + proxid + "]'             value='" + formapgto + "'     type='text' class='form-control-plaintext' readonly='readonly' required  />" +"</td>";
+            linha += "<td>" + "<input name='condpgto[" + proxid + "]'              value='" + condpgto + "'      type='text' class='form-control-plaintext' readonly='readonly' required  />" +"</td>";
+            linha += "<td>" + "<input name='nroparc[" + proxid + "]'               value=     '1|1'              type='text' class='form-control-plaintext' readonly='readonly' required  />" +"</td>";
+            linha += "<td>" + "<input name='data_quitacao[" + proxid + "]'         value=     ''                 type='text' class='form-control-plaintext' readonly='readonly' required  />" +"</td>";
+            linha += "<td>" + "<input name='nro_pedido[" + proxid + "]'            value='" + nropedido + "'     type='text' class='form-control-plaintext' readonly='readonly' required  />" +"</td>";
+            linha += "<td>" + "<input name='conta_corrente[" + proxid + "]'        value='" + contacorrente + "' type='text' class='form-control-plaintext' readonly='readonly' required  />" +"</td>";
+            linha += "<td>" + "<input name='adm_cartao[" + proxid + "]'            value='" + admcartao +"'      type='text' class='form-control-plaintext' readonly='readonly' required  />" +"</td>";
+            linha += "<td>" + "<input name='bandeira[" + proxid + "]'              value='" + bandeira +"'       type='text' class='form-control-plaintext' readonly='readonly' required  />" +"</td>";
+            linha += "<td>" + "<input name='favorecido[" + proxid + "]'            value='" + favorecido +"'     type='text' class='form-control-plaintext' readonly='readonly' required  />" +"</td>";
+            linha += "<td>" + "<input name='status[" + proxid + "]'                value=     'A Quitar'         type='text' class='form-control-plaintext' readonly='readonly' required  />" +"</td>";
+            linha += "<td>" + "<input name='quem_lancou[" + proxid + "]'           value='" + quemlancou +"'     type='text' class='form-control-plaintext' readonly='readonly' required  />" +"</td>";
+            linha += "<td>" + "<input name='data_entrada_sistema[" + proxid + "]'  value='" +dtentrada+"'        type='text' class='form-control-plaintext' readonly='readonly' required  />" +"</td>";
+            linha += "<td>" + "<input name='nro_nf[" + proxid + "]'                value='" + nronf +"'          type='text' class='form-control-plaintext' readonly='readonly' required  />" +"</td>";
+            linha += "<td>" + "<input name='data_emissao_nf[" + proxid + "]'       value='" + dataemissaonf +"'  type='text' class='form-control-plaintext' readonly='readonly' required  />" +"</td>";
+            linha += "<td>" + "<input name='observacao[" + proxid + "]'            value='" + observacao +"'     type='text' class='form-control-plaintext' readonly='readonly' required  />" +"</td>";
             linha += "</tr>";
 
             arraylinhas.push(linha);
             return arraylinhas;
 
         /////////////////////////// LANÇAMENTO INTEIRO FEITO PARCELADO - DISTANCIA DO VENCIMENTO EM MESES
-        }else if (condpgto == "Parcelado" & nroparcela > 0) {
+        }else if (condpgto == "Parcelado" && nroparcela > 0) {
         
             console.log('lancamento parcelado');
             var dtentrada = dataAtual();
@@ -934,7 +1248,9 @@ $(function () {
                 console.log(dtvenc);
 
                 var linha = "<tr>";
-                linha += "<td>" + "<a href='#' class='botao_peq_lc' onclick='editar(this) data-ident=" + ( proxid + pr ) + " '>Editar</a>" + "</td>";
+                linha += "<td>" + "<div class='btn btn-sm btn-secondary mr-1' onclick='excluir(this)' data-ident=" + proxid + " '><i class='fas fa-trash-alt'></i></div>" 
+                                + "<div class='btn btn-primary btn-sm ml-1' onclick='editar(this)' data-ident=" + proxid + " '><i class='fas fa-edit'></i></div>" 
+                      + "</td>";
                 linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='despesa_receita[" + ( proxid + pr ) + "]'  value='" + movimentacao + "' />"               +"</td>";
                 linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='conta_analitica[" + ( proxid + pr ) + "]'  value='" + analitica + "' />"                  +"</td>";
                 linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly='readonly' required name='detalhe[" + ( proxid + pr ) + "]'          value='" + detalhe + "' />"                    +"</td>";

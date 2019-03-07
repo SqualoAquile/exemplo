@@ -275,7 +275,7 @@
             </div>
             <div class="col-lg-3" style="order:18;">
                  <div class="form-group">
-                    <div class="btn btn-primary btn-block" tabindex="18" id="btn_incluir"> Incluir </div>                                                 
+                    <a href='#tabela_lancamento' class="btn btn-primary btn-block" tabindex="18" id="btn_incluir"> Incluir </a>                                                 
                  </div>                                       
             </div>
             
@@ -283,7 +283,7 @@
     </form>
     
     
-    <div class="my-5 table-responsive" id="tabela_lancamento">
+    <div class="my-5 table-responsive" id="tabela_lancamento" style='max-height: 400px; overflow-y:auto'>
         <form  method="POST" autocomplete="off" novalidate>
             <table class="table table-striped table-hover bg-white table-nowrap first-column-fixed">
                 <thead>
@@ -292,7 +292,6 @@
                             <?php if(isset($value["Comment"]) && array_key_exists("ver", $value["Comment"]) && $value["Comment"]["ver"] != "false") : ?>
                                 <th class="border-top-0">
                                     <span><?php echo (isset($value["Comment"]["label"]) && !is_null($value["Comment"]["label"]) && !empty($value["Comment"]["label"])) ? $value["Comment"]["label"] : ucwords(str_replace("_", " ", $value['Field'])) ?></span>
-                                    <i class="small text-muted fas fa-sort ml-2"></i>
                                 </th>
                             <?php endif ?>
                         <?php endforeach ?>
@@ -305,6 +304,12 @@
             
             </table>
         </form>
+    </div>
+    <div id='resumo_lancamento' class='row'>
+         <div class='col-lg-3'><label id='receita_lanc'> Receita:  </label></div>
+         <div class='col-lg-3'><label id='despesa_lanc'> Despesa:  </label></div>
+         <div class='col-lg-3'><label id='total_lanc'> Total:      </label></div>
+         <div class='col-lg-3'><button id='btn_salvar' class='btn btn-primary btn-lg btn-block'>Salvar</button></div>
     </div>
     
     <div class="row">

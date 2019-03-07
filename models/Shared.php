@@ -262,9 +262,15 @@ class Shared extends model {
                 if($nomeColunas[$i]['Field'] == $chave){ 
 
                     if($nomeColunas[$i]['Type'] == 'date'){
-                        //formatação de data padrão internacional
-                        $dtaux = explode("/",addslashes($registro[$chave]));
-                        $array[$chave] = $dtaux[2]."-".$dtaux[1]."-".$dtaux[0];
+                        if(empty($registro[$chave])){
+                            
+                            $array[$chave] = "0000-00-00";    
+                        }else{
+                            //formatação de data padrão internacional
+                            $dtaux = explode("/",addslashes($registro[$chave]));
+                            $array[$chave] = $dtaux[2]."-".$dtaux[1]."-".$dtaux[0];
+                        }
+                        
 
                     }elseif (substr_count($nomeColunas[$i]['Type'], "float") > 0){
                         //formatação de float padrão internacional "." - divisor decimal e "," - divisor milhão
