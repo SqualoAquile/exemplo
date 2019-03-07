@@ -20,6 +20,20 @@ $(function () {
                 Save();
             }
         });
+    
+    $('#form-bandeiras .form-control')
+        .on('change', function () {
+        
+            let $this = $(this),
+                $form = $this.parents('form'),
+                $submit = $form.find('[type="submit"]');
+
+            if ($form[0].checkValidity()) {
+                $submit.removeAttr('disabled');
+            } else {
+                $submit.attr('disabled', 'disabled');
+            }
+        });
 
     $('label[for="form-send"]')
         .click(function (event) {
@@ -161,11 +175,6 @@ $(function () {
             }
         });
 
-    $('#incluir')
-        .click(function () {
-            Save();
-        });
-
     function Save() {
 
         var antecipacoes = [],
@@ -303,8 +312,6 @@ $(function () {
     };
 
     function SetInput(adicionando, paramIdBandeira, bandeira, infos, txantecipacao, txcredito, bandeiraAceitaId) {
-
-        console.log('SetInput')
 
         let indexEditando = $formBandeiras.attr('data-editando'),
             arrInfos = infos.split('-'),
