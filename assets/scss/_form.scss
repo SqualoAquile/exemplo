@@ -88,3 +88,6 @@
         }
     }
 }
+.ui-widget.ui-widget-content {
+    z-index: $zindex-sticky!important;
+}

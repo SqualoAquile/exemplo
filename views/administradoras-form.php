@@ -20,7 +20,7 @@
 <section class="mb-5">
 
     <form id="main-form" method="POST" class="needs-validation" autocomplete="off" novalidate>
-        <input type="hidden" name="alteracoes" value="<?php echo isset($infoAdm) ? $infoAdm["alteracoes"] : "" ?>">
+        <input type="hidden" name="alteracoes" value="<?php echo isset($infoAdm) ? $infoAdm["alteracoes"] : "" ?>" data-anterior="<?php echo isset($infoAdm) ? $infoAdm["alteracoes"] : "" ?>">
         <div class="form-group pb-3">
             <label for="inome" class="font-weight-bold">
                 <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
@@ -128,15 +128,15 @@
                         <?php for($i=1;$i<=12;$i++):?>
                             <tr>
                                 <td>
-                                    <div class="d-flex align-items-center" data-placeholder="<?php echo $i ?>x">
+                                    <div data-placeholder="<?php echo $i ?>x">
                                         <label class="d-none" for="itxantecip_<?php echo $i ?>"><span>Taxa de recebimento com antecipação <?php echo $i ?>x</span></label>
-                                        <input type="text" id="itxantecip_<?php echo $i ?>" class="form-control taxas taxas-antecipacao" data-anterior="" data-mascara_validacao="porcentagem" required />
+                                        <input type="text" id="itxantecip_<?php echo $i ?>" name="itxantecip_<?php echo $i ?>" class="form-control taxas taxas-antecipacao" data-anterior="" data-mascara_validacao="porcentagem" required />
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="d-flex align-items-center" data-placeholder="<?php echo $i ?>x">
+                                    <div data-placeholder="<?php echo $i ?>x">
                                         <label class="d-none" for="itxcredsemjuros_<?php echo $i ?>"><span>Taxa de recebimento no crédito sem juros <?php echo $i ?>x</span></label>
-                                        <input type="text" id="itxcredsemjuros_<?php echo $i ?>" class="form-control taxas taxas-credito" data-anterior="" data-mascara_validacao="porcentagem" required />
+                                        <input type="text" id="itxcredsemjuros_<?php echo $i ?>" name="itxcredsemjuros_<?php echo $i ?>" class="form-control taxas taxas-credito" data-anterior="" data-mascara_validacao="porcentagem" required />
                                     </div>
                                 </td>
                             </tr>
@@ -145,7 +145,7 @@
                     </table>
                     <div class="row">
                         <div class="col-lg-3">
-                            <button type="submit" class="btn btn-block btn-primary">Incluir</button>
+                            <button type="submit" class="btn btn-block btn-primary" disabled="disabled">Incluir</button>
                         </div>
                     </div>
                 </div>

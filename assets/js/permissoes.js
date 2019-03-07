@@ -11,8 +11,7 @@ $(function () {
     
             var nome = textPermissaoSplit[0],
                 permissao = textPermissaoSplit[1],
-                $brothers = $('[type=checkbox][id^=' + nome + ']:not(#' + textPermissao + ')');
-    
+                $brothers = $('[type=checkbox][id^=' + nome + '_]:not(#' + textPermissao + ')');
                 
             if (permissao == 'ver') {
     

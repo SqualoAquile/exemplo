@@ -1,7 +1,6 @@
 $(function () {
 
-    let $inclusoes = $('#inclusoes'),
-        $taxa_debito = $('[name=txdebito]'),
+    let $taxa_debito = $('[name=txdebito]'),
         $taxa_credito = $('[name=txcredcom]'),
         $bandeira = $('[name=band]'),
         $dias_debito = $('[name=diasdebito]'),
@@ -11,8 +10,6 @@ $(function () {
         $mainForm = $('#main-form'),
         $nroparc = $('[name="nroparc"]');
         indexTrTable = 0;
-    
-    $inclusoes.hide();
 
     $('#form-bandeiras')
         .submit(function (event) {
@@ -21,6 +18,20 @@ $(function () {
             
             if (this.checkValidity()) {
                 Save();
+            }
+        });
+    
+    $('#form-bandeiras .form-control')
+        .on('change', function () {
+        
+            let $this = $(this),
+                $form = $this.parents('form'),
+                $submit = $form.find('[type="submit"]');
+
+            if ($form[0].checkValidity()) {
+                $submit.removeAttr('disabled');
+            } else {
+                $submit.attr('disabled', 'disabled');
             }
         });
 
@@ -38,8 +49,6 @@ $(function () {
         .ready(function () {
 
             if (!infoAdm) return;
-
-            $inclusoes.show();
 
             bandeirasAceitas.forEach(function (bandeiraAceita) {
                 
@@ -103,6 +112,31 @@ $(function () {
         })
         .on('click', '.excluir-inclusao', function () {
             Delete(this);
+        })
+        .on('DOMNodeInserted DOMNodeRemoved change', '#main-form, #inclusoes, #main-form input', function () {
+            
+            let $inputs = $('#main-form input'),
+                $label = $('[for="form-send"]'),
+                $submit = $('#form-send'),
+                temAlteracao = false;
+
+            $inputs.each(function (i, el) {
+                if ($(el).attr('data-anterior') && ($(el).attr('data-anterior') != $(el).val())) {
+                    temAlteracao = true;
+                }
+            });
+
+            if (bandeirasAceitas.length != $('.conteudos-escondidos:not(.excluido)').length) {
+                temAlteracao = true;
+            }
+
+            if (!temAlteracao) {
+                $label.addClass('disabled');
+                $submit.attr('disabled', 'disabled');
+            } else {
+                $label.removeClass('disabled');
+                $submit.removeAttr('disabled');
+            }
         });
 
     $nroparc
@@ -166,14 +200,7 @@ $(function () {
             }
         });
 
-    $('#incluir')
-        .click(function () {
-            Save();
-        });
-
     function Save() {
-        
-        $inclusoes.show();
 
         var antecipacoes = [],
             creditos = [];
@@ -296,7 +323,7 @@ $(function () {
 
         SetInput(adicionando, paramIdBandeira, bandeira, infos, txantecipacaojoin, txcreditojoin, bandeiraAceitaId);
 
-        $('#form-bandeiras').trigger('reset');
+        $('#form-bandeiras').trigger('reset').find('.form-control').removeClass('is-valid is-invalid');
         $('[name="nroparc"]').change();
 
         if (!indexEditando) {
@@ -305,8 +332,7 @@ $(function () {
 
             indexTrTable++;
         } else {
-            $('#table-inclusoes tbody tr[data-index=' + indexEditando + ']')
-                .html(tds);
+            $('#table-inclusoes tbody tr[data-index=' + indexEditando + ']').html(tds)
         }
     };
 
@@ -335,7 +361,9 @@ $(function () {
                         currentAntecipacao = arrTxAntecipacao[index - 1],
                         currentCredito = arrTxCredito[index - 1],
                         dataAnteriorTxAtencipacao = !adicionando && !indexEditando ? currentAntecipacao + '%' : '',
-                        dataAnteriorTxCredito = !adicionando && !indexEditando ? currentCredito + '%' : '';
+                        dataAnteriorTxCredito = !adicionando && !indexEditando ? currentCredito + '%' : '',
+                        textLabelAntecipacao = $inputTxAntecipacao.siblings('label').find('span').text(),
+                        textLabelCredito = $inputTxCredito.siblings('label').find('span').text();
 
                     if (currentAntecipacao == '0') dataAnteriorTxAtencipacao = '0%';
                     if (currentCredito == '0') dataAnteriorTxCredito = '0%';
@@ -343,11 +371,11 @@ $(function () {
                     htmlTaxaParcelas += `
                         <div class="envolta-inputs-alteracoes">
                             <div>
-                                <label><span>` + bandeira + ` - ` + $inputTxAntecipacao.attr('placeholder') + `</span></label>
+                                <label><span>` + bandeira + ` - ` + textLabelAntecipacao + `</span></label>
                                 <input id="alt_itxantecip_` + index + `" type="text" data-anterior="` + dataAnteriorTxAtencipacao + `" class="alteracao-parcelas-antecipacao" value="` + arrTxAntecipacao[index - 1] + `%" readonly>
                             </div>
                             <div>
-                                <label><span>` + bandeira + ` - ` + $inputTxCredito.attr('placeholder') + `</span></label>
+                                <label><span>` + bandeira + ` - ` + textLabelCredito + `</span></label>
                                 <input id="alt_itxcredsemjuros_` + index + `" type="text" data-anterior="` + dataAnteriorTxCredito + `" class="alteracao-parcelas-antecipacao" value="` + arrTxCredito[index - 1] + `%" readonly>
                             </div>
                         </div>

@@ -485,7 +485,9 @@ $(function () {
             monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
             showButtonPanel: true,
             changeMonth: true,
-            changeYear: true
+            changeYear: true,
+            closeText: 'Pronto',
+            currentText: 'Hoje'
         })
         .change(function () {
 
@@ -727,8 +729,8 @@ $(function () {
 
                 if (anterior != value) {
 
-                    var value = value.replace('.', '').replace('.', '').replace('.', '').replace('.', '').replace('.', ''),
-                        value = value.replace(',', '.');
+                    var value = value.replace(/\./g, ''),
+                        value = value.replace(/\,/g, '.');
 
                     value = parseFloat(value);
 
@@ -886,8 +888,8 @@ $(function () {
                     $(form).find('input[type=text], input[type=password], input[type=hidden]:not([name=alteracoes]), input[type=radio]:checked, textarea, select').each(function (index, el) {
 
                         var valorAtual = $(el).val(),
-                            dataAnterior = $(el).attr('data-anterior');
-                        var text_label = $(el).siblings('label').find('span').text();    
+                            dataAnterior = $(el).attr('data-anterior'),
+                            text_label = $(el).siblings('label').find('span').text();
 
                         valorAtual = String(valorAtual).trim().toUpperCase();
                         dataAnterior = String(dataAnterior).trim().toUpperCase();
