@@ -61,7 +61,7 @@ class fluxocaixaController extends controller{
 
         if(isset($_POST) && !empty($_POST)){  
             $this->model->adicionar($_POST);
-            header("Location: " . BASE_URL . "/" . $this->table);
+            header("Location: " . BASE_URL . "/" . $this->table ."/adicionar");
         }else{ 
             $dados["colunas"] = $this->colunas;
             $dados["viewInfo"] = ["title" => "Adicionar"];
