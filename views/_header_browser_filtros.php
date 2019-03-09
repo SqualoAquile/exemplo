@@ -8,6 +8,12 @@
         </button>
     </div>
 <?php endif ?>
+
+<?php
+    $indexTiltroTexto = 1;
+    $indexFiltroFaixa = 1;
+?>
+
 <header class="pt-4 pb-5"> <!-- Cabeçalho -->
     <div class="row align-items-center"> <!-- Alinhar as linhas -->
         <div class="col-lg"> <!--Colunas da esquerda -->
@@ -42,6 +48,12 @@
             <form id="card-body-filtros" class="card-body pb-1">
                 <input type="reset" class="d-none" id="limpar-filtro">
                 <?php if ($modulo == "fluxocaixa"): ?>
+
+                    <?php
+                        $indexTiltroTexto = 2;
+                        $indexFiltroFaixa = 2;
+                    ?>
+
                     <div class="row mb-3">
                         <div class="col">
                             <fieldset>
@@ -62,15 +74,14 @@
                         <div class="input-group">
                             <select class="custom-select input-filtro-faixa">
                                 <option selected disabled>Filtrar por...</option>
-                                <?php $k = 2 ?>
                                 <?php for($j = 1; $j < count($colunas); $j++): ?>
                                     <?php if($colunas[$j]["Comment"]["ver"] == "true"): ?>
                                         <?php if(array_key_exists("label", $colunas[$j]["Comment"]) && array_key_exists("filtro_faixa", $colunas[$j]["Comment"]) && $colunas[$j]["Comment"]["filtro_faixa"]): ?>
-                                            <option value="<?php echo $k ?>" data-tipo="<?php echo $colunas[$j]["Type"] ?>" data-mascara="<?php echo $colunas[$j]["Comment"]["mascara_validacao"] ?>">
+                                            <option value="<?php echo $indexFiltroFaixa ?>" data-tipo="<?php echo $colunas[$j]["Type"] ?>" data-mascara="<?php echo $colunas[$j]["Comment"]["mascara_validacao"] ?>">
                                                 <?php echo array_key_exists("label", $colunas[$j]["Comment"]) ? $colunas[$j]["Comment"]["label"] : $colunas[$j]["Field"] ?>
                                             </option>
                                         <?php endif ?>
-                                        <?php $k++ ?>
+                                        <?php $indexFiltroFaixa++ ?>
                                     <?php endif ?>
                                 <?php endfor ?>
                             </select>
@@ -82,15 +93,14 @@
                         <div class="input-group">
                             <select class="custom-select">
                                 <option selected disabled>Filtrar por...</option>
-                                <?php $l = 2 ?> <!-- $l é o número da coluna na tabela -->
                                 <?php for($m = 1; $m < count($colunas); $m++): ?>
                                     <?php if ($colunas[$m]["Comment"]["ver"] == "true"): ?>
                                         <?php if(!array_key_exists("filtro_faixa", $colunas[$m]["Comment"])): ?>
-                                            <option value="<?php echo $l ?>" data-tipo="<?php echo $colunas[$m]["Type"] ?>">
+                                            <option value="<?php echo $indexTiltroTexto ?>" data-tipo="<?php echo $colunas[$m]["Type"] ?>">
                                                 <?php echo array_key_exists("label", $colunas[$m]["Comment"]) ? $colunas[$m]["Comment"]["label"] : $colunas[$m]["Field"] ?>
                                             </option>
                                         <?php endif ?> 
-                                        <?php $l++ ?>
+                                        <?php $indexTiltroTexto++ ?>
                                     <?php endif ?>
                                 <?php endfor ?>
                             </select>
