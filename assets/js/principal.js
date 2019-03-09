@@ -46,4 +46,15 @@ $(function () {
             $btn.find('i.fas').removeClass('fa-minus-circle').addClass('fa-plus-circle');
         }
     });
+
+    $('.select-all').click(function () {
+
+        let $this = $(this),
+            $checkThead = $this.find('[type=checkbox]')
+            $table = $this.parents('.table-responsive');
+
+        console.log($table)
+
+        $table.find('tbody [type=checkbox]').prop('checked', true);
+    });
 });

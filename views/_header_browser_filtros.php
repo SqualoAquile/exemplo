@@ -30,7 +30,7 @@
             </button>
         </div>
     </div>
-    <div class="collapse mt-5 card bg-light show" id="collapseFiltros">
+    <div class="collapse mt-5 card bg-light" id="collapseFiltros">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h3 class="m-0">Filtros</h3>
             <div>

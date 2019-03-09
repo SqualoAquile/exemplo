@@ -149,7 +149,7 @@ $(function () {
                     'sLast': 'Último'
                 }
             },
-            dom: '<t><p><r><i>'
+            dom: '<l><t><p><r><i>'
         }
     );
 
