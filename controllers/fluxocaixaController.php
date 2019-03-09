@@ -56,10 +56,10 @@ class fluxocaixaController extends controller{
         if(in_array($this->table. "_add", $_SESSION["permissoesUsuario"]) == false){
             header("Location: " . BASE_URL . "/" . $this->table); 
         }
-        
+    
         $dados['infoUser'] = $_SESSION;
-        
-        if(isset($_POST) && !empty($_POST)){ 
+
+        if(isset($_POST) && !empty($_POST)){  
             $this->model->adicionar($_POST);
             header("Location: " . BASE_URL . "/" . $this->table);
         }else{ 
