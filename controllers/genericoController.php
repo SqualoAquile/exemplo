@@ -1,8 +1,8 @@
 <?php
-class fluxocaixaController extends controller{
+class genericoController extends controller{
 
     // Protected - estas variaveis só podem ser usadas nesse arquivo
-    protected $table = "fluxocaixa";
+    protected $table = "generico";
     protected $colunas;
     
     protected $model;
@@ -56,12 +56,12 @@ class fluxocaixaController extends controller{
         if(in_array($this->table. "_add", $_SESSION["permissoesUsuario"]) == false){
             header("Location: " . BASE_URL . "/" . $this->table); 
         }
-    
+        
         $dados['infoUser'] = $_SESSION;
-
-        if(isset($_POST) && !empty($_POST)){  
+        
+        if(isset($_POST) && !empty($_POST)){ 
             $this->model->adicionar($_POST);
-            header("Location: " . BASE_URL . "/" . $this->table ."/adicionar");
+            header("Location: " . BASE_URL . "/" . $this->table);
         }else{ 
             $dados["colunas"] = $this->colunas;
             $dados["viewInfo"] = ["title" => "Adicionar"];

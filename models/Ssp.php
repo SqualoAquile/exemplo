@@ -315,8 +315,6 @@ class SSP {
 			 $limit"
 		);
 
-
-
 		// Data set length after filtering
 		$resFilterLength = self::sql_exec( $db, $bindings,
 			"SELECT COUNT(`{$primaryKey}`)

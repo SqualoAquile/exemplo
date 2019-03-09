@@ -7,19 +7,7 @@
 <!-- Chama o arquivo específico do módulo, caso não exista,  -->
 <!-- Este javaScript serve para fazer verificações inerentes à cada módulo, por exemplo o radio de Clientes -->
 <script src="<?php echo BASE_URL?>/assets/js/<?php echo $modulo?>.js" type="text/javascript"></script>
-<?php if (isset($_SESSION["returnMessage"])): ?>
 
-    <div class="alert <?php echo $_SESSION["returnMessage"]["class"] ?> alert-dismissible">
-    
-        <?php echo $_SESSION["returnMessage"]["mensagem"] ?>
-    
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-
-    </div>
-
-<?php endif?>
 <header class="d-lg-flex align-items-center my-5">
     <h1 class="display-4 m-0 text-capitalize font-weight-bold"><?php echo $viewInfo["title"]." ".ucfirst($labelTabela["labelForm"]); ?></h1>
 </header>
@@ -27,7 +15,7 @@
 <?php $table = false ?>
 
 <section class="mb-5">
-    <form id="form-principal" method="DELETE" class="needs-validation" autocomplete="off" novalidate>
+    <form id="form-principal" method="POST" class="needs-validation" autocomplete="off" novalidate>
         <div class="row">
             <?php foreach ($colunas as $key => $value): ?>
                 <?php if(isset($value["Comment"]) && array_key_exists("form", $value["Comment"]) && $value["Comment"]["form"] != "false") : ?>
@@ -64,7 +52,7 @@
                             <div class="form-group">
 
                                 <!-- Label Geral -->
-                                <label class="fluxocaixa <?php echo $value["Null"] == "NO" ? "font-weight-bold" : "" ?>" for="<?php echo $value['Field'] ?>">
+                                <label class="<?php echo $value["Null"] == "NO" ? "font-weight-bold" : "" ?>" for="<?php echo $value['Field'] ?>">
                                     
                                     <!-- Asterisco de campo obrigatorio -->
                                     <?php if ($value["Null"] == "NO"): ?>
@@ -248,102 +236,15 @@
                         </div>
                     <?php endif ?>
                 <?php endif ?>
-            <?php endforeach ?>
-            <div class="col-lg-6" style="order:14;">
-                <div class="form-group">
-                    <label for="dia_venc" class="fluxocaixa font-weight-bold" ><span>* Dia Vencimento</span></label>
-                    <select id="dia_venc" 
-                            name="dia_venc"
-                            class="form-control"
-                            data-anterior=""
-                            tabindex="14"
-                            data-mascara_validacao = "false"   
-                    >
-                        <option value="" selected >Selecione</option>
-                        <?php for($j = 1; $j <= 31; $j++):?>
-                            <option value="<?php echo $j;?>"><?php echo $j;?></option>        
-                        <?php endfor;?>     
-                    </select>
-                </div>
-            </div>
-
-            <div class="col-lg-6" style="order:16;">
-                <div class="form-group">
-                    <label for="taxa-cartao" class="fluxocaixa font-weight-bold"><span>* Taxa do Cartão</span></label>
-                    <input type="text" class="form-control" name="taxa-cartao" value="" id="taxa-cartao" maxlength="20" tabindex="16" data-mascara_validacao="porcentagem" data-podeZero="true" disabled="disabled" data-anterior=""/>
-                </div>
-            </div>
-
-            <div class="col-lg-6" style="order:16;">
-                <div class="form-group">
-                    <label for="custo_financ" class="fluxocaixa font-weight-bold" ><span>* Custo Financeiro</span></label>
-                    <input type="text" class="form-control" name="custo_financ" value="" id="custo_financ" maxlength="20" tabindex="16" data-mascara_validacao="monetario" data-podeZero="true" disabled="disabled" data-anterior=""/>
-                </div>
-            </div>
-            <div class="col-lg-3" style="order:18;">
-                 <div class="form-group">
-                    <div class="btn btn-primary btn-block" tabindex="18" id="btn_incluir"> Incluir </div>                                                 
-                 </div>                                       
-            </div>
-            
+            <?php endforeach ?>        
         </div>
+        <button id="main-form" class="d-none"></button>
     </form>
-    
-    <div id='resumo_lancamento' class='row my-5'>
-        <div class='col-lg-4'>
-             <div class="mx-auto alert text-center alert-success mb-3">
-                <div class="alert-header font-weight-bold">Receita</div>
-                <div class="alert-body py-1">
-                    <h2 class="alert-title" id='receita_lanc'></h2>
-                </div>
-            </div>  
-        </div>
-
-        <div class='col-lg-4'>
-            <div class="mx-auto alert text-center alert-danger mb-3">
-                <div class="alert-header font-weight-bold">Despesa</div>
-                <div class="alert-body">
-                    <h2 class="alert-title" id='despesa_lanc'></h2>
-                </div>
-            </div>  
-        </div>
-        <div class='col-lg-4'>
-            <div class="mx-auto alert bg-light text-center mb-3">
-                <div class="alert-header font-weight-bold">Total</div>
-                <div class="alert-body">
-                    <h2 class="alert-title" id='total_lanc'></h2>
-                </div>
-            </div>  
-        </div>
-    </div>
-
-    <div class="my-5 table-responsive" id="tabela_lancamento" style='max-height: 400px; overflow-y:auto'>
-        <form  method="POST" autocomplete="off" novalidate id='form_lancamento'>
-            <table class="table table-striped table-hover bg-white table-nowrap first-column-fixed">
-                <thead>
-                    <tr>
-                        <?php foreach ($colunas as $key => $value): ?> 
-                            <?php if(isset($value["Comment"]) && array_key_exists("ver", $value["Comment"]) && $value["Comment"]["ver"] != "false") : ?>
-                                <th class="border-top-0">
-                                    <span><?php echo (isset($value["Comment"]["label"]) && !is_null($value["Comment"]["label"]) && !empty($value["Comment"]["label"])) ? $value["Comment"]["label"] : ucwords(str_replace("_", " ", $value['Field'])) ?></span>
-                                </th>
-                            <?php endif ?>
-                        <?php endforeach ?>
-                    </tr>
-                </thead>
-                
-                    <tbody>
-
-                    </tbody>                                            
-            
-            </table>
-            <button type="submit" id='btn_salvar' class='d-none'></button>
-        </form>
-    </div>
-    <div class="row flex-row-reverse bd-highlight" id='lbl_btn_salvar'>
-        <div class='col-lg-3'><label  for='btn_salvar' class='btn btn-primary btn-lg btn-block'>Salvar</label></div>                                               
-    </div>    
+    <?php if($table) include "_contatos_form.php" ?>
     <div class="row">
+        <div class="col-xl-2 col-lg-3">
+            <label for="main-form" class="btn btn-primary btn-block" tabindex="0">Salvar</label>
+        </div>
         <?php if (isset($item)): ?>
         <div class="col-xl-2 col-lg-3">
             <button class="btn btn-dark btn-block" type="button" data-toggle="collapse" data-target="#historico" aria-expanded="false" aria-controls="historico">Histórico de Alterações</button>
