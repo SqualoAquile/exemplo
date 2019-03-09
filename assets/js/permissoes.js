@@ -20,6 +20,8 @@ $(function () {
                 } else {
                     $brothers.attr('disabled', 'disabled');
                     $brothers.prop('checked', false);
+
+                    $('#fluxocaixa_add').removeAttr('disabled');
                 }
             }
         });

@@ -20,12 +20,21 @@ $width-closed: calc(30px + 2rem);
 				.nav-item {
 					.nav-link {
 						text-align: center;
-						span,
+						> span,
 						&:after {
 							display: none;
 						}
 						i {
 							margin: auto!important;
+						}
+					}
+					&:hover {
+						.dropdown-menu {
+							@extend .shadow-sm;
+							display: block!important;
+							position: fixed!important;
+							left: $width-closed!important;
+							top: 0!important;
 						}
 					}
 				}

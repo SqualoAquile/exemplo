@@ -24,4 +24,3 @@ spl_autoload_register(function($class){
 
 $core = new core();
 $core->run();
-?>

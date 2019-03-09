@@ -149,9 +149,11 @@ $(function () {
                     'sLast': 'Último'
                 }
             },
-            dom: '<t><p><r><i>'
+            dom: '<l><t><p><r><i>'
         }
     );
+
+    window.dataTable = dataTable;
 
     $('[name=searchDataTable]').on('keyup', function () {
         dataTable.search(this.value).draw();
