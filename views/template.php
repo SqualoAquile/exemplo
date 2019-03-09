@@ -48,6 +48,12 @@
                "permissao" => "servicoscomplementares_ver",
                "link" => "/servicoscomplementares"
             ],
+            [
+               "text" => "Genérico",
+               "icon" => "fas fa-receipt",
+               "permissao" => "generico_ver",
+               "link" => "/generico"
+            ],
          ]
       ],
       [
