@@ -3,7 +3,7 @@ $(function () {
     let dataTable = window.dataTable;
 
     function addMask (mask, $el) {
-        console.log('addMask')
+
         if (mask == 'data') {
             $el
                 .mask('00/00/0000')
@@ -53,17 +53,17 @@ $(function () {
             });
 
         })
-        .on('change', '#filtros-texto .input-filtro-texto', function () {
+        .on('change', '.filtros-texto .input-filtro-texto', function () {
 
-            $('#filtros-texto .input-group').each(function () {
+            $('.filtros-texto .input-group').each(function () {
 
                 let $this = $(this),
                     $select = $this.find('select'),
                     selectVal = $select.val(),
-                    $input = $this.find('.form-control');
+                    $input = $this.find('.input-filtro-texto');
 
                 dataTable
-                    .column(selectVal)
+                    .columns(selectVal)
                     .search($input.val())
                     .draw();
             });
@@ -73,6 +73,20 @@ $(function () {
             dataTable
                 .columns()
                 .search('')
+                .draw();
+        })
+        .on('change', '[name=movimentacao]', function () {
+
+            let $this = $(this),
+                $fieldset = $this.parents('fieldset'),
+                $checkeds = $fieldset.find(':checked'),
+                indexColumn = $this.attr('data-index'),
+                lenght = $checkeds.length,
+                search = lenght == 2 || lenght == 0 ? '' : $checkeds.val();
+
+            dataTable
+                .columns(indexColumn)
+                .search(search)
                 .draw();
         });
 

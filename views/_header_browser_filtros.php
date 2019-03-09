@@ -30,55 +30,75 @@
             </button>
         </div>
     </div>
-    <div class="collapse mt-5 card bg-light" id="collapseFiltros">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h3 class="m-0">Filtros</h3>
-            <div>
-                <label for="limpar-filtro" class="btn btn-secondary btn-sm m-0">Limpar Filtros</label>
-                <button id="criar-filtro" type="button" class="btn btn-success btn-sm">Criar Filtro</button>
+    <div class="collapse" id="collapseFiltros">
+        <div class="card mt-5 bg-light">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="m-0">Filtros</h3>
+                <div>
+                    <label for="limpar-filtro" class="btn btn-secondary btn-sm m-0">Limpar Filtros</label>
+                    <button id="criar-filtro" type="button" class="btn btn-success btn-sm">Mais Filtros</button>
+                </div>
             </div>
-        </div>
-        <form id="card-body-filtros" class="card-body pb-1">
-            <input type="reset" class="d-none" id="limpar-filtro">
-            <div class="filtros row mb-3">
-                <div class="filtros-faixa col">
-                    <div class="input-group">
-                        <select class="custom-select input-filtro-faixa">
-                            <option selected disabled>Filtrar por...</option>
-                            <?php $k = 1 ?>
-                            <?php for($j = 1; $j < count($colunas); $j++): ?>
-                                <?php if($colunas[$j]["Comment"]["ver"] == "true"): ?>
-                                    <?php if(array_key_exists("label", $colunas[$j]["Comment"]) && array_key_exists("filtro_faixa", $colunas[$j]["Comment"]) && $colunas[$j]["Comment"]["filtro_faixa"]): ?>
-                                        <option value="<?php echo $k ?>" data-tipo="<?php echo $colunas[$j]["Type"] ?>" data-mascara="<?php echo $colunas[$j]["Comment"]["mascara_validacao"] ?>"><?php echo $colunas[$j]["Comment"]["label"] ?></option>
+            <form id="card-body-filtros" class="card-body pb-1">
+                <input type="reset" class="d-none" id="limpar-filtro">
+                <?php if ($modulo == "fluxocaixa"): ?>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <fieldset>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="movimentacao" data-index="2" id="todosCheckReceita" value="receita">
+                                    <label class="form-check-label" for="todosCheckReceita">Receita</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="movimentacao" data-index="2" id="todosCheckDespesa" value="despesa">
+                                    <label class="form-check-label" for="todosCheckDespesa">Despesa</label>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                <?php endif ?>
+                <div class="filtros row mb-3">
+                    <div class="filtros-faixa col">
+                        <div class="input-group">
+                            <select class="custom-select input-filtro-faixa">
+                                <option selected disabled>Filtrar por...</option>
+                                <?php $k = 2 ?>
+                                <?php for($j = 1; $j < count($colunas); $j++): ?>
+                                    <?php if($colunas[$j]["Comment"]["ver"] == "true"): ?>
+                                        <?php if(array_key_exists("label", $colunas[$j]["Comment"]) && array_key_exists("filtro_faixa", $colunas[$j]["Comment"]) && $colunas[$j]["Comment"]["filtro_faixa"]): ?>
+                                            <option value="<?php echo $k ?>" data-tipo="<?php echo $colunas[$j]["Type"] ?>" data-mascara="<?php echo $colunas[$j]["Comment"]["mascara_validacao"] ?>">
+                                                <?php echo array_key_exists("label", $colunas[$j]["Comment"]) ? $colunas[$j]["Comment"]["label"] : $colunas[$j]["Field"] ?>
+                                            </option>
                                         <?php endif ?>
-                                    <?php $k++ ?>
-                                <?php endif ?>
-                            <?php endfor ?>
-                        </select>
-                        <input type="text" class="form-control input-filtro-faixa min" placeholder="de...">
-                        <input type="text" class="form-control input-filtro-faixa max" placeholder="até...">
+                                        <?php $k++ ?>
+                                    <?php endif ?>
+                                <?php endfor ?>
+                            </select>
+                            <input type="text" class="form-control input-filtro-faixa min" placeholder="de...">
+                            <input type="text" class="form-control input-filtro-faixa max" placeholder="até...">
+                        </div>
+                    </div>
+                    <div class="filtros-texto col">
+                        <div class="input-group">
+                            <select class="custom-select">
+                                <option selected disabled>Filtrar por...</option>
+                                <?php $l = 2 ?> <!-- $l é o número da coluna na tabela -->
+                                <?php for($m = 1; $m < count($colunas); $m++): ?>
+                                    <?php if ($colunas[$m]["Comment"]["ver"] == "true"): ?>
+                                        <?php if(!array_key_exists("filtro_faixa", $colunas[$m]["Comment"])): ?>
+                                            <option value="<?php echo $l ?>" data-tipo="<?php echo $colunas[$m]["Type"] ?>">
+                                                <?php echo array_key_exists("label", $colunas[$m]["Comment"]) ? $colunas[$m]["Comment"]["label"] : $colunas[$m]["Field"] ?>
+                                            </option>
+                                        <?php endif ?> 
+                                        <?php $l++ ?>
+                                    <?php endif ?>
+                                <?php endfor ?>
+                            </select>
+                            <input type="text" class="form-control input-filtro-texto">
+                        </div>
                     </div>
                 </div>
-                <div class="filtros-texto col">
-                    <div class="input-group">
-                        <select class="custom-select input-filtro-texto">
-                            <option selected disabled>Filtrar por...</option>
-                            <?php $l = 1 ?> <!-- $l é o número da coluna na tabela -->
-                            <?php for($m = 1; $m < count($colunas); $m++): ?>
-                                <?php if ($colunas[$m]["Comment"]["ver"] == "true"): ?>
-                                    <?php if(!array_key_exists("filtro_faixa", $colunas[$m]["Comment"])): ?>
-                                        <option value="<?php echo $l ?>" data-tipo="<?php echo $colunas[$m]["Type"] ?>">
-                                            <?php echo array_key_exists("label", $colunas[$m]["Comment"]) ? $colunas[$m]["Comment"]["label"] : $colunas[$m]["Field"] ?>
-                                        </option>
-                                    <?php endif ?> 
-                                    <?php $l++ ?>
-                                <?php endif ?>
-                            <?php endfor ?>
-                        </select>
-                        <input type="text" class="form-control input-filtro-texto">
-                    </div>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </header>
