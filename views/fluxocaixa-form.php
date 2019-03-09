@@ -9,11 +9,6 @@
 <script src="<?php echo BASE_URL?>/assets/js/<?php echo $modulo?>.js" type="text/javascript"></script>
 
 <header class="d-lg-flex align-items-center my-5">
-    <?php if(in_array($modulo . "_ver", $infoUser["permissoesUsuario"])): ?>
-        <a href="<?php echo BASE_URL . '/' . $modulo ?>" class="btn btn-secondary mr-lg-4" title="Voltar">
-            <i class="fas fa-chevron-left"></i>
-        </a>
-    <?php endif ?>
     <h1 class="display-4 m-0 text-capitalize font-weight-bold"><?php echo $viewInfo["title"]." ".ucfirst($labelTabela["labelForm"]); ?></h1>
 </header>
 
@@ -275,16 +270,43 @@
             </div>
             <div class="col-lg-3" style="order:18;">
                  <div class="form-group">
-                    <a href='#tabela_lancamento' class="btn btn-primary btn-block" tabindex="18" id="btn_incluir"> Incluir </a>                                                 
+                    <div class="btn btn-primary btn-block" tabindex="18" id="btn_incluir"> Incluir </div>                                                 
                  </div>                                       
             </div>
             
         </div>
     </form>
     
-    
+    <div id='resumo_lancamento' class='row my-5'>
+        <div class='col-lg-4'>
+             <div class="mx-auto alert text-center alert-success mb-3">
+                <div class="alert-header font-weight-bold">Receita</div>
+                <div class="alert-body py-1">
+                    <h2 class="alert-title" id='receita_lanc'></h2>
+                </div>
+            </div>  
+        </div>
+
+        <div class='col-lg-4'>
+            <div class="mx-auto alert text-center alert-danger mb-3">
+                <div class="alert-header font-weight-bold">Despesa</div>
+                <div class="alert-body">
+                    <h2 class="alert-title" id='despesa_lanc'></h2>
+                </div>
+            </div>  
+        </div>
+        <div class='col-lg-4'>
+            <div class="mx-auto alert bg-light text-center mb-3">
+                <div class="alert-header font-weight-bold">Total</div>
+                <div class="alert-body">
+                    <h2 class="alert-title" id='total_lanc'></h2>
+                </div>
+            </div>  
+        </div>
+    </div>
+
     <div class="my-5 table-responsive" id="tabela_lancamento" style='max-height: 400px; overflow-y:auto'>
-        <form  method="POST" autocomplete="off" novalidate>
+        <form  method="POST" autocomplete="off" novalidate id='form_lancamento'>
             <table class="table table-striped table-hover bg-white table-nowrap first-column-fixed">
                 <thead>
                     <tr>
@@ -303,15 +325,12 @@
                     </tbody>                                            
             
             </table>
+            <button type="submit" id='btn_salvar' class='d-none'></button>
         </form>
     </div>
-    <div id='resumo_lancamento' class='row'>
-         <div class='col-lg-3'><label id='receita_lanc'> Receita:  </label></div>
-         <div class='col-lg-3'><label id='despesa_lanc'> Despesa:  </label></div>
-         <div class='col-lg-3'><label id='total_lanc'> Total:      </label></div>
-         <div class='col-lg-3'><button id='btn_salvar' class='btn btn-primary btn-lg btn-block'>Salvar</button></div>
-    </div>
-    
+    <div class="row flex-row-reverse bd-highlight" id='lbl_btn_salvar'>
+        <div class='col-lg-3'><label  for='btn_salvar' class='btn btn-primary btn-lg btn-block'>Salvar</label></div>                                               
+    </div>    
     <div class="row">
         <?php if (isset($item)): ?>
         <div class="col-xl-2 col-lg-3">

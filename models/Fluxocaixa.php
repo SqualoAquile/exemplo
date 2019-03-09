@@ -27,6 +27,9 @@ class Fluxocaixa extends model {
     }
 
     public function adicionar($request) {
+        echo 'cheguei';
+        print_r($request);
+        exit;
         
         $ipcliente = $this->permissoes->pegaIPcliente();
         $request["alteracoes"] = ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
