@@ -2,6 +2,19 @@
     var baselink = '<?php echo BASE_URL;?>',
         currentModule = '<?php echo str_replace(array("-add", "-edt"), "", basename(__FILE__, ".php")) ?>'
 </script>
+<?php if (isset($_SESSION["returnMessage"])): ?>
+
+  <div class="alert <?php echo $_SESSION["returnMessage"]["class"] ?> alert-dismissible">
+
+    <?php echo $_SESSION["returnMessage"]["mensagem"] ?>
+
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+
+  </div>
+
+<?php endif?>
 <h1 class="display-4 font-weight-bold">Home</h1>
 <section id="charts">
     <div class="row">

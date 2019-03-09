@@ -30,13 +30,6 @@ class core {
                $currentAction = $url[0];
                array_shift($url) ;
            }else{ //Assim que uma mensagem de erro foi exibida no navegador, unsetar pra que ela suma no resto da sessão
-                if (isset($_SESSION["returnMessage"])) {
-                    if (array_key_exists("show", $_SESSION["returnMessage"]) && $_SESSION["returnMessage"]["show"]) {
-                        unset($_SESSION["returnMessage"]);
-                    } else {
-                        $_SESSION["returnMessage"]["show"] = true;
-                    }
-                }
                $currentAction = "index"; 
            }
            
@@ -79,18 +72,34 @@ class core {
 
             }else{
                 //echo 'O Controller existe, mas o método NÂO!';exit;  
-                echo $this->redirectMessage("Erro no endereço, você foi redirecionado para " .ucfirst(str_replace("Controller","",$currentController)));
+                $_SESSION["returnMessage"] = [
+                    "mensagem" => "Erro no endereço, você foi redirecionado para ".ucfirst(str_replace("Controller","",$currentController)),
+                    "class" => "alert-danger"
+                ];
+                // echo $this->redirectMessage("Erro no endereço, você foi redirecionado para " .ucfirst(str_replace("Controller","",$currentController)));
                 $currentAction = "index";
             }
         }else{
             //echo 'O Controller não existe!';exit;
             // echo "Estamos aquiiiii";
             // echo $currentAction; exit;
-            echo $this->redirectMessage();
+            // echo $this->redirectMessage();
+            $_SESSION["returnMessage"] = [
+                "mensagem" => "Erro no endereço, você foi redirecionado para o início.",
+                "class" => "alert-danger"
+            ];
             $currentController = "homeController";
             $currentAction = "index";
         }
         ////////////////////////////////////////       
+
+        if (isset($_SESSION["returnMessage"])) {
+            if (array_key_exists("show", $_SESSION["returnMessage"]) && $_SESSION["returnMessage"]["show"]) {
+                unset($_SESSION["returnMessage"]);
+            } else {
+                $_SESSION["returnMessage"]["show"] = true;
+            }
+        }
         
         $c = new $currentController();
         call_user_func_array(array($c,$currentAction), $params);

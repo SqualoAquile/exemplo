@@ -327,6 +327,7 @@ class Shared extends model {
             return $array;
         }
     }
+    
     public function labelTabela() {
         $sql = "SELECT table_comment as table_comment FROM INFORMATION_SCHEMA.TABLES WHERE table_name = '" . $this->table."'";
         $sql = self::db()->query($sql);

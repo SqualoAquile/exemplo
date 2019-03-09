@@ -22,8 +22,8 @@ if ( is_file( $file ) ) {
 	include( $file );
 }
 
-
 class SSP {
+
 	/**
 	 * Create the data output array for the DataTables rows
 	 *
@@ -56,7 +56,6 @@ class SSP {
 		return $out;
 	}
 
-
 	/**
 	 * Database connection
 	 *
@@ -79,7 +78,6 @@ class SSP {
 		return $conn;
 	}
 
-
 	/**
 	 * Paging
 	 *
@@ -99,7 +97,6 @@ class SSP {
 
 		return $limit;
 	}
-
 
 	/**
 	 * Ordering
@@ -143,6 +140,61 @@ class SSP {
 		return $order;
 	}
 
+	private static function formater ( $type, $value )
+	{
+		$returnValue = "";
+
+		if ($value) {
+			if ($type == "date") {
+				$dtaux = explode("/", $value);
+				if (count($dtaux) == 3) {
+					$returnValue = $dtaux[2] . "-" . $dtaux[1] . "-" . $dtaux[0];
+				}
+			}
+		}
+
+		return $returnValue;
+	}
+
+	private static function range ( $request, $str, $column, &$bindings )
+	{
+		$strReturn = "";
+
+		if (strpos($str, "<>") && strpos($str, ":")) {
+
+			$strExploded = explode(":", $str);
+			$type = $strExploded[0];
+			$contentExploded = explode("<>", $strExploded[1]);
+			$min = $contentExploded[0];
+			$max = $contentExploded[1];
+			
+			$min = self::formater($type, $min);
+			$max = self::formater($type, $max);
+	
+			if (!empty($min) && empty($max)) {
+				
+				$bindingMin = self::bind( $bindings, $min, PDO::PARAM_STR );
+				
+				$strReturn = "`" . $column['db'] . "` >= " . $bindingMin;
+	
+			} elseif (empty($min) && !empty($max)) {
+				
+				$bindingMax = self::bind( $bindings, $max, PDO::PARAM_STR );
+				
+				$strReturn = "`" . $column['db'] . "` <= " . $bindingMax;
+	
+			} elseif (!empty($min) && !empty($max)) {
+				
+				$bindingMin = self::bind( $bindings, $min, PDO::PARAM_STR );
+				$bindingMax = self::bind( $bindings, $max, PDO::PARAM_STR );
+	
+				$strReturn = "`" . $column['db'] . "` BETWEEN " . $bindingMin . " AND " . $bindingMax;
+	
+			}
+		}
+
+		return $strReturn;
+	}
 
 	/**
 	 * Searching / Filtering
@@ -189,10 +241,21 @@ class SSP {
 
 				$str = $requestColumn['search']['value'];
 
-				if ( $requestColumn['searchable'] == 'true' &&
-				 $str != '' ) {
-					$binding = self::bind( $bindings, '%'.$str.'%', PDO::PARAM_STR );
-					$columnSearch[] = "`".$column['db']."` LIKE ".$binding;
+				if ( $requestColumn['searchable'] == 'true' && $str != '' ) {
+					
+					// Prepara string de filtro faixa
+					$range = self::range($request, $str, $column, $bindings);
+
+					if (!empty($range)) {
+						
+						$columnSearch[] = $range;
+
+					} else {
+
+						$binding = self::bind( $bindings, '%'.$str.'%', PDO::PARAM_STR );
+						$columnSearch[] = "`".$column['db']."` LIKE ".$binding;
+
+					}
 				}
 			}
 		}
@@ -281,7 +344,6 @@ class SSP {
 			"data"            => self::data_output( $columns, $data )
 		);
 	}
-
 
 	/**
 	 * The difference between this method and the `simple` one, is that you can
@@ -381,7 +443,6 @@ class SSP {
 		);
 	}
 
-
 	/**
 	 * Connect to the database
 	 *
@@ -455,7 +516,6 @@ class SSP {
 		return $stmt->fetchAll( PDO::FETCH_BOTH );
 	}
 
-
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Internal methods
 	 */
@@ -500,7 +560,6 @@ class SSP {
 		return $key;
 	}
 
-
 	/**
 	 * Pull a particular property from each assoc. array in a numeric array, 
 	 * returning and array of the property values from each item.
@@ -520,7 +579,6 @@ class SSP {
 		return $out;
 	}
 
-
 	/**
 	 * Return a string from an array or a string
 	 *
@@ -538,5 +596,5 @@ class SSP {
 		}
 		return $a;
 	}
-}
 
+}
