@@ -603,9 +603,6 @@ $(function () {
             txcartao = parseFloat(0);
         }
         
-            
-        
-
         custofinanc = floatParaPadraoInternacional($("#custo_financ").val());
         observacao = $("#observacao").val().trim();
     
@@ -656,10 +653,11 @@ $(function () {
         // valores['observacao'] = observacao; 
 
         //testar se já tem na tabela os itens selecionados
+        var max, maxant;
         if ($("#tabela_lancamento tbody").length > 0) {
-            var max = 0;
+            max = 0;
             $("#tabela_lancamento tbody tr").each(function () {
-                var maxant = parseInt($(this).find('a').attr("data-ident"));
+                maxant = parseInt($(this).children('td:eq(0)').find('[data-ident]').attr("data-ident"));
                 if (maxant > max) {
                     max = maxant;
                 }
@@ -669,10 +667,10 @@ $(function () {
             max = 1;
         }
         
-        console.log('adm cartao ' + admcartao);
+        console.log('maxant:    '+maxant);
         // lança o valor da receita ou despesa
         var linha = new Array();
-        linha = lancaFluxo(max, movimentacao, nropedido, nronf, dtemissaonf, analitica, contacorrente, detalhe, quemlancou, favorecido, dtoperacao, valortotal, formapgto, condpgto, nroparcela, diavenc, admcartao, bandeira, observacao, distdias); 
+        linha = lancaFluxo(movimentacao, nropedido, nronf, dtemissaonf, analitica, contacorrente, detalhe, quemlancou, favorecido, dtoperacao, valortotal, formapgto, condpgto, nroparcela, diavenc, admcartao, bandeira, observacao, distdias); 
           
         if (linha.length > 1) {
             for (var i = 0; i < linha.length; i++) {
@@ -684,13 +682,12 @@ $(function () {
     
         //lança o custo financeiro caso ele exista
         var custoAux = floatParaPadraoInternacional($('#custo_financ').val());
-        console.log(custoAux);
         if (custoAux > 0) {
             //testar se já tem na tabela os itens selecionados
             if ($("#tabela_lancamento tbody").length > 0) {
-                var max = 0;
+                max = 0;
                 $("#tabela_lancamento tbody tr").each(function () {
-                    var maxant = parseInt($(this).find('a').attr("data-ident"));
+                    maxant = parseInt($(this).children('td:eq(0)').find('[data-ident]').attr("data-ident"));
                     if (maxant > max) {
                         max = maxant;
                     }
@@ -701,7 +698,7 @@ $(function () {
             }
     
             var linhab = new Array();
-            linhab = lancaFluxo(max, 'Despesa', nropedido, nronf, dtemissaonf, 'Despesa Financeira', contacorrente, 'Taxa - ' + formapgto + ' - ' + detalhe, quemlancou, favorecido, dtoperacao, custoAux, formapgto, condpgto, nroparcela, diavenc, admcartao, bandeira, observacao, distdias); 
+            linhab = lancaFluxo('Despesa', nropedido, nronf, dtemissaonf, 'Despesa Financeira', contacorrente, 'Taxa - ' + formapgto + ' - ' + detalhe, quemlancou, favorecido, dtoperacao, custoAux, formapgto, condpgto, nroparcela, diavenc, admcartao, bandeira, observacao, distdias); 
             if (linhab.length > 1) {
                 for (var i = 0; i < linhab.length; i++) {
                     $('#tabela_lancamento tbody').append(linhab[i]);
@@ -1255,7 +1252,7 @@ $(function () {
         }
     }
 
-    function lancaFluxo(proxid, movimentacao, nropedido, nronf, dataemissaonf, analitica, contacorrente, detalhe, quemlancou, favorecido, dtoperacao, valortotal, formapgto, condpgto, nroparcela, diavenc, admcartao, bandeira, observacao, distdias = 0) {
+    function lancaFluxo(movimentacao, nropedido, nronf, dataemissaonf, analitica, contacorrente, detalhe, quemlancou, favorecido, dtoperacao, valortotal, formapgto, condpgto, nroparcela, diavenc, admcartao, bandeira, observacao, distdias = 0) {
         console.log('entrei na funcao lancafluxo');
         /////////////////////////// LANÇAMENTO INTEIRO FEITO A VISTA - EXCLUINDO RECEITA DE CARTÃO DÉBITO
         if (condpgto == "À Vista" && formapgto != "Cartão Débito" && formapgto != "Cartão Crédito" ){
@@ -1263,37 +1260,38 @@ $(function () {
             console.log('forma de pgto: '+ formapgto);
             dtentrada = dataAtual();
             valortotal = floatParaPadraoBrasileiro(valortotal);
+            randomico = Math.random();
             
             var arraylinhas = new Array();
             var linha = "<tr>";
-                linha   += "<td>" + "<div class='btn btn-sm btn-secondary mr-1' onclick='excluir(this)' data-ident=" + proxid + " '><i class='fas fa-trash-alt'></i></div>" 
-                                  + "<div class='btn btn-primary btn-sm ml-1' onclick='editar(this)' data-ident=" + proxid + " '><i class='fas fa-edit'></i></div>" 
+                linha   += "<td>" + "<div class='btn btn-sm btn-secondary mr-1' onclick='excluir(this)' data-ident=" + randomico + " '><i class='fas fa-trash-alt'></i></div>" 
+                                  + "<div class='btn btn-primary btn-sm ml-1' onclick='editar(this)' data-ident=" + randomico + " '><i class='fas fa-edit'></i></div>" 
                         + "</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='despesa_receita[]'  value='" + movimentacao + "' />" +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='conta_analitica[]'  value='" + analitica + "'    />" +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='detalhe[]'          value='" + detalhe + "' />"      +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='data_operacao[]'    value='" + dtoperacao + "' />"   +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[despesa_receita]'  value='" + movimentacao + "' />" +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[conta_analitica]'  value='" + analitica + "'    />" +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[detalhe]'          value='" + detalhe + "' />"      +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[data_operacao]'    value='" + dtoperacao + "' />"   +"</td>";
                 linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled data-mascara_validacao='monetario' data-podeZero='false' required maxlength='20' "
-                                + "name='valortotal[]' value='" + valortotal + "' data-anterior='"+ valortotal +"' ' />"
+                                + "name='linha"+randomico+"[valor_total]' value='" + valortotal + "' data-anterior='"+ valortotal +"' ' />"
                       +"</td>";
                 linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled data-mascara_validacao='data' maxlength='10' required "
-                                + "name='data_vencimento[]' value ='" + dtoperacao + "' data-anterior='"+ dtoperacao +"' data-dtop='" + dtoperacao + "' />"   
+                                + "name='linha"+randomico+"[data_vencimento]' value ='" + dtoperacao + "' data-anterior='"+ dtoperacao +"' data-dtop='" + dtoperacao + "' />"   
                       +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='formapgto[]'        value='" + formapgto + "' />"    +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='condpgto[]'         value='" + condpgto + "' />"     +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='nroparc[]'          value=     '1|1' />"             +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='data_quitacao[]'    value='" + dtoperacao + "' />"   +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='nro_pedido[]'       value='" + nropedido + "' />"    +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='conta_corrente[]'   value='" + contacorrente + "'/>" +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='adm_cartao[]'       value='" + admcartao +"' />"     +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='bandeira[]'         value='" + bandeira +"' />"      +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='favorecido[]'       value='" + favorecido +"' />"    +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='status[]'           value=     'Quitado' />"         +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='quem_lancou[]'      value='" + quemlancou +"' />"    +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='data_entrada_sistema[]' value='" +dtentrada+"'/>"    +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='nro_nf[]'           value='" + nronf +"'/>"          +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='data_emissao_nf[]'  value='" + dataemissaonf +"'/>"  +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='observacao[]'       value='" + observacao +"' />"    +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[forma_pgto]'        value='" + formapgto + "' />"    +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[cond_pgto]'         value='" + condpgto + "' />"     +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[nro_parcela]'          value=     '1|1' />"             +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[data_quitacao]'    value='" + dtoperacao + "' />"   +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[nro_pedido]'       value='" + nropedido + "' />"    +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[conta_corrente]'   value='" + contacorrente + "'/>" +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[adm_cartao]'       value='" + admcartao +"' />"     +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[bandeira]'         value='" + bandeira +"' />"      +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[favorecido]'       value='" + favorecido +"' />"    +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[status]'           value=     'Quitado' />"         +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[quem_lancou]'      value='" + quemlancou +"' />"    +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[data_entrada_sistema]' value='" +dtentrada+"'/>"    +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[nro_nf]'           value='" + nronf +"'/>"          +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[data_emissao_nf]'  value='" + dataemissaonf +"'/>"  +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[observacao]'       value='" + observacao +"' />"    +"</td>";
             
             
             arraylinhas.push(linha);
@@ -1308,36 +1306,37 @@ $(function () {
             var dtentrada = dataAtual();
             valortotal = floatParaPadraoBrasileiro(valortotal);
             var dtvenc = proximoDiaUtil(dtoperacao, distdias);
+            randomico = Math.random();
 
             var linha = "<tr>";
-                linha += "<td>" + "<div class='btn btn-sm btn-secondary mr-1' onclick='excluir(this)' data-ident=" + proxid + " '><i class='fas fa-trash-alt'></i></div>" 
-                                + "<div class='btn btn-primary btn-sm ml-1' onclick='editar(this)' data-ident=" + proxid + " '><i class='fas fa-edit'></i></div>" 
+                linha += "<td>" + "<div class='btn btn-sm btn-secondary mr-1' onclick='excluir(this)' data-ident=" + randomico + " '><i class='fas fa-trash-alt'></i></div>" 
+                                + "<div class='btn btn-primary btn-sm ml-1' onclick='editar(this)' data-ident=" + randomico + " '><i class='fas fa-edit'></i></div>" 
                       + "</td>";
-            linha += "<td>" + "<input name='despesa_receita[]'       value='" + movimentacao + "'  type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
-            linha += "<td>" + "<input name='conta_analitica[]'       value='" + analitica + "'     type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
-            linha += "<td>" + "<input name='detalhe[]'               value='" + detalhe + "'       size ='auto' type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
-            linha += "<td>" + "<input name='data_operacao[]'         value='" + dtoperacao + "'    type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
+            linha += "<td>" + "<input name='linha"+randomico+"[despesa_receita]'       value='" + movimentacao + "'  type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
+            linha += "<td>" + "<input name='linha"+randomico+"[conta_analitica]'       value='" + analitica + "'     type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
+            linha += "<td>" + "<input name='linha"+randomico+"[detalhe]'               value='" + detalhe + "'       size ='auto' type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
+            linha += "<td>" + "<input name='linha"+randomico+"[data_operacao]'         value='" + dtoperacao + "'    type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
             linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled data-mascara_validacao='monetario' data-podeZero='false' required maxlenght='20' "
-                            + "name='valortotal[]' value='" + valortotal + "' data-anterior='"+ valortotal +"' />"
+                            + "name='linha"+randomico+"[valor_total]' value='" + valortotal + "' data-anterior='"+ valortotal +"' />"
                   + "</td>";
             linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled data-mascara_validacao='data' maxlenght='10' required "
-                            + "name='data_vencimento[]' value ='" + dtvenc + "' data-anterior='"+ dtvenc +"' data-dtop='" + dtoperacao + "' />"   
+                            + "name='linha"+randomico+"[data_vencimento]' value ='" + dtvenc + "' data-anterior='"+ dtvenc +"' data-dtop='" + dtoperacao + "' />"   
                   + "</td>";
-            linha += "<td>" + "<input name='formapgto[]'             value='" + formapgto + "'     type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
-            linha += "<td>" + "<input name='condpgto[]'              value='" + condpgto + "'      type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
-            linha += "<td>" + "<input name='nroparc[]'               value=     '1|1'              type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
-            linha += "<td>" + "<input name='data_quitacao[]'         value=     ''                 type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
-            linha += "<td>" + "<input name='nro_pedido[]'            value='" + nropedido + "'     type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
-            linha += "<td>" + "<input name='conta_corrente[]'        value='" + contacorrente + "' type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
-            linha += "<td>" + "<input name='adm_cartao[]'            value='" + admcartao +"'      type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
-            linha += "<td>" + "<input name='bandeira[]'              value='" + bandeira +"'       type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
-            linha += "<td>" + "<input name='favorecido[]'            value='" + favorecido +"'     type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
-            linha += "<td>" + "<input name='status[]'                value=     'A Quitar'         type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
-            linha += "<td>" + "<input name='quem_lancou[]'           value='" + quemlancou +"'     type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
-            linha += "<td>" + "<input name='data_entrada_sistema[]'  value='" +dtentrada+"'        type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
-            linha += "<td>" + "<input name='nro_nf[]'                value='" + nronf +"'          type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
-            linha += "<td>" + "<input name='data_emissao_nf[]'       value='" + dataemissaonf +"'  type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
-            linha += "<td>" + "<input name='observacao[]'            value='" + observacao +"'     type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
+            linha += "<td>" + "<input name='linha"+randomico+"[forma_pgto]'             value='" + formapgto + "'     type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
+            linha += "<td>" + "<input name='linha"+randomico+"[cond_pgto]'              value='" + condpgto + "'      type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
+            linha += "<td>" + "<input name='linha"+randomico+"[nro_parcela]'               value=     '1|1'              type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
+            linha += "<td>" + "<input name='linha"+randomico+"[data_quitacao]'         value=     ''                 type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
+            linha += "<td>" + "<input name='linha"+randomico+"[nro_pedido]'            value='" + nropedido + "'     type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
+            linha += "<td>" + "<input name='linha"+randomico+"[conta_corrente]'        value='" + contacorrente + "' type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
+            linha += "<td>" + "<input name='linha"+randomico+"[adm_cartao]'            value='" + admcartao +"'      type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
+            linha += "<td>" + "<input name='linha"+randomico+"[bandeira]'              value='" + bandeira +"'       type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
+            linha += "<td>" + "<input name='linha"+randomico+"[favorecido]'            value='" + favorecido +"'     type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
+            linha += "<td>" + "<input name='linha"+randomico+"[status]'                value=     'A Quitar'         type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
+            linha += "<td>" + "<input name='linha"+randomico+"[quem_lancou]'           value='" + quemlancou +"'     type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
+            linha += "<td>" + "<input name='linha"+randomico+"[data_entrada_sistema]'  value='" +dtentrada+"'        type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
+            linha += "<td>" + "<input name='linha"+randomico+"[nro_nf]'                value='" + nronf +"'          type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
+            linha += "<td>" + "<input name='linha"+randomico+"[data_emissao_nf]'       value='" + dataemissaonf +"'  type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
+            linha += "<td>" + "<input name='linha"+randomico+"[observacao]'            value='" + observacao +"'     type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
             linha += "</tr>";
 
             arraylinhas.push(linha);
@@ -1348,6 +1347,7 @@ $(function () {
         
             console.log('lancamento parcelado');
             var dtentrada = dataAtual();
+            
 
             var arraylinhas = new Array();
             var linha;
@@ -1359,37 +1359,38 @@ $(function () {
 
             for (var pr = 0; pr < nroparcela; pr++) {
                 dtvenc = proximoDiaUtilParcela(dtoperacao, pr, diavenc);
+                randomico = Math.random();
                 console.log(dtvenc);
 
                 var linha = "<tr>";
-                linha += "<td>" + "<div class='btn btn-sm btn-secondary mr-1' onclick='excluir(this)' data-ident=" + proxid + " '><i class='fas fa-trash-alt'></i></div>" 
-                                + "<div class='btn btn-primary btn-sm ml-1' onclick='editar(this)' data-ident=" + proxid + " '><i class='fas fa-edit'></i></div>" 
+                linha += "<td>" + "<div class='btn btn-sm btn-secondary mr-1' onclick='excluir(this)' data-ident=" + randomico + " '><i class='fas fa-trash-alt'></i></div>" 
+                                + "<div class='btn btn-primary btn-sm ml-1' onclick='editar(this)' data-ident=" + randomico + " '><i class='fas fa-edit'></i></div>" 
                       + "</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='despesa_receita[]'  value='" + movimentacao + "' />"               +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='conta_analitica[]'  value='" + analitica + "' />"                  +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='detalhe[]'          value='" + detalhe + "' />"                    +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='data_operacao[]'    value='" + dtoperacao + "' />"                 +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[despesa_receita]'  value='" + movimentacao + "' />"               +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[conta_analitica]'  value='" + analitica + "' />"                  +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[detalhe]'          value='" + detalhe + "' />"                    +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[data_operacao]'    value='" + dtoperacao + "' />"                 +"</td>";
                 linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled data-mascara_validacao='monetario' data-podeZero='false' required maxlenght='20' "
-                                + "name='valortotal[]' value='" + valtot + "' data-anterior='"+ valtot +"' />"
+                                + "name='linha"+randomico+"[valor_total]' value='" + valtot + "' data-anterior='"+ valtot +"' />"
                       + "</td>";
                 linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled data-mascara_validacao='data' maxlenght='10' required "
-                                + "name='data_vencimento[]' value ='" + dtvenc + "' data-anterior='"+ dtvenc +"' data-dtop='" + dtoperacao + "' />"   
+                                + "name='linha"+randomico+"[data_vencimento]' value ='" + dtvenc + "' data-anterior='"+ dtvenc +"' data-dtop='" + dtoperacao + "' />"   
                       + "</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='formapgto[]'        value='" + formapgto + "' />"                  +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='condpgto[]'         value='" + condpgto + "' />"                   +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='nroparc[]'          value='" + (pr + 1) + "|" + nroparcela + "' />"   +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='data_quitacao[]'    value=     ''    />"                           +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='nro_pedido[]'       value='" + nropedido + "' />"                  +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='conta_corrente[]'   value='" + contacorrente + "'/>"               +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='adm_cartao[]'       value='" + admcartao +"' />"                   +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='bandeira[]'         value='" + bandeira +"' />"                    +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='favorecido[]'       value='" + favorecido +"' />"                  +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='status[]'           value=     'A Quitar' />"                      +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='quem_lancou[]'      value='" + quemlancou +"' />"                  +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='data_entrada_sistema[]' value='" +dtentrada+"'/>"                +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='nro_nf[]'           value='" + nronf +"'/>"                        +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='data_emissao_nf[]'  value='" + dataemissaonf +"'/>"                +"</td>";
-                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='observacao[]'       value='" + observacao +"' />"                  +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[forma_pgto]'        value='" + formapgto + "' />"                  +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[cond_pgto]'         value='" + condpgto + "' />"                   +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[nro_parcela]'          value='" + (pr + 1) + "|" + nroparcela + "' />"   +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[data_quitacao]'    value=     ''    />"                           +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[nro_pedido]'       value='" + nropedido + "' />"                  +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[conta_corrente]'   value='" + contacorrente + "'/>"               +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[adm_cartao]'       value='" + admcartao +"' />"                   +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[bandeira]'         value='" + bandeira +"' />"                    +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[favorecido]'       value='" + favorecido +"' />"                  +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[status]'           value=     'A Quitar' />"                      +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[quem_lancou]'      value='" + quemlancou +"' />"                  +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[data_entrada_sistema]' value='" +dtentrada+"'/>"                +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[nro_nf]'           value='" + nronf +"'/>"                        +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[data_emissao_nf]'  value='" + dataemissaonf +"'/>"                +"</td>";
+                linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[observacao]'       value='" + observacao +"' />"                  +"</td>";
                 linha += "</tr>";
 
                 arraylinhas.push(linha);

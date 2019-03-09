@@ -27,20 +27,22 @@ class Fluxocaixa extends model {
     }
 
     public function adicionar($request) {
-        echo 'cheguei';
-        print_r($request);
-        exit;
-        
+        //echo 'cheguei';
+        // print_r($request); exit;
+
         $ipcliente = $this->permissoes->pegaIPcliente();
-        $request["alteracoes"] = ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
-        
-        $request["situacao"] = "ativo";
 
-        $keys = implode(",", array_keys($request));
+        $sql = '';
+        foreach ($request as $linha => $arrayRegistro) {
 
-        $values = "'" . implode("','", array_values($this->shared->formataDadosParaBD($request))) . "'";
-
-        $sql = "INSERT INTO " . $this->table . " (" . $keys . ") VALUES (" . $values . ")";
+            $arrayRegistro["alteracoes"] = ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
+            $arrayRegistro["situacao"] = "ativo";
+            
+            $keys = implode(",", array_keys($arrayRegistro));
+            $values = "'" . implode("','", array_values($this->shared->formataDadosParaBD($arrayRegistro))) . "'";
+            
+            $sql .= "INSERT INTO " . $this->table . " (" . $keys . ") VALUES (" . $values . ");";               
+        }
         
         self::db()->query($sql);
 

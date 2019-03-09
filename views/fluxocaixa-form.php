@@ -7,7 +7,19 @@
 <!-- Chama o arquivo específico do módulo, caso não exista,  -->
 <!-- Este javaScript serve para fazer verificações inerentes à cada módulo, por exemplo o radio de Clientes -->
 <script src="<?php echo BASE_URL?>/assets/js/<?php echo $modulo?>.js" type="text/javascript"></script>
+<?php if (isset($_SESSION["returnMessage"])): ?>
 
+    <div class="alert <?php echo $_SESSION["returnMessage"]["class"] ?> alert-dismissible">
+    
+        <?php echo $_SESSION["returnMessage"]["mensagem"] ?>
+    
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+    </div>
+
+<?php endif?>
 <header class="d-lg-flex align-items-center my-5">
     <h1 class="display-4 m-0 text-capitalize font-weight-bold"><?php echo $viewInfo["title"]." ".ucfirst($labelTabela["labelForm"]); ?></h1>
 </header>
