@@ -1,6 +1,6 @@
 $(function () {
 
-    let $taxa_debito = $('[name=txdebito]'),
+    var $taxa_debito = $('[name=txdebito]'),
         $taxa_credito = $('[name=txcredcom]'),
         $bandeira = $('[name=band]'),
         $dias_debito = $('[name=diasdebito]'),
@@ -24,7 +24,7 @@ $(function () {
     $('#form-bandeiras .form-control')
         .on('change', function () {
         
-            let $this = $(this),
+            var $this = $(this),
                 $form = $this.parents('form'),
                 $submit = $form.find('[type="submit"]');
 
@@ -52,7 +52,7 @@ $(function () {
 
             bandeirasAceitas.forEach(function (bandeiraAceita) {
                 
-                let idBandeira = bandeiraAceita.nome,
+                var idBandeira = bandeiraAceita.nome,
                     $bandeira = listaBandeiras.filter(function (listaBandeira) {
                         return listaBandeira.id == idBandeira;
                     }),
@@ -115,7 +115,7 @@ $(function () {
         })
         .on('DOMNodeInserted DOMNodeRemoved change', '#main-form, #inclusoes, #main-form input', function () {
             
-            let $inputs = $('#main-form input'),
+            var $inputs = $('#main-form input'),
                 $label = $('[for="form-send"]'),
                 $submit = $('#form-send'),
                 temAlteracao = false;
@@ -207,7 +207,7 @@ $(function () {
         
         $('.taxas-antecipacao').each(function(index, el) {
 
-            let valueTransform = $(el).val().replace('%', '');
+            var valueTransform = $(el).val().replace('%', '');
 
             antecipacoes.push({
                 index: index + 1,
@@ -217,7 +217,7 @@ $(function () {
         
         $('.taxas-credito').each(function(index, el) {
 
-            let valueTransform = $(el).val().replace('%', '');
+            var valueTransform = $(el).val().replace('%', '');
 
             creditos.push({
                 index: index + 1,
@@ -225,7 +225,7 @@ $(function () {
             });
         });
 
-        let id_bandeira = $bandeira.val(),
+        var id_bandeira = $bandeira.val(),
             bandeira = $('[name=band] option:selected').text(),
             parcelas = $('[name="nroparc"] option:selected').text(),
             taxa_debito_clean = $taxa_debito.val().replace('%', ''),
@@ -250,7 +250,7 @@ $(function () {
 
     function Popula(adicionando, paramIdBandeira, bandeira, taxa_debito, dias_debito, taxa_credito, dias_credito, dias_antecipacao, parcelas, antecipacoes, creditos, bandeiraAceitaId) {
 
-        let taxa_debitoRpl = taxa_credito ? taxa_credito.replace(',', '.') : '',
+        var taxa_debitoRpl = taxa_credito ? taxa_credito.replace(',', '.') : '',
             taxa_creditoRpl = taxa_credito ? taxa_credito.replace(',', '.') : '',
             infos = taxa_debitoRpl + '-' + dias_debito + '-' + taxa_creditoRpl + '-' + dias_credito + '-' + dias_antecipacao + '-' + parcelas,
             txantecipacao = [],
@@ -338,7 +338,7 @@ $(function () {
 
     function SetInput(adicionando, paramIdBandeira, bandeira, infos, txantecipacao, txcredito, bandeiraAceitaId) {
 
-        let indexEditando = $formBandeiras.attr('data-editando'),
+        var indexEditando = $formBandeiras.attr('data-editando'),
             arrInfos = infos.split('-'),
             arrTxAntecipacao = txantecipacao.split('-'),
             arrTxCredito = txcredito.split('-'),
@@ -353,10 +353,10 @@ $(function () {
 
             if (!indexEditando) {
 
-                let htmlTaxaParcelas = '';
-                for (let index = 1; index <= 12; index++) {
+                var htmlTaxaParcelas = '';
+                for (var index = 1; index <= 12; index++) {
                     
-                    let $inputTxAntecipacao = $('#itxantecip_' + index),
+                    var $inputTxAntecipacao = $('#itxantecip_' + index),
                         $inputTxCredito = $('#itxcredsemjuros_' + index),
                         currentAntecipacao = arrTxAntecipacao[index - 1],
                         currentCredito = arrTxCredito[index - 1],
@@ -383,7 +383,7 @@ $(function () {
                 }
 
                 // Se estiver criando uma nova bandeira, nao coloca nenhum conteudo no data-anterior
-                let dataAnteriorBandeira = !adicionando && !indexEditando ? bandeira : '',
+                var dataAnteriorBandeira = !adicionando && !indexEditando ? bandeira : '',
                     dataAnteriorTaxaDebitoAlteracoes = !adicionando && !indexEditando ? taxaDebitoAlteracoes : '',
                     dataAnteriorTaxaCreditoAlteracoes = !adicionando && !indexEditando ? taxaCreditoAlteracoes : '',
                     dataAnteriorAlt_dias_credito = !adicionando && !indexEditando ? alt_dias_credito : '',
@@ -459,7 +459,7 @@ $(function () {
                     .val(infos);
 
                 $divHiddensEditando.find('label:not(.labelBandeira) span').each(function (i, el) {
-                    let $elementSpan = $(el),
+                    var $elementSpan = $(el),
                         txtElSpan = $elementSpan.text(),
                         arrTxtElSpan = txtElSpan.split(' -');
 
@@ -496,9 +496,9 @@ $(function () {
                     .find('.alteracao-parcelas')
                     .val(alt_numero_parcelas);
 
-                for (let index = 1; index <= 12; index++) {
+                for (var index = 1; index <= 12; index++) {
                     
-                    let $inputTxAntecipacao = $('#itxantecip_' + index),
+                    var $inputTxAntecipacao = $('#itxantecip_' + index),
                         $inputTxCredito = $('#itxcredsemjuros_' + index);
                     
                     $('#alt_itxantecip_' + index).val($inputTxAntecipacao.val());
@@ -524,7 +524,7 @@ $(function () {
 
     function Edit(_this) {
 
-        let par = $(_this).closest('tr'),
+        var par = $(_this).closest('tr'),
             id_bandeira = par.find('.id_bandeira input').val(),
             index_editando = $(par).attr('data-index'),
             $divHiddensEditando = $('.conteudos-escondidos[data-tr-index="' + index_editando + '"]');
@@ -567,7 +567,7 @@ $(function () {
 
     function Delete(_this) {
 
-        let $par = $(_this).closest('tr'),
+        var $par = $(_this).closest('tr'),
             id_bandeira = $par.find('.id_bandeira input').val(),
             $envolta = $('.conteudos-escondidos').find('label.labelBandeira[for="bandeira' + id_bandeira + '"]').parents('.envolta-inputs-alteracoes'),
             $bandeira = $envolta.find('input.bandeira'),
@@ -587,7 +587,7 @@ $(function () {
     };
 
     function BandeiraSendoUsada(idCompare) {
-        let exist = false;
+        var exist = false;
         $('.conteudos-escondidos:not(.sendo-editado):not(.excluido)').each(function () {
             if ($(this).find('.flag').val() == idCompare) {
                 exist = true;
@@ -598,12 +598,12 @@ $(function () {
     
     $('#historico').on('shown.bs.collapse', function () {
         
-        let $div = $(this).find('.cada-alteracao .card.card-body .card-text > div'),
+        var $div = $(this).find('.cada-alteracao .card.card-body .card-text > div'),
             $span = $div.find('span'),
             $delVazio = $span.siblings('del:contains(∅)');
 
         $div.each(function () {
-            let content = $(this).text();
+            var content = $(this).text();
             if (content.indexOf('EXCLUIDA') != -1) {
                 $(this).find('strong, del').hide();
             }

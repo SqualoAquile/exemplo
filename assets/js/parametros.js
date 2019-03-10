@@ -21,11 +21,11 @@ function Ajax (url, callback, send = {}) {
 
 function Popula ($wrapper, data, campo) {
     
-    let htmlContentSearch = '';
+    var htmlContentSearch = '';
 
     data.forEach(element => {
 
-        let htmlAcoes = '';
+        var htmlAcoes = '';
 
         if (parametrosSemAcoes.indexOf(element[campo]) == -1) {
             htmlAcoes = `

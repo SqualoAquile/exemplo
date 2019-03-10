@@ -1,6 +1,6 @@
 $(function () {
 
-    let dataTable = window.dataTable;
+    var dataTable = window.dataTable;
 
     function addMask (mask, $el) {
 
@@ -53,7 +53,7 @@ $(function () {
 
             $('.filtros-faixa .input-group').each(function () {
 
-                let $this = $(this),
+                var $this = $(this),
                     $select = $this.find('select'),
                     $selected = $select.find(':selected'),
                     type = $selected.attr('data-tipo'),
@@ -92,7 +92,7 @@ $(function () {
 
             $('.filtros-texto .input-group').each(function () {
 
-                let $this = $(this),
+                var $this = $(this),
                     $select = $this.find('select'),
                     selectVal = $select.val(),
                     $input = $this.find('.input-filtro-texto');
@@ -114,7 +114,7 @@ $(function () {
         })
         .on('change', '[name=movimentacao]', function () {
 
-            let $this = $(this),
+            var $this = $(this),
                 $fieldset = $this.parents('fieldset'),
                 $checkeds = $fieldset.find(':checked'),
                 indexColumn = $this.attr('data-index'),
@@ -128,7 +128,7 @@ $(function () {
         })
         .on('change', '#card-body-filtros select', function () {
             
-            let $this = $(this),
+            var $this = $(this),
                 $pai = $this.parents('.input-group');
             
             $pai.find('input[type=text]').val('');
@@ -137,7 +137,7 @@ $(function () {
 
     $('#criar-filtro').click(function () {
 
-        let $filtros = $('.filtros');
+        var $filtros = $('.filtros');
 
         if ($filtros.length < 5) {
             $cloned = $filtros.last().clone();

@@ -15,7 +15,7 @@ function Toast (options) {
 
 $(function () {
 
-    let $menuToggle = $('#menu-toggle'),
+    var $menuToggle = $('#menu-toggle'),
         $wrapper = $('#wrapper');
 
     $(this)
@@ -49,7 +49,7 @@ $(function () {
 
     $('.select-all').click(function () {
 
-        let $this = $(this),
+        var $this = $(this),
             $checkThead = $this.find('[type=checkbox]')
             $table = $this.parents('.table-responsive');
 

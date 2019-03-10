@@ -43,12 +43,12 @@ $(function () {
                 var campos_alterados = '';
                 $('[type=checkbox]').each(function () {
 
-                    let $this = $(this),
+                    var $this = $(this),
                         text_label = $this.siblings('label').text();
 
                     if (!!$this.attr('data-anterior') != $this.prop('checked')) {
                         
-                        let dataAnterior = $this.attr('data-anterior') == 'true' ? 'Tem Permissão' : 'Não Tem Permissão',
+                        var dataAnterior = $this.attr('data-anterior') == 'true' ? 'Tem Permissão' : 'Não Tem Permissão',
                             valorAtual = $this.prop('checked') ? 'Tem Permissão' : 'Não Tem Permissão';
 
                         campos_alterados += '{' + text_label.toUpperCase() + ' de (' + dataAnterior + ') para (' + valorAtual + ')}';
@@ -57,7 +57,7 @@ $(function () {
 
                 $('[type=text]').each(function () {
 
-                    let $this = $(this),
+                    var $this = $(this),
                         text_label = $this.siblings('label').find('span').text(),
                         dataAnterior = $this.attr('data-anterior'),
                         valorAtual = $this.val();
