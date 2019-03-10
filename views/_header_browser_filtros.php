@@ -17,7 +17,7 @@
 <header class="pt-4 pb-5"> <!-- Cabeçalho -->
     <div class="row align-items-center"> <!-- Alinhar as linhas -->
         <div class="col-lg"> <!--Colunas da esquerda -->
-            <h1 class="display-4 text-capitalize text-nowrap font-weight-bold"><?php echo isset($labelTabela["labelBrowser"]) && !empty($labelTabela["labelBrowser"]) ? $labelTabela["labelBrowser"] : $modulo ?></h1>
+            <h1 class="display-4 text-capitalize font-weight-bold"><?php echo isset($labelTabela["labelBrowser"]) && !empty($labelTabela["labelBrowser"]) ? $labelTabela["labelBrowser"] : $modulo ?></h1>
         </div>
         <div class="col-lg"> 
             <div class="input-group mb-3 mb-lg-0">

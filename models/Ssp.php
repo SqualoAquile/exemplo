@@ -150,6 +150,11 @@ class SSP {
 				if (count($dtaux) == 3) {
 					$returnValue = $dtaux[2] . "-" . $dtaux[1] . "-" . $dtaux[0];
 				}
+			} elseif (substr_count($type, "float")) {
+				$returnValue = preg_replace('/\./', '', $value);
+				$returnValue = preg_replace('/\,/', '.', $returnValue);
+			} elseif ($type == "int") {
+				$returnValue = intval($value);
 			}
 		}
 

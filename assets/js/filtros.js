@@ -5,6 +5,7 @@ $(function () {
     function addMask (mask, $el) {
 
         if (mask == 'data') {
+
             $el
                 .mask('00/00/0000')
                 .datepicker({
@@ -20,11 +21,35 @@ $(function () {
                     closeText: 'Pronto',
                     currentText: 'Hoje'
                 });
+
+        } else if (mask == 'monetario') {
+
+            $el
+                .mask('#.##0,00', {
+                    reverse: true
+                });
+                
+        } else if (mask == 'numero') {
+
+            $el
+                .mask('0#');
+
         }
+    }
+
+    function removeMask () {
+
+        $('#card-body-filtros')
+            .find('input[type=text]')
+            .datepicker('destroy')
+            .removeAttr('maxlength id autocomplete')
+            .unmask();
     }
 
     $(this)
         .on('change', '.filtros-faixa .input-filtro-faixa', function () {
+
+            removeMask();
 
             $('.filtros-faixa .input-group').each(function () {
 
@@ -43,12 +68,22 @@ $(function () {
                 addMask(mascara, $max);
 
                 if (selectVal && (min || max)) {
+
+                    console.log(selectVal)
                     
                     dataTable
-                        .column(selectVal)
+                        .columns(selectVal)
                         .search(type + ':' + min + '<>' + max)
                         .draw();
 
+                }
+                
+                if (!min && !max) {
+                    console.log('no min no max')
+                    dataTable
+                        .columns(selectVal)
+                        .search('')
+                        .draw();
                 }
             });
 
@@ -69,6 +104,8 @@ $(function () {
             });
         })
         .on('reset', '#card-body-filtros', function () {
+            
+            removeMask();
 
             dataTable
                 .columns()
@@ -88,15 +125,30 @@ $(function () {
                 .columns(indexColumn)
                 .search(search)
                 .draw();
+        })
+        .on('change', '#card-body-filtros select', function () {
+            
+            let $this = $(this),
+                $pai = $this.parents('.input-group');
+            
+            $pai.find('input[type=text]').val('');
+
         });
 
     $('#criar-filtro').click(function () {
 
-        let $cloned = $('.filtros').last();
-            $cloned = $cloned.clone();
+        let $filtros = $('.filtros');
+
+        if ($filtros.length < 5) {
+            $cloned = $filtros.last().clone();
+            $cloned.find('input').val('');
+            $cloned.appendTo('#card-body-filtros');
+        }
         
-        $cloned.find('input').val('');
-        $cloned.appendTo('#card-body-filtros');
+        if ($filtros.length >= 4) {
+            $(this).hide();
+        }
+            
     });
 
 });
