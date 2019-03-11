@@ -83,7 +83,7 @@ $(function () {
                     
                 $inputs.each(function () {
     
-                    let $input = $(this),
+                    var $input = $(this),
                         $label = $input.siblings('label').find('span');
     
                     objSend[$input.attr('name')] = $input.val();
@@ -122,7 +122,7 @@ $(function () {
         
                                     $inputs.each(function () {
                                         
-                                        let $input = $(this);
+                                        var $input = $(this);
         
                                         $input
                                             .removeClass('is-valid is-invalid')
@@ -157,7 +157,7 @@ $(function () {
     
     $('[name="custo"], [name="preco_venda"]').on('blur', function(){
 
-        let $pai = $(this).parents('form'),
+        var $pai = $(this).parents('form'),
             $custo = $pai.find('[name="custo"]'),
             $preco = $pai.find('[name="preco_venda"]');
 
