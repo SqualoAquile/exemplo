@@ -482,7 +482,7 @@ $(function () {
     //
     $('[data-mascara_validacao="data"]')
         .mask('00/00/0000')
-        .datepicker(datepickerOptions)
+        .datepicker()
         .change(function () {
 
             var $this = $(this),

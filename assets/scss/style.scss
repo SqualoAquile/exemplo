@@ -26,4 +26,7 @@ $hamburger-layer-color: $primary;
 
 body {
     padding-top: $navbar-height;
+    .cursor-pointer {
+        cursor: pointer;
+    }
 }

@@ -1,11 +1,9 @@
-var datepickerOptions = {
-    uiLibrary: 'bootstrap4',
-    language: 'pt-BR',
-    autoclose: true,
-    todayHighlight: true,
-    todayBtn: true,
-    clearBtn: true
-};
+$.fn.datepicker.defaults.uiLibrary = 'bootstrap4';
+$.fn.datepicker.defaults.language = 'pt-BR';
+$.fn.datepicker.defaults.autoclose = true;
+$.fn.datepicker.defaults.todayHighlight = true;
+$.fn.datepicker.defaults.todayBtn = true;
+$.fn.datepicker.defaults.clearBtn = true;
 
 function Toast (options) {
     $('body').append(`
@@ -55,16 +53,4 @@ $(function () {
             $btn.find('i.fas').removeClass('fa-minus-circle').addClass('fa-plus-circle');
         }
     });
-
-    $('.select-all').click(function () {
-
-        var $this = $(this),
-            $checkThead = $this.find('[type=checkbox]')
-            $table = $this.parents('.table-responsive');
-
-        $checkThead.prop('checked', !$checkThead.prop('checked'))
-        $table.find('[type=checkbox]').prop('checked', !$checkThead.prop('checked'));
-    });
-
-    $('.select-all').off('click.DT');
 });
