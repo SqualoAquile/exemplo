@@ -121,6 +121,10 @@ $(function () {
             scrollCollapse: true,
             searchHighlight: true,
             conditionalPaging: true,
+            aLengthMenu: [
+                [25, 50, 100, 200, -1],
+                [25, 50, 100, 200, "Mostrar Todos"]
+            ],
             order: [0, 'desc'],
             ajax: {
                 url: baselink + '/ajax/dataTableAjax',
@@ -149,7 +153,7 @@ $(function () {
                     'sLast': 'Último'
                 }
             },
-            dom: '<l><t><p><r><i>'
+            dom: '<"limit-header-browser"l><t><p><r><i>'
         }
     );
 
@@ -478,19 +482,7 @@ $(function () {
     //
     $('[data-mascara_validacao="data"]')
         .mask('00/00/0000')
-        .datepicker({
-            dateFormat: 'dd/mm/yy',
-            dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
-            dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
-            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-            showButtonPanel: true,
-            changeMonth: true,
-            changeYear: true,
-            closeText: 'Pronto',
-            currentText: 'Hoje'
-        })
+        .datepicker(datepickerOptions)
         .change(function () {
 
             var $this = $(this),

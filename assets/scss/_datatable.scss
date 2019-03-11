@@ -60,4 +60,16 @@
             }
         }
     }
+    .limit-header-browser {
+        label {
+            @extend .d-flex;
+            @extend .align-items-center;
+            @extend .mb-3;
+            select {
+                @extend .form-control;
+                @extend .w-auto;
+                @extend .mr-2;
+            }
+        }
+    }
 }

@@ -2,54 +2,64 @@ $(function () {
 
     var dataTable = window.dataTable;
 
-    function addMask (mask, $el) {
+    function addMask (mask, $els) {
 
-        if (mask == 'data') {
+        $els.forEach(function (el) {
 
-            $el
-                .mask('00/00/0000')
-                .datepicker({
-                    dateFormat: 'dd/mm/yy',
-                    dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
-                    dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
-                    dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-                    monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-                    monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-                    showButtonPanel: true,
-                    changeMonth: true,
-                    changeYear: true,
-                    closeText: 'Pronto',
-                    currentText: 'Hoje'
-                });
-
-        } else if (mask == 'monetario') {
-
-            $el
-                .mask('#.##0,00', {
-                    reverse: true
-                });
-                
-        } else if (mask == 'numero') {
-
-            $el
-                .mask('0#');
-
-        }
+            if (mask == 'data') {
+    
+                $(el)
+                    .mask('00/00/0000')
+                    .datepicker(datepickerOptions);
+    
+            } else if (mask == 'monetario') {
+    
+                $(el)
+                    .mask('#.##0,00', {
+                        reverse: true
+                    });
+                    
+            } else if (mask == 'numero') {
+    
+                $(el)
+                    .mask('0#');
+    
+            }
+            
+        });
     }
 
-    function removeMask () {
+    function removeMask ($removeMask) {
 
-        $('#card-body-filtros')
-            .find('input[type=text]')
-            .datepicker('destroy')
-            .removeAttr('maxlength id autocomplete')
-            .unmask();
+        $elements = $removeMask ? $removeMask : $('#card-body-filtros input[type=text]');
+        
+        $elements.each(function () {
+
+            $(this)
+                .datepicker('destroy')
+                .removeAttr('maxlength')
+                .unmask();
+
+        });
+
     }
 
     $(this)
+        .on('change', '#card-body-filtros select', function () {
+
+            // Change dos Selects
+            
+            var $this = $(this),
+                $pai = $this.parents('.input-group'),
+                $inputs = $pai.find('input[type=text]');
+            
+            $inputs.val('');
+            removeMask($inputs);
+
+        })
         .on('change', '.filtros-faixa .input-filtro-faixa', function () {
 
-            removeMask();
+            // Filtros Faixa
 
             $('.filtros-faixa .input-group').each(function () {
 
@@ -62,48 +72,66 @@ $(function () {
                     min = $min.val(),
                     $max = $this.find('.max'),
                     max = $max.val(),
-                    mascara = $selected.attr('data-mascara');
+                    mascara = $selected.attr('data-mascara'),
+                    stringSearch = '';
 
-                addMask(mascara, $min);
-                addMask(mascara, $max);
+                addMask(mascara, [$min, $max]);
 
-                if (selectVal && (min || max)) {
+                if (selectVal) {
 
-                    console.log(selectVal)
-                    
+                    if (min || max) {
+                        stringSearch = type + ':' + min + '<>' + max;
+                    } else {
+                        selectVal = '';
+                    }
+
                     dataTable
                         .columns(selectVal)
-                        .search(type + ':' + min + '<>' + max)
-                        .draw();
-
-                }
-                
-                if (!min && !max) {
-                    console.log('no min no max')
-                    dataTable
-                        .columns(selectVal)
-                        .search('')
+                        .search(stringSearch)
                         .draw();
                 }
             });
-
         })
         .on('change', '.filtros-texto .input-filtro-texto', function () {
+
+            // Filtros Texto
 
             $('.filtros-texto .input-group').each(function () {
 
                 var $this = $(this),
                     $select = $this.find('select'),
+                    $input = $this.find('.texto'),
+                    inputVal = $input.val(),
                     selectVal = $select.val(),
-                    $input = $this.find('.input-filtro-texto');
+                    value = inputVal ? inputVal : '';
 
-                dataTable
-                    .columns(selectVal)
-                    .search($input.val())
-                    .draw();
+                if (selectVal) {
+
+                    if (!inputVal) {
+                        
+                        var arrSearched = dataTable.columns('').search();
+                        
+                        arrSearched
+                            .each(function (index, value) {
+                                if (arrSearched[value]) {
+                                    dataTable
+                                        .columns(value)
+                                        .search('')
+                                        .draw();
+                                }
+                            });
+                    }
+
+                    dataTable
+                        .columns(selectVal)
+                        .search(value)
+                        .draw();
+                }
             });
         })
         .on('reset', '#card-body-filtros', function () {
+
+            // Limpar Filtros
             
             removeMask();
 
@@ -113,6 +141,8 @@ $(function () {
                 .draw();
         })
         .on('change', '[name=movimentacao]', function () {
+
+            // Checkbox
 
             var $this = $(this),
                 $fieldset = $this.parents('fieldset'),
@@ -125,14 +155,6 @@ $(function () {
                 .columns(indexColumn)
                 .search(search)
                 .draw();
-        })
-        .on('change', '#card-body-filtros select', function () {
-            
-            var $this = $(this),
-                $pai = $this.parents('.input-group');
-            
-            $pai.find('input[type=text]').val('');
-
         });
 
     $('#criar-filtro').click(function () {

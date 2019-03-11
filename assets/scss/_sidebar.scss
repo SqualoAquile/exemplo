@@ -17,8 +17,8 @@ $width-closed: calc(30px + 2rem);
 		#sidebar-wrapper {
 			@extend .shadow-sm;
 			.sidebar-nav {
-				.nav-item {
-					.nav-link {
+				> .nav-item {
+					> .nav-link {
 						text-align: center;
 						> span,
 						&:after {

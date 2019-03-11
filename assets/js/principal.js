@@ -1,3 +1,12 @@
+var datepickerOptions = {
+    uiLibrary: 'bootstrap4',
+    language: 'pt-BR',
+    autoclose: true,
+    todayHighlight: true,
+    todayBtn: true,
+    clearBtn: true
+};
+
 function Toast (options) {
     $('body').append(`
         <div class="position-fixed my-toast m-3 shadow-sm alert ` + options.class + ` alert-dismissible fade show" role="alert">
@@ -53,8 +62,9 @@ $(function () {
             $checkThead = $this.find('[type=checkbox]')
             $table = $this.parents('.table-responsive');
 
-        console.log($table)
-
-        $table.find('tbody [type=checkbox]').prop('checked', true);
+        $checkThead.prop('checked', !$checkThead.prop('checked'))
+        $table.find('[type=checkbox]').prop('checked', !$checkThead.prop('checked'));
     });
+
+    $('.select-all').off('click.DT');
 });

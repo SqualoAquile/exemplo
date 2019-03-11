@@ -30,14 +30,17 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-1">
-            <button type="button" class="btn btn-warning btn-block" data-toggle="collapse" data-target="#collapseFiltros" aria-expanded="false" aria-controls="collapseFiltros">
-                <i class="fas fa-filter"></i>
+        <div class="col-lg flex-grow-0">
+            <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#collapseFiltros" aria-expanded="false" aria-controls="collapseFiltros">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-filter mr-2"></i>
+                    <span>Filtros</span>
+                </div>
             </button>
         </div>
     </div>
     <div class="collapse" id="collapseFiltros">
-        <div class="card mt-5 bg-light">
+        <div class="card mt-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="m-0">Filtros</h3>
                 <div>
@@ -50,6 +53,8 @@
                 <?php if ($modulo == "fluxocaixa"): ?>
 
                     <?php
+                        // O index passado para o valor dos selects, refere-se ao index REAL da coluna no cabeçalho do dataTbale
+                        // Quando for o modulo fluxo de caixa, esse index real começa em 2 pois a coluna de index real 1 é os checkbox's
                         $indexTiltroTexto = 2;
                         $indexFiltroFaixa = 2;
                     ?>
@@ -91,7 +96,7 @@
                     </div>
                     <div class="filtros-texto col">
                         <div class="input-group">
-                            <select class="custom-select">
+                            <select class="custom-select input-filtro-texto">
                                 <option selected disabled>Filtrar por...</option>
                                 <?php for($m = 1; $m < count($colunas); $m++): ?>
                                     <?php if ($colunas[$m]["Comment"]["ver"] == "true"): ?>
@@ -104,7 +109,7 @@
                                     <?php endif ?>
                                 <?php endfor ?>
                             </select>
-                            <input type="text" class="form-control input-filtro-texto">
+                            <input type="text" class="form-control input-filtro-texto texto">
                         </div>
                     </div>
                 </div>

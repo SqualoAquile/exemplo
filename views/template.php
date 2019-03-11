@@ -194,15 +194,15 @@
       <meta name="msapplication-TileColor" content="#212936">
       <meta name="msapplication-TileImage" content="<?php echo BASE_URL?>/assets/images/icons/ms-icon-144x144.png">
       <meta name="theme-color" content="#212936">
-
-      <link href="<?php echo BASE_URL?>/assets/css/vendor/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
       
       <link href="<?php echo BASE_URL?>/assets/css/style.css" rel="stylesheet" type="text/css"/>
+      <link href="<?php echo BASE_URL?>/assets/css/vendor/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css"/>
 
       <script src="<?php echo BASE_URL?>/assets/js/vendor/jquery-3.3.1.min.js" type="text/javascript"></script>
       <script src="<?php echo BASE_URL?>/assets/js/vendor/jquery.mask.js" type="text/javascript"></script>
       <script src="<?php echo BASE_URL?>/assets/js/vendor/jquery.dataTables.min.js" type="text/javascript"></script>
-      <script src="<?php echo BASE_URL?>/assets/js/vendor/jquery-ui.min.js" type="text/javascript"></script>
+      <script src="<?php echo BASE_URL?>/assets/js/vendor/bootstrap-datepicker.min.js" type="text/javascript"></script>
+      <script src="<?php echo BASE_URL?>/assets/js/vendor/bootstrap-datepicker.pt-BR.min.js" type="text/javascript"></script>
       <script src="<?php echo BASE_URL?>/assets/js/vendor/popper.min.js" type="text/javascript"></script>
       <script src="<?php echo BASE_URL?>/assets/js/vendor/bootstrap.min.js" type="text/javascript"></script>
       <script src="<?php echo BASE_URL?>/assets/js/vendor/jquery.highlight.js" type="text/javascript"></script>

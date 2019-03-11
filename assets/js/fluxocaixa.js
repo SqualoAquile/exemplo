@@ -1121,19 +1121,7 @@ $(function () {
 
         $('[data-mascara_validacao="data"]')
         .mask('00/00/0000')
-        .datepicker({
-            dateFormat: 'dd/mm/yy',
-            dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
-            dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
-            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-            showButtonPanel: true,
-            changeMonth: true,
-            changeYear: true,
-            closeText: 'Pronto',
-            currentText: 'Hoje'
-        })
+        .datepicker(datepickerOptions)
         .on('change blur', function () {
 
             var $this = $(this),
