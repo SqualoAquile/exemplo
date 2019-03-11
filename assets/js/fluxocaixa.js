@@ -1,16 +1,13 @@
+// import { exists } from "fs";
+
 $(function () {
     //só para teste de programação
     $('#Receita').click();
-    $("#data_operacao").val('06/03/2019');
-    $("#valor_total").val('1.000,00');
-    $('#nro_pedido').val('123');
-    $('#nro_nf').val('45/2019');
-    $('#data_emissao_nf').val('05/03/2019');
-    $('#conta_analitica').val('Venda');
-    $('#conta_corrente').val('Caixa Da Empresa');
-    $('#detalhe').val('Material de escritório');
-    $('#quem_lancou').val('Funcionário 1');
-    $('#favorecido').val('Identifixe envelopamentos');
+    $('#conta_analitica').empty()
+                .val('')
+                .append('<option value="" selected  >Selecione</option>')
+                .append('<option value="Genérica"   >Genérica</option>')
+                .append('<option value="Venda"      >Venda</option>');
 
     calcularesumo();
 
@@ -44,7 +41,8 @@ $(function () {
 
     $("#cond_pgto").attr("disabled", "disabled");
 
-    // $("#tabela_lancamento").hide();
+    $("#tabela_lancamento").hide();
+    
     $("#btn_incluir").click(function(){
         confirmaPreenchimento();
     });    
@@ -221,31 +219,29 @@ $(function () {
         $('#cond_pgto')     .siblings('.invalid-feedback').remove();
 
         $("#adm_cartao")    .val("").attr("disabled", "disabled").removeClass('is-valid is-invalid');
-        $("#adm_cartao")    .parent().parent().show();
+        $("#adm_cartao")    .parent().parent().hide();
         $("#adm_cartao")    .siblings('.invalid-feedback').remove();
 
         $("#bandeira")      .val("").attr("disabled", "disabled").removeClass('is-valid is-invalid');
-        $("#bandeira")      .parent().parent().show();
+        $("#bandeira")      .parent().parent().hide();
         $("#bandeira")      .siblings('.invalid-feedback').remove();
 
         $("#nro_parcela")   .val("").attr("disabled", "disabled").removeClass('is-valid is-invalid');
-        $("#nro_parcela")   .parent().parent().show();
+        $("#nro_parcela")   .parent().parent().hide();
         $("#nro_parcela")   .siblings('.invalid-feedback').remove();
 
         $("#dia_venc")      .val("").attr("disabled", "disabled").removeClass('is-valid is-invalid');
-        $("#dia_venc")      .parent().parent().show();
+        $("#dia_venc")      .parent().parent().hide();
         $("#dia_venc")      .siblings('.invalid-feedback').remove();
 
         $("#taxa-cartao")   .val("").attr("disabled", "disabled").removeClass('is-valid is-invalid');
-        $("#taxa-cartao")   .parent().parent().show();
+        $("#taxa-cartao")   .parent().parent().hide();
         $("#taxa-cartao")   .siblings('.invalid-feedback').remove();
 
         $("#custo_financ")  .val("").attr("disabled", "disabled").removeClass('is-valid is-invalid');
-        $("#custo_financ")  .parent().parent().show();
+        $("#custo_financ")  .parent().parent().hide();
         $("#custo_financ")  .siblings('.invalid-feedback').remove();
         
-        // $this[0].setCustomValidity('invalid'); // invalido
-        // $this.setCustomValidity('');
     }
 
     $('#cond_pgto').change(function () {
@@ -264,7 +260,8 @@ $(function () {
         if (dtop.val() == "" | valortot.val() == "") {
             formapgto.val("").blur();
             limpaCondPgto();
-            alert("Preencha a data e/ou o valor do lançamento.");
+            valortot.val() == '' ? valortot.focus() : dtop.focus() ;
+            //  alert("Preencha a data e/ou o valor do lançamento.");
             return;
         }
 
@@ -281,13 +278,13 @@ $(function () {
             case ('DOC'):
             case ('Transferência'):
 
-                admcartao.val("").attr("disabled", "disabled").parent().parent().show();
-                bandeira.val("").attr("disabled", "disabled").parent().parent().show();
-                txcobrada.val("0").attr("disabled", "disabled").parent().parent().show();
+                admcartao.val("").attr("disabled", "disabled").parent().parent().hide();
+                bandeira.val("").attr("disabled", "disabled").parent().parent().hide();
+                txcobrada.val("0").attr("disabled", "disabled").parent().parent().hide();
                 
                 if ($("#Despesa").is(":checked")) {
                     if ( formapgto.find(":selected").val() == "Dinheiro" | formapgto.find(":selected").val() == "Cheque" | formapgto.find(":selected").val() == "Boleto" ) {
-                            custofin.val(0).attr('disabled','disabled').parent().parent().show();
+                            custofin.val(0).attr('disabled','disabled').parent().parent().hide();
                     } else {
                             custofin.val("").removeAttr("disabled").parent().parent().show();
                     }
@@ -295,19 +292,19 @@ $(function () {
                     if (formapgto.find(":selected").val() == "Boleto") {
                         custofin.val("").removeAttr("disabled").parent().parent().show();
                     } else {
-                        custofin.val(0).attr('disabled','disabled').parent().parent().show();
+                        custofin.val(0).attr('disabled','disabled').parent().parent().hide();
                     }
                 }
 
 
                 if (condpgto.find(":selected").val() == "À Vista") {
                     
-                    nroparcela.val("").attr('disabled','disabled').parent().parent().show();
+                    nroparcela.val("").attr('disabled','disabled').parent().parent().hide();
 
                     var diaaux = dtop.val();
                     diaaux = diaaux.split("/");
                     var dia = parseInt(diaaux[0]);
-                    diavenc.val(dia).attr('disabled','disabled').parent().parent().show();
+                    diavenc.val(dia).attr('disabled','disabled').parent().parent().hide();
                     
                     
                 } else {
@@ -319,12 +316,12 @@ $(function () {
             case ('Cartão Débito'):
             case ('Cartão Crédito'):
                 if (condpgto.find(":selected").val() == "À Vista") {
-                    nroparcela.val("").attr("disabled", "disabled").parent().parent().show();
+                    nroparcela.val("").attr("disabled", "disabled").parent().parent().hide();
 
                     var diaaux = dtop.val();
                     diaaux = diaaux.split("/");
                     var dia = parseInt(diaaux[0]);
-                    diavenc.val(dia).attr('disabled','disabled').parent().parent().show();
+                    diavenc.val(dia).attr('disabled','disabled').parent().parent().hide();
 
                 } else {
 
@@ -333,30 +330,30 @@ $(function () {
 
                 }
 
-                txcobrada.val("0").attr("disabled", "disabled").parent().parent().show();
-                custofin.val("0").attr("disabled", "disabled").parent().parent().show();
+                txcobrada.val("0").attr("disabled", "disabled").parent().parent().hide();
+                custofin.val("0").attr("disabled", "disabled").parent().parent().hide();
 
                 if ($("#Despesa").is(":checked")) {
-                    admcartao.val("").attr("disabled", "disabled").parent().parent().show();
-                    bandeira.val("").attr("disabled", "disabled").parent().parent().show();
+                    admcartao.val("").attr("disabled", "disabled").parent().parent().hide();
+                    bandeira.val("").attr("disabled", "disabled").parent().parent().hide();
                 } else {
                     admcartao.val("").removeAttr("disabled").parent().parent().show();
                     bandeira.val("").removeAttr("disabled").show();
                 }
                 break;
             default:
-                    admcartao.val("").attr("disabled", "disabled").parent().parent().show();
-                    bandeira.val("").attr("disabled", "disabled").parent().parent().show();
-                    txcobrada.val("0").attr("disabled", "disabled").parent().parent().show();
+                    admcartao.val("").attr("disabled", "disabled").parent().parent().hide();
+                    bandeira.val("").attr("disabled", "disabled").parent().parent().hide();
+                    txcobrada.val("0").attr("disabled", "disabled").parent().parent().hide();
                     custofin.val("").removeAttr("disabled").parent().parent().show();
 
                     if (condpgto.find(":selected").val() == "À Vista") {
-                        nroparcela.val(0).attr("disabled", "disabled").parent().parent().show();
+                        nroparcela.val(0).attr("disabled", "disabled").parent().parent().hide();
     
                         var diaaux = dtop.val();
                         diaaux = diaaux.split("/");
                         var dia = parseInt(diaaux[0]);
-                        diavenc.val(dia).attr('disabled','disabled').parent().parent().show();
+                        diavenc.val(dia).attr('disabled','disabled').parent().parent().hide();
     
                     } else {
     
@@ -446,8 +443,12 @@ $(function () {
         calculatxcartao();
     });
 
-    function calculatxcartao() {
+    $("#btn_limparCampos").click(function(){
+        limparCampos();
+    });
 
+    function calculatxcartao() {
+        
         $('#taxa-cartao').val(0);
         $("#custo_financ").val(0);
 
@@ -527,12 +528,84 @@ $(function () {
         }
     }
 
-
     function confirmaPreenchimento() {
         // testa se o preenchimento dos campos necessários está ok
-        if(confirmaPreenchi() == false){
-            alert("Preencha todos os campos em negrito.");
+        if( $("#conta_analitica").find(':selected').val() == "" ){
+            $("#conta_analitica").focus();
             return;
+        }
+        if( $("#conta_corrente").find(':selected').val() == "" ){
+            $("#conta_corrente").focus();
+            return;
+        }
+        if( $("#detalhe").val() == "" ){
+            $("#detalhe").focus();
+            return;
+        }
+        if( $("#quem_lancou").find(':selected').val() == "" ){
+            $("#quem_lancou").focus();
+            return;
+        }
+        if( $("#favorecido").val() == "" || $("#favorecido").siblings('.invalid-feedback').is(':visible') ){
+            $("#favorecido").focus();
+            return;
+        }
+        if( $("#data_operacao").val() == "" ){
+            $("#data_operacao").focus();
+            return;
+        }
+        if( $("#valor_total").val() == "" ){
+            $("#valor_total").focus();
+            return;
+        }
+        if( $("#forma_pgto").find(':selected').val() == "" ){
+            $("#forma_pgto").focus();             
+            return;
+        }
+        if( $("#cond_pgto").find(':selected').val() == "" ){
+            $("#cond_pgto").focus();             
+            return;
+        }
+
+        if( $("#dia_venc").find(':selected').val() == "" ){
+            $("#dia_venc").focus();             
+            return;
+        }
+
+        if( $("#taxa-cartao").val() == "" ){
+            $("#taxa-cartao").focus();             
+            return;
+        }
+
+        if( $("#custo_financ").val() == "" ){
+            $("#custo_financ").focus();             
+            return;
+        }
+        
+        if( $("#cond_pgto").find(':selected').val() != "À Vista" ){
+            if( $("#nro_parcela").find(':selected').val() == "" ){
+                $("#nro_parcela").focus();             
+                return;
+            }
+        }
+
+        if ($("#Despesa").is(":checked")) {
+            if( $("#adm_cartao").find(':selected').val() != "" || $("#bandeira").find(':selected').val() != "" ){
+                $("#Despesa").focus();             
+                return;
+            }
+        }else{
+            if($('#forma_pgto').find(':selected').val() == 'Cartão Crédito' || $('#forma_pgto').find(':selected').val() == 'Cartão Débito' ){
+                if( $("#adm_cartao").find(':selected').val() == "" || $("#bandeira").find(':selected').val() == "" ){
+                    $("#forma_pgto").focus();             
+                    return;
+                }
+            }else{
+                if( $("#adm_cartao").find(':selected').val() != "" || $("#bandeira").find(':selected').val() != "" ){
+                    $("#forma_pgto").focus();             
+                    return;
+                }
+            }    
         }
 
         //início da inserção da nova linha          
@@ -596,7 +669,7 @@ $(function () {
                 txcartao = floatParaPadraoInternacional($("#taxa-cartao").val()) / 100;   
             }    
             if( parseFloat(txcartao) <= parseFloat(0)){
-                alert('A bandeira escolhida não permite essa forma / condição de pagamento. A taxa de cartão deve ter um valor diferente de zero (0).');
+                alert('A bandeira escolhida não permite essa forma e/ou condição de pagamento.\nA taxa de cartão nessa condição é igual a zero (0).\nA taxa de cartão deve ter valor diferente de zero (0).');
                 return;
             }
         }else{
@@ -628,46 +701,7 @@ $(function () {
         } else {
             distdias = 0;
         }
-        
-        // var valores = new Array();
-        // valores['despesa_receita'] = movimentacao;
-        // valores['conta_analitica'] = analitica; 
-        // valores['detalhe'] = detalhe; 
-        // valores['data_operacao'] = dtoperacao; 
-        // valores['valortotal'] = valortotal; 
-        // valores['data_vencimento'] = '';
-        // valores['formapgto'] = formapgto; 
-        // valores['condpgto'] = condpgto; 
-        // valores['nroparc'] = nroparcela; 
-        // valores['data_quitacao'] = '';
-        // valores['nro_pedido'] = nropedido;
-        // valores['conta_corrente'] = contacorrente; 
-        // valores['adm_cartao'] = admcartao; 
-        // valores['bandeira'] = bandeira; 
-        // valores['favorecido'] = favorecido;
-        // valores['status'] = '';
-        // valores['quem_lancou'] = quemlancou; 
-        // valores['data_entrada_sistema'] = '';
-        // valores['nro_nf'] = nronf;
-        // valores['data_emissao_nf'] = dtemissaonf;
-        // valores['observacao'] = observacao; 
 
-        //testar se já tem na tabela os itens selecionados
-        var max, maxant;
-        if ($("#tabela_lancamento tbody").length > 0) {
-            max = 0;
-            $("#tabela_lancamento tbody tr").each(function () {
-                maxant = parseInt($(this).children('td:eq(0)').find('[data-ident]').attr("data-ident"));
-                if (maxant > max) {
-                    max = maxant;
-                }
-            });
-            max++;
-        } else {
-            max = 1;
-        }
-        
-        console.log('maxant:    '+maxant);
         // lança o valor da receita ou despesa
         var linha = new Array();
         linha = lancaFluxo(movimentacao, nropedido, nronf, dtemissaonf, analitica, contacorrente, detalhe, quemlancou, favorecido, dtoperacao, valortotal, formapgto, condpgto, nroparcela, diavenc, admcartao, bandeira, observacao, distdias); 
@@ -683,20 +717,7 @@ $(function () {
         //lança o custo financeiro caso ele exista
         var custoAux = floatParaPadraoInternacional($('#custo_financ').val());
         if (custoAux > 0) {
-            //testar se já tem na tabela os itens selecionados
-            if ($("#tabela_lancamento tbody").length > 0) {
-                max = 0;
-                $("#tabela_lancamento tbody tr").each(function () {
-                    maxant = parseInt($(this).children('td:eq(0)').find('[data-ident]').attr("data-ident"));
-                    if (maxant > max) {
-                        max = maxant;
-                    }
-                });
-                max++;
-            } else {
-                max = 1;
-            }
-    
+            //testar se já tem na tabela os itens selecionados   
             var linhab = new Array();
             linhab = lancaFluxo('Despesa', nropedido, nronf, dtemissaonf, 'Despesa Financeira', contacorrente, 'Taxa - ' + formapgto + ' - ' + detalhe, quemlancou, favorecido, dtoperacao, custoAux, formapgto, condpgto, nroparcela, diavenc, admcartao, bandeira, observacao, distdias); 
             if (linhab.length > 1) {
@@ -712,83 +733,29 @@ $(function () {
         cancelaEdicoes();
         formataTabela();
         calcularesumo();
+        $('#tabela_lancamento').show().focus();
     
     }
 
-    function confirmaPreenchi(){
-       preenche = true;
+    function limparCampos(){
 
-        if( $("#conta_analitica").find(':selected').val() == "" ){
-            preenche = false;
-        }
-        if( $("#conta_corrente").find(':selected').val() == "" ){
-            preenche = false;
-        }
-        if( $("#detalhe").val() == "" ){
-            preenche = false;
-        }
-        if( $("#quem_lancou").find(':selected').val() == "" ){
-            preenche = false;
-        }
-        if( $("#favorecido").val() == "" ){
-            preenche = false;
-        }else{
-            if( $("#favorecido").siblings('.invalid-feedback').is(':visible') ){
-                preenche = false;
-            }
-        }
-        if( $("#data_operacao").val() == "" ){
-            preenche = false;
-        }
-        if( $("#valor_total").val() == "" ){
-            preenche = false;
-        }
-        if( $("#forma_pgto").find(':selected').val() == "" ){
-            preenche = false;
-        }
-        if( $("#cond_pgto").find(':selected').val() == "" ){
-            preenche = false;
-        }
+        $("#Receita").parent().parent().removeClass('is-invalid is-valid').blur();
+        $("#valor_total").val('').removeClass('is-invalid is-valid').blur();
+        $("#data_operacao").val('').removeClass('is-invalid is-valid').blur();               
+        $("#favorecido").val('').removeClass('is-invalid is-valid').blur();
+        $("#quem_lancou").val('').removeClass('is-invalid is-valid').blur();
+        $("#detalhe").val('').removeClass('is-invalid is-valid').blur();
+        $("#conta_corrente").val('').removeClass('is-invalid is-valid').blur();
+        $("#conta_analitica").val('').removeClass('is-invalid is-valid').blur();
+        $("#forma_pgto").val('').removeClass('is-invalid is-valid').change();
 
-        if( $("#dia_venc").find(':selected').val() == "" ){
-            preenche = false;
-        }
+        $("#nro_pedido").val('').removeClass('is-invalid is-valid').blur();
+        $("#nro_nf").val('').removeClass('is-invalid is-valid').blur();
+        $("#data_emissao_nf").val('').removeClass('is-invalid is-valid').blur();
 
-        if( $("#taxa-cartao").val() == "" ){
-            preenche = false;
-        }
-
-        if( $("#custo_financ").val() == "" ){
-            preenche = false;
-        }
-        
-        if( $("#cond_pgto").find(':selected').val() != "À Vista" ){
-            if( $("#nro_parcela").find(':selected').val() == "" ){
-                preenche = false;
-            }
-        }
-
-        if ($("#Despesa").is(":checked")) {
-            if( $("#adm_cartao").find(':selected').val() != "" || $("#bandeira").find(':selected').val() != "" ){
-                preenche = false;
-            }
-        }else{
-            if($('#forma_pgto').find(':selected').val() == 'Cartão Crédito' || $('#forma_pgto').find(':selected').val() == 'Cartão Débito' ){
-                if( $("#adm_cartao").find(':selected').val() == "" || $("#bandeira").find(':selected').val() == "" ){
-                    preenche = false;
-                }
-            }else{
-                if( $("#adm_cartao").find(':selected').val() != "" || $("#bandeira").find(':selected').val() != "" ){
-                    preenche = false;
-                }
-            }    
-        }
-
-        return preenche;
     }
 
-    $('#form_lancamento').on('submit', function(e){
-        console.log('evento de submit');
+     $('#form_lancamento').on('submit', function(e){
         if( confirm('Tem Certeza?') == false ){
             e.preventDefault();
             return;
@@ -952,16 +919,14 @@ $(function () {
     
                 total = (receita - despesa);
             });
-    
-            receita = parseFloat(receita).toFixed(2);
+
+            receita = parseFloat(receita);
             receita = floatParaPadraoBrasileiro(receita);
-    
-    
-            despesa = parseFloat(despesa).toFixed(2);
+            
+            despesa = parseFloat(despesa);
             despesa = floatParaPadraoBrasileiro(despesa);
     
-    
-            total = parseFloat(total).toFixed(2);
+            total = parseFloat(total);
             total = floatParaPadraoBrasileiro(total);
             
             $("#receita_lanc").html(receita);
@@ -1005,6 +970,7 @@ $(function () {
     }
 
     function formataTabela() {
+        
         if ($('#tabela_lancamento tbody tr ').length > 0) {
             var lin, col, larg, largaux;
             for ( col = 1; col <= $('#tabela_lancamento tbody tr td').length; col++) {
@@ -1039,6 +1005,7 @@ $(function () {
     }
 
     function cancelaEdicoes() {
+        
         if ($('#tabela_lancamento tbody tr ').length > 0) {
             var lin, val, dtanterior ;    
             //varre as linhas pra ver a largura maxima
@@ -1075,6 +1042,7 @@ $(function () {
     }
 
     function botarMascaraInputs(){
+        
         $("#tabela_lancamento tbody tr td:eq(5) input:eq(0)").each(function () {
             
             $('[data-mascara_validacao="monetario"]')
@@ -1139,7 +1107,9 @@ $(function () {
             var $this = $(this),
                 valor = $this.val()
                 anterior = $this.attr('data-anterior')
-                
+            
+            if (valor != '') {    
+            
                 dtop = $this.closest('tr').children('td:eq(4)').children('input:eq(0)').val();
                 dtop = dtop.split('/')[2] + dtop.split('/')[1] + dtop.split('/')[0];
                 dtop = parseInt(dtop);
@@ -1148,10 +1118,10 @@ $(function () {
                 dtatual = dtatual.split('/')[2] + dtatual.split('/')[1] + dtatual.split('/')[0];
                 dtatual = parseInt(dtatual);
 
-            valor = valor.split('/');
-            var data = valor[0] + '/' + valor[1] + '/' + valor[2];
+                valor = valor.split('/');
+                var data = valor[0] + '/' + valor[1] + '/' + valor[2];
 
-            if (valor != '') {
+            
                 if ($this.attr('data-anterior') != $this.val()) {
                     if (
                         (typeof valor[1] == 'undefined' || typeof valor[2] == 'undefined') ||
@@ -1252,12 +1222,49 @@ $(function () {
         }
     }
 
+    function decimalAdjust(type, value, exp) {
+        // If the exp is undefined or zero...
+        if (typeof exp === 'undefined' || +exp === 0) {
+            return Math[type](value);
+        }
+        value = +value;
+        exp = +exp;
+        // If the value is not a number or the exp is not an integer...
+        if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0)) {
+            return NaN;
+        }
+        // Shift
+        value = value.toString().split('e');
+        value = Math[type](+(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp)));
+        // Shift back
+        value = value.toString().split('e');
+        return +(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp));
+    }
+    // Decimal round
+    if (!Math.round10) {
+        Math.round10 = function(value, exp) {
+            return decimalAdjust('round', value, exp);
+        };
+    }
+    // Decimal floor
+    if (!Math.floor10) {
+        Math.floor10 = function(value, exp) {
+            return decimalAdjust('floor', value, exp);
+        };
+    }
+    // Decimal ceil
+    if (!Math.ceil10) {
+        Math.ceil10 = function(value, exp) {
+            return decimalAdjust('ceil', value, exp);
+        };
+    }
+
     function lancaFluxo(movimentacao, nropedido, nronf, dataemissaonf, analitica, contacorrente, detalhe, quemlancou, favorecido, dtoperacao, valortotal, formapgto, condpgto, nroparcela, diavenc, admcartao, bandeira, observacao, distdias = 0) {
-        console.log('entrei na funcao lancafluxo');
+        
         /////////////////////////// LANÇAMENTO INTEIRO FEITO A VISTA - EXCLUINDO RECEITA DE CARTÃO DÉBITO
-        if (condpgto == "À Vista" && formapgto != "Cartão Débito" && formapgto != "Cartão Crédito" ){
-            console.log('lancamento à vista que não cartao');
-            console.log('forma de pgto: '+ formapgto);
+        if ((condpgto == "À Vista" && formapgto != "Cartão Débito" && formapgto != "Cartão Crédito" ) || ( formapgto == 'Cartão Débito' && bandeira == '') ){
+            
+            
             dtentrada = dataAtual();
             valortotal = floatParaPadraoBrasileiro(valortotal);
             randomico = Math.random();
@@ -1295,13 +1302,13 @@ $(function () {
             
             
             arraylinhas.push(linha);
-            console.log(arraylinhas);
+            
             return arraylinhas;
         
         /////////////////////////// LANÇAMENTO INTEIRO FEITO EM UMA VEZ - DISTÂNCIA DO VENCIMENTO EM DIAS
-        } else if ( formapgto == "Cartão Débito" || (formapgto == "Cartão Crédito" && condpgto == "Com Juros") || (formapgto == "Cartão Crédito" && condpgto == "Antecipado")) {
+        } else if ( ( formapgto == "Cartão Débito" && bandeira != '')  || (formapgto == "Cartão Crédito" && condpgto == "Com Juros") || (formapgto == "Cartão Crédito" && condpgto == "Antecipado")) {
         
-            console.log('lancamento debito, com juros e antecipado');
+            
             var arraylinhas = new Array();
             var dtentrada = dataAtual();
             valortotal = floatParaPadraoBrasileiro(valortotal);
@@ -1345,22 +1352,34 @@ $(function () {
         /////////////////////////// LANÇAMENTO INTEIRO FEITO PARCELADO - DISTANCIA DO VENCIMENTO EM MESES
         }else if (condpgto == "Parcelado" && nroparcela > 0) {
         
-            console.log('lancamento parcelado');
-            var dtentrada = dataAtual();
             
-
+            var dtentrada = dataAtual();
+        
             var arraylinhas = new Array();
-            var linha;
+            var linha, valortotAux, valInicio, valtot, recalc ;
 
-            var valtot = valortotal.replace(",", ".");
-            valtot = parseFloat(valtot).toFixed(2) / parseInt(nroparcela);
-            valtot = parseFloat(valtot).toFixed(2);
-            valtot = floatParaPadraoBrasileiro(valtot);
-
+            valInicio = parseFloat(valortotal.replace(",", ".")); /// 1000
+            valortotAux = parseFloat(parseFloat( valInicio / parseInt(nroparcela)).toFixed(2)); // 333.333
+            recalc = parseFloat(valortotAux * parseInt(nroparcela));
+            soma = parseFloat(valInicio - recalc).toFixed(2);
+                        
+            valtot = parseFloat(parseFloat(valInicio) / parseInt(nroparcela)).toFixed(2);            
+            
+            
             for (var pr = 0; pr < nroparcela; pr++) {
+                
                 dtvenc = proximoDiaUtilParcela(dtoperacao, pr, diavenc);
                 randomico = Math.random();
-                console.log(dtvenc);
+                
+                valtot = 0;
+                if(pr == 0){
+                    valtot = parseFloat(parseFloat(valortotAux) + parseFloat(soma)).toFixed(2); 
+                    valtot = floatParaPadraoBrasileiro(valtot);
+                }else{
+                    valtot = parseFloat(parseFloat(valInicio) / parseInt(nroparcela)).toFixed(2); 
+                    valtot = floatParaPadraoBrasileiro(valtot);
+                }
+                
 
                 var linha = "<tr>";
                 linha += "<td>" + "<div class='btn btn-sm btn-secondary mr-1' onclick='excluir(this)' data-ident=" + randomico + " '><i class='fas fa-trash-alt'></i></div>" 
@@ -1399,7 +1418,7 @@ $(function () {
             return arraylinhas;
 
         }else{
-            console.log('nao entrou em nenhuma condicao');
+            
         }
 
     }
