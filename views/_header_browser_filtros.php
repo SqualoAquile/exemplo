@@ -44,8 +44,8 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="m-0">Filtros</h3>
                 <div>
-                    <label for="limpar-filtro" class="btn btn-secondary btn-sm m-0">Limpar Filtros</label>
-                    <button id="criar-filtro" type="button" class="btn btn-success btn-sm">Mais Filtros</button>
+                    <label for="limpar-filtro" class="btn cursor-pointer btn-outline-secondary btn-sm m-0">Limpar Filtros</label>
+                    <button id="criar-filtro" type="button" class="btn btn-outline-success btn-sm">Mais Filtros</button>
                 </div>
             </div>
             <form id="card-body-filtros" class="card-body pb-1">

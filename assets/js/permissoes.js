@@ -11,7 +11,7 @@ $(function () {
     
             var nome = textPermissaoSplit[0],
                 permissao = textPermissaoSplit[1],
-                $brothers = $('[type=checkbox][id^=' + nome + '_]:not(#' + textPermissao + ')');
+                $brothers = $('[type=checkbox][id^=' + nome + '_]:not(#' + textPermissao + '):not(#fluxocaixa_add)');
                 
             if (permissao == 'ver') {
     
@@ -20,8 +20,6 @@ $(function () {
                 } else {
                     $brothers.attr('disabled', 'disabled');
                     $brothers.prop('checked', false);
-
-                    $('#fluxocaixa_add').removeAttr('disabled');
                 }
             }
         });

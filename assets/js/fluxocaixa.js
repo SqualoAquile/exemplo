@@ -1088,51 +1088,54 @@ $(function () {
         });
 
         $('[data-mascara_validacao="data"]')
-        .mask('00/00/0000')
-        .datepicker(datepickerOptions)
-        .on('change blur', function () {
+            .mask('00/00/0000')
+            .datepicker()
+            .on('change blur', function () {
 
-            var $this = $(this),
-                valor = $this.val()
-                anterior = $this.attr('data-anterior')
-            
-            if (valor != '') {    
-            
-                dtop = $this.closest('tr').children('td:eq(4)').children('input:eq(0)').val();
-                dtop = dtop.split('/')[2] + dtop.split('/')[1] + dtop.split('/')[0];
-                dtop = parseInt(dtop);
+                var $this = $(this),
+                    valor = $this.val()
+                    anterior = $this.attr('data-anterior')
+                
+                if (valor != '') {    
+                
+                    dtop = $this.closest('tr').children('td:eq(4)').children('input:eq(0)').val();
+                    dtop = dtop.split('/')[2] + dtop.split('/')[1] + dtop.split('/')[0];
+                    dtop = parseInt(dtop);
 
-                dtatual = $this.val();
-                dtatual = dtatual.split('/')[2] + dtatual.split('/')[1] + dtatual.split('/')[0];
-                dtatual = parseInt(dtatual);
+                    dtatual = $this.val();
+                    dtatual = dtatual.split('/')[2] + dtatual.split('/')[1] + dtatual.split('/')[0];
+                    dtatual = parseInt(dtatual);
 
-                valor = valor.split('/');
-                var data = valor[0] + '/' + valor[1] + '/' + valor[2];
+                    valor = valor.split('/');
+                    var data = valor[0] + '/' + valor[1] + '/' + valor[2];
 
-            
-                if ($this.attr('data-anterior') != $this.val()) {
-                    if (
-                        (typeof valor[1] == 'undefined' || typeof valor[2] == 'undefined') ||
-                        (valor[2].length > 4 || valor[0].length > 2 || valor[1].length > 2) ||
-                        (validaDat(data) == false)
-                    ) {
-                        // Inválido
-                        $this.val(anterior);
-                            
-                    } else {
-                        // Valido
-                        if(dtatual <= dtop){
-                            $this.val(anterior);  
-                        }else{
-                            $this.val(data);  
-                        }                            
+                
+                    if ($this.attr('data-anterior') != $this.val()) {
+                        if (
+                            (typeof valor[1] == 'undefined' || typeof valor[2] == 'undefined') ||
+                            (valor[2].length > 4 || valor[0].length > 2 || valor[1].length > 2) ||
+                            (validaDat(data) == false)
+                        ) {
+                            // Inválido
+                            $this.val(anterior);
+                                
+                        } else {
+                            // Valido
+                            if(dtatual <= dtop){
+                                $this.val(anterior);  
+                            }else{
+                                $this.val(data);  
+                            }                            
+                        }
                     }
+                }else{
+                    // Inválido
+                    $this.val(anterior);
                 }
-            }else{
-                 // Inválido
-                 $this.val(anterior);
-            }
-        });
+
+                $this.datepicker('update');
+                
+            });
     }
 
     function validaDat(valor) {

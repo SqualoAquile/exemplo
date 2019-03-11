@@ -10,7 +10,7 @@ $(function () {
     
                 $(el)
                     .mask('00/00/0000')
-                    .datepicker(datepickerOptions);
+                    .datepicker();
 
             } else if (mask == 'monetario') {
     

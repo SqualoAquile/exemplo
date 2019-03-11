@@ -300,7 +300,7 @@ $(document).ready(function () {
     });
     
 // filtro das datas
-    $("#iaux2").datepicker(datepickerOptions);
+    $("#iaux2").datepicker();
     
     $("#iaux2").blur(function(){
         var valor = $("#iaux2").val();

@@ -12,18 +12,25 @@ class Shared extends model {
     }
 
     private function formataacoes($id){
-        $stringBtn = '';
-        $stringBtn .= '<form method="POST">';
-        
-        if( in_array( $this->table.'_edt' , $_SESSION["permissoesUsuario"]) ){
-            $stringBtn .=  '<a href="' . BASE_URL . '/' . $this->table . '/editar/' . $id . '" class="btn btn-primary btn-sm mr-1"><i class="fas fa-edit"></i></a>';
-        }
 
-        if(in_array($this->table."_exc", $_SESSION["permissoesUsuario"])){
-            $stringBtn .= '<input type="hidden" name="id" value="'. $id .'"><button type="submit" onclick="return confirm(\'Tem Certeza?\')" class="btn btn-sm btn-secondary ml-1"><i class="fas fa-trash-alt"></i></button>';
+        $stringBtn = '';
+
+        if ($this->table != "fluxocaixa") {
+
+            $stringBtn .= '<form method="POST">';
+            
+            if( in_array( $this->table.'_edt' , $_SESSION["permissoesUsuario"]) ){
+                $stringBtn .=  '<a href="' . BASE_URL . '/' . $this->table . '/editar/' . $id . '" class="btn btn-primary btn-sm mr-1"><i class="fas fa-edit"></i></a>';
+            }
+    
+            if(in_array($this->table."_exc", $_SESSION["permissoesUsuario"])){
+                $stringBtn .= '<input type="hidden" name="id" value="'. $id .'"><button type="submit" onclick="return confirm(\'Tem Certeza?\')" class="btn btn-sm btn-secondary ml-1"><i class="fas fa-trash-alt"></i></button>';
+            }
+            
+            $stringBtn .= '</form>';
+        } else {
+            $stringBtn .=  '<div class="text-center"><button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button></div>';
         }
-        
-        $stringBtn .= '</form>';
         
         return $stringBtn;
     }
