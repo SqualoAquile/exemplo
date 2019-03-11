@@ -11,7 +11,7 @@ $(function () {
                 $(el)
                     .mask('00/00/0000')
                     .datepicker(datepickerOptions);
-    
+
             } else if (mask == 'monetario') {
     
                 $(el)
@@ -23,9 +23,7 @@ $(function () {
     
                 $(el)
                     .mask('0#');
-    
             }
-            
         });
     }
 
@@ -39,9 +37,7 @@ $(function () {
                 .datepicker('destroy')
                 .removeAttr('maxlength')
                 .unmask();
-
         });
-
     }
 
     $(this)
@@ -53,7 +49,9 @@ $(function () {
                 $pai = $this.parents('.input-group'),
                 $inputs = $pai.find('input[type=text]');
             
-            $inputs.val('');
+            $inputs
+                .val('');
+
             removeMask($inputs);
 
         })
@@ -73,22 +71,30 @@ $(function () {
                     $max = $this.find('.max'),
                     max = $max.val(),
                     mascara = $selected.attr('data-mascara'),
-                    stringSearch = '';
+                    stringSearch = '',
+                    indexAnterior = $select.attr('data-index-anterior');
 
                 addMask(mascara, [$min, $max]);
+
+                if (indexAnterior) {
+                    dataTable
+                        .columns(indexAnterior)
+                        .search('')
+                        .draw();
+                }
 
                 if (selectVal) {
 
                     if (min || max) {
                         stringSearch = type + ':' + min + '<>' + max;
-                    } else {
-                        selectVal = '';
                     }
 
                     dataTable
                         .columns(selectVal)
                         .search(stringSearch)
                         .draw();
+
+                    $select.attr('data-index-anterior', selectVal);
                 }
             });
         })
@@ -103,29 +109,25 @@ $(function () {
                     $input = $this.find('.texto'),
                     inputVal = $input.val(),
                     selectVal = $select.val(),
-                    value = inputVal ? inputVal : '';
+                    value = inputVal ? inputVal : '',
+                    indexAnterior = $select.attr('data-index-anterior');
+
+                if (indexAnterior) {
+                    dataTable
+                        .columns(indexAnterior)
+                        .search('')
+                        .draw();
+                    
+                }
 
                 if (selectVal) {
-
-                    if (!inputVal) {
-                        
-                        var arrSearched = dataTable.columns('').search();
-                        
-                        arrSearched
-                            .each(function (index, value) {
-                                if (arrSearched[value]) {
-                                    dataTable
-                                        .columns(value)
-                                        .search('')
-                                        .draw();
-                                }
-                            });
-                    }
-
+                    
                     dataTable
                         .columns(selectVal)
                         .search(value)
                         .draw();
+
+                    $select.attr('data-index-anterior', selectVal);
                 }
             });
         })
