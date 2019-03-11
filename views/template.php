@@ -71,20 +71,20 @@
             [
                "text" => "Lançamentos de Caixa",
                "icon" => "fas fa-cart-plus",
-               "permissao" => "lancamentos_ver",
+               "permissao" => "fluxocaixa_add",
                "link" => "/fluxocaixa/adicionar"
             ],
             [
                "text" => "Controle de Caixa",
                "icon" => "fas fa-calculator",
-               "permissao" => "controlecaixa_ver",
+               "permissao" => "fluxocaixa_ver",
                "link" => "/fluxocaixa"
             ],
             [
                "text" => "Controle de Saldos",
                "icon" => "fas fa-chart-line",
-               "permissao" => "controle_saldos_ver",
-               "link" => "/controle_saldos"
+               "permissao" => "controlesaldos_ver",
+               "link" => "/controlesaldos"
             ]
          ]
       ],
