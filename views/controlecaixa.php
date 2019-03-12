@@ -6,7 +6,7 @@
 
 
 <div class="input-pai"><div class="input-filho">
-        <div id="ititulo1"> Filtros </div>
+        <div id="ititulo1">Filtros</div>
         <div id="ifiltros">
             <div class="input-pai">
                 <div class="input-filho">            
@@ -38,7 +38,7 @@
                 </div>
             </div>    
             <div class="input-pai">
-                <div class="input-filho">            
+                <div class="input-filho align-items-center">            
                     <input type="text" id="idtmin" class="input-block" placeholder="Data Inicial"/>
                 </div>
                 <div class="input-filho">            

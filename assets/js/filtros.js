@@ -33,13 +33,33 @@ $(function () {
         
         $elements.each(function () {
 
-            $(this)
+            var $this = $(this);
+
+            $this
+                .removeClass('is-invalid is-valid')
+                .siblings('.invalid-feedback').remove();
+
+            $this[0]
+                .setCustomValidity('');
+            
+            $this
                 .datepicker('destroy')
                 .unmask();
         });
     }
 
     $(this)
+        .on('click', '#excluir-linha', function (event) {
+
+            event.preventDefault();
+
+            var $this = $(this),
+                $parent = $this.parents('.filtros');
+
+            $parent.find('select').val('').change();
+
+            $parent.remove();
+        })
         .on('change', '#card-body-filtros select', function () {
 
             // Change dos Selects
@@ -80,6 +100,20 @@ $(function () {
                         .columns(indexAnterior)
                         .search('')
                         .draw();
+                }
+
+                if (min && max) {
+                    
+                    $max.removeClass('is-invalid');
+                    $max[0].setCustomValidity('');
+                    $max.siblings('.invalid-feedback').remove();
+
+                    if (min >= max) {
+                        $max.addClass('is-invalid');
+                        $max[0].setCustomValidity('invalid');
+                        $max.after('<div class="invalid-feedback col-lg-4 m-0">O valor deste campo deve ser maior que o campo anterior.</div>');
+                        return;
+                    }
                 }
 
                 if (selectVal) {
@@ -165,13 +199,20 @@ $(function () {
         if ($filtros.length < 5) {
             $cloned = $filtros.last().clone();
             $cloned.find('input').val('');
-            $cloned.appendTo('#card-body-filtros');
+            $cloned.appendTo('#card-body-filtros .filtros-wrapper');
         }
-        
-        if ($filtros.length >= 4) {
-            $(this).hide();
-        }
-            
     });
 
+    $(this)
+        .on('click', '#criar-filtro, #excluir-linha', function () {
+
+            var $criar = $('#criar-filtro'),
+                $filtros = $('.filtros');
+
+            if ($filtros.length == 5) {
+                $criar.hide();
+            } else if($filtros.length < 5) {
+                $criar.show();
+            }
+        });
 });

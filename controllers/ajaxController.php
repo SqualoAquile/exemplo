@@ -340,6 +340,15 @@ class ajaxController extends controller{
           exit;
       }
   }
+
+  public function gerarGraficoFiltro(){
+    
+    if(isset($_POST) && !empty($_POST)){
+      $shared = new Shared('fluxocaixa');
+      $dados = $shared->gerarGraficoFiltro($_POST);
+    }
+    echo json_encode($dados);
+  }
     
 }   
 ?>

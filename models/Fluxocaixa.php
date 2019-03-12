@@ -82,7 +82,11 @@ class Fluxocaixa extends model {
 
         if (!empty($id)) {
 
-            $stringUpdate = "UPDATE " . $this->table . " SET valor_total='" . $valor_total . "', data_vencimento='" . $data_vencimento . "', observacao='" . $observacao . "' WHERE id=" . $id;
+            $ipcliente = $this->permissoes->pegaIPcliente();
+            $hist = explode("##", addslashes($request['alteracoes']));
+            $alteracoes = $hist[0] . " | " . ucwords($_SESSION["nomeUsuario"]) . " - $ipcliente - " . date('d/m/Y H:i:s') . " - ALTERAÇÃO >> " . $hist[1];
+
+            $stringUpdate = "UPDATE " . $this->table . " SET valor_total='" . $valor_total . "', data_vencimento='" . $data_vencimento . "', observacao='" . $observacao . "', alteracoes=CONCAT(alteracoes, '" . $alteracoes . "') WHERE id=" . $id;
 
             self::db()->query($stringUpdate);
 

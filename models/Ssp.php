@@ -140,6 +140,82 @@ class SSP {
 		return $order;
 	}
 
+	static function complex_graficos ( $request, $conn, $table, $primaryKey, $columns, $whereResult=null, $whereAll=null, $sum ='', $coluna_alvo=null )
+	{
+		$bindings = array();
+		$db = self::db( $conn );
+		$localWhereResult = array();
+		$localWhereAll = array();
+		$whereAllSql = '';
+		// Build the SQL query string from the request
+		$limit = self::limit( $request, $columns );
+		$order = self::order( $request, $columns );
+		$where = self::filter( $request, $columns, $bindings );
+		$whereResult = self::_flatten( $whereResult );
+		$whereAll = self::_flatten( $whereAll );
+		if ( $whereResult ) {
+			$where = $where ?
+				$where .' AND '.$whereResult :
+				'WHERE '.$whereResult;
+		}
+		if ( $whereAll ) {
+			$where = $where ?
+				$where .' AND '.$whereAll :
+				'WHERE '.$whereAll;
+			$whereAllSql = 'WHERE '.$whereAll;
+		}
+		
+		if ($sum){
+			$sum = ', SUM(' .$sum. ') as total';
+		}
+		if ($coluna_alvo){
+			$groupby = ' GROUP BY '. $coluna_alvo;
+		}else{
+			$groupby = null;
+		}
+		// Main query to actually get the data
+		$data = self::sql_exec( $db, $bindings,
+		// Aqui eu preciso passar a coluna isolada, sem o pluck
+		// Ver onde o pluck é chamado nessa função, é ai o erro
+			"SELECT `$coluna_alvo`
+			$sum
+			 FROM `$table`
+			 $where
+			 $groupby
+			$order
+			$limit
+			"
+		);
+	
+		//SELECT conta_analitica, SUM(valor_total) FROM fluxocaixa GROUP BY conta_analitica
+		
+		// Data set length after filtering
+		$resFilterLength = self::sql_exec( $db, $bindings,
+			"SELECT COUNT(`{$primaryKey}`)
+			 FROM   `$table`
+			 $where"
+		);
+		$recordsFiltered = $resFilterLength[0][0];
+		// Total data set length
+		$resTotalLength = self::sql_exec( $db, $bindings,
+			"SELECT COUNT(`{$primaryKey}`)
+			 FROM   `$table` ".
+			$whereAllSql
+		);
+		$recordsTotal = $resTotalLength[0][0];
+		/*
+		 * Output
+		 */
+		return array(
+			"draw"            => isset ( $request['draw'] ) ?
+				intval( $request['draw'] ) :
+				0,
+			"recordsTotal"    => intval( $recordsTotal ),
+			"recordsFiltered" => intval( $recordsFiltered ),
+			"data"            => $data 
+		);
+	}
+
 	private static function formater ( $type, $value )
 	{
 		$returnValue = "";

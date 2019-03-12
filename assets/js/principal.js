@@ -53,4 +53,8 @@ $(function () {
             $btn.find('i.fas').removeClass('fa-minus-circle').addClass('fa-plus-circle');
         }
     });
+
+    $('#sidebar-wrapper li.dropdown').on('mouseover', function () {
+        $(this).find('.dropdown-menu').css('top', $(this).offset().top);
+    });
 });

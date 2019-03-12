@@ -1,11 +1,98 @@
+function floatParaPadraoBrasileiro(valor){
+    var valortotal = valor;
+    valortotal = number_format(valortotal,2,',','.');
+    return valortotal;
+}
+
+function floatParaPadraoInternacional(valor){
+    
+    var valortotal = valor;
+    valortotal = valortotal.replace(".", "").replace(".", "").replace(".", "").replace(".", "");
+    valortotal = valortotal.replace(",", ".");
+    valortotal = parseFloat(valortotal).toFixed(2);
+    return valortotal;
+}
+
+function number_format( numero, decimal, decimal_separador, milhar_separador ){ 
+        numero = (numero + '').replace(/[^0-9+\-Ee.]/g, '');
+        var n = !isFinite(+numero) ? 0 : +numero,
+            prec = !isFinite(+decimal) ? 0 : Math.abs(decimal),
+            sep = (typeof milhar_separador === 'undefined') ? ',' : milhar_separador,
+            dec = (typeof decimal_separador === 'undefined') ? '.' : decimal_separador,
+            s = '',
+            toFixedFix = function (n, prec) {
+                var k = Math.pow(10, prec);
+                return '' + Math.round(n * k) / k;
+            };
+ 
+        // Fix para IE: parseFloat(0.55).toFixed(0) = 0;
+        s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+        if (s[0].length > 3) {
+            s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+        }
+        if ((s[1] || '').length < prec) {
+            s[1] = s[1] || '';
+            s[1] += new Array(prec - s[1].length + 1).join('0');
+        }
+        return s.join(dec);
+}
+
 $(function () {
 
     var $collapse = $('#collapseFluxocaixaResumo'),
         $cardBodyFiltros = $('#card-body-filtros'),
         dataTable = window.dataTable,
-        indexColumnStatus = 17,
+        indexColumns = {
+            checkbox: 0,
+            acoes: 1,
+            movimentacoes: 2,
+            data_operacao: 5,
+            valor_total: 6,
+            data_vencimento: 7,
+            status: 17,
+            observacao: 22
+        },
         $checados,
         $aQuiatares;
+
+    function resumo () {
+        
+        var rowData = dataTable.rows({selected: true}).data(),
+            somasDespesas = 0,
+            somasReceitas = 0;
+
+        $checados.each(function (index) {
+            if (rowData[index][indexColumns.movimentacoes].toLowerCase() == 'despesa') {
+                
+                var despesa = $(this).parents('tr').find('td:eq(' + indexColumns.valor_total + ')').text();
+
+                despesa = despesa.replace('R$  ', '');
+
+                despesa = floatParaPadraoInternacional(despesa);
+
+                somasDespesas += parseFloat(despesa);
+            }
+        });
+
+        $('#despesasTotal').text(floatParaPadraoBrasileiro(somasDespesas));
+
+        $checados.each(function (index) {
+            if (rowData[index][indexColumns.movimentacoes].toLowerCase() == 'receita') {
+                
+                var receita = $(this).parents('tr').find('td:eq(' + indexColumns.valor_total + ')').text();
+
+                receita = receita.replace('R$  ', '');
+
+                receita = floatParaPadraoInternacional(receita);
+
+                somasReceitas += parseFloat(receita);
+            }
+        });
+
+        $('#receitasTotal').text(floatParaPadraoBrasileiro(somasReceitas));
+
+        $('#itensSelecionados').text($checados.length);
+    }
 
     function aQuitar () {
 
@@ -13,30 +100,29 @@ $(function () {
             $quitar = $('.col-data-quitacao, .col-btn-quitar');
 
         $aQuiatares = $checados.filter(function (index) {
-            return rowData[index][indexColumnStatus].toLowerCase() == 'a quitar';
+            return rowData[index][indexColumns.status].toLowerCase() == 'a quitar';
         });
 
         if ($aQuiatares.length) {
             
             $quitar.show();
-            $quitar.find('span').text($aQuiatares.length);
+            $quitar.find('span.lengthQuitar').text($aQuiatares.length);
 
         } else {
             $quitar.hide();
         }
     }
 
-    $('.select-all').click(function () {
+    $('.select-all')
+        .click(function () {
 
-        var $this = $(this),
-            $checkThead = $this.find('[type=checkbox]')
-            $table = $this.parents('.table-responsive');
+            var $this = $(this),
+                $checkThead = $this.find('[type=checkbox]')
+                $table = $this.parents('.table-responsive');
 
-        $checkThead.prop('checked', !$checkThead.prop('checked'))
-        $table.find('[type=checkbox]').prop('checked', !$checkThead.prop('checked'));
-    });
-
-    $('.dataTable thead th:eq(0), .dataTable thead th:eq(1)').off('click.DT');
+            $checkThead.prop('checked', !$checkThead.prop('checked'))
+            $table.find('[type=checkbox]').prop('checked', !$checkThead.prop('checked'));
+        });
 
     $(this)
         .on('blur', '[name=data_quitacao]', function () {
@@ -167,14 +253,16 @@ $(function () {
         .on('click', '#editar', function () {
             
             var $this = $(this),
+                $table = $this.parents('table'),
+                $thead = $table.find('thead'),
                 $tr = $this.parents('tr'),
-                $valorTotal = $tr.find('td:eq(6)'),
+                $valorTotal = $tr.find('td:eq(' + indexColumns.valor_total + ')'),
                 valorTotalText = $valorTotal.text().replace('R$  ', ''),
-                $dataVencimento = $tr.find('td:eq(7)'),
-                $observacao = $tr.find('td:eq(22)');
+                $dataVencimento = $tr.find('td:eq(' + indexColumns.data_vencimento + ')'),
+                $observacao = $tr.find('td:eq(' + indexColumns.observacao + ')');
 
             $valorTotal
-                .html('<input type="text" data-anterior="' + valorTotalText + '" value="' + valorTotalText + '" class="form-control" data-mascara_validacao="monetario">')
+                .html('<input type="text" data-placeholder="' + $thead.find('th:eq(' + indexColumns.valor_total + ')').text().trim() + '" data-anterior="' + valorTotalText + '" value="' + valorTotalText + '" class="form-control" data-mascara_validacao="monetario">');
             
             $('[data-mascara_validacao="monetario"]')
                 .mask('#.##0,00', {
@@ -182,14 +270,14 @@ $(function () {
                 });
 
             $dataVencimento
-                .html('<input type="text" data-anterior="' + $dataVencimento.text() + '" data-mascara_validacao="data" value="' + $dataVencimento.text() + '" class="form-control">')
+                .html('<input type="text" data-placeholder="' + $thead.find('th:eq(' + indexColumns.data_vencimento + ')').text().trim() + '" data-anterior="' + $dataVencimento.text() + '" data-mascara_validacao="data" value="' + $dataVencimento.text() + '" class="form-control">');
 
             $('[data-mascara_validacao="data"]')
                 .mask('00/00/0000')
                 .datepicker();
 
             $observacao
-                .html('<textarea data-anterior="' + $observacao.text() + '" class="form-control">' + $observacao.text() + '</textarea>')
+                .html('<textarea data-placeholder="' + $thead.find('th:eq(' + indexColumns.observacao + ')').text().trim() + '" data-anterior="' + $observacao.text() + '" class="form-control">' + $observacao.text() + '</textarea>');
 
             $this
                 .removeClass('btn-primary')
@@ -198,20 +286,21 @@ $(function () {
                 .find('.fas')
                 .removeClass('fa-edit')
                 .addClass('fa-save');
-
-            // console.log()
-            // $tr.find('td:eq(6),td:eq(7),td:eq(22)').each(function () {
-            //     var text = $(this).text();
-            //     $(this).html();
-            // });
         })
         .on('click', '#salvar', function () {
 
             var $this = $(this),
                 $tr = $this.parents('tr'),
-                $valorTotal = $tr.find('td:eq(6)'),
-                $dataVencimento = $tr.find('td:eq(7)'),
-                $observacao = $tr.find('td:eq(22)');
+                $valorTotal = $tr.find('td:eq(' + indexColumns.valor_total + ')'),
+                $dataVencimento = $tr.find('td:eq(' + indexColumns.data_vencimento + ')'),
+                $observacao = $tr.find('td:eq(' + indexColumns.observacao + ')'),
+                alteracao = '';
+
+            $tr.find('.form-control').each(function () {
+                if ($(this).val() != $(this).attr('data-anterior')) {
+                    alteracao += '{' + $(this).attr('data-placeholder').toUpperCase() + ' de (' + $(this).attr('data-anterior') + ') para (' + $(this).val() + ')}';
+                }
+            });
 
             $.ajax({
                 url: baselink + '/fluxocaixa/inlineEdit',
@@ -220,7 +309,8 @@ $(function () {
                     id: $this.attr('data-id'),
                     valor_total: $valorTotal.find('input').val(),
                     data_vencimento: $dataVencimento.find('input').val(),
-                    observacao: $observacao.find('textarea').val()
+                    observacao: $observacao.find('textarea').val(),
+                    alteracoes: '##' + alteracao
                 },
                 dataType: 'json',
                 success: function (data) {
@@ -232,16 +322,6 @@ $(function () {
                             class: 'alert-success'
                         });
 
-                        // $valorTotal
-                        //     .text($valorTotal.find('input').val());
-                
-                        // $this
-                        //     .removeClass('btn-success')
-                        //     .addClass('btn-primary')
-                        //     .attr('id', 'editar')
-                        //     .find('.fas')
-                        //     .removeClass('fa-save')
-                        //     .addClass('fa-edit');
                     }
 
                     $cardBodyFiltros.trigger('reset');
@@ -262,6 +342,7 @@ $(function () {
 
             if ($allChecados.length) {
                 aQuitar();
+                resumo();
                 $collapse.collapse('show');
                 $trChecados.addClass('selected');
             } else {
@@ -271,7 +352,7 @@ $(function () {
         })
         .on('init.dt', '.dataTable', function () {
             // Tira o icone de ordenação da coluna de ações no cabeçalho
-            var $thAcoes = $('.dataTable thead th:eq(1)');
+            var $thAcoes = $('.dataTable thead th:eq(' + indexColumns.acoes + ')');
             
             $thAcoes
                 .addClass('text-center')
@@ -279,11 +360,12 @@ $(function () {
                 .remove();
         });
 
-    $collapse.on('shown.bs.collapse', function () {
-        $(this)
-            .find('[data-provide="datepicker"]')
-            .mask('00/00/0000');
-    });
+    $collapse
+        .on('shown.bs.collapse', function () {
+            $(this)
+                .find('[data-provide="datepicker"]')
+                .mask('00/00/0000');
+        });
 
     dataTable
         .on('draw', function () {
@@ -310,7 +392,7 @@ $(function () {
             
             if (valor != '') {
             
-                dtop = $this.closest('tr').children('td:eq(5)').text();
+                dtop = $this.closest('tr').children('td:eq(' + indexColumns.data_operacao + ')').text();
                 dtop = dtop.split('/')[2] + dtop.split('/')[1] + dtop.split('/')[0];
                 dtop = parseInt(dtop);
 
@@ -320,9 +402,6 @@ $(function () {
 
                 valor = valor.split('/');
                 var data = valor[0] + '/' + valor[1] + '/' + valor[2];
-
-                console.log('dtop', dtop);
-                console.log('dtatual', dtatual);
             
                 if ($this.attr('data-anterior') != valor) {
 
@@ -351,4 +430,8 @@ $(function () {
             $this.datepicker('update');
 
         });
+
+    // Desativar ordamento das colunas de ações e de checkbox
+    $('.dataTable thead th:eq(' + indexColumns.checkbox + '), .dataTable thead th:eq(' + indexColumns.acoes + ')')
+        .off('click.DT');
 });
