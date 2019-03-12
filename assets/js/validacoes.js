@@ -851,8 +851,18 @@ $(function () {
     //
     // Função que valida as alterações necessárias para o submit
     //
+    $('input').keypress(function(event){
+        console.log('tecla: ' + event.keyCode);
+        if(event.keyCode == 13){
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
+        }
+    });
+
     $('.needs-validation').submit(function (event) {
         
+        // deixa o enter destivado para submitar o formulario    
         var form = this;
 
         // Executa o blur de todos os campos do formulário novamente
