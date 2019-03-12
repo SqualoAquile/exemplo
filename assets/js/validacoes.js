@@ -1,3 +1,29 @@
+//
+// Validação de Datas
+//
+function validaDat(valor) {
+    var date = valor;
+    var ardt = new Array;
+    var ExpReg = new RegExp('(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/[12][0-9]{3}');
+    ardt = date.split('/');
+    erro = false;
+    if (date.search(ExpReg) == -1) {
+        erro = true;
+    }
+    else if (((ardt[1] == 4) || (ardt[1] == 6) || (ardt[1] == 9) || (ardt[1] == 11)) && (ardt[0] > 30))
+        erro = true;
+    else if (ardt[1] == 2) {
+        if ((ardt[0] > 28) && ((ardt[2] % 4) != 0))
+            erro = true;
+        if ((ardt[0] > 29) && ((ardt[2] % 4) == 0))
+            erro = true;
+    }
+    if (erro) {
+        return false;
+    }
+    return true;
+}
+
 $(function () {
 
     //
@@ -20,32 +46,6 @@ $(function () {
             success: callback
         });
     };
-
-    //
-    // Validação de Datas
-    //
-    function validaDat(valor) {
-        var date = valor;
-        var ardt = new Array;
-        var ExpReg = new RegExp('(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/[12][0-9]{3}');
-        ardt = date.split('/');
-        erro = false;
-        if (date.search(ExpReg) == -1) {
-            erro = true;
-        }
-        else if (((ardt[1] == 4) || (ardt[1] == 6) || (ardt[1] == 9) || (ardt[1] == 11)) && (ardt[0] > 30))
-            erro = true;
-        else if (ardt[1] == 2) {
-            if ((ardt[0] > 28) && ((ardt[2] % 4) != 0))
-                erro = true;
-            if ((ardt[0] > 29) && ((ardt[2] % 4) == 0))
-                erro = true;
-        }
-        if (erro) {
-            return false;
-        }
-        return true;
-    }
 
     //
     // Validação Padrão de Email
@@ -122,8 +122,8 @@ $(function () {
             searchHighlight: true,
             conditionalPaging: true,
             aLengthMenu: [
-                [25, 50, 100, 200, -1],
-                [25, 50, 100, 200, "Mostrar Todos"]
+                [10, 25, 50, -1],
+                [10, 25, 50, "Mostrar Todos"]
             ],
             order: [0, 'desc'],
             ajax: {
@@ -482,8 +482,10 @@ $(function () {
     //
     $('[data-mascara_validacao="data"]')
         .mask('00/00/0000')
-        .datepicker()
-        .change(function () {
+        .datepicker();
+
+    $(this)
+        .on('change', '[data-mascara_validacao="data"]', function () {
 
             var $this = $(this),
                 valor = $this.val();
@@ -702,7 +704,9 @@ $(function () {
         .mask('#.##0,00', {
             reverse: true
         })
-        .on('blur touchstart', function () {
+    
+    $(this)
+        .on('blur touchstart', '[data-mascara_validacao="monetario"]', function () {
 
             var $this = $(this),
                 value = $this.val(),

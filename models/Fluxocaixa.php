@@ -26,9 +26,71 @@ class Fluxocaixa extends model {
         return $array; 
     }
 
+    public function quitar($request) {
+
+        $data_quitacao = $request["data_quitacao"];
+        $arr_quitar_id = $request["aquitares"];
+        
+        if (!empty($data_quitacao) && !empty($arr_quitar_id)) {
+            
+            $ipcliente = $this->permissoes->pegaIPcliente();
+            $alteracoes = " | " . ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - QUITAÇÃO";
+
+            $idImploded = implode(",", $arr_quitar_id);
+
+            $stringUpdate = "UPDATE " . $this->table . " SET status='Quitado', alteracoes=CONCAT(alteracoes, '" . $alteracoes . "') WHERE id IN (" . $idImploded . ")";
+            
+            self::db()->query($stringUpdate);
+
+            return self::db()->errorInfo();
+        }
+    }
+
+    public function excluirChecados($request) {
+
+        $checados = $request["checados"];
+        
+        if (!empty($checados)) {
+            
+            $ipcliente = $this->permissoes->pegaIPcliente();
+            $alteracoes = " | " . ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - EXCLUSÃO";
+
+            $idImploded = implode(",", $checados);
+
+            $stringUpdate = "UPDATE " . $this->table . " SET situacao='excluido', alteracoes=CONCAT(alteracoes, '" . $alteracoes . "') WHERE id IN (" . $idImploded . ")";
+            
+            self::db()->query($stringUpdate);
+
+            return self::db()->errorInfo();
+        }
+    }
+
+    public function inlineEdit($request) {
+        
+        $id = $request["id"];
+        $valor_total = $request["valor_total"];
+        $data_vencimento = $request["data_vencimento"];
+        $observacao = $request["observacao"];
+
+        $dtaux = explode("/", $data_vencimento);
+        if (count($dtaux) == 3) {
+            $data_vencimento = $dtaux[2] . "-" . $dtaux[1] . "-" . $dtaux[0];
+        }
+
+        $valor_total = preg_replace('/\./', '', $valor_total);
+        $valor_total = preg_replace('/\,/', '.', $valor_total);
+
+        if (!empty($id)) {
+
+            $stringUpdate = "UPDATE " . $this->table . " SET valor_total='" . $valor_total . "', data_vencimento='" . $data_vencimento . "', observacao='" . $observacao . "' WHERE id=" . $id;
+
+            self::db()->query($stringUpdate);
+
+            return self::db()->errorInfo();
+        }
+    }
+
     public function adicionar($request) {
-        //echo 'cheguei';
-        // print_r($request); exit;
 
         $ipcliente = $this->permissoes->pegaIPcliente();
 

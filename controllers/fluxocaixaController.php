@@ -93,5 +93,26 @@ class fluxocaixaController extends controller{
             $this->loadTemplate($this->table . "-form", $dados); 
         }
     }
+
+    public function quitar () {
+
+        if(isset($_POST) && !empty($_POST)){
+            echo json_encode($this->model->quitar($_POST));
+        }
+    }
+
+    public function excluirChecados () {
+
+        if(isset($_POST) && !empty($_POST)){
+            echo json_encode($this->model->excluirChecados($_POST));
+        }
+    }
+
+    public function inlineEdit () {
+
+        if(isset($_POST) && !empty($_POST)){
+            echo json_encode($this->model->inlineEdit($_POST));
+        }
+    }
 }   
 ?>

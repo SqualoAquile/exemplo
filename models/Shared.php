@@ -29,7 +29,7 @@ class Shared extends model {
             
             $stringBtn .= '</form>';
         } else {
-            $stringBtn .=  '<div class="text-center"><button class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button></div>';
+            $stringBtn .=  '<div class="text-center"><button class="btn btn-primary btn-sm" id="editar" data-id="' . $id . '"><i class="fas fa-edit"></i></button></div>';
         }
         
         return $stringBtn;
@@ -44,7 +44,7 @@ class Shared extends model {
                 "db" => "id",
                 "dt" => $index,
                 "formatter" => function($id, $row) {
-                    return "<input type='checkbox' name='checkboxFluxoCaixa'>";
+                    return "<input type='checkbox' name='checkboxFluxoCaixa' value='" . $id . "'>";
                 }
             ];
             $index++;
