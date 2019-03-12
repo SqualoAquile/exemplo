@@ -9,21 +9,21 @@ require "_header_browser_filtros.php";
 <div class="collapse mb-5 sticky-top" id="collapseFluxocaixaResumo">
     <div class="card card-body">
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-4 col-data-quitacao">
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon-calendar">
                             <i class="fas fa-calendar-alt"></i>
                         </span>
                     </div>
-                    <input type="text" class="form-control" data-provide="datepicker" placeholder="Data de Quitação" aria-label="Data de Quitação" aria-describedby="basic-addon-calendar">
+                    <input type="text" class="form-control" data-provide="datepicker" placeholder="Data de Quitação" aria-label="Data de Quitação" aria-describedby="basic-addon-calendar" name="data_quitacao" required>
                 </div>
             </div>
-            <div class="col-lg-3 flex-grow-0">
+            <div class="col-lg-3 flex-grow-0 col-btn-quitar">
                 <button class="btn btn-danger btn-block" id="quitar">Quitar <span></span> Lançamentos</button>
             </div>
             <div class="col-lg-2 flex-grow-0">
-                <button class="btn btn-secondary btn-block">Excluir Selecionados</button>
+                <button class="btn btn-secondary btn-block" id="excluir">Excluir Selecionados</button>
             </div>
         </div>
     </div>

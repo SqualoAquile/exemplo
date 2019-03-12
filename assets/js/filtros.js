@@ -9,7 +9,7 @@ $(function () {
             if (mask == 'data') {
     
                 $(el)
-                    .mask('00/00/0000')
+                    .mask('00/00/0000', {maxlength: false})
                     .datepicker();
 
             } else if (mask == 'monetario') {
@@ -35,7 +35,6 @@ $(function () {
 
             $(this)
                 .datepicker('destroy')
-                .removeAttr('maxlength')
                 .unmask();
         });
     }

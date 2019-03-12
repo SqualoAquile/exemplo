@@ -67,6 +67,7 @@
             @extend .mb-3;
             select {
                 @extend .form-control;
+                @extend .form-control-sm;
                 @extend .w-auto;
                 @extend .mr-2;
             }
