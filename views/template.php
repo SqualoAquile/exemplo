@@ -97,8 +97,8 @@
             [
                "text" => "Orçamentos",
                "icon" => "fas fa-tasks",
-               "permissao" => "administradoras_ver",
-               "link" => "/administradoras"
+               "permissao" => "orcamentos_ver",
+               "link" => "/orcamentos"
             ],
             [
                "text" => "Ordens de Serviço",

@@ -135,7 +135,13 @@ $(document).ready(function () {
     });    
 
     $('#form-principal').on('submit', function(e){
-        $(this).find('input').removeAttr('disabled');
+        if($(this)[0].checkValidity() == true) {
+            $(this).find('input').removeAttr('disabled');
+        }else{
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }    
     });
 
 });
@@ -235,7 +241,7 @@ function calculaDiferenca (sdoTotInicio, resultado, sdoTotFinal, diferenca){
     var sdoTotInicio, resultado, sdoTotFinal, diferenca, valAux;
 
     valAux = 0;
-    console.log('totinicio: ' + sdoTotInicio.val());
+    
     if(sdoTotInicio.val() != '' && sdoTotInicio.val() != undefined ){
         sdoTotInicio = parseFloat( floatParaPadraoInternacional(sdoTotInicio.val()) );
     }else{
@@ -243,7 +249,7 @@ function calculaDiferenca (sdoTotInicio, resultado, sdoTotFinal, diferenca){
     }
 
     valAux = 0;
-    console.log('resultado: ' + resultado.val());
+    
     if(resultado.val() != '' && resultado.val() != undefined ){
         resultado = parseFloat( floatParaPadraoInternacional(resultado.val()) );
     }else{
@@ -251,19 +257,19 @@ function calculaDiferenca (sdoTotInicio, resultado, sdoTotFinal, diferenca){
     }
 
     valAux = 0;
-    console.log('totfinal: ' + sdoTotFinal.val());
+    
     if(sdoTotFinal.val() != '' && sdoTotFinal.val() != undefined ){
         sdoTotFinal = parseFloat( floatParaPadraoInternacional(sdoTotFinal.val()) );
     }else{
         sdoTotFinal = parseFloat(0);
     }
     
-    console.log('inicio1: ' + sdoTotInicio + ' movimen1:  ' + resultado + ' fim1:  ' +  sdoTotFinal );
+    
     valAux = 0;
     valAux =  parseFloat( parseFloat(sdoTotInicio) + parseFloat(resultado) - parseFloat(sdoTotFinal));
     valAux = floatParaPadraoBrasileiro(valAux);
 
-    console.log('inicio: ' + sdoTotInicio + ' movimen:  ' + resultado + ' fim:  ' +  sdoTotFinal + ' dif: ' + valAux );
+    
     return diferenca.val(valAux);
 
 }
