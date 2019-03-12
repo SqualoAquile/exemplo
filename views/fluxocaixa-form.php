@@ -294,16 +294,16 @@
     </form>    
     <div id='resumo_lancamento' class='row my-5'>
         <div class='col-lg-4'>
-            <div class="mx-auto alert bg-light text-center border-dark mb-3">
+            <div class="mx-auto alert bg-white shadow-sm text-center mb-3">
                 <div class="alert-header font-weight-bold text-success">Receita</div>
-                <div class="alert-body py-1">
+                <div class="alert-body">
                     <h2 class="alert-title text-success" id='receita_lanc' ></h2>
                 </div>
             </div>  
         </div>
 
         <div class='col-lg-4'>
-            <div class="mx-auto alert bg-light text-center border-dark mb-3">
+            <div class="mx-auto alert bg-white shadow-sm text-center mb-3">
                 <div class="alert-header font-weight-bold text-danger">Despesa</div>
                 <div class="alert-body">
                     <h2 class="alert-title text-danger" id='despesa_lanc'></h2>
@@ -311,7 +311,7 @@
             </div>  
         </div>
         <div class='col-lg-4'>
-            <div class="mx-auto alert bg-light text-center border-dark mb-3">
+            <div class="mx-auto alert bg-light shadow-sm text-center border-dark mb-3">
                 <div class="alert-header font-weight-bold">Total</div>
                 <div class="alert-body">
                     <h2 class="alert-title" id='total_lanc'></h2>

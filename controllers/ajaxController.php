@@ -58,12 +58,12 @@ class ajaxController extends controller{
   }
   /////// cadastro de ADM CARTOES
   /////// cadastro de LANÇAMENTOS CAIXA
-  public function buscaSinteticas(){
+  public function buscaReceitasDespesas(){
+    
     $dados = array();
-    $cg = new Contasgerenciais();
-    if(isset($_POST["q"]) && !empty($_POST["q"])){
-        $nome = trim(addslashes($_POST["q"]));
-        $dados = $cg->pegarListaSinteticas($nome,$_SESSION["idEmpresaFuncionario"]);
+    $fc = new Fluxocaixa();
+    if(isset($_POST) && !empty($_POST)){
+        $dados = $fc->receitasDespesas($_POST);
     }
     echo json_encode($dados);
   }

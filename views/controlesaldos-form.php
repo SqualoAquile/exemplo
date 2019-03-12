@@ -9,6 +9,11 @@
 <script src="<?php echo BASE_URL?>/assets/js/<?php echo $modulo?>.js" type="text/javascript"></script>
 
 <header class="d-lg-flex align-items-center my-5">
+    <?php if(in_array($modulo . "_ver", $infoUser["permissoesUsuario"])): ?>
+        <a href="<?php echo BASE_URL . '/' . $modulo ?>" class="btn btn-secondary mr-lg-4" title="Voltar">
+            <i class="fas fa-chevron-left"></i>
+        </a>
+    <?php endif ?>
     <h1 class="display-4 m-0 text-capitalize font-weight-bold"><?php echo $viewInfo["title"]." ".ucfirst($labelTabela["labelForm"]); ?></h1>
 </header>
 
@@ -58,7 +63,7 @@
                                     <?php if ($value["Null"] == "NO"): ?>
                                         <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
                                     <?php endif ?>
-                                    <span><?php echo array_key_exists("label", $value["Comment"]) ? $value["Comment"]["label"] : ucwords(str_replace("_", " ", $value['Field'])) ?></span>
+                                    <span><?php echo array_key_exists("label", $value["Comment"]) ? ucwords($value["Comment"]["label"]) : ucwords(str_replace("_", " ", $value['Field'])) ?></span>
                                 </label>
                                 
                                 <!-- CAMPOS DO TIPO RELACIONAL - SELECT -->

@@ -149,4 +149,61 @@ class Fluxocaixa extends model {
             }
         }
     }
+
+    public function receitasDespesas($infoConsulta){
+        
+        $array = array();
+        if(!empty($infoConsulta) && isset($infoConsulta)){
+            $data1 = '';
+            $data2 = '';
+            $tabela = addslashes(trim($infoConsulta['tabela']));
+            $campo = addslashes(trim($infoConsulta['campo']));
+            $dataInicio = addslashes(trim($infoConsulta['dataInicio']));
+            $dataInicio = explode("/",$dataInicio);
+            $data1 = $dataInicio[2]."-".$dataInicio[1]."-".$dataInicio[0];
+            
+            if( $dataInicio[1] == '2'){
+                if( gmp_div_r(intval($dataInicio[2]), intval(4)) == intval(0) ){
+                    $data2 = $dataInicio[2]."-".$dataInicio[1]."-29";
+                }else{
+                    $data2 = $dataInicio[2]."-".$dataInicio[1]."-28";
+                }
+            }else if($dataInicio[1] == '1' || $dataInicio[1] == '3' || $dataInicio[1] == '5'  ||
+                     $dataInicio[1] == '7' || $dataInicio[1] == '8' || $dataInicio[1] == '10' || $dataInicio[1] == '12'){
+
+                $data2 = $dataInicio[2]."-".$dataInicio[1]."-31";
+
+            }else{
+
+                $data2 = $dataInicio[2]."-".$dataInicio[1]."-30";
+            }
+
+            $sql1 = "SELECT SUM(valor_total) as despesatotal FROM fluxocaixa WHERE despesa_receita = 'Despesa' AND data_quitacao BETWEEN '$data1' AND '$data2'";
+            $sql1 = self::db()->query($sql1);
+
+            if($sql1->rowCount() > 0){  
+                $sql1 = $sql1->fetch();
+                $despesa = floatval($sql1['despesatotal']);
+            }else{
+                $despesa = floatval(0);
+            }    
+
+            $sql2 = "SELECT SUM(valor_total) as receitatotal FROM fluxocaixa WHERE despesa_receita = 'Receita' AND data_quitacao BETWEEN '$data1' AND '$data2'";
+            $sql2 = self::db()->query($sql2);
+
+            if($sql2->rowCount() > 0){  
+                $sql2 = $sql2->fetch();
+                $receita = floatval($sql2['receitatotal']);
+            }else{
+                $receita = floatval(0);
+            }    
+
+            $resultado = floatval($receita - $despesa);
+            $array['Receita'] = $receita;
+            $array['Despesa'] = $despesa;
+            $array['Resultado'] = $resultado;
+
+        }
+        return $array;
+    }
 }

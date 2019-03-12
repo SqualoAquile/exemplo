@@ -14,16 +14,16 @@ $(document).ready(function () {
     $("#saldo_caixa_final");       
     
 
-    
-    
-
     $('[data-mascara_validacao="data"]')
     .mask('00/00/0000')
-    .datepicker(datepickerOptions)
-    .change(function () {
+    .datepicker()
+    .on('change blur', function () {
 
         var $this = $(this),
-            valor = $this.val();
+            valor = $this.val(),
+            $entradas = $("#entradas"),
+            $saidas = $("#saidas"),
+            $resultado = $("#resultado");
 
         valor = valor.split('/');
         valor[0] = '01';
@@ -31,8 +31,8 @@ $(document).ready(function () {
 
         $this.removeClass('is-valid is-invalid');
         $this.siblings('.invalid-feedback').remove();
-
-        if (valor != '') {
+        
+        if ($this.val() != '') {
             if ($this.attr('data-anterior') != $this.val()) {
                 if (
                     (typeof valor[1] == 'undefined' || typeof valor[2] == 'undefined') ||
@@ -40,41 +40,104 @@ $(document).ready(function () {
                     (validaDat(data) == false)
                 ) {
                     // Inválido
-
-                    $this
-                        .removeClass('is-valid')
-                        .addClass('is-invalid');
-
+                    $this.val('').removeClass('is-valid').addClass('is-invalid');
                     $this[0].setCustomValidity('invalid');
-
                     $this.after('<div class="invalid-feedback">Data inválida.</div>');
+
+                    $entradas.val(floatParaPadraoBrasileiro(0));
+                    $saidas.val(floatParaPadraoBrasileiro(0));
+                    $resultado.val(floatParaPadraoBrasileiro(0));
+                    
                 } else {
                     // Valido   
-                    if( valor[0] == '01' ){
-                        console.log('data certa: ' + data);
-                        $this
-                        .val(data)
-                        .removeClass('is-invalid')
-                        .addClass('is-valid');
-                        $this[0].setCustomValidity('');
+                    $this.val(valor[2]+'-'+valor[1]+'-'+valor[0]);
+                    $this.unico(function (json) {
+                        if (!json.length) {
+                            // Não existe, pode seguir
+                            if( valor[0] == '01' ){
+                                $this.removeClass('is-invalid').addClass('is-valid');
+                                $this[0].setCustomValidity('');
+                                $this.datepicker('update');
+        
+                                // preenche os valores dos campos que são necessários
+                                var tabela, campo, dtinicio;
+                                tabela = 'fluxocaixa'
+                                campo = 'valor_total'
+                                dtinicio = data;
+            
+                                $.ajax({
+                                    url: baselink + '/ajax/buscaReceitasDespesas',
+                                    type: 'POST',
+                                    data: {
+                                        tabela: tabela,
+                                        campo: campo,
+                                        dataInicio: dtinicio 
+                                    },
+                                    dataType: 'json',
+                                    success: function (dado) {
+                                        $this.val(data);
+                                        if(dado == ''){
+                                            $entradas.val(floatParaPadraoBrasileiro(0));
+                                            $saidas.val(floatParaPadraoBrasileiro(0));
+                                            $resultado.val(floatParaPadraoBrasileiro(0));
+        
+                                        }else{
+                                            $entradas.val(floatParaPadraoBrasileiro(dado['Receita']));
+                                            $saidas.val(floatParaPadraoBrasileiro(dado['Despesa']));
+                                            $resultado.val(floatParaPadraoBrasileiro(dado['Resultado']));                                            
+                                        }
+                                        
+                                    }
+                                });
+        
+                            }else{
+                                // inválido
+                                $this.val('').removeClass('is-valid').addClass('is-invalid');
+                                $this[0].setCustomValidity('invalid');
+                                $this.after('<div class="invalid-feedback">Somente datas com dia iguais a 01 são válidas.</div>');
+        
+                                $entradas.val(floatParaPadraoBrasileiro(0));
+                                $saidas.val(floatParaPadraoBrasileiro(0));
+                                $resultado.val(floatParaPadraoBrasileiro(0));
+                                
+                            }
 
-                        $this.datepicker('update');
+                        } else {
+                            // Já existe, erro
+                            $this.val('');
+                            $this.removeClass('is-valid').addClass('is-invalid');
+                            $this[0].setCustomValidity('invalid');
+                            $this.after('<div class="invalid-feedback">Essa data já está sendo usada.</div>');
 
-                    }else{
-                        // inválido
-                        $this
-                        .val('')
-                        .removeClass('is-valid')
-                        .addClass('is-invalid');
-                        $this[0].setCustomValidity('invalid');
-                        $this.after('<div class="invalid-feedback">Somente datas com dia iguais a 01 são válidas.</div>');
-                        
-                    }
-                    
+                            $entradas.val(floatParaPadraoBrasileiro(0));
+                            $saidas.val(floatParaPadraoBrasileiro(0));
+                            $resultado.val(floatParaPadraoBrasileiro(0));
+                        }
+                    });
+                    $this.val(data);
                 }
             }
+        }else{
+            $entradas.val(floatParaPadraoBrasileiro(0));
+            $saidas.val(floatParaPadraoBrasileiro(0));
+            $resultado.val(floatParaPadraoBrasileiro(0));
         }
+        calculaDiferenca($('#saldo_total_inicio'), $('#resultado'), $('#saldo_total_final'), $('#diferenca'));
     });
+
+    $("#saldo_banco_inicio, #saldo_caixa_inicio, #saldo_online_inicio, #saldo_total_inicio").on('blur change', function(){
+        somaSaldo($('#saldo_banco_inicio'),$('#saldo_caixa_inicio'), $('#saldo_online_inicio'), $('#saldo_total_inicio'));
+        calculaDiferenca($('#saldo_total_inicio'), $('#resultado'), $('#saldo_total_final'), $('#diferenca'));
+    });    
+    $("#saldo_banco_final, #saldo_caixa_final, #saldo_online_final, #saldo_total_final ").on('blur change', function(){
+        somaSaldo($('#saldo_banco_final'),$('#saldo_caixa_final'), $('#saldo_online_final'), $('#saldo_total_final'));
+        calculaDiferenca($('#saldo_total_inicio'), $('#resultado'), $('#saldo_total_final'), $('#diferenca'));
+    });    
+
+    $('#form-principal').on('submit', function(e){
+        $(this).find('input').removeAttr('disabled');
+    });
+
 });
 
 function validaDat(valor) {
@@ -98,4 +161,109 @@ function validaDat(valor) {
         return false;
     }
     return true;
+}
+
+function floatParaPadraoBrasileiro(valor){
+    var valortotal = valor;
+    valortotal = number_format(valortotal,2,',','.');
+    return valortotal;
+}
+
+function floatParaPadraoInternacional(valor){
+    
+    var valortotal = valor;
+    valortotal = valortotal.replace(".", "").replace(".", "").replace(".", "").replace(".", "");
+    valortotal = valortotal.replace(",", ".");
+    valortotal = parseFloat(valortotal).toFixed(2);
+    return valortotal;
+}
+
+function number_format( numero, decimal, decimal_separador, milhar_separador ){ 
+        numero = (numero + '').replace(/[^0-9+\-Ee.]/g, '');
+        var n = !isFinite(+numero) ? 0 : +numero,
+            prec = !isFinite(+decimal) ? 0 : Math.abs(decimal),
+            sep = (typeof milhar_separador === 'undefined') ? ',' : milhar_separador,
+            dec = (typeof decimal_separador === 'undefined') ? '.' : decimal_separador,
+            s = '',
+            toFixedFix = function (n, prec) {
+                var k = Math.pow(10, prec);
+                return '' + Math.round(n * k) / k;
+            };
+ 
+        // Fix para IE: parseFloat(0.55).toFixed(0) = 0;
+        s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+        if (s[0].length > 3) {
+            s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+        }
+        if ((s[1] || '').length < prec) {
+            s[1] = s[1] || '';
+            s[1] += new Array(prec - s[1].length + 1).join('0');
+        }
+        return s.join(dec);
+}
+
+function somaSaldo(sdoBanco, sdoCaixa, sdoOnline, sdoTotal){
+    var sdoBanco, sdoCaixa, sdoOnline, sdoTotal, total, valAux;
+    
+    total = 0;
+
+    valAux = 0;
+    if(sdoBanco.val() != '' && sdoBanco.val() != undefined ){
+        valAux = floatParaPadraoInternacional(sdoBanco.val());
+        total +=  parseFloat(valAux);
+    }
+
+    valAux = 0;
+    if(sdoCaixa.val() != '' && sdoCaixa.val() != undefined ){
+        valAux = floatParaPadraoInternacional(sdoCaixa.val());
+        total +=  parseFloat(valAux);
+    }
+
+    valAux = 0;
+    if(sdoOnline.val() != '' && sdoOnline.val() != undefined ){
+        valAux = floatParaPadraoInternacional(sdoOnline.val());
+        total +=  parseFloat(valAux);
+    }
+    
+    valAux = floatParaPadraoBrasileiro(total);
+    calculaDiferenca($('#saldo_total_inicio'), $('#resultado'), $('#saldo_total_final'), $('#diferenca'));
+    return sdoTotal.val(valAux);
+
+}
+
+function calculaDiferenca (sdoTotInicio, resultado, sdoTotFinal, diferenca){
+    var sdoTotInicio, resultado, sdoTotFinal, diferenca, valAux;
+
+    valAux = 0;
+    console.log('totinicio: ' + sdoTotInicio.val());
+    if(sdoTotInicio.val() != '' && sdoTotInicio.val() != undefined ){
+        sdoTotInicio = parseFloat( floatParaPadraoInternacional(sdoTotInicio.val()) );
+    }else{
+        sdoTotInicio = parseFloat(0);
+    }
+
+    valAux = 0;
+    console.log('resultado: ' + resultado.val());
+    if(resultado.val() != '' && resultado.val() != undefined ){
+        resultado = parseFloat( floatParaPadraoInternacional(resultado.val()) );
+    }else{
+        resultado = parseFloat(0);
+    }
+
+    valAux = 0;
+    console.log('totfinal: ' + sdoTotFinal.val());
+    if(sdoTotFinal.val() != '' && sdoTotFinal.val() != undefined ){
+        sdoTotFinal = parseFloat( floatParaPadraoInternacional(sdoTotFinal.val()) );
+    }else{
+        sdoTotFinal = parseFloat(0);
+    }
+    
+    console.log('inicio1: ' + sdoTotInicio + ' movimen1:  ' + resultado + ' fim1:  ' +  sdoTotFinal );
+    valAux = 0;
+    valAux =  parseFloat( parseFloat(sdoTotInicio) + parseFloat(resultado) - parseFloat(sdoTotFinal));
+    valAux = floatParaPadraoBrasileiro(valAux);
+
+    console.log('inicio: ' + sdoTotInicio + ' movimen:  ' + resultado + ' fim:  ' +  sdoTotFinal + ' dif: ' + valAux );
+    return diferenca.val(valAux);
+
 }
