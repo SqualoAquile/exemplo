@@ -1,6 +1,9 @@
 $width-closed: calc(30px + 2rem);
 #wrapper {
 	padding-left: $width-closed;
+	@include media-breakpoint-down(md) {
+		padding-left: 0;
+	}
 	transition: all 0.5s ease;
 	&.toggled {
 		#sidebar-wrapper {
@@ -34,7 +37,9 @@ $width-closed: calc(30px + 2rem);
 							display: block!important;
 							position: fixed!important;
 							left: $width-closed!important;
-							// top: 0!important;
+							@include media-breakpoint-down(md) {
+								left: 0!important;
+							}
 						}
 					}
 				}
@@ -47,6 +52,9 @@ $width-closed: calc(30px + 2rem);
 	position: fixed;
 	left: 0;
 	width: $width-closed;
+	@include media-breakpoint-down(md) {
+		width: 0;
+	}
 	top: $navbar-height;
 	bottom: 0;
 	overflow-y: auto;
@@ -77,6 +85,9 @@ $width-closed: calc(30px + 2rem);
 	}
 	#sidebar-wrapper {
 		width: $width-closed;
+		@include media-breakpoint-down(md) {
+			width: 0!important;
+		}
 	}
 	#page-content-wrapper {
 		position: relative;
