@@ -15,7 +15,7 @@
   </div>
 
 <?php endif?>
-<h1 class="display-4 font-weight-bold">Home</h1>
+<h1 class="display-4 font-weight-bold pt-4">Home</h1>
 <section id="charts">
     <div class="row">
         <div class="col">
@@ -31,14 +31,16 @@
         </div>
     </div>
 </section>
-<script src="<?php echo BASE_URL;?>/assets/js/vendor/loader.js" type="text/javascript"></script>
 <script type="text/javascript">
+      
       google.charts.load('current', {'packages':['corechart']});
+
       google.charts.setOnLoadCallback(drawChart);
       google.charts.setOnLoadCallback(drawCurveChart);
       google.charts.setOnLoadCallback(drawVisualization);
 
       function drawChart() {
+
         var data = google.visualization.arrayToDataTable([
           ['Year', 'Sales', 'Expenses'],
           ['2013',  1000,      400],
@@ -50,7 +52,8 @@
         var options = {
           title: 'Company Performance',
           hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
-          vAxis: {minValue: 0}
+          vAxis: {minValue: 0},
+          colors: ['#2a4c6b', '#4a85b8', '#adcbe6', '#e7eff7', '#62abea']
         };
 
         var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
@@ -69,7 +72,8 @@
         var options = {
           title: 'Company Performance',
           curveType: 'function',
-          legend: { position: 'bottom' }
+          legend: { position: 'bottom' },
+          colors: ['#2a4c6b', '#4a85b8', '#adcbe6', '#e7eff7', '#62abea']
         };
 
         var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
@@ -93,7 +97,8 @@
           vAxis: {title: 'Cups'},
           hAxis: {title: 'Month'},
           seriesType: 'bars',
-          series: {5: {type: 'line'}}
+          series: {5: {type: 'line'}},
+          colors: ['#2a4c6b', '#4a85b8', '#adcbe6', '#e7eff7', '#62abea']
         };
 
         var chart = new google.visualization.ComboChart(document.getElementById('combochart_div'));

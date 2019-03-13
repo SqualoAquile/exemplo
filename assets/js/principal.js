@@ -54,7 +54,21 @@ $(function () {
         }
     });
 
-    $('#sidebar-wrapper li.dropdown').on('mouseover', function () {
-        $(this).find('.dropdown-menu').css('top', $(this).offset().top);
-    });
+    $('#sidebar-wrapper li.dropdown')
+        .on('mouseover', function() {
+            var $this = $(this),
+                heightNav = $('nav#nav').height(),
+                paddingYSidebar = $('#sidebar-wrapper > .nav').css('padding-top').replace('px', ''),
+                paddingYSidebar = parseInt(paddingYSidebar),
+                calcScroll = $this.position().top - $('#sidebar-wrapper').scrollTop();
+            
+            $this.find('.dropdown-menu').stop(true, true).css('top', (calcScroll + heightNav + paddingYSidebar));
+        })
+        .on('click focus', '> a', function(event) {
+            if (!$(this).parents('.toggled').length) {
+                event.preventDefault();
+                event.stopPropagation();
+                return false;
+            }
+        });
 });

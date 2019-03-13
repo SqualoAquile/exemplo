@@ -59,6 +59,9 @@ $width-closed: calc(30px + 2rem);
 	bottom: 0;
 	overflow-y: auto;
 	transition: all 0.5s ease;
+	&::-webkit-scrollbar {
+		width: 0 !important;
+	}
 }
 .sidebar-nav {
 	position: absolute;

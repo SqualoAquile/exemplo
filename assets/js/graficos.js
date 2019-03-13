@@ -1,5 +1,7 @@
 $(function () {
 
+    var $selectGraf = $('#selectGraficos');
+
     // Load the Visualization API and the corechart package.
     google.charts.load('current', {'packages':['corechart']});
 
@@ -8,17 +10,18 @@ $(function () {
 
     // Pega os dados da última query do datatable (pegar valores filtrados)
 
-    $('#botaoGrafico').on('click', function() {
-        drawChart();
-    });
+    $selectGraf
+        .on('change', function() {
+            drawChart();
+        });
 
     function drawChart() {
 
-        console.log("escutando search.dt");
+        if (!$selectGraf.val()) {
+            $selectGraf.val($selectGraf.find('option:not([disabled])').first().val()).change()
+        };
 
-
-        var $selectGraf = $('#selectGraficos'),
-        group = $selectGraf.val();
+        var group = $selectGraf.val();
 
         $.ajax({ 
             url: baselink + '/ajax/gerarGraficoFiltro', 
@@ -50,13 +53,15 @@ $(function () {
 
                     data.addRows(arrTeste);
 
+                    var chart_div = document.getElementById('chart_div');
+
                     var options = {
-                        'title': $selectGraf.text(),
-                        'width': 400,
-                        'height': 300
+                        'title': $selectGraf.find(':selected').text().trim(),
+                        'width': 500,
+                        'height': 400
                     };
 
-                    var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+                    var chart = new google.visualization.PieChart(chart_div);
 
                     chart.draw(data, options);
                 }

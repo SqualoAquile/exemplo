@@ -30,13 +30,27 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg flex-grow-0">
-            <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#collapseFiltros" aria-expanded="false" aria-controls="collapseFiltros">
-                <div class="d-flex align-items-center">
-                    <i class="fas fa-filter mr-2"></i>
-                    <span>Filtros</span>
-                </div>
-            </button>
+        <div class="col-lg flex-lg-grow-0">
+            <div class="btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-info btn-block cursor-pointer" data-toggle="collapse" data-target="#collapseFiltros" aria-expanded="false" aria-controls="collapseFiltros">
+                    <input type="checkbox" checked autocomplete="off">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-filter mr-2"></i>
+                        <span>Filtros</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+        <div class="col-lg flex-lg-grow-0">
+            <div class="btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-warning btn-block cursor-pointer" data-toggle="collapse" data-target="#collapseGraficos" aria-expanded="false" aria-controls="collapseGraficos">
+                    <input type="checkbox" checked autocomplete="off">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-chart-pie mr-2"></i>
+                        <span>Gráficos</span>
+                    </div>
+                </label>
+            </div>
         </div>
     </div>
     <div class="collapse" id="collapseFiltros">
@@ -123,4 +137,5 @@
             </form>
         </div>
     </div>
+    <?php require "_graficos.php" ?>
 </header>

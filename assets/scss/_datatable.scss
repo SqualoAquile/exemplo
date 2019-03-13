@@ -37,14 +37,20 @@
         }
     }
     .dataTables_paginate {
-        display: flex;
-        justify-content: center;
+        @extend .d-flex;
+        @extend .flex-nowrap;
+        @extend .align-items-center;
+        @extend .justify-content-center;
+        > span {
+            overflow-x: scroll;
+            @extend .d-flex;
+            @extend .flex-nowrap;
+            @extend .align-items-center;
+        }
         .paginate_button {
             @extend .btn;
             margin: $spacer;
-            &.disabled {
-                display: none;
-            }
+            cursor: pointer;
             &:not(.previous):not(.current):not(.next) {
                 @include button-outline-variant($primary);
                 &:not(:hover) {
@@ -57,6 +63,9 @@
             }
             &.current {
                 @include button-variant($primary, $primary);
+            }
+            &.disabled {
+                display: none;
             }
         }
     }

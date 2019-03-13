@@ -4,7 +4,6 @@
 $modulo = str_replace("-form", "", basename(__FILE__, ".php"));
 // Constroi o cabeçalho
 require "_header_browser_filtros.php";
-require "_graficos.php";
 ?>
 
 <div class="collapse mb-5 sticky-top" id="collapseFluxocaixaResumo">
