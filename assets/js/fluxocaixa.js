@@ -934,22 +934,20 @@ $(function () {
             $("#total_lanc").html(total);
     
             if (parseFloat(total) < 0) {
-                $("#total_lanc").parent('div').parent('div').removeClass('text-white bg-light bg-danger bg-success border-dark').addClass('bg-danger text-white');
+                $("#total_lanc").parent('div').parent('div').removeClass('text-success').addClass('text-danger');
                 
             } else if (parseFloat(total) > 0) {
-                $("#total_lanc").parent('div').parent('div').removeClass('text-white bg-light bg-danger bg-success border-dark').addClass('bg-success text-white');
+                $("#total_lanc").parent('div').parent('div').removeClass('text-danger').addClass('text-success');
 
             } else {
-                $("#total_lanc").parent('div').parent('div').removeClass('text-white bg-light bg-danger bg-success border-dark').addClass('bg-light border-dark');
+                $("#total_lanc").parent('div').parent('div').removeClass('text-danger text-success');
             }
     
         } else {
             $("#receita_lanc").html("0,00");
-            $("#receita_lanc").parent('div').parent('div').removeClass('text-white bg-light bg-danger bg-success').addClass('bg-success text-white');
             $("#despesa_lanc").html("0,00");
-            $("#despesa_lanc").parent('div').parent('div').removeClass('text-white bg-light bg-danger bg-success').addClass('bg-danger text-white');
             $("#total_lanc").html("0,00");
-            $("#total_lanc").parent('div').parent('div').removeClass('text-white bg-light bg-danger bg-success').addClass('bg-light border-dark');
+            $("#total_lanc").parent('div').parent('div').removeClass('text-danger text-success');
         }
         
         if ($('#tabela_lancamento tbody tr').length <= 0) {
