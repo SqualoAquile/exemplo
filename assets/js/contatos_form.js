@@ -7,7 +7,7 @@ $(function () {
                 <a href="javascript:void(0)" class="editar-contato btn btn-sm btn-primary">
                     <i class="fas fa-edit"></i>
                 </a>
-                <a href="javascript:void(0)" class="excluir-contato btn btn-sm btn-secondary">
+                <a href="javascript:void(0)" class="excluir-contato btn btn-sm btn-danger">
                     <i class="fas fa-trash-alt"></i>
                 </a>
             </td>

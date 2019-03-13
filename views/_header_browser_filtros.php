@@ -120,7 +120,7 @@
                             </div>
                         </div>
                         <div class="col-lg flex-grow-0 col-excluir-linha">
-                            <button class="btn btn-secondary btn-block" id="excluir-linha">
+                            <button class="btn btn-danger btn-block" id="excluir-linha">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </div>

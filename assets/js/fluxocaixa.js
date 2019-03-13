@@ -1262,7 +1262,7 @@ $(function () {
             
             var arraylinhas = new Array();
             var linha = "<tr>";
-                linha   += "<td>" + "<div class='btn btn-sm btn-secondary mr-1' onclick='excluir(this)' data-ident=" + randomico + " '><i class='fas fa-trash-alt'></i></div>" 
+                linha   += "<td>" + "<div class='btn btn-sm btn-danger mr-1' onclick='excluir(this)' data-ident=" + randomico + " '><i class='fas fa-trash-alt'></i></div>" 
                                   + "<div class='btn btn-primary btn-sm ml-1' onclick='editar(this)' data-ident=" + randomico + " '><i class='fas fa-edit'></i></div>" 
                         + "</td>";
                 linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[despesa_receita]'  value='" + movimentacao + "' />" +"</td>";
@@ -1307,7 +1307,7 @@ $(function () {
             randomico = Math.random();
 
             var linha = "<tr>";
-                linha += "<td>" + "<div class='btn btn-sm btn-secondary mr-1' onclick='excluir(this)' data-ident=" + randomico + " '><i class='fas fa-trash-alt'></i></div>" 
+                linha += "<td>" + "<div class='btn btn-sm btn-danger mr-1' onclick='excluir(this)' data-ident=" + randomico + " '><i class='fas fa-trash-alt'></i></div>" 
                                 + "<div class='btn btn-primary btn-sm ml-1' onclick='editar(this)' data-ident=" + randomico + " '><i class='fas fa-edit'></i></div>" 
                       + "</td>";
             linha += "<td>" + "<input name='linha"+randomico+"[despesa_receita]'       value='" + movimentacao + "'  type='text' class='form-control-plaintext' readonly disabled required  />" +"</td>";
@@ -1373,7 +1373,7 @@ $(function () {
                 
 
                 var linha = "<tr>";
-                linha += "<td>" + "<div class='btn btn-sm btn-secondary mr-1' onclick='excluir(this)' data-ident=" + randomico + " '><i class='fas fa-trash-alt'></i></div>" 
+                linha += "<td>" + "<div class='btn btn-sm btn-danger mr-1' onclick='excluir(this)' data-ident=" + randomico + " '><i class='fas fa-trash-alt'></i></div>" 
                                 + "<div class='btn btn-primary btn-sm ml-1' onclick='editar(this)' data-ident=" + randomico + " '><i class='fas fa-edit'></i></div>" 
                       + "</td>";
                 linha += "<td>" + "<input type='text' class='form-control-plaintext' readonly disabled required name='linha"+randomico+"[despesa_receita]'  value='" + movimentacao + "' />"               +"</td>";

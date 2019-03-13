@@ -312,7 +312,7 @@ $(function () {
                     <button class="editar-inclusao btn btn-primary btn-sm">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="excluir-inclusao btn btn-secondary btn-sm">
+                    <button class="excluir-inclusao btn btn-danger btn-sm">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </td>

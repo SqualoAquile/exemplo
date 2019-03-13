@@ -31,7 +31,7 @@ class Shared extends model {
             }
     
             if(in_array($this->table."_exc", $_SESSION["permissoesUsuario"])){
-                $stringBtn .= '<input type="hidden" name="id" value="'. $id .'"><button type="submit" onclick="return confirm(\'Tem Certeza?\')" class="btn btn-sm btn-secondary ml-1"><i class="fas fa-trash-alt"></i></button>';
+                $stringBtn .= '<input type="hidden" name="id" value="'. $id .'"><button type="submit" onclick="return confirm(\'Tem Certeza?\')" class="btn btn-sm btn-danger ml-1"><i class="fas fa-trash-alt"></i></button>';
             }
             
             $stringBtn .= '</form>';

@@ -17,91 +17,86 @@
 <?php endif?>
 <h1 class="display-4 font-weight-bold pt-4">Home</h1>
 <section id="charts">
-    <div class="row">
-        <div class="col">
-            <div id="chart_div" class="w-100 py-5"></div>
+    <div class="row my-5">
+        <div class="col-lg">
+          <canvas id="chartBar"></canvas>
         </div>
-        <div class="col">
-            <div id="curve_chart" class="w-100 py-5"></div>
+        <div class="col-lg">
+          <canvas id="chartPie"></canvas>
         </div>
     </div>
-    <div class="row">
-        <div class="col">
-            <div id="combochart_div" class="w-100 pb-5"></div>
+    <div class="row my-5">
+        <div class="col-lg">
+          <canvas id="chartLine"></canvas>
         </div>
     </div>
 </section>
-<script type="text/javascript">
-      
-      google.charts.load('current', {'packages':['corechart']});
+<script>
+var ctxBar = document.getElementById("chartBar").getContext('2d');
+var ctxPie = document.getElementById("chartPie").getContext('2d');
+var ctxLine = document.getElementById("chartLine").getContext('2d');
 
-      google.charts.setOnLoadCallback(drawChart);
-      google.charts.setOnLoadCallback(drawCurveChart);
-      google.charts.setOnLoadCallback(drawVisualization);
+var chartBar = new Chart(ctxBar, {
+    type: 'bar',
+    data: {
+        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        datasets: [{
+            label: '0 de Votos',
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor: [
+                '#2a4c6b',
+                '#4a85b8',
+                '#adcbe6',
+                '#e7eff7',
+                '#62abea'
+            ]
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+});
 
-      function drawChart() {
+var chartPie = new Chart(ctxPie, {
+    type: 'doughnut',
+    data: {
+        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        datasets: [{
+            label: '# of Votes',
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor: [
+                '#2a4c6b',
+                '#4a85b8',
+                '#adcbe6',
+                '#e7eff7',
+                '#62abea'
+            ]
+        }]
+    }
+});
 
-        var data = google.visualization.arrayToDataTable([
-          ['Year', 'Sales', 'Expenses'],
-          ['2013',  1000,      400],
-          ['2014',  1170,      460],
-          ['2015',  660,       1120],
-          ['2016',  1030,      540]
-        ]);
-
-        var options = {
-          title: 'Company Performance',
-          hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
-          vAxis: {minValue: 0},
-          colors: ['#2a4c6b', '#4a85b8', '#adcbe6', '#e7eff7', '#62abea']
-        };
-
-        var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
-        chart.draw(data, options);
-      }
-
-      function drawCurveChart() {
-        var data = google.visualization.arrayToDataTable([
-          ['Year', 'Sales', 'Expenses'],
-          ['2004',  1000,      400],
-          ['2005',  1170,      460],
-          ['2006',  660,       1120],
-          ['2007',  1030,      540]
-        ]);
-
-        var options = {
-          title: 'Company Performance',
-          curveType: 'function',
-          legend: { position: 'bottom' },
-          colors: ['#2a4c6b', '#4a85b8', '#adcbe6', '#e7eff7', '#62abea']
-        };
-
-        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-
-        chart.draw(data, options);
-      }
-
-      function drawVisualization() {
-        // Some raw data (not necessarily accurate)
-        var data = google.visualization.arrayToDataTable([
-          ['Month', 'Bolivia', 'Ecuador', 'Madagascar', 'Papua New Guinea', 'Rwanda', 'Average'],
-          ['2004/05',  165,      938,         522,             998,           450,      614.6],
-          ['2005/06',  135,      1120,        599,             1268,          288,      682],
-          ['2006/07',  157,      1167,        587,             807,           397,      623],
-          ['2007/08',  139,      1110,        615,             968,           215,      609.4],
-          ['2008/09',  136,      691,         629,             1026,          366,      569.6]
-        ]);
-
-        var options = {
-          title : 'Monthly Coffee Production by Country',
-          vAxis: {title: 'Cups'},
-          hAxis: {title: 'Month'},
-          seriesType: 'bars',
-          series: {5: {type: 'line'}},
-          colors: ['#2a4c6b', '#4a85b8', '#adcbe6', '#e7eff7', '#62abea']
-        };
-
-        var chart = new google.visualization.ComboChart(document.getElementById('combochart_div'));
-        chart.draw(data, options);
-      }
-    </script>
+var chartLine = new Chart(ctxLine, {
+    type: 'line',
+    data: {
+        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        datasets: [{
+            label: '0 de Votos',
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor: '#2a4c6b',
+            options: {
+                scales: {
+                    yAxes: [{
+                        stacked: true
+                    }]
+                }
+            }
+        }]
+    }
+});
+</script>

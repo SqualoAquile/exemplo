@@ -33,7 +33,7 @@ function Popula ($wrapper, data, campo) {
                     <button class="editar btn btn-sm btn-primary" tabindex="-1">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="excluir btn btn-sm btn-secondary" tabindex="-1">
+                    <button class="excluir btn btn-sm btn-danger" tabindex="-1">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </div>
