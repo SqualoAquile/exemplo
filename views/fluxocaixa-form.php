@@ -287,7 +287,7 @@
             </div>
             <div class="col-lg-6 d-flex flex-row-reverse bd-highlight" style="order:1;">
                 <div class="form-group">
-                <div class="btn btn-primary btn-block" tabindex="-1" id="btn_limparCampos"> Limpar Campos </div>                                                 
+                <div class="btn btn-secondary btn-block" tabindex="-1" id="btn_limparCampos"> Limpar Campos </div>                                                 
                 </div>                                       
             </div>
         </div>
