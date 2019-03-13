@@ -117,14 +117,14 @@
             [
                "text" => "Fluxo de Caixa",
                "icon" => "fas fa-chart-line",
-               "permissao" => "administradoras_ver",
-               "link" => "/administradoras"
+               "permissao" => "fluxocaixa_ver",
+               "link" => "/fluxocaixa"
             ],
             [
                "text" => "Saldos",
                "icon" => "fas fa-dollar-sign",
-               "permissao" => "lancamentos_ver",
-               "link" => "/lancamentos"
+               "permissao" => "controlesaldos_ver",
+               "link" => "/controlesaldos"
             ],
             [
                "text" => "Ordens de Serviço",
