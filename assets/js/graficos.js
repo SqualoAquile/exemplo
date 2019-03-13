@@ -1,6 +1,12 @@
-$(function () {
+function canAccessGoogleVisualization() {
+    if ((typeof google === 'undefined') || (typeof google.visualization === 'undefined')) {
+        return false;
+    } else{
+        return true;
+    }
+}
 
-    var $selectGraf = $('#selectGraficos');
+$(function () {
 
     // Load the Visualization API and the corechart package.
     google.charts.load('current', {'packages':['corechart']});
@@ -8,7 +14,16 @@ $(function () {
     // Set a callback to run when the Google Visualization API is loaded.
     google.charts.setOnLoadCallback(drawChart);
 
-    // Pega os dados da última query do datatable (pegar valores filtrados)
+    var $selectGraf = $('#selectGraficos'),
+        dataTable = window.dataTable;
+
+        // ainda nao esta pronto o dataTable
+    $('.dataTable')
+        .on('draw.dt', function() {
+            if (canAccessGoogleVisualization()) {
+                drawChart();
+            }
+        });
 
     $selectGraf
         .on('change', function() {
@@ -18,7 +33,7 @@ $(function () {
     function drawChart() {
 
         if (!$selectGraf.val()) {
-            $selectGraf.val($selectGraf.find('option:not([disabled])').first().val()).change()
+            $selectGraf.val($selectGraf.find('option:not([disabled])').first().val()).change();
         };
 
         var group = $selectGraf.val();
@@ -27,7 +42,7 @@ $(function () {
             url: baselink + '/ajax/gerarGraficoFiltro', 
             type: 'POST', 
             data: {
-                params: dataTable.ajax.params(), 
+                columns: dataTable.ajax.params(), 
                 campo_group: group,
                 campo_sum: 'valor_total'
             },
@@ -36,10 +51,10 @@ $(function () {
 
                 if (resultado.data){
 
-                    var data = new google.visualization.DataTable();
+                    var dataGrafico = new google.visualization.DataTable();
 
-                    data.addColumn('string', 'Campo');
-                    data.addColumn('number', 'Total');
+                    dataGrafico.addColumn('string', 'Campo');
+                    dataGrafico.addColumn('number', 'Total');
                     arrTeste = [];
 
                     for (var i = 0; i < resultado.data.length; i++) {
@@ -51,19 +66,20 @@ $(function () {
 
                     }
 
-                    data.addRows(arrTeste);
+                    dataGrafico.addRows(arrTeste);
 
                     var chart_div = document.getElementById('chart_div');
 
                     var options = {
                         'title': $selectGraf.find(':selected').text().trim(),
                         'width': 500,
-                        'height': 400
+                        'height': 400,
+                        colors: ['#2a4c6b', '#4a85b8', '#adcbe6', '#e7eff7', '#62abea']
                     };
 
                     var chart = new google.visualization.PieChart(chart_div);
 
-                    chart.draw(data, options);
+                    chart.draw(dataGrafico, options);
                 }
             }
         });

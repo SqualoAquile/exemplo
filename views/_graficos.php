@@ -17,7 +17,11 @@
             </select>
         </div>
         <div class="card-body">
-            <div id="chart_div" class="d-flex justify-content-center"></div>
+            <div id="chart_div" class="d-flex justify-content-center">
+                <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                    <span class="sr-only">Carregando...</span>
+                </div>
+            </div>
         </div>
     </div>
 </div>

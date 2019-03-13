@@ -10,7 +10,7 @@
 <?php endif ?>
 
 <?php
-    $indexTiltroTexto = 1;
+    $indexFiltroTexto = 1;
     $indexFiltroFaixa = 1;
 ?>
 
@@ -65,14 +65,6 @@
             <form id="card-body-filtros" class="card-body pb-1">
                 <input type="reset" class="d-none" id="limpar-filtro">
                 <?php if ($modulo == "fluxocaixa"): ?>
-
-                    <?php
-                        // O index passado para o valor dos selects, refere-se ao index REAL da coluna no cabeçalho do dataTbale
-                        // Quando for o modulo fluxo de caixa, esse index real começa em 2 pois a coluna de index real 1 é os checkbox's
-                        $indexTiltroTexto = 2;
-                        $indexFiltroFaixa = 2;
-                    ?>
-
                     <div class="row mb-3">
                         <div class="col">
                             <fieldset>
@@ -116,11 +108,11 @@
                                     <?php for($m = 1; $m < count($colunas); $m++): ?>
                                         <?php if ($colunas[$m]["Comment"]["ver"] == "true"): ?>
                                             <?php if(!array_key_exists("filtro_faixa", $colunas[$m]["Comment"])): ?>
-                                                <option value="<?php echo $indexTiltroTexto ?>" data-tipo="<?php echo $colunas[$m]["Type"] ?>">
+                                                <option value="<?php echo $indexFiltroTexto ?>" data-tipo="<?php echo $colunas[$m]["Type"] ?>">
                                                     <?php echo array_key_exists("label", $colunas[$m]["Comment"]) ? $colunas[$m]["Comment"]["label"] : $colunas[$m]["Field"] ?>
                                                 </option>
                                             <?php endif ?> 
-                                            <?php $indexTiltroTexto++ ?>
+                                            <?php $indexFiltroTexto++ ?>
                                         <?php endif ?>
                                     <?php endfor ?>
                                 </select>
