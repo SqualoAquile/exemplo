@@ -4,10 +4,9 @@
 $modulo = str_replace("-form", "", basename(__FILE__, ".php"));
 // Constroi o cabeçalho
 require "_header_browser_filtros.php";
-require "_graficos.php";
 ?>
 
-<div class="collapse mb-5 sticky-top" id="collapseFluxocaixaResumo">
+<div class="collapse mb-5" id="collapseFluxocaixaResumo">
     <div class="card card-body">
         <div class="row mb-3" id="somasResumo">
             <div class="col-lg-3">
@@ -19,7 +18,7 @@ require "_graficos.php";
             </div>
             <div class="col-lg">
                 <div class="row mb-3">
-                    <div class="col-lg offset-1">
+                    <div class="col-lg offset-lg-1">
                         <div class="card card-body py-2 text-danger text-center">
                             <p class="m-0">Despesa Total</p>
                             <h2 id="despesasTotal"></h2>
@@ -33,7 +32,7 @@ require "_graficos.php";
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg offset-1 col-data-quitacao">
+                    <div class="col-lg offset-lg-1 col-data-quitacao">
                         <div class="row align-items-center">
                             <div class="col-lg flex-grow-0">
                                 <label for="data_quitacao" class="text-truncate m-0">Data de Quitação</label>

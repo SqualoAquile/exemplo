@@ -10,7 +10,7 @@
 <?php endif ?>
 
 <?php
-    $indexTiltroTexto = 1;
+    $indexFiltroTexto = 1;
     $indexFiltroFaixa = 1;
 ?>
 
@@ -30,13 +30,27 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg flex-grow-0">
-            <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#collapseFiltros" aria-expanded="false" aria-controls="collapseFiltros">
-                <div class="d-flex align-items-center">
-                    <i class="fas fa-filter mr-2"></i>
-                    <span>Filtros</span>
-                </div>
-            </button>
+        <div class="col-lg flex-lg-grow-0">
+            <div class="btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-info btn-block cursor-pointer" data-toggle="collapse" data-target="#collapseFiltros" aria-expanded="false" aria-controls="collapseFiltros">
+                    <input type="checkbox" checked autocomplete="off">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-filter mr-2"></i>
+                        <span>Filtros</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+        <div class="col-lg flex-lg-grow-0">
+            <div class="btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-warning btn-block cursor-pointer" data-toggle="collapse" data-target="#collapseGraficos" aria-expanded="false" aria-controls="collapseGraficos">
+                    <input type="checkbox" checked autocomplete="off">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-chart-pie mr-2"></i>
+                        <span>Gráficos</span>
+                    </div>
+                </label>
+            </div>
         </div>
     </div>
     <div class="collapse" id="collapseFiltros">
@@ -51,14 +65,6 @@
             <form id="card-body-filtros" class="card-body pb-1">
                 <input type="reset" class="d-none" id="limpar-filtro">
                 <?php if ($modulo == "fluxocaixa"): ?>
-
-                    <?php
-                        // O index passado para o valor dos selects, refere-se ao index REAL da coluna no cabeçalho do dataTbale
-                        // Quando for o modulo fluxo de caixa, esse index real começa em 2 pois a coluna de index real 1 é os checkbox's
-                        $indexTiltroTexto = 2;
-                        $indexFiltroFaixa = 2;
-                    ?>
-
                     <div class="row mb-3">
                         <div class="col">
                             <fieldset>
@@ -102,11 +108,11 @@
                                     <?php for($m = 1; $m < count($colunas); $m++): ?>
                                         <?php if ($colunas[$m]["Comment"]["ver"] == "true"): ?>
                                             <?php if(!array_key_exists("filtro_faixa", $colunas[$m]["Comment"])): ?>
-                                                <option value="<?php echo $indexTiltroTexto ?>" data-tipo="<?php echo $colunas[$m]["Type"] ?>">
+                                                <option value="<?php echo $indexFiltroTexto ?>" data-tipo="<?php echo $colunas[$m]["Type"] ?>">
                                                     <?php echo array_key_exists("label", $colunas[$m]["Comment"]) ? $colunas[$m]["Comment"]["label"] : $colunas[$m]["Field"] ?>
                                                 </option>
                                             <?php endif ?> 
-                                            <?php $indexTiltroTexto++ ?>
+                                            <?php $indexFiltroTexto++ ?>
                                         <?php endif ?>
                                     <?php endfor ?>
                                 </select>
@@ -123,4 +129,5 @@
             </form>
         </div>
     </div>
+    <?php require "_graficos.php" ?>
 </header>

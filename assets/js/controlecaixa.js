@@ -43,14 +43,13 @@ $(function () {
         $cardBodyFiltros = $('#card-body-filtros'),
         dataTable = window.dataTable,
         indexColumns = {
-            checkbox: 0,
-            acoes: 1,
-            movimentacoes: 2,
-            data_operacao: 5,
-            valor_total: 6,
-            data_vencimento: 7,
-            status: 17,
-            observacao: 22
+            acoes: 0,
+            movimentacoes: 1,
+            data_operacao: 4,
+            valor_total: 5,
+            data_vencimento: 6,
+            status: 16,
+            observacao: 21
         },
         $checados,
         $aQuiatares;
@@ -117,11 +116,9 @@ $(function () {
         .click(function () {
 
             var $this = $(this),
-                $checkThead = $this.find('[type=checkbox]')
                 $table = $this.parents('.table-responsive');
 
-            $checkThead.prop('checked', !$checkThead.prop('checked'))
-            $table.find('[type=checkbox]').prop('checked', !$checkThead.prop('checked'));
+            $table.find('[type=checkbox]').prop('checked', $this.prop('checked'));
         });
 
     $(this)
@@ -279,6 +276,8 @@ $(function () {
             $observacao
                 .html('<textarea data-placeholder="' + $thead.find('th:eq(' + indexColumns.observacao + ')').text().trim() + '" data-anterior="' + $observacao.text() + '" class="form-control">' + $observacao.text() + '</textarea>');
 
+            $tr.find('.form-control').first().focus();
+
             $this
                 .removeClass('btn-primary')
                 .addClass('btn-success')
@@ -432,6 +431,6 @@ $(function () {
         });
 
     // Desativar ordamento das colunas de ações e de checkbox
-    $('.dataTable thead th:eq(' + indexColumns.checkbox + '), .dataTable thead th:eq(' + indexColumns.acoes + ')')
+    $('.dataTable thead th:eq(' + indexColumns.acoes + ')')
         .off('click.DT');
 });

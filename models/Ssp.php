@@ -147,12 +147,15 @@ class SSP {
 		$localWhereResult = array();
 		$localWhereAll = array();
 		$whereAllSql = '';
+		$groupby = '';
+
 		// Build the SQL query string from the request
 		$limit = self::limit( $request, $columns );
 		$order = self::order( $request, $columns );
 		$where = self::filter( $request, $columns, $bindings );
 		$whereResult = self::_flatten( $whereResult );
 		$whereAll = self::_flatten( $whereAll );
+
 		if ( $whereResult ) {
 			$where = $where ?
 				$where .' AND '.$whereResult :
@@ -168,15 +171,13 @@ class SSP {
 		if ($sum){
 			$sum = ', SUM(' .$sum. ') as total';
 		}
+
 		if ($coluna_alvo){
 			$groupby = ' GROUP BY '. $coluna_alvo;
-		}else{
-			$groupby = null;
 		}
+
 		// Main query to actually get the data
 		$data = self::sql_exec( $db, $bindings,
-		// Aqui eu preciso passar a coluna isolada, sem o pluck
-		// Ver onde o pluck é chamado nessa função, é ai o erro
 			"SELECT `$coluna_alvo`
 			$sum
 			 FROM `$table`
@@ -186,8 +187,6 @@ class SSP {
 			$limit
 			"
 		);
-	
-		//SELECT conta_analitica, SUM(valor_total) FROM fluxocaixa GROUP BY conta_analitica
 		
 		// Data set length after filtering
 		$resFilterLength = self::sql_exec( $db, $bindings,
@@ -491,7 +490,6 @@ class SSP {
 			 $order
 			 $limit"
 		);
-
 		
 		// Data set length after filtering
 		$resFilterLength = self::sql_exec( $db, $bindings,

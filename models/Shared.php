@@ -15,7 +15,14 @@ class Shared extends model {
 
         $stringBtn = '';
 
-        if ($this->table != "fluxocaixa") {
+        if ($this->table == "fluxocaixa") {
+
+            $stringBtn .=  '
+                <input type="checkbox" name="checkboxFluxoCaixa" value="' . $id . '" class="mx-3">
+                <button class="btn btn-primary btn-sm" id="editar" data-id="' . $id . '"><i class="fas fa-edit"></i></button>
+            ';
+
+        } else {
 
             $stringBtn .= '<form method="POST">';
             
@@ -28,8 +35,6 @@ class Shared extends model {
             }
             
             $stringBtn .= '</form>';
-        } else {
-            $stringBtn .=  '<div class="text-center"><button class="btn btn-primary btn-sm" id="editar" data-id="' . $id . '"><i class="fas fa-edit"></i></button></div>';
         }
         
         return $stringBtn;
@@ -38,17 +43,6 @@ class Shared extends model {
     public function montaDataTable() {
 
         $index = 0;
-
-        if ($this->table == "fluxocaixa") {
-            $columns[] = [
-                "db" => "id",
-                "dt" => $index,
-                "formatter" => function($id, $row) {
-                    return "<input type='checkbox' name='checkboxFluxoCaixa' value='" . $id . "'>";
-                }
-            ];
-            $index++;
-        }
 
         foreach ($this->nomeDasColunas() as $key => $value) {
             if(isset($value["Comment"]) && array_key_exists("ver", $value["Comment"]) && $value["Comment"]["ver"] != "false") {
@@ -360,7 +354,7 @@ class Shared extends model {
             
         };
 
-        return Ssp::complex_graficos($_POST['params'], $this->config, $this->table, "id", $columns, null, "situacao='ativo'" ,$_POST['campo_sum'],$_POST['campo_group']);
+        return Ssp::complex_graficos($requisicao['columns'], $this->config, $this->table, "id", $columns, null, "situacao='ativo'", $requisicao['campo_sum'], $requisicao['campo_group']);
     }
 
     public function formataDadosParaBD($registro) {

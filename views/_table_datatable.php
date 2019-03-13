@@ -16,14 +16,12 @@
     <table class="table table-striped table-hover dataTable bg-white table-nowrap first-column-fixed">
         <thead>
             <tr>
-                <?php if ($modulo == "fluxocaixa"): ?>
-                    <th class="border-top-0 select-all">
-                        <input type="checkbox" name="checkboxFluxoCaixa">
-                    </th>
-                <?php endif ?>
                 <?php foreach ($colunas as $key => $value): ?> 
                     <?php if(isset($value["Comment"]) && array_key_exists("ver", $value["Comment"]) && $value["Comment"]["ver"] != "false") : ?>
                         <th class="border-top-0">
+                            <?php if ($modulo == "fluxocaixa" && (array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "acoes")): ?>
+                                <input type="checkbox" name="checkboxFluxoCaixa" class="select-all ml-2 mr-3">
+                            <?php endif ?>
                             <span><?php echo (isset($value["Comment"]["label"]) && !is_null($value["Comment"]["label"]) && !empty($value["Comment"]["label"])) ? $value["Comment"]["label"] : ucwords(str_replace("_", " ", $value['Field'])) ?></span>
                             <i class="small text-muted fas fa-sort ml-2"></i>
                         </th>

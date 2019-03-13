@@ -207,6 +207,7 @@
       <script src="<?php echo BASE_URL?>/assets/js/vendor/bootstrap.min.js" type="text/javascript"></script>
       <script src="<?php echo BASE_URL?>/assets/js/vendor/jquery.highlight.js" type="text/javascript"></script>
       <script src="<?php echo BASE_URL?>/assets/js/vendor/dataTables.searchHighlight.min.js" type="text/javascript"></script>
+      <script src="<?php echo BASE_URL;?>/assets/js/vendor/loader.js" type="text/javascript"></script>
 
       <script src="<?php echo BASE_URL?>/assets/js/validacoes.js" type="text/javascript"></script>
       <script src="<?php echo BASE_URL?>/assets/js/principal.js" type="text/javascript"></script>
@@ -286,7 +287,6 @@
             </ul>
          </aside>
          <main id="page-content-wrapper">
-            <?php include "_breadcrumb.php" ?>
             <div class="container-fluid">
                <?php $this->loadViewInTemplate($viewName, $viewData); ?>
             </div>

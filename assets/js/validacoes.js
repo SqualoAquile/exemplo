@@ -849,10 +849,9 @@ $(function () {
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     //
-    // Função que valida as alterações necessárias para o submit
+    // Desabilitar a tecla Enter
     //
     $('input').keypress(function(event){
-        console.log('tecla: ' + event.keyCode);
         if(event.keyCode == 13){
             event.preventDefault();
             event.stopPropagation();
@@ -860,6 +859,9 @@ $(function () {
         }
     });
 
+    //
+    // Função que valida as alterações necessárias para o submit
+    //
     $('.needs-validation').submit(function (event) {
         
         // deixa o enter destivado para submitar o formulario    
