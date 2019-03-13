@@ -18,9 +18,8 @@ $(function () {
     // $('#senha').val('').blur();
     // $('#senhaaux').val('').blur();
     // $('#senhaaux').attr('autocomplete','off');
-    <div class='col-lg-4'> 
-    </div>   
-
+    $('#form-principal').children('.row').children('[class^="col-lg"]:nth-child(-n+17)').appendTo('#esquerda');
+    $('#form-principal').children('.row').children('[class^="col-lg"]:nth-child(n+2):nth-child(-n+9)').appendTo('#direita');
     
 
 });

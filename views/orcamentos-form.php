@@ -238,12 +238,12 @@
                     <?php endif ?>
             <?php endforeach ?>        
         </div>
-        <div class="row">
-            <div class="col-lg-4" id='esquerda'></div>
-            <div class="col-lg-8" id='direita'></div>
-        </div>
         <button id="main-form" class="d-none"></button>
     </form>
+    <div class="row">
+        <div class="col-lg-4" id='esquerda'></div>
+        <div class="col-lg-8" id='direita'></div>
+    </div>
     <?php if($table) include "_contatos_form.php" ?>
     <div class="row">
         <div class="col-xl-2 col-lg-3">
