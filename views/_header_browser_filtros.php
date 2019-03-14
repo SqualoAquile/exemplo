@@ -41,17 +41,6 @@
                 </label>
             </div>
         </div>
-        <div class="col flex-lg-grow-0">
-            <div class="btn-group-toggle" data-toggle="buttons">
-                <label class="btn btn-warning btn-block cursor-pointer" data-toggle="collapse" data-target="#collapseGraficos" aria-expanded="false" aria-controls="collapseGraficos">
-                    <input type="checkbox" checked autocomplete="off">
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-chart-pie mr-2"></i>
-                        <span>Gráficos</span>
-                    </div>
-                </label>
-            </div>
-        </div>
     </div>
     <div class="collapse" id="collapseFiltros">
         <div class="card mt-4">
@@ -69,11 +58,11 @@
                         <div class="col">
                             <fieldset>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" name="movimentacao" data-index="2" id="todosCheckReceita" value="receita">
+                                    <input class="form-check-input" type="checkbox" name="movimentacao" data-index="1" id="todosCheckReceita" value="receita">
                                     <label class="form-check-label" for="todosCheckReceita">Receita</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" name="movimentacao" data-index="2" id="todosCheckDespesa" value="despesa">
+                                    <input class="form-check-input" type="checkbox" name="movimentacao" data-index="1" id="todosCheckDespesa" value="despesa">
                                     <label class="form-check-label" for="todosCheckDespesa">Despesa</label>
                                 </div>
                             </fieldset>
@@ -129,5 +118,4 @@
             </div>
         </div>
     </div>
-    <?php require "_graficos.php" ?>
 </header>

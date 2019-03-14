@@ -4,6 +4,7 @@ $.fn.datepicker.defaults.autoclose = true;
 $.fn.datepicker.defaults.todayHighlight = true;
 $.fn.datepicker.defaults.todayBtn = true;
 $.fn.datepicker.defaults.clearBtn = true;
+$.fn.datepicker.defaults.orientation = 'bottom';
 
 function Toast (options) {
     $('body').append(`
