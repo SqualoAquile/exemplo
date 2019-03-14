@@ -51,8 +51,6 @@ $(function () {
     $(this)
         .on('click', '#excluir-linha', function (event) {
 
-            event.preventDefault();
-
             var $this = $(this),
                 $parent = $this.parents('.filtros');
 

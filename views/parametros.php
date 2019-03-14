@@ -58,8 +58,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="save-parametros col-lg flex-grow-0">
-                                                <button class="salvar btn btn-primary" tabindex="-1" disabled="disabled">Incluir</button>
+                                            <div class="save-parametros col-lg flex-lg-grow-0">
+                                                <button class="salvar btn btn-primary btn-block" tabindex="-1" disabled="disabled">Incluir</button>
                                             </div>
                                         </div>
                                     </li>
@@ -117,8 +117,8 @@
                                     />
                                 </div>
                             </div>
-                            <div class="col-lg flex-grow-0">
-                                <button type="submit" class="btn btn-primary" disabled="disabled">Salvar</button>
+                            <div class="col-lg flex-lg-grow-0">
+                                <button type="submit" class="btn btn-primary btn-block" disabled="disabled">Salvar</button>
                             </div>
                         </div>
                     </form>

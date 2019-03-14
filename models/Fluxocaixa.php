@@ -32,13 +32,18 @@ class Fluxocaixa extends model {
         $arr_quitar_id = $request["aquitares"];
         
         if (!empty($data_quitacao) && !empty($arr_quitar_id)) {
+
+            $dtaux = explode("/", $data_quitacao);
+            if (count($dtaux) == 3) {
+                $data_quitacao = $dtaux[2] . "-" . $dtaux[1] . "-" . $dtaux[0];
+            }
             
             $ipcliente = $this->permissoes->pegaIPcliente();
             $alteracoes = " | " . ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - QUITAÇÃO";
 
             $idImploded = implode(",", $arr_quitar_id);
 
-            $stringUpdate = "UPDATE " . $this->table . " SET status='Quitado', alteracoes=CONCAT(alteracoes, '" . $alteracoes . "') WHERE id IN (" . $idImploded . ")";
+            $stringUpdate = "UPDATE " . $this->table . " SET status='Quitado', data_quitacao='" . $data_quitacao . "', alteracoes=CONCAT(alteracoes, '" . $alteracoes . "') WHERE id IN (" . $idImploded . ")";
             
             self::db()->query($stringUpdate);
 

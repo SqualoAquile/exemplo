@@ -35,7 +35,10 @@ require "_header_browser_filtros.php";
                     <div class="col-lg offset-lg-1 col-data-quitacao">
                         <div class="row align-items-center">
                             <div class="col-lg flex-grow-0">
-                                <label for="data_quitacao" class="text-truncate m-0">Data de Quitação</label>
+                                <label for="data_quitacao" class="text-truncate m-0 font-weight-bold">
+                                    <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Campo Obrigatório">*</i>
+                                    <span>Data de Quitação</span>
+                                </label>
                             </div>
                             <div class="col">
                                 <div class="input-group">

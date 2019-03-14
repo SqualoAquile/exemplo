@@ -18,15 +18,15 @@
 <h1 class="display-4 font-weight-bold pt-4">Home</h1>
 <section id="charts">
     <div class="row my-5">
-        <div class="col-lg">
+        <div class="col-xl">
           <canvas id="chartBar"></canvas>
         </div>
-        <div class="col-lg">
+        <div class="col-xl">
           <canvas id="chartPie"></canvas>
         </div>
     </div>
     <div class="row my-5">
-        <div class="col-lg">
+        <div class="col-xl">
           <canvas id="chartLine"></canvas>
         </div>
     </div>

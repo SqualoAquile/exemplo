@@ -67,6 +67,21 @@ class Permissoes extends model {
             $alteracoes = ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
             $sql = "INSERT INTO " . $this->table . " (nome,parametros,alteracoes,situacao) VALUES ('$nome', '$params','$alteracoes', 'ativo')";
             self::db()->query($sql); 
+
+            $erro = self::db()->errorInfo();
+
+            if (empty($erro[2])){
+
+                $_SESSION["returnMessage"] = [
+                    "mensagem" => "Grupo de permissão inserido com sucesso!",
+                    "class" => "alert-success"
+                ];
+            } else {
+                $_SESSION["returnMessage"] = [
+                    "mensagem" => "Houve uma falha, tente novamente! <br /> ".$erro[2],
+                    "class" => "alert-danger"
+                ];
+            }
         }           
     }
 
@@ -157,7 +172,7 @@ class Permissoes extends model {
                 }
             } else {
                 $_SESSION["returnMessage"] = [
-                    "mensagem" => "Nenhum funcionário pode estar associado ao grupo para ocorrer a exclusão.<br/>" . $numFunc . " funcionário(s) está(ão) associado(s) ao grupo.",
+                    "mensagem" => "Nenhum usuário pode estar associado ao grupo para ocorrer a exclusão.<br/>" . $numFunc . " funcionário(s) está(ão) associado(s) ao grupo.",
                     "class" => "alert-danger"
                 ];
             }

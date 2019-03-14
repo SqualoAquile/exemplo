@@ -71,4 +71,10 @@ $(function () {
                 return false;
             }
         });
+
+    // Desativar ordamento da coluna de ações
+    $('.dataTable thead th:eq(0)')
+        .off('click.DT')
+        .find('.fas')
+        .remove();
 });
