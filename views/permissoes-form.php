@@ -17,14 +17,14 @@
     <h1 class="display-4 m-0 text-capitalize font-weight-bold"><?php echo $viewInfo["title"]." ".ucfirst($labelTabela["labelForm"]); ?></h1>
 </header>
 
-<form method="POST" class="mb-5">
+<form method="POST" class="mb-5" autocomplete="off" novalidate>
 
     <div class="form-group pb-4">
         <label for="nome" class="font-weight-bold">
             <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
             <span>Nome do Grupo</span>
         </label>
-        <input type="text" data-anterior="<?php echo $permAtivas["nome"] ?>" name="nome" id="nome" class="form-control" value="<?php echo isset($permAtivas) ? $permAtivas["nome"] : "" ?>" required/>
+        <input type="text" data-anterior="<?php echo isset($permAtivas) ? $permAtivas["nome"] : "" ?>" data-mascara_validacao="false" name="nome" id="nome" class="form-control" value="<?php echo isset($permAtivas) ? $permAtivas["nome"] : "" ?>" required/>
     </div>
 
     <div class="table-responsive mb-lg-5 mb-3">
@@ -73,11 +73,11 @@
         </table>
     </div>
 
-    <input type="hidden" name="alteracoes" value="<?php echo $permAtivas["alteracoes"] ?>">
+    <input type="hidden" data-anterior="<?php echo isset($permAtivas) ? $permAtivas["alteracoes"] : "" ?>" name="alteracoes" value="<?php echo isset($permAtivas) ? $permAtivas["alteracoes"] : "" ?>">
 
     <div class="row">
         <div class="col-xl-2 col-lg-3">
-            <button type="submit" class="btn btn-primary btn-block mb-2" onclick="return confirm('Tem certeza?')">Salvar</button>
+            <button type="submit" class="btn btn-primary btn-block mb-2" disabled>Salvar</button>
         </div>
 
         <?php if (isset($permAtivas)): ?>

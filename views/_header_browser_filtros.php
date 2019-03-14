@@ -30,7 +30,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg flex-lg-grow-0">
+        <div class="col flex-lg-grow-0">
             <div class="btn-group-toggle" data-toggle="buttons">
                 <label class="btn btn-info btn-block cursor-pointer" data-toggle="collapse" data-target="#collapseFiltros" aria-expanded="false" aria-controls="collapseFiltros">
                     <input type="checkbox" checked autocomplete="off">
@@ -41,7 +41,7 @@
                 </label>
             </div>
         </div>
-        <div class="col-lg flex-lg-grow-0">
+        <div class="col flex-lg-grow-0">
             <div class="btn-group-toggle" data-toggle="buttons">
                 <label class="btn btn-warning btn-block cursor-pointer" data-toggle="collapse" data-target="#collapseGraficos" aria-expanded="false" aria-controls="collapseGraficos">
                     <input type="checkbox" checked autocomplete="off">
@@ -62,7 +62,7 @@
                     <button id="criar-filtro" type="button" class="btn btn-outline-success btn-sm">Mais Filtros</button>
                 </div>
             </div>
-            <form id="card-body-filtros" class="card-body pb-1">
+            <div id="card-body-filtros" class="card-body pb-1">
                 <input type="reset" class="d-none" id="limpar-filtro">
                 <?php if ($modulo == "fluxocaixa"): ?>
                     <div class="row mb-3">
@@ -126,7 +126,7 @@
                         </div>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
     <?php require "_graficos.php" ?>

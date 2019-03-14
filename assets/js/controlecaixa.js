@@ -98,8 +98,9 @@ $(function () {
         var rowData = dataTable.rows({selected: true}).data(),
             $quitar = $('.col-data-quitacao, .col-btn-quitar');
 
-        $aQuiatares = $checados.filter(function (index) {
-            return rowData[index][indexColumns.status].toLowerCase() == 'a quitar';
+        $aQuiatares = $checados.filter(function () {
+            var indexTrChecado = $(this).parents('tr').index();
+            return rowData[indexTrChecado][indexColumns.status].toLowerCase() == 'a quitar';
         });
 
         if ($aQuiatares.length) {
@@ -153,13 +154,7 @@ $(function () {
                     $this.after('<div class="invalid-feedback">Data inválida!</div>');
 
                 }
-            } else {
-
-                $this.addClass('is-invalid');
-                $this[0].setCustomValidity('invalid');
-
             }
-
         })
         .on('click', '#quitar', function () {
 
@@ -195,9 +190,16 @@ $(function () {
                                         message: 'Lançamentos quitados com sucesso!',
                                         class: 'alert-success'
                                     });
-        
-                                    $cardBodyFiltros.trigger('reset');
-                                    $('.fluxocaixa .collapse').collapse('hide');
+
+                                    // Limpar campo de data_quitacao
+                                    $dataQuitacao.val('');
+                                    
+                                    // Atualizar dataTable
+                                    // Deschecar todos os checkbox
+                                    dataTable.ajax.reload();
+
+                                    // Fechar collpase de resumo
+                                    $collapse.collapse('hide');
                                 }
                             }
                         });
@@ -329,7 +331,7 @@ $(function () {
         });
 
     $('.table-responsive')
-        .on('change', '[type=checkbox]', function () {
+        .on('click', '[type=checkbox]', function () {
 
             var $this = $(this),
                 $pai = $this.parents('.table-responsive'),
@@ -348,15 +350,6 @@ $(function () {
                 $collapse.collapse('hide');
                 $trChecados.removeClass('selected');
             }
-        })
-        .on('init.dt', '.dataTable', function () {
-            // Tira o icone de ordenação da coluna de ações no cabeçalho
-            var $thAcoes = $('.dataTable thead th:eq(' + indexColumns.acoes + ')');
-            
-            $thAcoes
-                .addClass('text-center')
-                .find('.fas')
-                .remove();
         });
 
     $collapse
@@ -429,8 +422,4 @@ $(function () {
             $this.datepicker('update');
 
         });
-
-    // Desativar ordamento das colunas de ações e de checkbox
-    $('.dataTable thead th:eq(' + indexColumns.acoes + ')')
-        .off('click.DT');
 });

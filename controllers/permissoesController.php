@@ -62,10 +62,10 @@ class permissoesController extends controller{
         
         $dados['infoUser'] = $_SESSION;
         
-        if(isset($_POST["enome"]) && !empty($_POST["enome"]) && isset($_POST["epermissoes"]) && !empty($_POST["epermissoes"])){
+        if(isset($_POST) && !empty($_POST)){
 
-            $pnome = addslashes($_POST["enome"]);
-            $pLista = $_POST["epermissoes"];
+            $pnome = addslashes($_POST["nome"]);
+            $pLista = $_POST["permissoes"];
 
             $this->model->adicionarGrupo($pnome, $pLista);
 
