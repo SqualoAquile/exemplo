@@ -215,6 +215,137 @@ class SSP {
 		);
 	}
 
+	static function complex_graficos2 ( $request, $conn, $table, $primaryKey, $columns, $whereResult=null, $whereAll=null, $sum ='', $coluna_alvo=null, $opcao_group = null )
+	{
+		$bindings = array();
+		$db = self::db( $conn );
+		$localWhereResult = array();
+		$localWhereAll = array();
+		$whereAllSql = '';
+		$groupby = '';
+
+		// Build the SQL query string from the request
+		$limit = self::limit( $request, $columns );
+		$order = self::order( $request, $columns );
+		$where = self::filter( $request, $columns, $bindings );
+		$whereResult = self::_flatten( $whereResult );
+		$whereAll = self::_flatten( $whereAll );
+
+		if ( $whereResult ) {
+			$where = $where ?
+				$where .' AND '.$whereResult :
+				'WHERE '.$whereResult;
+		}
+		
+		if ($sum){
+			$sum = ', SUM(' .$sum. ') as total';
+		}
+
+		if ( $whereAll ) {
+			$where = $where ?
+				$where .' AND '.$whereAll :
+				'WHERE '.$whereAll;
+			$whereAllSql = 'WHERE '.$whereAll;
+		}
+		
+
+		if (!empty($coluna_alvo) && !empty($opcao_group)){
+			$coluna_alvo = $opcao_group . "(" . $coluna_alvo. ")";
+			$groupby = " GROUP BY ". $coluna_alvo;
+		} else{
+			$coluna_alvo = $coluna_alvo;
+			$groupby = " GROUP BY ". $coluna_alvo;
+		}
+
+		//SELECT WEEKDAY(data_quitacao), sum(valor_total) 
+		//FROM fluxocaixa 
+		//WHERE data_quitacao 
+		//BETWEEN "2019-03-01" AND "2019-03-31" 
+		//GROUP BY WEEKDAY(data_quitacao)
+
+		// Main query to actually get the data
+		//puxa todos os dados de despesa
+		$where1 = $where." AND despesa_receita = 'Despesa'";
+		$despesaBruta = self::sql_exec( $db, $bindings,
+			"SELECT $coluna_alvo
+			$sum
+			FROM `$table`
+			$where1
+			$groupby
+			"
+		);
+
+		// puxa todos os dados de receita
+		$where2 = $where." AND despesa_receita = 'Receita'";
+		$receitaBruta = self::sql_exec( $db, $bindings,
+			"SELECT $coluna_alvo
+			$sum
+			FROM `$table`
+			$where2
+			$groupby
+			"
+		);
+		// print_r($despesaBruta);
+		// print_r($receitaBruta); exit;
+		// echo "SELECT $coluna_alvo
+		// $sum
+		// FROM `$table`
+		// $where2
+		// $groupby
+		// "; exit;
+		// print_r($data[0]); exit;
+		
+		// equaliza o tamanho dos arrays e coloca o valor zero nos dias que não apresentarem valor
+		$arrayDiasDespesa = array();
+		for($i = 0; $i < count($despesaBruta); $i++){
+			$arrayDiasDespesa[$i] = $despesaBruta[$i][0];
+		}
+
+		$arrayDiasReceita = array();
+		for($i = 0; $i < count($receitaBruta); $i++){
+			$arrayDiasReceita[$i] = $receitaBruta[$i][0];
+		}
+		
+		$arrayDias = array_values(array_unique(array_merge_recursive($arrayDiasDespesa, $arrayDiasReceita)));
+		
+		$despesas = array();
+		for($j = 0; $j < count($arrayDias); $j++){
+			$valorDia = 0;
+			for ($k = 0; $k < count($despesaBruta); $k++){
+				if( $arrayDias[$j] == $despesaBruta[$k][0] ){
+					$valorDia = floatval(floatval($despesaBruta[$k][1]) * (-1));
+				}
+			}
+			$despesas[$j][0] = $arrayDias[$j];
+			$despesas[$j][1] = $valorDia;
+		}
+
+		$receitas = array();
+		for($j = 0; $j < count($arrayDias); $j++){
+			$valorDia = 0;
+			for ($k = 0; $k < count($receitaBruta); $k++){
+				if( $arrayDias[$j] == $receitaBruta[$k][0] ){
+					$valorDia = floatval($receitaBruta[$k][1]);
+				}
+			}
+			$receitas[$j][0] = $arrayDias[$j];
+			$receitas[$j][1] = $valorDia;
+		}
+
+		// print_r($despesas);
+		// print_r($receitas);
+				
+		$data = array();
+		$data[0] = $despesas;
+		$data[1] = $receitas;
+
+		/*
+		 * Output
+		 */
+		return $data; 
+		
+	}
+
 	private static function formater ( $type, $value )
 	{
 		$returnValue = "";

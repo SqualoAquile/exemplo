@@ -1,6 +1,7 @@
 $(function () {
 
-    var $selectGraf = $('#selectGraficos'),
+    var $selectGraf = $('#selectGraficosTemporal'),
+        $selectGrafOpcoes = $('#selectGrafOpcoes'),
         dataTable = window.dataTable,
         ctx = document.getElementById('fluxocaixaGrafico').getContext('2d');
 
@@ -15,54 +16,85 @@ $(function () {
             drawChart();
         });
 
+    $selectGrafOpcoes
+    .on('change', function() {
+        drawChart();
+    });
+
     function drawChart() {
 
         if (!$selectGraf.val()) {
             $selectGraf.val($selectGraf.find('option:not([disabled])').first().val()).change();
         };
 
-        var group = $selectGraf.val();
+        if (!$selectGrafOpcoes.val()) {
+            $selectGrafOpcoes.val($selectGrafOpcoes.find('option:not([disabled])').first().val());
+        };
+
+        var campoGroup = $selectGraf.val();
+        //var tipoGraf = $selectGrafOpcoes.find(':selected').attr('data-tipograf');
+        var agrupamento = $selectGrafOpcoes.val();
 
         $.ajax({ 
             url: baselink + '/ajax/gerarGraficoFiltro', 
             type: 'POST', 
             data: {
                 columns: dataTable.ajax.params(), 
-                campo_group: group,
-                campo_sum: 'valor_total'
+                campo_group: campoGroup,
+                campo_sum: 'valor_total',
+                opcao_group: agrupamento
             },
             dataType: 'json', 
-            success: function (resultado) { 
+            success: function (resultado) {
+                // console.log(resultado);
+                if (resultado){
 
-                if (resultado.data){
+                    var eixoDatas = [],
+                    receitas = [],
+                    coresReceitas = [],
+                    despesas = [],
+                    coresDespesas = [];
 
-                    dataChart = [],
-                    labelsChart = [];
-
-                    for (var i = 0; i < resultado.data.length; i++) {
-
-                        var result = resultado.data,
-                        element = result[i];
+                    for (var i = 0; i < resultado[0].length; i++) {
                         
-                        labelsChart.push(element[0]);
-                        dataChart.push(parseInt(element[1]));
-
+                        dataAux = resultado[0][i][0];
+                        dataAux = dataAux.split('-').reverse().join('/');
+                        eixoDatas[i] = dataAux;
+                        despesas[i] = resultado[0][i][1];
+                        coresDespesas[i] = '#E74C3C';
+                        receitas[i] = resultado[1][i][1];
+                        coresReceitas[i] = '#27AE60';
+                        
                     }
-
-                    var fluxocaixaGrafico = new Chart(ctx, {
-                        type: 'doughnut',
+                    
+                    var myChart = new Chart(ctx, {
+                        type: 'bar',
                         data: {
-                            labels: labelsChart,
+                            labels: eixoDatas,
                             datasets: [{
-                                data: dataChart,
-                                backgroundColor: [
-                                    '#2a4c6b',
-                                    '#4a85b8',
-                                    '#adcbe6',
-                                    '#e7eff7',
-                                    '#62abea'
-                                ]
+                                type: 'bar',
+                                label: 'Despesas',
+                                backgroundColor: coresDespesas,
+                                data: despesas,
+                                borderColor: 'white',
+                                borderWidth: 1
+                            }, {
+                                type: 'bar',
+                                label: 'Receitas',
+                                backgroundColor: coresReceitas,
+                                data: receitas,
+                                borderColor: 'white',
+                                borderWidth: 1
                             }]
+                        },
+                        options: {
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero:false
+                                    }
+                                }]
+                            }
                         }
                     });
                 }
