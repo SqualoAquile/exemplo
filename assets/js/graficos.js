@@ -32,8 +32,10 @@ $(function () {
         };
 
         var campoGroup = $selectGraf.val();
-        //var tipoGraf = $selectGrafOpcoes.find(':selected').attr('data-tipograf');
         var agrupamento = $selectGrafOpcoes.val();
+
+        console.log(campoGroup);
+        console.log(agrupamento);
 
         $.ajax({ 
             url: baselink + '/ajax/gerarGraficoFiltro', 
@@ -49,11 +51,7 @@ $(function () {
                 // console.log(resultado);
                 if (resultado){
 
-                    var eixoDatas = [],
-                    receitas = [],
-                    coresReceitas = [],
-                    despesas = [],
-                    coresDespesas = [];
+                    var eixoDatas = [], receitas = [], despesas = [];
 
                     for (var i = 0; i < resultado[0].length; i++) {
                         
@@ -61,9 +59,7 @@ $(function () {
                         dataAux = dataAux.split('-').reverse().join('/');
                         eixoDatas[i] = dataAux;
                         despesas[i] = resultado[0][i][1];
-                        coresDespesas[i] = '#E74C3C';
                         receitas[i] = resultado[1][i][1];
-                        coresReceitas[i] = '#27AE60';
                         
                     }
                     
@@ -74,14 +70,14 @@ $(function () {
                             datasets: [{
                                 type: 'bar',
                                 label: 'Despesas',
-                                backgroundColor: coresDespesas,
+                                backgroundColor: 'red',
                                 data: despesas,
                                 borderColor: 'white',
                                 borderWidth: 1
                             }, {
                                 type: 'bar',
                                 label: 'Receitas',
-                                backgroundColor: coresReceitas,
+                                backgroundColor: 'green',
                                 data: receitas,
                                 borderColor: 'white',
                                 borderWidth: 1
