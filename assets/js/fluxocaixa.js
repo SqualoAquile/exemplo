@@ -1120,9 +1120,9 @@ $(function () {
                         } else {
                             // Valido
                             if(dtatual <= dtop){
-                                $this.val(anterior);  
+                                $this.val(anterior);
                             }else{
-                                $this.val(data);  
+                                $this.val(data);
                             }                            
                         }
                     }
@@ -1130,8 +1130,6 @@ $(function () {
                     // Inválido
                     $this.val(anterior);
                 }
-
-                $this.datepicker('update');
                 
             });
     }

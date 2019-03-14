@@ -243,6 +243,10 @@ $(document)
                             class: 'alert-success'
                         });
 
+                        $searchBody
+                            .find('.salvar')
+                            .attr('disabled', 'disabled');
+
                         $inputSearch
                             .val('')
                             .focus()
