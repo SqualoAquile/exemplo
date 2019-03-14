@@ -46,14 +46,9 @@
         <div class="card mt-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="m-0">Filtros</h3>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-light dropdown-toggle no-icon-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-ellipsis-h"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <button id="limpar-filtro" type="button" class="dropdown-item">Limpar Filtros</button>
-                        <button id="criar-filtro" type="button" class="dropdown-item">Adicionar Filtros</button>
-                    </div>
+                <div>
+                    <button id="limpar-filtro" type="button" class="btn btn-outline-secondary btn-sm">Limpar Filtros</button>
+                    <button id="criar-filtro" type="button" class="btn btn-outline-success btn-sm">Adicionar Filtros</button>
                 </div>
             </div>
             <div id="card-body-filtros" class="card-body pb-1">
