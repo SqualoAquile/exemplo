@@ -46,13 +46,17 @@
         <div class="card mt-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="m-0">Filtros</h3>
-                <div>
-                    <label for="limpar-filtro" class="btn cursor-pointer btn-outline-secondary btn-sm m-0">Limpar Filtros</label>
-                    <button id="criar-filtro" type="button" class="btn btn-outline-success btn-sm">Mais Filtros</button>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-light dropdown-toggle no-icon-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <button id="limpar-filtro" type="button" class="dropdown-item">Limpar Filtros</button>
+                        <button id="criar-filtro" type="button" class="dropdown-item">Adicionar Filtros</button>
+                    </div>
                 </div>
             </div>
             <div id="card-body-filtros" class="card-body pb-1">
-                <input type="reset" class="d-none" id="limpar-filtro">
                 <?php if ($modulo == "fluxocaixa"): ?>
                     <div class="row mb-3">
                         <div class="col">
@@ -74,7 +78,7 @@
                         <div class="filtros-faixa col-lg">
                             <div class="input-group">
                                 <select class="custom-select input-filtro-faixa">
-                                    <option selected disabled>Filtrar por...</option>
+                                    <option selected disabled value="">Filtrar por...</option>
                                     <?php for($j = 1; $j < count($colunas); $j++): ?>
                                         <?php if($colunas[$j]["Comment"]["ver"] == "true"): ?>
                                             <?php if(array_key_exists("label", $colunas[$j]["Comment"]) && array_key_exists("filtro_faixa", $colunas[$j]["Comment"]) && $colunas[$j]["Comment"]["filtro_faixa"]): ?>
@@ -93,7 +97,7 @@
                         <div class="filtros-texto col-lg">
                             <div class="input-group">
                                 <select class="custom-select input-filtro-texto">
-                                    <option selected disabled>Filtrar por...</option>
+                                    <option selected disabled value="">Filtrar por...</option>
                                     <?php for($m = 1; $m < count($colunas); $m++): ?>
                                         <?php if ($colunas[$m]["Comment"]["ver"] == "true"): ?>
                                             <?php if(!array_key_exists("filtro_faixa", $colunas[$m]["Comment"])): ?>
