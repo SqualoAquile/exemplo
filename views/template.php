@@ -243,6 +243,7 @@
          <aside id="sidebar-wrapper" class="shadow-lg bg-white">
             <ul class="nav flex-column sidebar-nav py-3">
                <?php foreach ($menus as $key => $value): ?> <!--Verifica se o funcionario tem permissao, do contrário nem exibe os módulos-->
+                  <?php $indexFilhosComPermissao = 0 ?>
                   <?php if($value["permissao"] == "%" || in_array($value["permissao"], $infoUser["permissoesUsuario"])): ?>
                      <?php
                         // Menu com Dropdown
@@ -252,6 +253,7 @@
                            $filhos = "";
                            foreach ($value["filhos"] as $keyFilho => $valueFilho) {
                               if(in_array($valueFilho['permissao'],$infoUser["permissoesUsuario"])){
+
                                  $filhos .= '
                                     <li class="nav-item">
                                        <a class="nav-link my-2" href="' . BASE_URL . $valueFilho["link"] . '">
@@ -260,6 +262,8 @@
                                        </a>
                                     </li>
                                  ';
+                                 
+                                 $indexFilhosComPermissao++;
                               }
                            }
 
@@ -276,13 +280,15 @@
                            $dropdownMenu = "";
                         }
                      ?>
-                     <li class="nav-item <?php echo $navItemDropdownClass ?>">
-                        <a class="nav-link my-2 <?php echo $navLinkDropdownClass ?>" href="<?php echo BASE_URL . $value["link"] ?>" <?php echo $navLinkDropdownAttrs ?>>
-                           <i class="<?php echo $value["icon"] ?> mr-2"></i>
-                           <span><?php echo $value["text"] ?></span>
-                        </a>
-                        <?php echo $dropdownMenu ?>
-                     </li>
+                     <?php if (!isset($value["filhos"]) || $indexFilhosComPermissao > 0): ?>
+                        <li class="nav-item <?php echo $navItemDropdownClass ?>">
+                           <a class="nav-link my-2 <?php echo $navLinkDropdownClass ?>" href="<?php echo BASE_URL . $value["link"] ?>" <?php echo $navLinkDropdownAttrs ?>>
+                              <i class="<?php echo $value["icon"] ?> mr-2"></i>
+                              <span><?php echo $value["text"] ?></span>
+                           </a>
+                           <?php echo $dropdownMenu ?>
+                        </li>
+                     <?php endif ?>
                   <?php endif ?>
                <?php endforeach ?>
             </ul>
