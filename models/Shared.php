@@ -11,16 +11,18 @@ class Shared extends model {
         $this->table = $table; 
     }
 
-    private function formataacoes($id){
+    private function formataacoes($id, $row){
 
         $stringBtn = '';
 
         if ($this->table == "fluxocaixa") {
 
-            $stringBtn .=  '
-                <input type="checkbox" name="checkboxFluxoCaixa" value="' . $id . '" class="mx-3">
-                <button class="btn btn-primary btn-sm" id="editar" data-id="' . $id . '"><i class="fas fa-edit"></i></button>
-            ';
+            $stringBtn .=  '<input type="checkbox" name="checkboxFluxoCaixa" value="' . $id . '" class="mx-3">';
+            if( in_array( $this->table.'_edt' , $_SESSION["permissoesUsuario"]) ){
+                if (strtolower($row["Status"]) != "quitado") {
+                    $stringBtn .= '<button class="btn btn-primary btn-sm" id="editar" data-id="' . $id . '"><i class="fas fa-edit"></i></button>';
+                }
+            }
 
         } else {
 
@@ -52,7 +54,7 @@ class Shared extends model {
                         "db" => $value["Field"],
                         "dt" => $index,
                         "formatter" => function($id, $row) {
-                            return $this->formataacoes($id);
+                            return $this->formataacoes($id, $row);
                         }
                     ];
                     

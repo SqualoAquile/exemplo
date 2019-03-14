@@ -285,10 +285,10 @@
                     <div class="btn btn-primary btn-block" tabindex="18" id="btn_incluir"> Incluir </div>                                                 
                  </div>                                       
             </div>
-            <div class="col-lg-6 d-flex flex-row-reverse bd-highlight" style="order:1;">
+            <div class="col-lg-2 offset-lg-4 text-lg-right order-0 order-lg-1">
                 <div class="form-group">
-                <div class="btn btn-secondary btn-block" tabindex="-1" id="btn_limparCampos"> Limpar Campos </div>                                                 
-                </div>                                       
+                    <button class="btn btn-secondary btn-block mb-5 mb-lg-0" tabindex="-1" id="btn_limparCampos">Limpar Campos</button>
+                </div>
             </div>
         </div>
     </form>    

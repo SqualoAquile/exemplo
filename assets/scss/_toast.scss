@@ -10,6 +10,7 @@
     }
 }
 .my-toast {
+    z-index: $zindex-dropdown;
     right: 0;
     animation-name: fadeInDown;
     animation-duration: 1s;

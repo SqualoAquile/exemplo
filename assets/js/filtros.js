@@ -110,6 +110,10 @@ $(function () {
                         $max.addClass('is-invalid');
                         $max[0].setCustomValidity('invalid');
                         $max.after('<div class="invalid-feedback col-lg-4 m-0">O valor deste campo deve ser maior que o campo anterior.</div>');
+
+                        $max.val('');
+                        $min.val('');
+
                         return;
                     }
                 }

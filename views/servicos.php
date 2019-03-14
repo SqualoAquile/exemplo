@@ -52,9 +52,9 @@
                                 <?php endif ?>
                             <?php endforeach ?>
 
-                            <div class="col-lg flex-grow-0">
+                            <div class="col-lg flex-lg-grow-0">
                                 <label>&nbsp;</label>
-                                <button type="submit" class="btn btn-primary">Salvar</button>
+                                <button type="submit" class="btn btn-primary btn-block">Salvar</button>
                             </div>
                         </div>
 
@@ -64,8 +64,8 @@
                                     $item = $value;
                                     $iteracao = $key;
                                 ?>
-                                <div class="col">
-                                    <button class="btn btn-dark" type="button" data-toggle="collapse" data-target="#historico<?php echo $iteracao ?>" aria-expanded="false" aria-controls="historico<?php echo $iteracao ?>">Histórico de Alterações</button>
+                                <div class="col-lg flex-lg-grow-0">
+                                    <button class="btn btn-dark btn-block text-truncate" type="button" data-toggle="collapse" data-target="#historico<?php echo $iteracao ?>" aria-expanded="false" aria-controls="historico<?php echo $iteracao ?>">Histórico de Alterações</button>
                                 </div>
                             <?php endif ?>
                         </div>

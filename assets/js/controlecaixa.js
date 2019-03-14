@@ -342,10 +342,14 @@ $(function () {
             $checados = $trChecados.find('[type=checkbox]:checked');
 
             if ($allChecados.length) {
+
                 aQuitar();
                 resumo();
                 $collapse.collapse('show');
                 $trChecados.addClass('selected');
+
+                $('.select-all').prop('checked', !($tbodyChecados.find('[type=checkbox]').length != $tbodyChecados.find('[type=checkbox]:checked').length));
+
             } else {
                 $collapse.collapse('hide');
                 $trChecados.removeClass('selected');
