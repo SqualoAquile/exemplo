@@ -347,6 +347,7 @@ class ajaxController extends controller{
       $shared = new Shared('fluxocaixa');
       $dados = $shared->gerarGraficoFiltro($_POST);
     }
+    
     echo json_encode($dados);
   }
     
