@@ -18,15 +18,18 @@
 <h1 class="display-4 font-weight-bold pt-4">Home</h1>
 <section id="charts">
     <div class="row my-5">
-        <div class="col-xl">
+        <div class="col-xl-6">
           <canvas id="chartBar"></canvas>
         </div>
-        <div class="col-xl">
+        <div class="col-xl-6">
           <canvas id="chartPie"></canvas>
         </div>
     </div>
     <div class="row my-5">
-        <div class="col-xl">
+        <div class="col-xl-6">
+          <canvas id="chartPolarArea"></canvas>
+        </div>
+        <div class="col-xl-6">
           <canvas id="chartLine"></canvas>
         </div>
     </div>
@@ -35,6 +38,7 @@
 var ctxBar = document.getElementById("chartBar").getContext('2d');
 var ctxPie = document.getElementById("chartPie").getContext('2d');
 var ctxLine = document.getElementById("chartLine").getContext('2d');
+var ctxPolarArea = document.getElementById("chartPolarArea").getContext('2d');
 
 var chartBar = new Chart(ctxBar, {
     type: 'bar',
@@ -97,6 +101,27 @@ var chartLine = new Chart(ctxLine, {
                 }
             }
         }]
+    }
+});
+
+var chartPolarArea = new Chart(ctxPolarArea, {
+    type: 'polarArea',
+    data: {
+        datasets: [{
+            data: [10, 20, 30],
+            backgroundColor: [
+                '#2a4c6b',
+                '#4a85b8',
+                '#adcbe6',
+                '#e7eff7',
+                '#62abea'
+            ]
+        }],
+        labels: [
+            'Red',
+            'Yellow',
+            'Blue'
+        ]
     }
 });
 </script>

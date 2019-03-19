@@ -64,7 +64,7 @@ class Shared extends model {
                         "db" => $value["Field"],
                         "dt" => $index,
                         "formatter" => function($d,$row) {
-                            if(empty(strtotime($d))){
+                            if(empty(strtotime($d)) || $d == "0000-00-00"){
                                 return '';
                             }else{
                                 return date( 'd/m/Y', strtotime($d));
@@ -152,7 +152,7 @@ class Shared extends model {
             }
             
         };
-        //print_r($columns); exit;
+
         return Ssp::complex($_POST, $this->config, $this->table, "id", $columns, null, "situacao='ativo'");
     }
 

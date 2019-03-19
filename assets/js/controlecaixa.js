@@ -328,10 +328,8 @@ $(function () {
                     $cardBodyFiltros.trigger('reset');
                 }
             });
-        });
-
-    $('.table-responsive')
-        .on('click', '[type=checkbox]', function () {
+        })
+        .on('change', '.table-responsive [type=checkbox]', function () {
 
             var $this = $(this),
                 $pai = $this.parents('.table-responsive'),
@@ -341,7 +339,7 @@ $(function () {
 
             $checados = $trChecados.find('[type=checkbox]:checked');
 
-            if ($allChecados.length) {
+            if ($tbodyChecados.length) {
 
                 aQuitar();
                 resumo();
@@ -366,7 +364,8 @@ $(function () {
     dataTable
         .on('draw', function () {
             $('.fluxocaixa .table-responsive table [type="checkbox"]')
-                .prop('checked', false);
+                .prop('checked', false)
+                .change();
         });
 
     $(this)

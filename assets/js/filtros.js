@@ -36,6 +36,7 @@ $(function () {
             var $this = $(this);
 
             $this
+                .val('')
                 .removeClass('is-invalid is-valid')
                 .siblings('.invalid-feedback').remove();
 
@@ -65,14 +66,11 @@ $(function () {
             var $this = $(this),
                 $pai = $this.parents('.input-group'),
                 $inputs = $pai.find('input[type=text]');
-            
-            $inputs
-                .val('');
 
             removeMask($inputs);
 
         })
-        .on('change', '.filtros-faixa .input-filtro-faixa', function () {
+        .on('blur', '.filtros-faixa .input-filtro-faixa', function () {
 
             // Filtros Faixa
 
@@ -100,6 +98,13 @@ $(function () {
                         .draw();
                 }
 
+                $max
+                    .removeClass('is-invalid')
+                    .siblings('.invalid-feedback')
+                    .remove();
+
+                $max[0].setCustomValidity('');
+
                 if (min && max) {
                     
                     $max.removeClass('is-invalid');
@@ -107,6 +112,7 @@ $(function () {
                     $max.siblings('.invalid-feedback').remove();
 
                     if (min >= max) {
+
                         $max.addClass('is-invalid');
                         $max[0].setCustomValidity('invalid');
                         $max.after('<div class="invalid-feedback col-lg-4 m-0">O valor deste campo deve ser maior que o campo anterior.</div>');
@@ -114,7 +120,7 @@ $(function () {
                         $max.val('');
                         $min.val('');
 
-                        return;
+                        return false;
                     }
                 }
 
@@ -133,7 +139,7 @@ $(function () {
                 }
             });
         })
-        .on('change', '.filtros-texto .input-filtro-texto', function () {
+        .on('blur', '.filtros-texto .input-filtro-texto', function () {
 
             // Filtros Texto
 
@@ -152,7 +158,6 @@ $(function () {
                         .columns(indexAnterior)
                         .search('')
                         .draw();
-                    
                 }
 
                 if (selectVal) {
@@ -166,11 +171,21 @@ $(function () {
                 }
             });
         })
-        .on('reset', '#card-body-filtros', function () {
+        .on('click', '#limpar-filtro', function () {
 
             // Limpar Filtros
+
+            var $cardBodyFiltros = $('#card-body-filtros'),
+                $select = $cardBodyFiltros.find('select');
             
             removeMask();
+
+            $select
+                .val('');
+
+            $cardBodyFiltros
+                .find('[type=checkbox]')
+                .prop('checked', false);
 
             dataTable
                 .columns()
@@ -192,21 +207,20 @@ $(function () {
                 .columns(indexColumn)
                 .search(search)
                 .draw();
-        });
+        })
+        .on('click', '#criar-filtro', function () {
 
-    $('#criar-filtro').click(function () {
+            var $filtros = $('.filtros');
 
-        var $filtros = $('.filtros');
+            if ($filtros.length < 5) {
+                $cloned = $filtros.last().clone();
+                $cloned.find('input').val('');
+                $cloned.appendTo('#card-body-filtros .filtros-wrapper');
+            }
+        })
+        .on('click', '#criar-filtro, #excluir-linha', function (event) {
 
-        if ($filtros.length < 5) {
-            $cloned = $filtros.last().clone();
-            $cloned.find('input').val('');
-            $cloned.appendTo('#card-body-filtros .filtros-wrapper');
-        }
-    });
-
-    $(this)
-        .on('click', '#criar-filtro, #excluir-linha', function () {
+            event.stopPropagation();
 
             var $criar = $('#criar-filtro'),
                 $filtros = $('.filtros');
