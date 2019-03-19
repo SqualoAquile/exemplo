@@ -35,7 +35,7 @@
     }
 }
 .relacional-dropdown-wrapper {
-    z-index: $zindex-dropdown;
+    z-index: 1;
     .relacional-dropdown {
         max-height: 200px;
         overflow-y: auto;

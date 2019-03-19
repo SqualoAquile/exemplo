@@ -34,7 +34,7 @@
 
                             <div class="card card-body my-3">
 
-                                <label for="parametroRelacional<?php echo $key ?>" class="h3 text-capitalize">
+                                <label class="h3 text-capitalize">
                                     <?php echo array_key_exists("label", $comment) ? $comment["label"] : $parametro ?>
                                 </label>
                                 
@@ -43,7 +43,7 @@
                                         <div class="row">
                                             <div class="col-lg">
                                                 <div class="position-relative">
-                                                    <input id="parametroRelacional<?php echo $key ?>" type="text" class="form-control search-input mb-3 mb-lg-0" placeholder="Procure por <?php echo $parametro ?>">
+                                                    <input id="parametroRelacional<?php echo $key ?>" type="text" class="form-control form-control-lg search-input" placeholder="Procure por <?php echo $parametro ?>">
                                                     <div class="icons-search-input d-flex px-1">
                                                         <button class="btn btn-sm down-btn" tabindex="-1">
                                                             <i class="fas fa-sort-down"></i>
@@ -57,9 +57,6 @@
                                                         <div class="list-group-filtereds list-group list-group-flush"></div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="save-parametros col-lg flex-lg-grow-0">
-                                                <button class="salvar btn btn-primary btn-block" tabindex="-1" disabled="disabled">Incluir</button>
                                             </div>
                                         </div>
                                     </li>

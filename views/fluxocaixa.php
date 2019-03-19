@@ -14,7 +14,10 @@ require "_header_browser_filtros.php";
                     <p class="m-0">Itens Selecionados</p>
                     <h2 id="itensSelecionados"></h2>
                 </div>
-                <button class="btn btn-danger btn-block" id="excluir">Excluir</button>
+                <button class="btn btn-danger btn-block" id="excluir">
+                    <i class="fas fa-trash-alt mr-2"></i>
+                    <span>Excluir</span>
+                </button>
             </div>
             <div class="col-lg">
                 <div class="row mb-3">

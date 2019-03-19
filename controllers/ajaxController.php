@@ -35,10 +35,17 @@ class ajaxController extends controller{
       echo json_encode($dados);
   }
 
-  public function relacionalDropdown() {
+  public function getRelacionalDropdown() {
     if (isset($_POST) && !empty($_POST)) {
       $shared = new Shared($_POST["tabela"]);
-      echo json_encode($shared->relacionalDropdown($_POST));
+      echo json_encode($shared->getRelacionalDropdown($_POST));
+    }
+  }
+
+  public function addRelacionalDropdown() {
+    if (isset($_POST) && !empty($_POST)) {
+      $shared = new Shared($_POST["tabela"]);
+      echo json_encode($shared->addRelacionalDropdown($_POST));
     }
   }
     

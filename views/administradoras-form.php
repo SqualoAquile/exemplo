@@ -21,15 +21,19 @@
 
     <form id="main-form" method="POST" class="needs-validation" autocomplete="off" novalidate>
         <input type="hidden" name="alteracoes" value="<?php echo isset($infoAdm) ? $infoAdm["alteracoes"] : "" ?>" data-anterior="<?php echo isset($infoAdm) ? $infoAdm["alteracoes"] : "" ?>">
-        <div class="form-group pb-3">
+        <div class="form-group">
             <label for="inome" class="font-weight-bold">
                 <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
                 <span>Nome da Administradora</span>
             </label>
-            <input type="text" name="nome" id="inome" class="form-control" data-anterior="<?php echo isset($infoAdm) ? $infoAdm["nome"] : "" ?>" value="<?php echo isset($infoAdm) ? $infoAdm["nome"] : "" ?>" required/>
+            <input type="text" name="nome" id="inome" class="form-control form-control-lg" data-anterior="<?php echo isset($infoAdm) ? $infoAdm["nome"] : "" ?>" value="<?php echo isset($infoAdm) ? $infoAdm["nome"] : "" ?>" required/>
         </div>
         <input id="form-send" type="submit" class="d-none">
     </form>
+
+    <div class="alert alert-info my-4" role="alert">
+        Taxas com valor 0%, não poderão ser usadas nos lançamentos de receitas/vendas.
+    </div>
 
     <div class="row">
         <div class="col-lg-6">
@@ -43,7 +47,7 @@
                         <select id="iband" name="band" class="form-control" required>
                             <option disabled selected value>Selecione</option>
                             <?php foreach ($listaBandeiras as $p):?>
-                            <option value="<?php echo $p["id"];?>"><?php echo ucfirst($p["nome"]);?></option>
+                                <option value="<?php echo $p["id"];?>"><?php echo ucfirst($p["nome"]);?></option>
                             <?php endforeach;?>
                         </select>
                     </div>
@@ -54,7 +58,7 @@
                                     <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
                                     <span>Taxa de Recebimento no Débito</span>
                                 </label>
-                                <input type="text" name="txdebito" id="itxdebito" class="form-control" data-anterior="" data-mascara_validacao="porcentagem" required/>
+                                <input type="text" name="txdebito" id="itxdebito" class="form-control" data-anterior="" data-mascara_validacao="porcentagem" data-podeZero="true" required/>
                             </div>
                         </div>
                         <div class="col-lg">
@@ -62,7 +66,7 @@
                                 <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
                                 <span>Dias de Recebimento no Débito</span>
                             </label>
-                            <input type="text" name="diasdebito" id="idiasdebito" class="form-control" data-anterior="" data-mascara_validacao="numero" maxlength="2" required/>
+                            <input type="text" name="diasdebito" id="idiasdebito" class="form-control" data-anterior="" data-mascara_validacao="numero" data-podeZero="true" maxlength="2" required/>
                         </div>
                     </div>
                     <div class="row">
@@ -72,7 +76,7 @@
                                     <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
                                     <span>Taxa Recebimento Crédito c/ Juros</span>
                                 </label>
-                                <input type="text" name="txcredcom" id="itxcredcom" class="form-control" data-anterior="" data-mascara_validacao="porcentagem" required/>
+                                <input type="text" name="txcredcom" id="itxcredcom" class="form-control" data-anterior="" data-mascara_validacao="porcentagem" data-podeZero="true" required/>
                             </div>
                         </div>
                         <div class="col-lg">
@@ -80,7 +84,7 @@
                                 <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
                                 <span>Dias Recebimento Crédito c/ Juros</span>
                             </label>
-                            <input type="text" name="diascredcom" id="idiascredcom" class="form-control" data-anterior="" data-mascara_validacao="numero" maxlength="2" required/>
+                            <input type="text" name="diascredcom" id="idiascredcom" class="form-control" data-anterior="" data-mascara_validacao="numero" data-podeZero="true" maxlength="2" required/>
                         </div>
                     </div>
                     <div class="row">
@@ -90,7 +94,7 @@
                                     <i class="font-weight-bold" data-toggle="tooltip" data-placement="top" title="Campo Obrigatório">*</i>
                                     <span>Dias Recebimento Antecipação</span>
                                 </label>
-                                <input type="text" name="diasantecip" id="idiasantecip" class="form-control" data-anterior="" data-mascara_validacao="numero" maxlength="2" required/>
+                                <input type="text" name="diasantecip" id="idiasantecip" class="form-control" data-anterior="" data-mascara_validacao="numero" data-podeZero="true" maxlength="2" required/>
                             </div>
                         </div>
                         <div class="col-lg">
@@ -130,13 +134,13 @@
                                 <td>
                                     <div data-placeholder="<?php echo $i ?>x">
                                         <label class="d-none" for="itxantecip_<?php echo $i ?>"><span>Taxa de recebimento com antecipação <?php echo $i ?>x</span></label>
-                                        <input type="text" id="itxantecip_<?php echo $i ?>" name="itxantecip_<?php echo $i ?>" class="form-control taxas taxas-antecipacao" data-anterior="" data-mascara_validacao="porcentagem" required />
+                                        <input type="text" id="itxantecip_<?php echo $i ?>" name="itxantecip_<?php echo $i ?>" class="form-control taxas taxas-antecipacao" data-anterior="" data-mascara_validacao="porcentagem" data-podeZero="true" required />
                                     </div>
                                 </td>
                                 <td>
                                     <div data-placeholder="<?php echo $i ?>x">
                                         <label class="d-none" for="itxcredsemjuros_<?php echo $i ?>"><span>Taxa de recebimento no crédito sem juros <?php echo $i ?>x</span></label>
-                                        <input type="text" id="itxcredsemjuros_<?php echo $i ?>" name="itxcredsemjuros_<?php echo $i ?>" class="form-control taxas taxas-credito" data-anterior="" data-mascara_validacao="porcentagem" required />
+                                        <input type="text" id="itxcredsemjuros_<?php echo $i ?>" name="itxcredsemjuros_<?php echo $i ?>" class="form-control taxas taxas-credito" data-anterior="" data-mascara_validacao="porcentagem" data-podeZero="true" required />
                                     </div>
                                 </td>
                             </tr>

@@ -51,11 +51,12 @@
                                     </div>
                                 <?php endif ?>
                             <?php endforeach ?>
-
-                            <div class="col-lg flex-lg-grow-0">
-                                <label>&nbsp;</label>
-                                <button type="submit" class="btn btn-primary btn-block">Salvar</button>
-                            </div>
+                            <?php if(in_array($modulo . "_edt", $infoUser["permissoesUsuario"])): ?>
+                                <div class="col-lg flex-lg-grow-0">
+                                    <label>&nbsp;</label>
+                                    <button type="submit" class="btn btn-primary btn-block">Salvar</button>
+                                </div>
+                            <?php endif ?>
                         </div>
 
                         <div class="row">

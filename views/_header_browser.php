@@ -25,7 +25,10 @@
         <!-- Verifica se o funcionário tem permissao pra adicionar -->
         <?php if(in_array($modulo . "_add", $infoUser["permissoesUsuario"])):?> <!--$infoUser é um vetor que pega os dados da sessao e armazena, entre outros dados, a permissao do usuario -->
             <div class="col-lg-2">
-                <a href="<?php echo BASE_URL . "/" . (isset($headerData["adicionar"]) ? $headerData["adicionar"]["url"] : $modulo . "/adicionar") ?>" class="btn btn-success btn-block">Adicionar</a>
+                <a href="<?php echo BASE_URL . "/" . (isset($headerData["adicionar"]) ? $headerData["adicionar"]["url"] : $modulo . "/adicionar") ?>" class="btn btn-success btn-block">
+                    <i class="fas fa-plus-circle mr-1"></i>
+                    <span>Adicionar</span>
+                </a>
             </div>
         <?php endif ?>
     </div>

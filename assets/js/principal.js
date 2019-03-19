@@ -4,6 +4,9 @@ $.fn.datepicker.defaults.autoclose = true;
 $.fn.datepicker.defaults.todayHighlight = true;
 $.fn.datepicker.defaults.todayBtn = true;
 $.fn.datepicker.defaults.clearBtn = true;
+$.fn.datepicker.defaults.showClose = true;
+$.fn.datepicker.defaults.ignoreReadonly = true;
+$.fn.datepicker.defaults.allowInputToggle = true;
 $.fn.datepicker.defaults.orientation = 'bottom';
 
 function Toast (options) {
@@ -40,7 +43,7 @@ $(function () {
 
     $menuToggle.click(function () {
         $(this).toggleClass('is-active');
-        $wrapper.toggleClass('toggled');
+        $wrapper.toggleClass('aberto');
     });
 
     $('.dataTable').on('shown.bs.collapse hidden.bs.collapse', '.contatos-filtrados .collapse', function () {
@@ -49,9 +52,9 @@ $(function () {
             $btn = $contaotsFiltrados.find('.btn');
 
         if ($this.hasClass('show')) {
-            $btn.find('i.fas').removeClass('fa-plus-circle').addClass('fa-minus-circle');
+            $btn.find('i.fas').removeClass('fa-chevron-circle-down').addClass('fa-minus-circle');
         } else {
-            $btn.find('i.fas').removeClass('fa-minus-circle').addClass('fa-plus-circle');
+            $btn.find('i.fas').removeClass('fa-minus-circle').addClass('fa-chevron-circle-down');
         }
     });
 
@@ -63,12 +66,12 @@ $(function () {
                 paddingYSidebar = parseInt(paddingYSidebar),
                 calcScroll = $this.position().top - $('#sidebar-wrapper').scrollTop();
             
-            $this.find('.dropdown-menu').stop(true, true).css('top', (calcScroll + heightNav + paddingYSidebar));
+            $this
+                .find('.dropdown-menu')
+                    .stop(true, true).css('top', (calcScroll + heightNav + paddingYSidebar));
         })
-        .on('click focus', '> a', function(event) {
-            if (!$(this).parents('.toggled').length) {
-                event.preventDefault();
-                event.stopPropagation();
+        .on('touchstart click', '> a', function() {
+            if (!$(this).parents('.aberto').length) {
                 return false;
             }
         });

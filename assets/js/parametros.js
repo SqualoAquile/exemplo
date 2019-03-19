@@ -6,7 +6,14 @@ const parametrosSemAcoes = [
     'cheque',
     'transferência',
     'TED',
-    'DOC'
+    'DOC',
+    'Elo',
+    'Visa',
+    'MasterCard',
+    'BanriCompras',
+    'Hiper',
+    'Visa Electron',
+    'Hipercard'
 ];
 
 function Ajax (url, callback, send = {}) {
@@ -55,24 +62,59 @@ function Popula ($wrapper, data, campo) {
 
 // Dropdowns
 $(document)
-    .on('click touchstart', '.down-btn', function () {
+    .on('click', '.down-btn', function () {
         $(this).parents('.search-body').find('.search-input').focus();
     })
-    .on('click touchstart', '.close-btn', function () {
+    .on('click', '.close-btn', function () {
 
-        var $searchBody = $(this).parents('.search-body');
+        var $searchBody = $(this).parents('.search-body'),
+            $inputSearch = $searchBody.find('.search-input');
 
-        $searchBody.find('.list-group-filtereds-wrapper').hide();
-        $searchBody.removeClass('active');
-        $searchBody.find('.search-input').blur().trigger('input');
+        if ($inputSearch.attr('data-id')) {
+
+            $inputSearch[0].setCustomValidity('');
+
+            $inputSearch
+                .removeClass('is-invalid is-valid')
+                .removeAttr('data-id')
+                .val('')
+                .focus();
+
+        } else {
+
+            if ($searchBody.find('.elements-add').children().length) {
+
+                $inputSearch
+                    .removeClass('is-invalid is-valid')
+                    .removeAttr('data-id')
+                    .val('')
+                    .trigger('input')
+                    .focus();
+            } else {
+
+                $searchBody.find('.list-group-filtereds-wrapper').hide();
+                $searchBody.removeClass('active');
+            }
+
+        }
     })
     .on('click touchstart', function (event) {
         
         var $currentElement = $(event.target);
 
         if (!$currentElement.parents('.search-body').length) {
-            $('.search-body.active .list-group-filtereds-wrapper').hide();
-            $('.search-body.active').removeClass('active');
+
+            var $searchBodyActive = $('.search-body');
+
+            $searchBodyActive
+                .find('.search-input')
+                .blur();
+
+            $searchBodyActive
+                .removeClass('active')
+                .find('.list-group-filtereds-wrapper')
+                    .hide();
+
         } else {
 
             var $notCurrent = $('.search-body.active').not($currentElement.parents('.search-body'))
@@ -92,10 +134,19 @@ $(document)
         if ($created.attr('id') == $inputSearch.attr('data-id')) {
     
             $created
-                .find('.btn')
-                .attr('disabled', 'disabled');
+                .find('.excluir')
+                    .hide();
+    
+            $created
+                .find('.editar')
+                    .removeClass('editar btn-primary')
+                    .addClass('salvar btn-success')
+                .find('.fas')
+                    .removeClass('fa-edit')
+                    .addClass('fa-save');
 
-            $created.addClass('disabled');
+            $created
+                
         }
     })
     .on('focus', '.search-input', function () {
@@ -114,17 +165,23 @@ $(document)
             value = $this.attr('data-anterior');
         }
 
-        Ajax('listar', function(data) {
-            
-            Popula($contentSearchThis, data, campo);
+        if (($this.val() && $this.attr('data-id')) || (!$this.val() && !$this.attr('data-id'))) {
 
-            $this.trigger('input');
+            Ajax('listar', function(data) {
+                
+                Popula($contentSearchThis, data, campo);
 
-        }, {
-            value: value,
-            tabela: $searchBody.attr('id'),
-            campo: campo
-        });
+                if ($this.attr('data-id')) {
+                    $this.trigger('input');
+                }
+    
+            }, {
+                value: value,
+                tabela: $searchBody.attr('id'),
+                campo: campo
+            });
+        }
+
     })
     .on('input', '.search-input', function () {
 
@@ -147,15 +204,12 @@ $(document)
                 var htmlElAdd = '';
                     
                 if (!data.length) {
-                    htmlElAdd += '<div class="p-3">Nenhum resultado encontrado</div>';
-                }
-
-                if ($this.val()) {
-                    if ((data.length && (data[0][campo].toUpperCase() != $this.val().toUpperCase())) || !data.length) {
-                        $saveParametros.removeAttr('disabled');
-                    } else {
-                        $saveParametros.attr('disabled', 'disabled');
-                    }
+                    htmlElAdd += `
+                        <div class="p-3">
+                            <span>Nenhum resultado encontrado</span>
+                            <button class="salvar btn btn-success btn-block text-truncate mt-2">Adicionar: ` + $this.val() + `</button>
+                        </div>
+                    `;
                 }
 
                 $elAdd.html(htmlElAdd);
@@ -169,35 +223,60 @@ $(document)
         } else {
             // Editando
 
-            if (!$this.val().length) {
+            var $btnSalvar = $contentSearchThis.find('.salvar');
 
-                $this
-                    .removeAttr('data-id')
-                    .focus();
+            $this.removeClass('is-invalid is-valid');
 
-                $saveParametros.attr('disabled', 'disabled');
+            if ($this.val()) {
+                if ($this.val() != $this.attr('data-anterior')) {
+                    
+                    $this[0].setCustomValidity('');
+                    $this.addClass('is-valid');
+
+                    $btnSalvar.removeAttr('disabled');
+
+                } else {
+
+                    $btnSalvar.attr('disabled', 'disabled');
+
+                }
             } else {
 
-                if ($this.val() != $this.attr('data-anterior')) {
-                    $saveParametros.removeAttr('disabled');
-                }
+                $this[0].setCustomValidity('invalid');
+                $this.addClass('is-invalid');
+
+                $btnSalvar.attr('disabled', 'disabled');
             }
-            
+
             $('.list-group-filtereds #' + id + ' .text').text($this.val());
+            
         }
     })
-    .on('keyup', '.search-input', function(event) {
+    .on('keydown', '.search-input', function(event) {
 
         var $this = $(this),
-            $saveParametros = $this.parents('.search-body').find('.salvar'),
+            $searchBody = $this.parents('.search-body'),
+            $inputSearch = $searchBody.find('.search-input'),
             code = event.keyCode || event.which;
 
         if (code == 27 || code == 9) {
             // Esc || Tab
-            $this.parents('.search-body').find('.close-btn').click();
-        } else if (code == 13) {
-            // Enter
-            $saveParametros.click();
+
+            $inputSearch[0].setCustomValidity('');
+
+            $inputSearch
+                .removeClass('is-valid is-invalid')
+                .removeAttr('data-id')
+                .val('')
+                .trigger('input')
+                .blur();
+
+            $searchBody
+                .find('.elements-add')
+                    .html('');
+
+            $searchBody.find('.icons-search-input .close-btn').click();
+
         }
     })
     .on('click', '.excluir', function() {
@@ -232,7 +311,7 @@ $(document)
             tabela = $searchBody.attr('id'),
             campo = $searchBody.attr('data-campo');
 
-        if ($inputSearch.val()) {
+        if ($inputSearch.attr('data-id') != $inputSearch.val() && $inputSearch.val()) {
             if ($inputSearch.attr('data-id') == undefined) {
     
                 Ajax('adicionar', function(data) {
@@ -243,14 +322,12 @@ $(document)
                             class: 'alert-success'
                         });
 
-                        $searchBody
-                            .find('.salvar')
-                            .attr('disabled', 'disabled');
-
                         $inputSearch
+                            .removeClass('is-valid is-invalid')
                             .val('')
                             .focus()
                             .trigger('input');
+
                     }
                 }, {
                     value: $inputSearch.val(),
@@ -268,15 +345,12 @@ $(document)
                             class: 'alert-success'
                         });
 
-                        $searchBody
-                            .find('.salvar')
-                            .attr('disabled', 'disabled');
-
                         $inputSearch
+                            .removeClass('is-valid is-invalid')
+                            .removeAttr('data-id')
                             .val('')
                             .focus()
-                            .trigger('input')
-                            .removeAttr('data-id');
+                            .trigger('input');
                     }
                 }, {
                     value: $inputSearch.val(),
@@ -285,6 +359,13 @@ $(document)
                 });
     
             }
+        } else {
+
+            $inputSearch[0].setCustomValidity('invalid');
+            
+            $inputSearch
+                .focus()
+                .addClass('is-invalid');
         }
 
     })
