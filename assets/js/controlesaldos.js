@@ -1,5 +1,6 @@
 $(document).ready(function () {
 
+    $("#mes_ref").attr('disabled','disabled');    
     $("#saldo_total_inicio").attr('disabled','disabled');    
     $("#saldo_banco_inicio");    
     $("#saldo_online_inicio");    
@@ -13,6 +14,7 @@ $(document).ready(function () {
     $("#saldo_online_final");    
     $("#saldo_caixa_final");       
     
+    calculaDiferenca($('#saldo_total_inicio'), $('#resultado'), $('#saldo_total_final'), $('#diferenca'));
 
     $('[data-mascara_validacao="data"]')
     .mask('00/00/0000')
@@ -23,7 +25,9 @@ $(document).ready(function () {
             valor = $this.val(),
             $entradas = $("#entradas"),
             $saidas = $("#saidas"),
-            $resultado = $("#resultado");
+            $resultado = $("#resultado"),
+            $mesref = $("#mes_ref"),
+            meses = {"01":"jan", "02":"fev", "03":"mar", "04":"abr", "05":"mai", "06":"jun", "07":"jul", "08":"ago", "09":"set", "10":"out", "11":"nov", "12":"dez"};
 
         valor = valor.split('/');
         valor[0] = '01';
@@ -47,7 +51,8 @@ $(document).ready(function () {
                     $entradas.val(floatParaPadraoBrasileiro(0));
                     $saidas.val(floatParaPadraoBrasileiro(0));
                     $resultado.val(floatParaPadraoBrasileiro(0));
-                    
+                    $mesref.val('');
+
                 } else {
                     // Valido   
                     $this.val(valor[2]+'-'+valor[1]+'-'+valor[0]);
@@ -57,7 +62,10 @@ $(document).ready(function () {
                             if( valor[0] == '01' ){
                                 $this.removeClass('is-invalid').addClass('is-valid');
                                 $this[0].setCustomValidity('');
-                                $this.datepicker('update');
+                                // $this.datepicker('update');
+                                $mesref.val(meses[valor[1]]+'/'+valor[2]);
+                                
+
         
                                 // preenche os valores dos campos que são necessários
                                 var tabela, campo, dtinicio;
@@ -79,7 +87,7 @@ $(document).ready(function () {
                                         if(dado == ''){
                                             $entradas.val(floatParaPadraoBrasileiro(0));
                                             $saidas.val(floatParaPadraoBrasileiro(0));
-                                            $resultado.val(floatParaPadraoBrasileiro(0));
+                                            $resultado.val(floatParaPadraoBrasileiro(0));                                            
         
                                         }else{
                                             $entradas.val(floatParaPadraoBrasileiro(dado['Receita']));
@@ -99,6 +107,7 @@ $(document).ready(function () {
                                 $entradas.val(floatParaPadraoBrasileiro(0));
                                 $saidas.val(floatParaPadraoBrasileiro(0));
                                 $resultado.val(floatParaPadraoBrasileiro(0));
+                                
                                 
                             }
 
@@ -121,6 +130,7 @@ $(document).ready(function () {
             $entradas.val(floatParaPadraoBrasileiro(0));
             $saidas.val(floatParaPadraoBrasileiro(0));
             $resultado.val(floatParaPadraoBrasileiro(0));
+            $mesref.val('');
         }
         calculaDiferenca($('#saldo_total_inicio'), $('#resultado'), $('#saldo_total_final'), $('#diferenca'));
     });
@@ -233,6 +243,8 @@ function somaSaldo(sdoBanco, sdoCaixa, sdoOnline, sdoTotal){
     
     valAux = floatParaPadraoBrasileiro(total);
     calculaDiferenca($('#saldo_total_inicio'), $('#resultado'), $('#saldo_total_final'), $('#diferenca'));
+    $("#mes_ano").change().blur();
+    
     return sdoTotal.val(valAux);
 
 }
@@ -267,9 +279,18 @@ function calculaDiferenca (sdoTotInicio, resultado, sdoTotFinal, diferenca){
     
     valAux = 0;
     valAux =  parseFloat( parseFloat(sdoTotInicio) + parseFloat(resultado) - parseFloat(sdoTotFinal));
-    valAux = floatParaPadraoBrasileiro(valAux);
-
     
+    if( valAux > parseFloat(0) ){
+        diferenca.addClass('bg-success text-white');
+
+    }else if( valAux < parseFloat(0) ){
+        diferenca.addClass('bg-danger text-white');
+
+    }else{
+        diferenca.removeClass('bg-danger bg-success text-white');
+    }
+
+    valAux = floatParaPadraoBrasileiro(valAux);
     return diferenca.val(valAux);
 
 }

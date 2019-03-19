@@ -118,4 +118,5 @@
             </div>
         </div>
     </div>
+    <?php require_once "_graficos.php";?>
 </header>

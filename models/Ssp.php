@@ -215,7 +215,7 @@ class SSP {
 		);
 	}
 
-	static function complex_graficos2 ( $request, $conn, $table, $primaryKey, $columns, $whereResult=null, $whereAll=null, $sum ='', $coluna_alvo=null, $opcao_group = null )
+	static function complex_graficos2 ( $request, $conn, $table, $primaryKey, $columns, $whereResult=null, $whereAll=null, $sum ='', $coluna_alvo=null, $opcao_group = null, $interval_datas = null )
 	{
 		$bindings = array();
 		$db = self::db( $conn );
@@ -248,8 +248,8 @@ class SSP {
 			$whereAllSql = 'WHERE '.$whereAll;
 		}
 		
-
-		if (!empty($coluna_alvo) && !empty($opcao_group)){
+		$opcao_group = '';
+		if (!empty($coluna_alvo)){
 			$coluna_alvo = $opcao_group . "(" . $coluna_alvo. ")";
 			$groupby = " GROUP BY ". $coluna_alvo;
 		} else{
@@ -265,7 +265,10 @@ class SSP {
 
 		// Main query to actually get the data
 		//puxa todos os dados de despesa
-		$where1 = $where." AND despesa_receita = 'Despesa'";
+		$dt1 = $interval_datas[0];
+		$dt2 = $interval_datas[1];
+
+		$where1 = $where." AND despesa_receita = 'Despesa' AND $coluna_alvo BETWEEN '$dt1' AND '$dt2' ";
 		$despesaBruta = self::sql_exec( $db, $bindings,
 			"SELECT $coluna_alvo
 			$sum
@@ -276,7 +279,7 @@ class SSP {
 		);
 
 		// puxa todos os dados de receita
-		$where2 = $where." AND despesa_receita = 'Receita'";
+		$where2 = $where." AND despesa_receita = 'Receita' AND $coluna_alvo BETWEEN '$dt1' AND '$dt2' ";
 		$receitaBruta = self::sql_exec( $db, $bindings,
 			"SELECT $coluna_alvo
 			$sum
@@ -342,6 +345,7 @@ class SSP {
 		/*
 		 * Output
 		 */
+		// print_r($data);exit;
 		return $data; 
 		
 	}

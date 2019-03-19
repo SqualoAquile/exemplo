@@ -423,7 +423,7 @@ $(function () {
                 $this.val(anterior);
             }
 
-            $this.datepicker('update');
+            // $this.datepicker('update');
             
         });
 });

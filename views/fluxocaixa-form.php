@@ -287,7 +287,7 @@
             </div>
             <div class="col-lg-2 offset-lg-4 text-lg-right order-0 order-lg-1">
                 <div class="form-group">
-                    <button class="btn btn-secondary btn-block mb-5 mb-lg-0" tabindex="-1" id="btn_limparCampos">Limpar Campos</button>
+                    <div class="btn btn-secondary btn-block mb-5 mb-lg-0" tabindex="-1" id="btn_limparCampos">Limpar Campos</div>
                 </div>
             </div>
         </div>
