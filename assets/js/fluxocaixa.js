@@ -9,6 +9,8 @@ $(function () {
                 .append('<option value="Genérica"   >Genérica</option>')
                 .append('<option value="Venda"      >Venda</option>');
 
+    $('#favorecido').parent().parent().find('span').text('Pago Por');
+
     calcularesumo();
 
     ///////////////////////////////////////CONDIÇÕES INICIAIS DA TELA
@@ -65,6 +67,8 @@ $(function () {
                 .append('<option value="Venda"      >Venda</option>');
 
             //troca a base de informações do dropdown do favorecido
+            $('#favorecido').parent().parent().find('span').text('Pago Por');
+
             $('.relacional-dropdown-input').each(function () {
 
                 var $this = $(this),
@@ -108,6 +112,8 @@ $(function () {
                 .append('<option value="Imposto"            >Imposto</option>');
 
             //troca a base de informações do dropdown do favorecido
+            $('#favorecido').parent().parent().find('span').text('Favorecido');
+
             $('.relacional-dropdown-input').each(function () {
 
                 var $this = $(this),
@@ -739,19 +745,25 @@ $(function () {
 
     function limparCampos(){
 
-        $("#Receita").parent().parent().removeClass('is-invalid is-valid').blur();
-        $("#valor_total").val('').removeClass('is-invalid is-valid').blur();
-        $("#data_operacao").val('').removeClass('is-invalid is-valid').blur();               
-        $("#favorecido").val('').removeClass('is-invalid is-valid').blur();
-        $("#quem_lancou").val('').removeClass('is-invalid is-valid').blur();
-        $("#detalhe").val('').removeClass('is-invalid is-valid').blur();
-        $("#conta_corrente").val('').removeClass('is-invalid is-valid').blur();
-        $("#conta_analitica").val('').removeClass('is-invalid is-valid').blur();
-        $("#forma_pgto").val('').removeClass('is-invalid is-valid').change();
+        $('#form-principal').trigger('reset');
 
-        $("#nro_pedido").val('').removeClass('is-invalid is-valid').blur();
-        $("#nro_nf").val('').removeClass('is-invalid is-valid').blur();
-        $("#data_emissao_nf").val('').removeClass('is-invalid is-valid').blur();
+        $("#valor_total").val('').removeClass('is-invalid is-valid');
+        $("#data_operacao").val('').removeClass('is-invalid is-valid');               
+        $("#favorecido").val('').removeClass('is-invalid is-valid');
+        $("#quem_lancou").val('').removeClass('is-invalid is-valid');
+        $("#detalhe").val('').removeClass('is-invalid is-valid');
+        $("#conta_corrente").val('').removeClass('is-invalid is-valid');
+        $("#conta_analitica").val('').removeClass('is-invalid is-valid');
+        $("#forma_pgto").val('').change().removeClass('is-invalid is-valid');
+        $("#nro_pedido").val('').removeClass('is-invalid is-valid');
+        $("#nro_nf").val('').removeClass('is-invalid is-valid');
+        $("#data_emissao_nf").val('').removeClass('is-invalid is-valid');
+
+        $('#form-principal').removeClass('was-validated');
+        $("#Receita").click().focus();
+        $("#Receita").parent().parent().removeClass('is-invalid is-valid');
+        $("#cond_pgto").removeClass('is-invalid is-valid');
+        $("#observacao").removeClass('is-invalid is-valid');
 
     }
 

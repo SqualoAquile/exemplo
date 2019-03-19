@@ -32,8 +32,17 @@ $(function () {
         };
 
         var campoGroup = $selectGraf.val();
-        //var tipoGraf = $selectGrafOpcoes.find(':selected').attr('data-tipograf');
         var agrupamento = $selectGrafOpcoes.val();
+        var intervDatas = [];
+
+        intervDatas = intervaloDatas(agrupamento);
+        console.log(campoGroup);
+        console.log(agrupamento);
+        console.log(intervDatas[0]);
+        console.log(intervDatas[1]);
+        
+        
+        
 
         $.ajax({ 
             url: baselink + '/ajax/gerarGraficoFiltro', 
@@ -42,6 +51,7 @@ $(function () {
                 columns: dataTable.ajax.params(), 
                 campo_group: campoGroup,
                 campo_sum: 'valor_total',
+                intervalo: intervDatas,
                 opcao_group: agrupamento
             },
             dataType: 'json', 
@@ -49,11 +59,7 @@ $(function () {
                 // console.log(resultado);
                 if (resultado){
 
-                    var eixoDatas = [],
-                    receitas = [],
-                    coresReceitas = [],
-                    despesas = [],
-                    coresDespesas = [];
+                    var eixoDatas = [], receitas = [], despesas = [];
 
                     for (var i = 0; i < resultado[0].length; i++) {
                         
@@ -61,12 +67,10 @@ $(function () {
                         dataAux = dataAux.split('-').reverse().join('/');
                         eixoDatas[i] = dataAux;
                         despesas[i] = resultado[0][i][1];
-                        coresDespesas[i] = '#E74C3C';
                         receitas[i] = resultado[1][i][1];
-                        coresReceitas[i] = '#27AE60';
                         
                     }
-                    
+                    console.log(myChart);
                     var myChart = new Chart(ctx, {
                         type: 'bar',
                         data: {
@@ -74,14 +78,14 @@ $(function () {
                             datasets: [{
                                 type: 'bar',
                                 label: 'Despesas',
-                                backgroundColor: coresDespesas,
+                                backgroundColor: 'red',
                                 data: despesas,
                                 borderColor: 'white',
                                 borderWidth: 1
                             }, {
                                 type: 'bar',
                                 label: 'Receitas',
-                                backgroundColor: coresReceitas,
+                                backgroundColor: 'green',
                                 data: receitas,
                                 borderColor: 'white',
                                 borderWidth: 1
@@ -102,3 +106,133 @@ $(function () {
         });
     }
 });
+
+function intervaloDatas(nome_intervalo) {
+    var hoje, dt1, dt2, dtaux, dia, mes, ano, retorno = [];
+
+        dtaux = new Date();
+        
+        dia = dtaux.getDate();
+        if (dia.toString().length == 1) {
+            dia = "0" + dtaux.getDate();
+        }
+        
+        mes = dtaux.getMonth() + 1;
+        if (mes.toString().length == 1) {
+            mes = "0" + mes;
+        }
+        ano = dtaux.getFullYear();
+
+        hoje = ano + '-' + mes + '-' + dia;
+
+        if(nome_intervalo == 'd0'){
+            dt1 = hoje;
+            dt2 = hoje;
+        }
+
+        if(nome_intervalo == 'd7'){
+            var dtaux1 = new Date(ano, parseInt(mes) - 1, dia);            
+            var dtaux2 = new Date(ano, parseInt(mes) - 1, dia);            
+            dtaux1.setDate(dtaux1.getDate() - 7);
+            dtaux2.setDate(dtaux2.getDate() + 7);
+
+            dia = dtaux1.getDate();
+            if (dia.toString().length == 1) {
+                dia = "0" + dtaux1.getDate();
+            }
+            
+            mes = dtaux1.getMonth() + 1;
+            if (mes.toString().length == 1) {
+                mes = "0" + mes;
+            }
+            ano = dtaux1.getFullYear();
+
+            dt1 = ano + '-' + mes + '-' + dia;
+
+            dia = dtaux2.getDate();
+            if (dia.toString().length == 1) {
+                dia = "0" + dtaux2.getDate();
+            }
+            
+            mes = dtaux2.getMonth() + 1;
+            if (mes.toString().length == 1) {
+                mes = "0" + mes;
+            }
+            ano = dtaux2.getFullYear();
+
+            dt2 = ano + '-' + mes + '-' + dia;
+
+        }
+        if(nome_intervalo == 'd15'){
+            var dtaux1 = new Date(ano, parseInt(mes) - 1, dia);            
+            var dtaux2 = new Date(ano, parseInt(mes) - 1, dia);            
+            dtaux1.setDate(dtaux1.getDate() - 15);
+            dtaux2.setDate(dtaux2.getDate() + 15);
+
+            dia = dtaux1.getDate();
+            if (dia.toString().length == 1) {
+                dia = "0" + dtaux1.getDate();
+            }
+            
+            mes = dtaux1.getMonth() + 1;
+            if (mes.toString().length == 1) {
+                mes = "0" + mes;
+            }
+            ano = dtaux1.getFullYear();
+
+            dt1 = ano + '-' + mes + '-' + dia;
+
+            dia = dtaux2.getDate();
+            if (dia.toString().length == 1) {
+                dia = "0" + dtaux2.getDate();
+            }
+            
+            mes = dtaux2.getMonth() + 1;
+            if (mes.toString().length == 1) {
+                mes = "0" + mes;
+            }
+            ano = dtaux2.getFullYear();
+
+            dt2 = ano + '-' + mes + '-' + dia;
+
+        }
+        if(nome_intervalo == 'd30'){
+            var dtaux1 = new Date(ano, parseInt(mes) - 1, dia);            
+            var dtaux2 = new Date(ano, parseInt(mes) - 1, dia);            
+            dtaux1.setDate(dtaux1.getDate() - 30);
+            dtaux2.setDate(dtaux2.getDate() + 30);
+
+            dia = dtaux1.getDate();
+            if (dia.toString().length == 1) {
+                dia = "0" + dtaux1.getDate();
+            }
+            
+            mes = dtaux1.getMonth() + 1;
+            if (mes.toString().length == 1) {
+                mes = "0" + mes;
+            }
+            ano = dtaux1.getFullYear();
+
+            dt1 = ano + '-' + mes + '-' + dia;
+
+            dia = dtaux2.getDate();
+            if (dia.toString().length == 1) {
+                dia = "0" + dtaux2.getDate();
+            }
+            
+            mes = dtaux2.getMonth() + 1;
+            if (mes.toString().length == 1) {
+                mes = "0" + mes;
+            }
+            ano = dtaux2.getFullYear();
+
+            dt2 = ano + '-' + mes + '-' + dia;
+
+        }
+
+        retorno[0] = dt1;
+        retorno[1] = dt2;
+
+        return retorno;
+
+}
