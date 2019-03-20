@@ -74,7 +74,7 @@ $(function () {
             removeMask($inputs);
 
         })
-        .on('change', '.filtros-faixa .input-filtro-faixa', function () {
+        .on('change blur', '.filtros-faixa .input-filtro-faixa', function () {
 
             // Filtros Faixa
 
@@ -145,7 +145,7 @@ $(function () {
                 }
             });
         })
-        .on('change', '.filtros-texto .input-filtro-texto', function () {
+        .on('change blur', '.filtros-texto .input-filtro-texto', function () {
 
             // Filtros Texto
 

@@ -200,6 +200,10 @@ class Shared extends model {
     }
 
     public function nomeDasColunas(){
+
+        if ($this->table == "relatoriofluxocaixa"){
+            $this->table = "fluxocaixa";
+        }
         $sql = self::db()->query("SHOW FULL COLUMNS FROM " . $this->table);
         $result = $sql->fetchAll(PDO::FETCH_ASSOC);
         
@@ -374,6 +378,7 @@ class Shared extends model {
             
         };
 
+        //return Ssp::complex_graficos_count($requisicao['columns'], $this->config, $this->table, "id", $columns, null, "situacao='ativo'", $requisicao['campo_sum'], $requisicao['campo_group']);
         return Ssp::complex_graficos2($requisicao['columns'], $this->config, $this->table, "id", $columns, null, "situacao='ativo'", $requisicao['campo_sum'], $requisicao['campo_group'], $requisicao['opcao_group'], $requisicao['intervalo']);
     }
 
