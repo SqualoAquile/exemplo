@@ -344,7 +344,7 @@ class ajaxController extends controller{
   public function gerarGraficoFiltro(){
     
     if(isset($_POST) && !empty($_POST)){
-      $shared = new Shared('fluxocaixa');
+      $shared = new Shared($_POST['modulo']);
       $dados = $shared->gerarGraficoFiltro($_POST);
     }
     

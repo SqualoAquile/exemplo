@@ -350,6 +350,53 @@ class SSP {
 		
 	}
 
+	static function complex_graficos_count ( $request, $conn, $table, $primaryKey, $columns, $whereResult=null, $whereAll=null, $sum ='', $coluna_alvo=null )
+	{
+		$bindings = array();
+		$db = self::db( $conn );
+		$localWhereResult = array();
+		$localWhereAll = array();
+		$whereAllSql = '';
+		$groupby = '';
+
+		// Build the SQL query string from the request
+
+		$where = self::filter( $request, $columns, $bindings );
+		$whereResult = self::_flatten( $whereResult );
+		$whereAll = self::_flatten( $whereAll );
+
+		if ( $whereResult ) {
+			$where = $where ?
+				$where .' AND '.$whereResult :
+				'WHERE '.$whereResult;
+		}
+		if ( $whereAll ) {
+			$where = $where ?
+				$where .' AND '.$whereAll :
+				'WHERE '.$whereAll;
+			$whereAllSql = 'WHERE '.$whereAll;
+		}
+		
+		if ($coluna_alvo){
+			$groupby = ' GROUP BY '. $coluna_alvo;
+		}
+
+		$count = ' COUNT(id) ';
+		$order = 'ORDER BY '.$count.' DESC';
+
+		// Main query to actually get the data
+		$data = self::sql_exec( $db, $bindings,
+			"SELECT $count, `$coluna_alvo`
+			 FROM `$table`
+			 $where
+			 $groupby
+			$order
+			"
+		);
+
+		return $data;
+	}
+
 	private static function formater ( $type, $value )
 	{
 		$returnValue = "";
