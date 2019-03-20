@@ -2,77 +2,109 @@ var charts = [];
 
 $(function () {
 
-    var $selectGraf = $('#selectGraficos'),
+    var $selectGrafTemporal = $('#selectGraficosTemporal')
+        $selectGrafOpcoes = $('#selectGrafOpcoes'),
         dataTable = window.dataTable,
         modo = "agrupar", // agrupar (doughnut, bar, horizontalBar), temporal(line, bar, combo)
         
         id = "#chart-div2",
-        tipo = "doughnut",
+        tipo = "bar",
         tabela = $('#infos').attr('data-modulo'),
         ctx = document.getElementById(id.substr(1)).getContext('2d');
         
+        console.log(ctx);
     $('.dataTable') 
         .on('draw.dt', function() {
-            drawChart(id,tipo,modo);
+            drawChart(id,tipo);
         });
 
-    $selectGraf
+    $selectGrafTemporal
         .on('change', function() {
-            
-            drawChart(id,tipo,modo);
+            console.log('teste arq certo')
+            drawChart(id,tipo);
         });
+
+    $selectGrafOpcoes
+    .on('change', function() {
+        console.log('teste arq certo2')
+        drawChart(id,tipo);
+    });
 
     function drawChart(id, tipo) {
- 
-            if (!$selectGraf.val()) {
-                $selectGraf.val($selectGraf.find('option:not([disabled])').first().val()).change();
+        var coluna, titulo, intervalo = [];
+
+            if (!$selectGrafTemporal.val() && !$selectGrafOpcoes.val() ) {
+
+                $selectGrafTemporal.val($selectGrafTemporal.find('option:not([disabled])').first().val()).change();
+                $selectGrafOpcoes.val($selectGrafOpcoes.find('option:not([disabled])').first().val()).change();
             };
 
-            var coluna = $selectGraf.val();
-            var titulo = 'Agrupar registros por ' + $selectGraf.children("option:selected").text().trim();
-
-    
+            coluna = $selectGrafTemporal.val();
+            titulo = 'Agrupar registros por ' + $selectGrafTemporal.children("option:selected").text().trim() + ' de ' + $selectGrafOpcoes.children("option:selected").text().trim() +' até hoje.';
+            intervalo = intervaloDatas($selectGrafOpcoes.val());
+            
             $.ajax({ 
-                url: baselink + '/ajax/gerarGraficoFiltro', 
+                url: baselink + '/ajax/gerarGraficoFiltroIntervaloDatas', 
                 type: 'POST', 
                 data: {
                     columns: dataTable.ajax.params(), 
-                    campo_group: coluna,
-                    campo_sum: '',
+                    coluna: coluna,
+                    intervalo: intervalo,
                     modulo: tabela
                 },
                 dataType: 'json', 
                 success: function (resultado) { 
-                   
-                    if (resultado){
-    
-                        dataChart = [],
-                        labelsChart = [];
+                    if (resultado){    
+                        var eixoDatas = [], receitas = [], despesas = [], result = [], resultAcul = [];
 
-                        var total =0;
-    
-                        for (var i = 0; i < resultado.length; i++) {
-    
-                            element = resultado[i];
+                        for (var i = 0; i < Object.keys(resultado[0]).length; i++) {
+                            eixoDatas[i] = Object.keys(resultado[0])[i];
+                            despesas[i] =  parseFloat(parseFloat(-1) * parseFloat(Object.values(resultado[0])[i]));
+                            receitas[i] = parseFloat(Object.values(resultado[1])[i]);
+                            result[i] = parseFloat(parseFloat(Object.values(resultado[1])[i]) - parseFloat(Object.values(resultado[0])[i]));
+                            if(i == 0){
+                                resultAcul[i] = parseFloat(result[i]).toFixed(2);    
+                            }else{
+                                resultAcul[i] = parseFloat(parseFloat(resultAcul[i-1]) + parseFloat(result[i])).toFixed(2);      
+                            }   
                             
-                            // NO COUNT O INDEX DOS ELEMENTOS VEM TROCADOS 
-                            labelsChart.push(element[1] + ' - ' + parseInt(element[0]));
-                            dataChart.push(parseInt(element[0]));
                         }
-    
+                        
+                        console.log(resultAcul);
                         var config = {
-                            type: tipo,
+                            type: 'bar',
                             data: {
-                                labels: labelsChart,
+                                labels: eixoDatas,
                                 datasets: [{
-                                    data: dataChart,
-                                    backgroundColor: [
-                                        '#2a4c6b',
-                                        '#4a85b8',
-                                        '#adcbe6',
-                                        '#e7eff7',
-                                        '#62abea'
-                                    ]
+                                    type: 'line',
+                                    label: 'Resultado Acumulado',
+                                    backgroundColor: 'black',
+                                    fill:false,
+                                    data: resultAcul,
+                                    borderColor: 'black',
+                                    borderWidth: 3
+                                },{
+                                    type: 'line',
+                                    label: 'Resultado',
+                                    backgroundColor: 'blue',
+                                    fill:false,
+                                    data: result,
+                                    borderColor: 'blue',
+                                    borderWidth: 2
+                                }, {
+                                    type: 'bar',
+                                    label: 'Despesas',
+                                    backgroundColor: 'red',
+                                    data: despesas,
+                                    borderColor: 'white',
+                                    borderWidth: 1
+                                }, {
+                                    type: 'bar',
+                                    label: 'Receitas',
+                                    backgroundColor: 'green',
+                                    data: receitas,
+                                    borderColor: 'white',
+                                    borderWidth: 1
                                 }]
                             },
                             options: {
@@ -88,7 +120,7 @@ $(function () {
                                     position: "top"
                                 },
                             }
-                        };
+                        }
     
                         if(typeof charts[id] == "undefined") {   
                             charts[id]= new (function(){
@@ -105,3 +137,52 @@ $(function () {
 
     }
 });
+
+function intervaloDatas(intervalo) {
+    var hoje, dtaux, dtaux1, dia, mes, ano, dia1, mes1, ano1, retorno = [];
+
+        // calculando o valor de HOJE
+        dtaux = new Date();
+        
+        dia = dtaux.getDate();
+        if (dia.toString().length == 1) {
+            dia = "0" + dtaux.getDate();
+        }
+
+        mes = dtaux.getMonth() + 1;
+        if (mes.toString().length == 1) {
+            mes = "0" + mes;
+        }
+        ano = dtaux.getFullYear();
+
+        hoje = ano + '-' + mes + '-' + dia;
+
+        // criando o array de DATAS
+
+        if(parseInt(intervalo) != parseInt(0)){
+            k=0;
+            for(i = parseInt(intervalo) ; i > 0 ; i--){
+                dtaux1 = new Date(ano, parseInt(mes) - 1, dia); 
+                dtaux1.setDate(dtaux1.getDate() - i);
+
+                dia1 = dtaux1.getDate();
+                if (dia1.toString().length == 1) {
+                    dia1 = "0" + dtaux1.getDate();
+                }
+                
+                mes1 = dtaux1.getMonth() + 1;
+                if (mes1.toString().length == 1) {
+                    mes1 = "0" + mes1;
+                }
+                ano1 = dtaux1.getFullYear();
+
+                retorno[k] = ano1 + '-' + mes1 + '-' + dia1;
+                k++;
+            }
+        }
+        
+        retorno[parseInt(intervalo)] = hoje;
+
+        return retorno;
+
+}

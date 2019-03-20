@@ -357,6 +357,15 @@ class ajaxController extends controller{
     
     echo json_encode($dados);
   }
+  
+  public function gerarGraficoFiltroIntervaloDatas(){
     
+    if(isset($_POST) && !empty($_POST)){
+      $shared = new Shared($_POST['modulo']);
+      $dados = $shared->gerarGraficoFiltroIntervaloDatas($_POST);
+    }
+    
+    echo json_encode($dados);
+  }
 }   
 ?>

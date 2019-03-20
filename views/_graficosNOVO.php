@@ -49,10 +49,10 @@
                 <div class="col-lg-6">
                     <select class="custom-select" id="selectGrafOpcoes">
                         <option selected disabled>Agrupar por</option>
-                        <option value="d0" >Hoje</option>
-                        <option value="d7"> +- 7 dias</option>
-                        <option value="d15"> +- 15 dias</option>
-                        <option value="d30"> +- 30 dias</option>
+                        <option value="0" >Hoje</option>
+                        <option value="7" >7 dias</option>
+                        <option value="15">15 dias</option>
+                        <option value="30">30 dias</option>
                     </select>
                 </div>
         </div>
