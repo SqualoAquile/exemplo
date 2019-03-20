@@ -170,6 +170,55 @@ $(function () {
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
     //
+    // Sem Mascara
+    //
+    $('[data-mascara_validacao="false"]')
+        .on('blur touchstart', function () {
+
+            var $this = $(this);
+
+            $this.removeClass('is-valid is-invalid');
+            $this.siblings('.invalid-feedback').remove();
+
+            if ($this.val()) {
+                if ($this.attr('data-anterior') != $this.val()) {
+                    if ($this.attr('data-unico')) {
+                        $this.unico(function (json) {
+                            if (!json.length) {
+                                // Não existe, pode seguir
+
+                                $this
+                                    .removeClass('is-invalid')
+                                    .addClass('is-valid');
+
+                                $this[0].setCustomValidity('');
+
+                            } else {
+                                // Já existe, erro
+
+                                var text_label = $this.siblings('label').find('span').text();
+
+                                $this
+                                    .removeClass('is-valid')
+                                    .addClass('is-invalid');
+
+                                $this[0].setCustomValidity('invalid');
+
+                                $this.after('<div class="invalid-feedback">Este ' + text_label.toLowerCase() + ' já está sendo usado</div>');
+                            }
+                        });
+                    } else {
+                        $this
+                            .removeClass('is-invalid')
+                            .addClass('is-valid');
+
+                        $this[0].setCustomValidity('');
+                    }
+                }
+            }
+        });
+
+    //
     // Campo Nome
     //
     $('[data-mascara_validacao="nome"]')

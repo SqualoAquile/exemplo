@@ -30,12 +30,10 @@
                     <?php if(array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "table"): ?> 
 
                         <!-- Label Geral -->
-                        <label class="d-none" for="<?php echo $value['Field'] ?>">
-                            <!-- Asterisco de campo obrigatorio -->
-                            <span><?php echo array_key_exists("label", $value["Comment"]) ? $value["Comment"]["label"] : ucwords(str_replace("_", " ", $value['Field'])) ?></span>
-                        </label>
+                        <label class="d-none"><span><?php echo array_key_exists("label", $value["Comment"]) ? $value["Comment"]["label"] : ucwords(str_replace("_", " ", $value['Field'])) ?></span></label>
                         
                         <?php $table = true ?>
+                        
                         <input 
                             type="hidden" 
                             name="<?php echo $value["Field"] ?>" 

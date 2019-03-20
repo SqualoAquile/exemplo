@@ -117,7 +117,7 @@ $(function () {
         .click(function () {
 
             var $this = $(this),
-                $table = $this.parents('.table-responsive');
+                $table = $this.parents('.dataTables_wrapper');
 
             $table.find('[type=checkbox]').prop('checked', $this.prop('checked'));
         });
@@ -241,7 +241,7 @@ $(function () {
                                 });
     
                                 $cardBodyFiltros.trigger('reset');
-                                $('.fluxocaixa .collapse').collapse('hide');
+                                $('.collapse').collapse('hide');
                             }
                         }
                     });
@@ -331,10 +331,10 @@ $(function () {
                 }
             });
         })
-        .on('change', '.table-responsive [type=checkbox]', function () {
+        .on('change', '.dataTables_wrapper [type=checkbox]', function () {
 
             var $this = $(this),
-                $pai = $this.parents('.table-responsive'),
+                $pai = $this.parents('.dataTables_wrapper'),
                 $allChecados = $pai.find('[type=checkbox]:checked'),
                 $tbodyChecados = $allChecados.parents('tbody'),
                 $trChecados = $tbodyChecados.find('tr');
@@ -365,7 +365,7 @@ $(function () {
 
     dataTable
         .on('draw', function () {
-            $('.fluxocaixa .table-responsive table [type="checkbox"]')
+            $('.dataTables_wrapper table [type="checkbox"]')
                 .prop('checked', false)
                 .change();
         });

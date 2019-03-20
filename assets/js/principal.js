@@ -62,13 +62,16 @@ $(function () {
         .on('mouseover', function() {
             var $this = $(this),
                 heightNav = $('nav#nav').height(),
-                paddingYSidebar = $('#sidebar-wrapper > .nav').css('padding-top').replace('px', ''),
-                paddingYSidebar = parseInt(paddingYSidebar),
+                paddingYNavLink = $this.find('> .nav-link').css('padding-top').replace('px', ''),
+                paddingYNavLink = parseInt(paddingYNavLink),
+                marginYNavLink = $this.find('> .nav-link').css('padding-top').replace('px', ''),
+                marginYNavLink = parseInt(marginYNavLink),
+                calNavLink = marginYNavLink + paddingYNavLink,
                 calcScroll = $this.position().top - $('#sidebar-wrapper').scrollTop();
             
             $this
                 .find('.dropdown-menu')
-                    .stop(true, true).css('top', (calcScroll + heightNav + paddingYSidebar));
+                    .stop(true, true).css('top', (calcScroll + heightNav + calNavLink));
         })
         .on('touchstart click', '> a', function() {
             if (!$(this).parents('.aberto').length) {

@@ -36,7 +36,11 @@
                     <!-- CAMPOS DO TIPO TABELA - Ex: CONTATOS -->
                     <?php if(array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "table"): ?> 
                         
+                        <!-- Label Geral -->
+                        <label class="d-none"><span><?php echo array_key_exists("label", $value["Comment"]) ? $value["Comment"]["label"] : ucwords(str_replace("_", " ", $value['Field'])) ?></span></label>
+                        
                         <?php $table = true ?>
+                        
                         <input 
                             type="hidden" 
                             name="<?php echo $value["Field"] ?>" 
@@ -192,6 +196,7 @@
                                 <!-- CAMPOS DO TIPO DROPDOWN -->
                                 <?php elseif(array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "dropdown"): ?>
                                     <div class="relacional-dropdown-wrapper dropdown">
+                                        <label class="d-none"><span><?php echo array_key_exists("label", $value["Comment"]) ? $value["Comment"]["label"] : ucwords(str_replace("_", " ", $value['Field'])) ?></span></label>
                                         <input 
                                         id="<?php echo $value['Field'] ?>" 
                                         name="<?php echo $value['Field'] ?>" 
