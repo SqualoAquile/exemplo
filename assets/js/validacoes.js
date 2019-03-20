@@ -670,13 +670,20 @@ $(function () {
 
             var $this = $(this);
 
+            var pode_zero = $this.attr('data-podeZero');
+            if (pode_zero != undefined && pode_zero == 'true') {
+                pode_zero = true;
+            } else {
+                pode_zero = false;
+            }
+
             $this.removeClass('is-valid is-invalid');
             $this.siblings('.invalid-feedback').remove();
 
             if ($this.val()) {
                 if ($this.attr('data-anterior') != $this.val()) {
                     var value = Number($this.val());
-                    if (value) {
+                    if (value != 0 || pode_zero == true) {
                         // Valido
                         $this
                             .removeClass('is-invalid')
@@ -1066,7 +1073,7 @@ $(function () {
                     campo = $this.attr('data-campo');
     
                 $.ajax({
-                    url: baselink + '/ajax/relacionalDropdown',
+                    url: baselink + '/ajax/getRelacionalDropdown',
                     type: 'POST',
                     data: {
                         tabela: $this.attr('data-tabela'),
@@ -1106,7 +1113,23 @@ $(function () {
                 $nenhumResult = $dropdownMenu.find('.nenhum-result');
 
             if (!$('.relacional-dropdown-element:contains(' + $this.val() + ')').length) {
+                
                 $nenhumResult.removeClass('d-none');
+
+                if ($this.attr('data-add') == 'true') {
+                    
+                    if (!$nenhumResult.find('.adicionar').length) {
+                        $nenhumResult
+                            .append(`
+                                <button class="btn btn-success btn-block mt-2 adicionar">Adicionar: <span></span></button>
+                            `);
+                    }
+    
+                    $nenhumResult.find('.adicionar > span').text($this.val());
+
+                }
+
+
             } else {
                 $nenhumResult.addClass('d-none');
             }
@@ -1134,5 +1157,25 @@ $(function () {
                     this.setCustomValidity('');
                 }
             }
+        })
+        .on('click', '.relacional-dropdown .adicionar', function () {
+
+            var $this = $(this),
+                $parent = $this.parents('.relacional-dropdown-wrapper'),
+                $input = $parent.find('.relacional-dropdown-input');
+
+            $.ajax({
+                url: baselink + '/ajax/addRelacionalDropdown',
+                type: 'POST',
+                data: {
+                    tabela: $input.attr('data-tabela'),
+                    value: $input.val(),
+                    campo: $input.attr('data-campo')
+                },
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                }
+            });
         });
 });

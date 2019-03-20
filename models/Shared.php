@@ -17,7 +17,7 @@ class Shared extends model {
 
         if ($this->table == "fluxocaixa") {
 
-            $stringBtn .=  '<input type="checkbox" name="checkboxFluxoCaixa" value="' . $id . '" class="mx-3">';
+            $stringBtn .=  '<input type="checkbox" name="checkboxFluxoCaixa" value="' . $id . '">';
             if( in_array( $this->table.'_edt' , $_SESSION["permissoesUsuario"]) ){
                 if (strtolower($row["Status"]) != "quitado") {
                     $stringBtn .= '<button class="btn btn-primary btn-sm" id="editar" data-id="' . $id . '"><i class="fas fa-edit"></i></button>';
@@ -122,7 +122,7 @@ class Shared extends model {
                                     $return_contatos = '
                                         <div class="contatos-filtrados d-flex">
                                             <button class="btn btn-sm btn-link text-info" type="button" data-toggle="collapse" data-target="#collapseContato' . $row["id"] . '" aria-expanded="false" aria-controls="collapseContato' . $row["id"] . '">
-                                                <i class="fas fa-plus-circle"></i>
+                                                <i class="fas fa-chevron-circle-down"></i>
                                             </button>
                                             <div>
                                                 <span>' . $first_contato . '</span>
@@ -166,7 +166,7 @@ class Shared extends model {
         return $array;
     }
 
-    public function relacionalDropdown($request) {
+    public function getRelacionalDropdown($request) {
 
         if ($request["campo"]) {
             
@@ -179,6 +179,24 @@ class Shared extends model {
         $sql = self::db()->query($sql);
         
         return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function addRelacionalDropdown($request) {
+
+        if ($request["campo"] && $request["value"]) {
+            
+            $campo = trim($request["campo"]);
+            $campo = addslashes($campo);
+            
+            $value = trim($request["value"]);
+            $value = addslashes($value);
+        }
+
+        $sql = "INSERT INTO " . $this->table . " (" . $campo . ") VALUES ('" . $value . "')";
+
+        self::db()->query($sql);
+        
+        return self::db()->errorInfo();
     }
 
     public function nomeDasColunas(){

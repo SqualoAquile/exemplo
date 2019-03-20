@@ -28,11 +28,18 @@
                     <!-- INÍCIO DOS TESTES PARA VER QUAL O TIPO DE CAMPO -->
                     <!-- CAMPOS DO TIPO TABELA - Ex: CONTATOS -->
                     <?php if(array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "table"): ?> 
+
+                        <!-- Label Geral -->
+                        <label class="d-none" for="<?php echo $value['Field'] ?>">
+                            <!-- Asterisco de campo obrigatorio -->
+                            <span><?php echo array_key_exists("label", $value["Comment"]) ? $value["Comment"]["label"] : ucwords(str_replace("_", " ", $value['Field'])) ?></span>
+                        </label>
                         
                         <?php $table = true ?>
                         <input 
                             type="hidden" 
                             name="<?php echo $value["Field"] ?>" 
+                            id="<?php echo $value["Field"] ?>" 
                             value="<?php echo isset($item) && !empty($item) ? $item[$value["Field"]] : "" ?>"
                             data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
                             data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
@@ -42,6 +49,12 @@
 
                     <!-- CAMPOS DO TIPO HIDDEN - Ex: ALTERAÇÕES -->
                     <?php elseif(array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "hidden"): ?>
+
+                        <!-- Label Geral -->
+                        <label class="d-none" for="<?php echo $value['Field'] ?>">
+                            <!-- Asterisco de campo obrigatorio -->
+                            <span><?php echo array_key_exists("label", $value["Comment"]) ? $value["Comment"]["label"] : ucwords(str_replace("_", " ", $value['Field'])) ?></span>
+                        </label>
                         
                         <input 
                             type="hidden" 

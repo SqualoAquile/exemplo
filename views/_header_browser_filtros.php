@@ -19,8 +19,8 @@
         <div class="col-lg"> <!--Colunas da esquerda -->
             <h1 class="display-4 text-capitalize font-weight-bold"><?php echo isset($labelTabela["labelBrowser"]) && !empty($labelTabela["labelBrowser"]) ? $labelTabela["labelBrowser"] : $modulo ?></h1>
         </div>
-        <div class="col-lg"> 
-            <div class="input-group mb-3 mb-lg-0">
+        <div class="col"> 
+            <div class="input-group mb-0">
                 <!--Input com os dados da tabela-->
                 <input type="text" name="searchDataTable" id="searchDataTable" aria-label="Pesquise por qualquer campo..." class="form-control" placeholder="Pesquise por qualquer campo..." aria-describedby="search-addon">
                 <div class="input-group-append">
@@ -30,7 +30,7 @@
                 </div>
             </div>
         </div>
-        <div class="col flex-lg-grow-0">
+        <div class="col flex-grow-0">
             <div class="btn-group-toggle" data-toggle="buttons">
                 <label class="btn btn-info btn-block cursor-pointer" data-toggle="collapse" data-target="#collapseFiltros" aria-expanded="false" aria-controls="collapseFiltros">
                     <input type="checkbox" checked autocomplete="off">
@@ -46,9 +46,20 @@
         <div class="card mt-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="m-0">Filtros</h3>
-                <div>
-                    <button id="limpar-filtro" type="button" class="btn btn-outline-secondary btn-sm">Limpar Filtros</button>
-                    <button id="criar-filtro" type="button" class="btn btn-outline-success btn-sm">Adicionar Filtros</button>
+                <div class="dropdown">
+                    <button class="btn btn-light dropdown-toggle no-icon-dropdown" type="button" id="dropdownMenuAcoesFiltros" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuAcoesFiltros">
+                        <button id="limpar-filtro" type="button" class="dropdown-item">
+                            <i class="fas fa-eraser mr-2"></i>
+                            <span>Limpar Filtros</span>
+                        </button>
+                        <button id="criar-filtro" type="button" class="dropdown-item">
+                            <i class="fas fa-plus-circle mr-2"></i>
+                            <span>Adicionar Filtros</span>
+                        </button>
+                    </div>
                 </div>
             </div>
             <div id="card-body-filtros" class="card-body pb-1">
@@ -70,7 +81,7 @@
                 <?php endif ?>
                 <div class="filtros-wrapper">
                     <div class="filtros row mb-3">
-                        <div class="filtros-faixa col-lg">
+                        <div class="filtros-faixa col-lg-6">
                             <div class="input-group">
                                 <select class="custom-select input-filtro-faixa">
                                     <option selected disabled value="">Filtrar por...</option>
@@ -89,7 +100,7 @@
                                 <input type="text" class="form-control input-filtro-faixa max" placeholder="até...">
                             </div>
                         </div>
-                        <div class="filtros-texto col-lg">
+                        <div class="filtros-texto col-lg-6">
                             <div class="input-group">
                                 <select class="custom-select input-filtro-texto">
                                     <option selected disabled value="">Filtrar por...</option>
@@ -107,8 +118,8 @@
                                 <input type="text" class="form-control input-filtro-texto texto">
                             </div>
                         </div>
-                        <div class="col-lg flex-grow-0 col-excluir-linha">
-                            <button class="btn btn-danger btn-block" id="excluir-linha">
+                        <div class="col-excluir-linha col-lg-1">
+                            <button class="btn btn-outline-danger btn-block" id="excluir-linha">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </div>
@@ -117,5 +128,4 @@
             </div>
         </div>
     </div>
-    <?php require_once "_graficos.php";?>
 </header>

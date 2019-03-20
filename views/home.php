@@ -48,11 +48,11 @@ var chartBar = new Chart(ctxBar, {
             label: '0 de Votos',
             data: [12, 19, 3, 5, 2, 3],
             backgroundColor: [
-                '#2a4c6b',
-                '#4a85b8',
-                '#adcbe6',
-                '#e7eff7',
-                '#62abea'
+                '#007DFF',
+                '#3076BF',
+                '#0051A6',
+                '#409EFF',
+                '#73B8FF'
             ]
         }]
     },
@@ -75,11 +75,11 @@ var chartPie = new Chart(ctxPie, {
             label: '# of Votes',
             data: [12, 19, 3, 5, 2, 3],
             backgroundColor: [
-                '#2a4c6b',
-                '#4a85b8',
-                '#adcbe6',
-                '#e7eff7',
-                '#62abea'
+                '#007DFF',
+                '#3076BF',
+                '#0051A6',
+                '#409EFF',
+                '#73B8FF'
             ]
         }]
     }
@@ -92,7 +92,7 @@ var chartLine = new Chart(ctxLine, {
         datasets: [{
             label: '0 de Votos',
             data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: '#2a4c6b',
+            backgroundColor: '#007DFF',
             options: {
                 scales: {
                     yAxes: [{
@@ -110,11 +110,11 @@ var chartPolarArea = new Chart(ctxPolarArea, {
         datasets: [{
             data: [10, 20, 30],
             backgroundColor: [
-                '#2a4c6b',
-                '#4a85b8',
-                '#adcbe6',
-                '#e7eff7',
-                '#62abea'
+                '#007DFF',
+                '#3076BF',
+                '#0051A6',
+                '#409EFF',
+                '#73B8FF'
             ]
         }],
         labels: [

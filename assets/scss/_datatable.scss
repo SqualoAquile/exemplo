@@ -35,6 +35,9 @@
             background-color: $warning;
             border-radius: $badge-border-radius;
         }
+        [type=checkbox] {
+            width: $spacer * 2;
+        }
     }
     .dataTables_paginate {
         @extend .d-flex;

@@ -204,6 +204,7 @@
                                         value="<?php echo isset($item) && !empty($item) ? $item[$value["Field"]] : "" ?>"
                                         data-tabela="<?php echo $value["Comment"]["info_relacional"]["tabela"] ?>" 
                                         data-campo="<?php echo $value["Comment"]["info_relacional"]["campo"] ?>" 
+                                        data-add="<?php echo array_key_exists("add", $value["Comment"]["info_relacional"]) ? $value["Comment"]["info_relacional"]["add"] : "" ?>" 
                                         data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                         data-unico="<?php echo array_key_exists("unico", $value["Comment"]) && $value["Comment"]["unico"]  == true ? "unico" : "" ?>"
                                         data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
@@ -285,9 +286,12 @@
                     <div class="btn btn-primary btn-block" tabindex="18" id="btn_incluir"> Incluir </div>                                                 
                  </div>                                       
             </div>
-            <div class="col-lg-2 offset-lg-4 text-lg-right order-0 order-lg-1">
+            <div class="offset-xl-3 col-xl-3 col-lg-2 offset-lg-4 text-lg-right order-0 order-lg-1">
                 <div class="form-group">
-                    <div class="btn btn-secondary btn-block mb-5 mb-lg-0" tabindex="-1" id="btn_limparCampos">Limpar Campos</div>
+                    <button class="btn btn-secondary btn-block mb-5 mb-lg-0" tabindex="-1" id="btn_limparCampos">
+                        <i class="fas fa-eraser mr-2"></i>
+                        <span>Limpar Campos</span>
+                    </button>
                 </div>
             </div>
         </div>

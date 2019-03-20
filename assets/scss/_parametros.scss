@@ -1,6 +1,6 @@
 .search-body {
     .list-group-filtereds-wrapper {
-        z-index: $zindex-dropdown;
+        z-index: 1;
         .list-group-filtereds {
             max-height: 200px;
             overflow-y: auto;
@@ -19,13 +19,22 @@
             margin-top: -0.3rem;
         }
     }
+    input[type=text] {
+        &:invalid,
+        &.is-valid,
+        &.is-invalid {
+            & ~ .icons-search-input {
+                right: $spacer * 2;
+            }
+        }
+    }
     &.active {
         .icons-search-input {
             .close-btn {
-                display: initial;
+                display: block!important;
             }
             .down-btn {
-                display: none;
+                display: none!important;
             }
         }
     }

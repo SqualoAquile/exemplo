@@ -1,13 +1,18 @@
 $width-closed: calc(30px + 2rem);
+
 #wrapper {
 	padding-left: $width-closed;
+	transition: all 0.5s ease;
+	animation-delay: 0.5s;
 	@include media-breakpoint-down(md) {
 		padding-left: 0;
 	}
-	transition: all 0.5s ease;
-	&.toggled {
+	&.aberto {
 		#sidebar-wrapper {
 			width: $sidebar-width;
+			.fas {
+				margin-right: 0.8rem;
+			}
 		}
 		@include media-breakpoint-up(md) {
 			padding-left: $sidebar-width;
@@ -16,19 +21,18 @@ $width-closed: calc(30px + 2rem);
 			}
 		}
 	}
-	&:not(.toggled) {
+	&:not(.aberto) {
 		#sidebar-wrapper {
 			@extend .shadow-sm;
 			.sidebar-nav {
+				align-items: center;
 				> .nav-item {
+					width: 100%;
 					> .nav-link {
 						text-align: center;
 						> span,
 						&:after {
 							display: none;
-						}
-						i {
-							margin: auto!important;
 						}
 					}
 					&:hover {
@@ -48,7 +52,7 @@ $width-closed: calc(30px + 2rem);
 	}
 }
 #sidebar-wrapper {
-	z-index: 1000;
+	z-index: $zindex-dropdown;
 	position: fixed;
 	left: 0;
 	width: $width-closed;
@@ -66,16 +70,20 @@ $width-closed: calc(30px + 2rem);
 .sidebar-nav {
 	position: absolute;
 	top: 0;
-	width: 100%;
+	left: 0;
+	right: 0;
 	margin: 0;
 	padding: 0;
+	.nav-link {
+		white-space: nowrap;
+	}
 	.dropdown-menu {
 		transform: none!important;
 	}
 }
 @include media-breakpoint-up(md) {
 	#wrapper {
-		&.toggled {
+		&.aberto {
 			padding-left: $sidebar-width;
 			#sidebar-wrapper {
 				width: $sidebar-width;

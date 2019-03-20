@@ -50,12 +50,14 @@ $(function () {
     }
 
     $(this)
-        .on('click', '#excluir-linha', function (event) {
+        .on('click', '#excluir-linha', function () {
 
             var $this = $(this),
                 $parent = $this.parents('.filtros');
 
             $parent.find('select').val('').change();
+
+            $parent.prev(':not(:first-child)').find('.filtros-texto').removeClass('col-lg-6').addClass('col-lg-5');
 
             $parent.remove();
         })
@@ -70,7 +72,7 @@ $(function () {
             removeMask($inputs);
 
         })
-        .on('blur', '.filtros-faixa .input-filtro-faixa', function () {
+        .on('change blur', '.filtros-faixa .input-filtro-faixa', function () {
 
             // Filtros Faixa
 
@@ -139,7 +141,7 @@ $(function () {
                 }
             });
         })
-        .on('blur', '.filtros-texto .input-filtro-texto', function () {
+        .on('change blur', '.filtros-texto .input-filtro-texto', function () {
 
             // Filtros Texto
 
@@ -213,8 +215,17 @@ $(function () {
             var $filtros = $('.filtros');
 
             if ($filtros.length < 5) {
-                $cloned = $filtros.last().clone();
+
+                $cloned = $filtros.first().clone();
                 $cloned.find('input').val('');
+
+                if ($filtros.length >= 2) {
+                    $filtros.not($cloned).find('.filtros-texto').removeClass('col-lg-5').addClass('col-lg-6');
+                    $cloned.find('.filtros-texto').removeClass('col-lg-6').addClass('col-lg-5');
+                } else {
+                    $cloned.find('.filtros-texto').removeClass('col-lg-6').addClass('col-lg-5');
+                }
+
                 $cloned.appendTo('#card-body-filtros .filtros-wrapper');
             }
         })

@@ -23,6 +23,7 @@ $hamburger-layer-color: $primary;
 @import "permissoes";
 @import "administradoras";
 @import "header_browser_filtros";
+@import "relatorio_fluxo_caixa";
 
 body {
     padding-top: $navbar-height;

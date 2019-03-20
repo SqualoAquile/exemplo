@@ -1,4 +1,3 @@
-<script src="<?php echo BASE_URL?>/assets/js/controlecaixa.js" type="text/javascript"></script>
 <?php
 // Transforma o nome do arquivo para o nome do módulo
 $modulo = str_replace("-form", "", basename(__FILE__, ".php"));
@@ -11,7 +10,8 @@ require "_table_datatable.php";
     var baselink = '<?php echo BASE_URL;?>',
         currentModule = '<?php echo $modulo ?>'  // usa o nome da tabela como nome do módulo, necessário para outras interações
 </script>
-<div class="collapse mb-5" id="collapseFluxocaixaResumo">
+
+<!-- <div class="collapse mb-5" id="collapseFluxocaixaResumo">
     <div class="card card-body">
         <div class="row mb-3" id="somasResumo">
             <div class="col-lg-3">
@@ -19,7 +19,10 @@ require "_table_datatable.php";
                     <p class="m-0">Itens Selecionados</p>
                     <h2 id="itensSelecionados"></h2>
                 </div>
-                <button class="btn btn-danger btn-block" id="excluir">Excluir</button>
+                <button class="btn btn-danger btn-block" id="excluir">
+                    <i class="fas fa-trash-alt mr-2"></i>
+                    <span>Excluir</span>
+                </button>
             </div>
             <div class="col-lg">
                 <div class="row mb-3">
@@ -64,4 +67,4 @@ require "_table_datatable.php";
             </div>
         </div>
     </div>
-</div>
+</div> -->

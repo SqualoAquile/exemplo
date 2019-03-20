@@ -284,7 +284,7 @@
                      <?php if (!isset($value["filhos"]) || $indexFilhosComPermissao > 0): ?>
                         <li class="nav-item <?php echo $navItemDropdownClass ?>">
                            <a class="nav-link my-2 <?php echo $navLinkDropdownClass ?>" href="<?php echo BASE_URL . $value["link"] ?>" <?php echo $navLinkDropdownAttrs ?>>
-                              <i class="<?php echo $value["icon"] ?> mr-2"></i>
+                              <i class="<?php echo $value["icon"] ?>"></i>
                               <span><?php echo $value["text"] ?></span>
                            </a>
                            <?php echo $dropdownMenu ?>

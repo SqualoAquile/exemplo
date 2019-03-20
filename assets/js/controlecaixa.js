@@ -323,6 +323,8 @@ $(function () {
                             class: 'alert-success'
                         });
 
+                        dataTable.ajax.reload();
+
                     }
 
                     $cardBodyFiltros.trigger('reset');
@@ -421,8 +423,6 @@ $(function () {
                 // Inválido
                 $this.val(anterior);
             }
-
-            // $this.datepicker('update');
             
         });
 });
