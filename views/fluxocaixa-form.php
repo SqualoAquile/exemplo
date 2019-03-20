@@ -293,10 +293,10 @@
             </div>
             <div class="offset-xl-3 col-xl-3 col-lg-2 offset-lg-4 text-lg-right order-0 order-lg-1">
                 <div class="form-group">
-                    <button class="btn btn-secondary btn-block mb-5 mb-lg-0" tabindex="-1" id="btn_limparCampos">
+                    <div class="btn btn-secondary btn-block mb-5 mb-lg-0" tabindex="-1" role="button" aria-pressed="false" id="btn_limparCampos">
                         <i class="fas fa-eraser mr-2"></i>
                         <span>Limpar Campos</span>
-                    </button>
+                    </div>
                 </div>
             </div>
         </div>
