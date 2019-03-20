@@ -69,6 +69,8 @@ $(function () {
                 $pai = $this.parents('.input-group'),
                 $inputs = $pai.find('input[type=text]');
 
+            $inputs.change();
+
             removeMask($inputs);
 
         })
@@ -93,7 +95,7 @@ $(function () {
 
                 addMask(mascara, [$min, $max]);
 
-                if (indexAnterior) {
+                if (indexAnterior && indexAnterior != selectVal) {
                     dataTable
                         .columns(indexAnterior)
                         .search('')
@@ -112,6 +114,8 @@ $(function () {
                     $max.removeClass('is-invalid');
                     $max[0].setCustomValidity('');
                     $max.siblings('.invalid-feedback').remove();
+
+                    console.log('min max', min, max);
 
                     if (min >= max) {
 

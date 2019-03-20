@@ -206,6 +206,7 @@
                                         value="<?php echo isset($item) && !empty($item) ? $item[$value["Field"]] : "" ?>"
                                         data-tabela="<?php echo $value["Comment"]["info_relacional"]["tabela"] ?>" 
                                         data-campo="<?php echo $value["Comment"]["info_relacional"]["campo"] ?>" 
+                                        data-pode_nao_cadastrado="<?php echo array_key_exists("pode_nao_cadastrado", $value["Comment"]["info_relacional"]) ? $value["Comment"]["info_relacional"]["pode_nao_cadastrado"] : "false" ?>" 
                                         data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                         data-unico="<?php echo array_key_exists("unico", $value["Comment"]) && $value["Comment"]["unico"]  == true ? "unico" : "" ?>"
                                         data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"

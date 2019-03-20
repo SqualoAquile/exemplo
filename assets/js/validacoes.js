@@ -1116,20 +1116,6 @@ $(function () {
                 
                 $nenhumResult.removeClass('d-none');
 
-                if ($this.attr('data-add') == 'true') {
-                    
-                    if (!$nenhumResult.find('.adicionar').length) {
-                        $nenhumResult
-                            .append(`
-                                <button class="btn btn-success btn-block mt-2 adicionar">Adicionar: <span></span></button>
-                            `);
-                    }
-    
-                    $nenhumResult.find('.adicionar > span').text($this.val());
-
-                }
-
-
             } else {
                 $nenhumResult.addClass('d-none');
             }
@@ -1149,7 +1135,7 @@ $(function () {
                     return $(this).text() === $this.val();
                 });
                 
-                if (!$filtereds.length) {
+                if (!$filtereds.length && $this.attr('data-pode_nao_cadastrado') != 'true') {
                     $this.addClass('is-invalid');
                     this.setCustomValidity('invalid');
                 } else {
