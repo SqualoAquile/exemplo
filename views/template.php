@@ -242,7 +242,7 @@
       </nav>
       <div id="wrapper">
          <aside id="sidebar-wrapper" class="shadow-lg bg-white">
-            <ul class="nav flex-column sidebar-nav py-3">
+            <ul class="nav flex-column sidebar-nav">
                <?php foreach ($menus as $key => $value): ?> <!--Verifica se o funcionario tem permissao, do contrário nem exibe os módulos-->
                   <?php $indexFilhosComPermissao = 0 ?>
                   <?php if($value["permissao"] == "%" || in_array($value["permissao"], $infoUser["permissoesUsuario"])): ?>
@@ -257,9 +257,11 @@
 
                                  $filhos .= '
                                     <li class="nav-item">
-                                       <a class="nav-link my-2" href="' . BASE_URL . $valueFilho["link"] . '">
-                                          <i class="' . $valueFilho["icon"] . ' mr-2"></i>
-                                          <span>' . $valueFilho["text"] . '</span>
+                                       <a class="nav-link" href="' . BASE_URL . $valueFilho["link"] . '">
+                                          <div class="py-2 px-3">
+                                             <i class="' . $valueFilho["icon"] . ' mr-2"></i>
+                                             <span>' . $valueFilho["text"] . '</span>
+                                          </div>
                                        </a>
                                     </li>
                                  ';
@@ -272,7 +274,7 @@
                            $navLinkDropdownClass = "dropdown-toggle";
                            $navLinkDropdownAttrs = 'data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"';
                            $dropdownMenu = '
-                              <ul class="dropdown-menu float-none border-0 rounded-0 position-static mt-0 py-0 px-3">' . $filhos . '</ul>
+                              <ul class="dropdown-menu float-none border-0 rounded-0 position-static mt-0 py-0">' . $filhos . '</ul>
                            ';
                         } else {
                            $navItemDropdownClass = "";

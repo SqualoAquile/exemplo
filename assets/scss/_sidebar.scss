@@ -27,6 +27,7 @@ $width-closed: calc(30px + 2rem);
 			.sidebar-nav {
 				align-items: center;
 				> .nav-item {
+					cursor: pointer;
 					width: 100%;
 					> .nav-link {
 						text-align: center;
@@ -74,11 +75,32 @@ $width-closed: calc(30px + 2rem);
 	right: 0;
 	margin: 0;
 	padding: 0;
-	.nav-link {
-		white-space: nowrap;
-	}
-	.dropdown-menu {
-		transform: none!important;
+	> .nav-item {
+		.nav-link {
+			white-space: nowrap;
+		}
+		.dropdown-menu {
+			transform: none!important;
+		}
+		&:hover {
+			background-color: $primary;
+			.nav-link {
+				color: $white;
+			}
+			.dropdown-menu {
+				> .nav-item {
+					> .nav-link {
+						color: $primary;
+					}
+					&:hover {
+						background-color: $primary;
+						> .nav-link {
+							color: $white
+						}
+					}
+				}
+			}
+		}
 	}
 }
 @include media-breakpoint-up(md) {
