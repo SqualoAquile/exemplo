@@ -36,14 +36,7 @@ $(function () {
         var intervDatas = [];
 
         intervDatas = intervaloDatas(agrupamento);
-        console.log(campoGroup);
-        console.log(agrupamento);
-        console.log(intervDatas[0]);
-        console.log(intervDatas[1]);
         
-        
-        
-
         $.ajax({ 
             url: baselink + '/ajax/gerarGraficoFiltro', 
             type: 'POST', 
@@ -56,7 +49,7 @@ $(function () {
             },
             dataType: 'json', 
             success: function (resultado) {
-                // console.log(resultado);
+
                 if (resultado){
 
                     var eixoDatas = [], receitas = [], despesas = [];
@@ -70,7 +63,7 @@ $(function () {
                         receitas[i] = resultado[1][i][1];
                         
                     }
-                    console.log(myChart);
+
                     var myChart = new Chart(ctx, {
                         type: 'bar',
                         data: {

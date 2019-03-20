@@ -69,10 +69,12 @@ $(function () {
                 $pai = $this.parents('.input-group'),
                 $inputs = $pai.find('input[type=text]');
 
+            $inputs.change();
+
             removeMask($inputs);
 
         })
-        .on('blur', '.filtros-faixa .input-filtro-faixa', function () {
+        .on('change', '.filtros-faixa .input-filtro-faixa', function () {
 
             // Filtros Faixa
 
@@ -93,7 +95,7 @@ $(function () {
 
                 addMask(mascara, [$min, $max]);
 
-                if (indexAnterior) {
+                if (indexAnterior && indexAnterior != selectVal) {
                     dataTable
                         .columns(indexAnterior)
                         .search('')
@@ -112,6 +114,8 @@ $(function () {
                     $max.removeClass('is-invalid');
                     $max[0].setCustomValidity('');
                     $max.siblings('.invalid-feedback').remove();
+
+                    console.log('min max', min, max);
 
                     if (min >= max) {
 
@@ -141,7 +145,7 @@ $(function () {
                 }
             });
         })
-        .on('blur', '.filtros-texto .input-filtro-texto', function () {
+        .on('change', '.filtros-texto .input-filtro-texto', function () {
 
             // Filtros Texto
 

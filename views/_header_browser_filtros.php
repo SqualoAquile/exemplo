@@ -45,7 +45,7 @@
     <div class="collapse" id="collapseFiltros">
         <div class="card mt-4">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h3 class="m-0">Filtros</h3>
+                <h5 class="m-0">Filtros</h5>
                 <div class="dropdown">
                     <button class="btn btn-light dropdown-toggle no-icon-dropdown" type="button" id="dropdownMenuAcoesFiltros" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-ellipsis-h"></i>
@@ -128,5 +128,4 @@
             </div>
         </div>
     </div>
-    <?php require_once "_graficos.php";?>
 </header>
