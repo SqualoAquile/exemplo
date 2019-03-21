@@ -419,7 +419,7 @@ $(function () {
                                         .removeClass('is-invalid')
                                         .addClass('is-valid');
 
-                                    $this.setCustomValidity('');
+                                    $this[0].setCustomValidity('');
 
                                 } else {
                                     // Já existe, erro
