@@ -103,8 +103,8 @@
             [
                "text" => "Ordens de Serviço",
                "icon" => "fas fa-file-signature",
-               "permissao" => "lancamentos_ver",
-               "link" => "/lancamentos"
+               "permissao" => "ordensservico_ver",
+               "link" => "/ordensservico"
             ]
          ]
       ],
@@ -123,14 +123,26 @@
             [
                "text" => "Saldos",
                "icon" => "fas fa-dollar-sign",
-               "permissao" => "controlesaldos_ver",
-               "link" => "/controlesaldos"
+               "permissao" => "relatoriocontrolesaldos_ver",
+               "link" => "/relatoriocontrolesaldos"
+            ],
+            [
+               "text" => "Orçamentos",
+               "icon" => "fas fa-hands-helping",
+               "permissao" => "relatorioorcamentos_ver",
+               "link" => "/relatorioorcamentos"
+            ],
+            [
+               "text" => "Produtos e Serviços",
+               "icon" => "fas fa-hands-helping",
+               "permissao" => "relatorioorcamentositens_ver",
+               "link" => "/relatorioorcamentositens"
             ],
             [
                "text" => "Ordens de Serviço",
                "icon" => "fas fa-hands-helping",
-               "permissao" => "lancamentos_ver",
-               "link" => "/lancamentos"
+               "permissao" => "relatorioordensservico_ver",
+               "link" => "/relatorioordensservico"
             ]
          ]
       ],
