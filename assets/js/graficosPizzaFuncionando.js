@@ -5,10 +5,8 @@ $(function () {
     var $selectGraf = $('#selectGraficos'),
         dataTable = window.dataTable,
         modo = "agrupar", // agrupar (doughnut, bar, horizontalBar), temporal(line, bar, combo)
-        
         id = "#chart-div",
         tipo = "doughnut",
-        tabela = $('#infos').attr('data-modulo'),
         ctx = document.getElementById(id.substr(1)).getContext('2d');
         
     $('.dataTable') 
@@ -30,7 +28,6 @@ $(function () {
 
             var coluna = $selectGraf.val();
             var titulo = 'Agrupar registros por ' + $selectGraf.children("option:selected").text().trim();
-
     
             $.ajax({ 
                 url: baselink + '/ajax/gerarGraficoFiltro', 
@@ -39,7 +36,7 @@ $(function () {
                     columns: dataTable.ajax.params(), 
                     campo_group: coluna,
                     campo_sum: '',
-                    modulo: tabela
+                    modulo: currentModule
                 },
                 dataType: 'json', 
                 success: function (resultado) { 
