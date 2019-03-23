@@ -57,9 +57,6 @@ $(document).ready(function () {
                     resultadoAjax = parseFloat(dado['Resultado']).toFixed(2);
                     diferenca = parseFloat(dataanterior - resultadoAjax).toFixed(0);
 
-                    console.log('dtanterior: '+dataanterior);
-                    console.log('resultaajax: '+resultadoAjax);
-                    console.log('diferença: '+diferenca);
                      if( diferenca != 0 ){  
 
                             $entradas.val(floatParaPadraoBrasileiro(dado['Receita']));
@@ -190,13 +187,11 @@ $(document).ready(function () {
                 }
             }else{
                 //data anterior é igual ao valor atual
-                console.log('atualizando os valores já cadastrados de despesa, receita, resultado');
                 // preenche os valores dos campos que são necessários
                 var tabela, campo, dtinicio;
                 tabela = 'fluxocaixa'
                 campo = 'valor_total'
                 dtinicio = data;
-                console.log(data);
 
                 $.ajax({
                     url: baselink + '/ajax/buscaReceitasDespesas',
@@ -210,15 +205,11 @@ $(document).ready(function () {
                     success: function (dado) {
                         $this.val(data);
                         if(dado == ''){
-                            console.log('dado vazio');
                             $entradas.val(floatParaPadraoBrasileiro(0));
                             $saidas.val(floatParaPadraoBrasileiro(0));
                             $resultado.val(floatParaPadraoBrasileiro(0));                                            
 
                         }else{
-                            console.log('receita: '+dado['Receita']);
-                            console.log('despesa: '+dado['Despesa']);
-                            console.log('resultado: '+dado['Resultado']);
 
                             $entradas.val(floatParaPadraoBrasileiro(dado['Receita']));
                             $saidas.val(floatParaPadraoBrasileiro(dado['Despesa']));
