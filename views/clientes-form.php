@@ -136,6 +136,7 @@
                                                     <label class="form-check-label" for="<?php echo $value["Comment"]['info_relacional']['resultado'][$j];?>" ><?php echo $value["Comment"]['info_relacional']['resultado'][$j];?></label>
                                                 </div>
                                             <?php endfor?>
+                                            <label class="d-none"><span><?php echo array_key_exists("label", $value["Comment"]) ? $value["Comment"]["label"] : ucwords(str_replace("_", " ", $value['Field'])) ?></span></label>
                                             <input 
                                                 type="hidden" 
                                                 name="<?php echo lcfirst($value["Field"]) ?>" 
@@ -164,6 +165,7 @@
                                     <div class="form-check-wrapper form-radio d-table position-relative pr-4" tabindex="0">
                                         <?php foreach ($value["Comment"]["options"] as $valueRadio => $label): ?>
                                             <div class="form-check form-check-inline position-static">
+                                                <label class="d-none"><span><?php echo array_key_exists("label", $value["Comment"]) ? $value["Comment"]["label"] : ucwords(str_replace("_", " ", $value['Field'])) ?></span></label>
                                                 <input 
                                                     type="radio" 
                                                     id="<?php echo $valueRadio ?>" 

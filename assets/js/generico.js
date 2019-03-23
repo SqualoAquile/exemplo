@@ -232,7 +232,7 @@ $(function () {
                                 .removeClass('is-valid')
                                 .addClass('is-invalid');
 
-                            $this[0].setCustomValidity('invalido');
+                            $this[0].setCustomValidity('invalid');
 
                             $this.after('<div class="invalid-feedback">Preencha o campo no formato: 000.000.000-00</div>');
                         }
