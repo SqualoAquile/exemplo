@@ -13,7 +13,71 @@ $(document).ready(function () {
     $("#saldo_banco_final");    
     $("#saldo_online_final");    
     $("#saldo_caixa_final");       
+
     
+    if($('#mes_ano').attr('data-anterior') != ''){ //significa que o formulário está sendo editado
+
+        $this = $('#mes_ano');
+        $this.attr('disabled','disabled');
+        $entradas = $('#entradas');
+        $saidas = $('#saidas');
+        $resultado = $('#resultado');
+        
+        valor = $this.val();
+        valor = valor.split('/');
+        valor[0] = '01';
+        var data = valor[0] + '/' + valor[1] + '/' + valor[2];
+
+        $this.val(data);
+         // preenche os valores dos campos que são necessários
+         var tabela, campo, dtinicio;
+         tabela = 'fluxocaixa'
+         campo = 'valor_total'
+         dtinicio = data;
+
+         $.ajax({
+             url: baselink + '/ajax/buscaReceitasDespesas',
+             type: 'POST',
+             data: {
+                 tabela: tabela,
+                 campo: campo,
+                 dataInicio: dtinicio 
+             },
+             dataType: 'json',
+             success: function (dado) {
+                 $this.val(data);
+                 if(dado == ''){
+                     $entradas.val(floatParaPadraoBrasileiro(0));
+                     $saidas.val(floatParaPadraoBrasileiro(0));
+                     $resultado.val(floatParaPadraoBrasileiro(0));                                            
+
+                 }else{
+                    var dataanterior, resultadoAjax, diferenca;
+                    dataanterior = parseFloat(floatParaPadraoInternacional($resultado.attr('data-anterior')));
+                    resultadoAjax = parseFloat(dado['Resultado']).toFixed(2);
+                    diferenca = parseFloat(dataanterior - resultadoAjax).toFixed(0);
+
+                    console.log('dtanterior: '+dataanterior);
+                    console.log('resultaajax: '+resultadoAjax);
+                    console.log('diferença: '+diferenca);
+                     if( diferenca != 0 ){  
+
+                            $entradas.val(floatParaPadraoBrasileiro(dado['Receita']));
+                            $saidas.val(floatParaPadraoBrasileiro(dado['Despesa']));
+                            $resultado.val(floatParaPadraoBrasileiro(dado['Resultado'])); 
+                            calculaDiferenca($('#saldo_total_inicio'), $('#resultado'), $('#saldo_total_final'), $('#diferenca'));                            
+                            $this.blur();
+
+                            alert('Existem alterações nos valores do Total De Entradas, Total De Saídas e Resultado. \nAperte no botão [Salvar] para registrá-las');
+                            
+                        }
+                                                                
+                 }
+                 
+             }
+         });
+    }
+
     calculaDiferenca($('#saldo_total_inicio'), $('#resultado'), $('#saldo_total_final'), $('#diferenca'));
 
     $('[data-mascara_validacao="data"]')
@@ -37,6 +101,7 @@ $(document).ready(function () {
         $this.siblings('.invalid-feedback').remove();
         
         if ($this.val() != '') {
+            $this.val(data);
             if ($this.attr('data-anterior') != $this.val()) {
                 if (
                     (typeof valor[1] == 'undefined' || typeof valor[2] == 'undefined') ||
@@ -65,8 +130,6 @@ $(document).ready(function () {
                                 // $this.datepicker('update');
                                 $mesref.val(meses[valor[1]]+'/'+valor[2]);
                                 
-
-        
                                 // preenche os valores dos campos que são necessários
                                 var tabela, campo, dtinicio;
                                 tabela = 'fluxocaixa'
@@ -125,6 +188,45 @@ $(document).ready(function () {
                     });
                     $this.val(data);
                 }
+            }else{
+                //data anterior é igual ao valor atual
+                console.log('atualizando os valores já cadastrados de despesa, receita, resultado');
+                // preenche os valores dos campos que são necessários
+                var tabela, campo, dtinicio;
+                tabela = 'fluxocaixa'
+                campo = 'valor_total'
+                dtinicio = data;
+                console.log(data);
+
+                $.ajax({
+                    url: baselink + '/ajax/buscaReceitasDespesas',
+                    type: 'POST',
+                    data: {
+                        tabela: tabela,
+                        campo: campo,
+                        dataInicio: dtinicio 
+                    },
+                    dataType: 'json',
+                    success: function (dado) {
+                        $this.val(data);
+                        if(dado == ''){
+                            console.log('dado vazio');
+                            $entradas.val(floatParaPadraoBrasileiro(0));
+                            $saidas.val(floatParaPadraoBrasileiro(0));
+                            $resultado.val(floatParaPadraoBrasileiro(0));                                            
+
+                        }else{
+                            console.log('receita: '+dado['Receita']);
+                            console.log('despesa: '+dado['Despesa']);
+                            console.log('resultado: '+dado['Resultado']);
+
+                            $entradas.val(floatParaPadraoBrasileiro(dado['Receita']));
+                            $saidas.val(floatParaPadraoBrasileiro(dado['Despesa']));
+                            $resultado.val(floatParaPadraoBrasileiro(dado['Resultado']));                                            
+                        }
+                        
+                    }
+                });
             }
         }else{
             $entradas.val(floatParaPadraoBrasileiro(0));
