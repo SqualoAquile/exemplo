@@ -6,7 +6,7 @@
 
 <!-- Chama o arquivo específico do módulo, caso não exista,  -->
 <!-- Este javaScript serve para fazer verificações inerentes à cada módulo, por exemplo o radio de Clientes -->
-<script src="<?php echo BASE_URL?>/assets/js/<?php echo $modulo?>.js" type="text/javascript"></script>
+<!-- <script src="<?php echo BASE_URL?>/assets/js/<?php echo $modulo?>.js" type="text/javascript"></script> -->
 
 <header class="d-lg-flex align-items-center my-5">
     <?php if(in_array($modulo . "_ver", $infoUser["permissoesUsuario"])): ?>
