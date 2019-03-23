@@ -244,7 +244,12 @@
             <li class="nav-item dropdown">
                <a class="nav-link dropdown-toggle text-truncate" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <span>Olá, </span>
-                  <span><?php echo ucfirst($infoUser["nomeUsuario"]);?></span>
+                  <?php
+                     $nome = $infoUser["nomeUsuario"];
+                     $nome = explode(" ", $infoUser["nomeUsuario"]);
+                     $nome = $nome[0];
+                  ?>
+                  <span><?php echo ucfirst($nome) ?></span>
                </a>
                <div class="dropdown-menu text-truncate dropdown-menu-right position-absolute" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item text-danger" onclick="return confirm('Confirmar sua saída?')" href="<?php echo BASE_URL;?>/login/sair">Sair</a>
