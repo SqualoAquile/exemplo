@@ -6,13 +6,10 @@ $(function () {
         $selectGrafOpcoes = $('#selectGrafOpcoes'),
         dataTable = window.dataTable,
         modo = "agrupar", // agrupar (doughnut, bar, horizontalBar), temporal(line, bar, combo)
-        
         id = "#chart-div2",
         tipo = "bar",
-        tabela = $('#infos').attr('data-modulo'),
         ctx = document.getElementById(id.substr(1)).getContext('2d');
-        
-        console.log(ctx);
+
     $('.dataTable') 
         .on('draw.dt', function() {
             drawChart(id,tipo);
@@ -20,15 +17,13 @@ $(function () {
 
     $selectGrafTemporal
         .on('change', function() {
-            console.log('teste arq certo')
             drawChart(id,tipo);
         });
 
     $selectGrafOpcoes
-    .on('change', function() {
-        console.log('teste arq certo2')
-        drawChart(id,tipo);
-    });
+        .on('change', function() {
+            drawChart(id,tipo);
+        });
 
     function drawChart(id, tipo) {
         var coluna, titulo, intervalo = [];
@@ -50,7 +45,7 @@ $(function () {
                     columns: dataTable.ajax.params(), 
                     coluna: coluna,
                     intervalo: intervalo,
-                    modulo: tabela
+                    modulo: currentModule
                 },
                 dataType: 'json', 
                 success: function (resultado) { 
@@ -70,7 +65,6 @@ $(function () {
                             
                         }
                         
-                        console.log(resultAcul);
                         var config = {
                             type: 'bar',
                             data: {

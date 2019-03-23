@@ -1000,24 +1000,27 @@ $(function () {
     });
 
     // Filtrar contatos pela busca
-    dataTable.on('draw', function () {
+    $('#searchDataTable').on('keyup', function() {
+
+        var searchValue = $(this).val();
 
         $('.contatos-filtrados').each(function () {
             var $display = $(this).find('span');
-            $(this).find('.contatos-escondidos:contains("' + dataTable.search() + '")').each(function () {
+            $(this).find('.contatos-escondidos:contains("' + searchValue + '")').each(function () {
                 var $filtered = $(this),
                     textFiltered = $filtered.text(),
                     textDisplay = $display.text();
-
+    
                 $display.text(textFiltered);
                 $filtered.text(textDisplay);
             });
         });
-
+    
         var body = $(dataTable.table().body());
-
+    
         body.unhighlight();
-        body.highlight(dataTable.search());
+        body.highlight(searchValue);
+
     });
 
     $('[type=checkbox]').on('blur touchstart', function () {

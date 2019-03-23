@@ -76,6 +76,14 @@
                 right: 1.5rem;
             }
         }
+        &:focus {
+            &:invalid,
+            &:valid {
+                & ~ .close-btn {
+                    right: 1.5rem;
+                }
+            }
+        }
     }
     &.active {
         .icons-search-input {
