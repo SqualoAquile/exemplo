@@ -234,7 +234,7 @@ class Fluxocaixa extends model {
             $data1 = $dataInicio[2]."-".$dataInicio[1]."-".$dataInicio[0];
             
             if( $dataInicio[1] == '2'){
-                if( gmp_div_r(intval($dataInicio[2]), intval(4)) == intval(0) ){
+                if( is_int(intval($dataInicio[2]) / intval(4)) ){
                     $data2 = $dataInicio[2]."-".$dataInicio[1]."-29";
                 }else{
                     $data2 = $dataInicio[2]."-".$dataInicio[1]."-28";

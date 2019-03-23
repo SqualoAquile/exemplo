@@ -76,7 +76,7 @@ $(function () {
             tds = '';
 
         // Coloca a tag html TD em volta de cada valor vindo do form de contatos
-        values.forEach(value => tds += `<td class="col-lg-2">` + value + `</td>`);
+        values.forEach(value => tds += `<td class="col-lg-2 text-truncate">` + value + `</td>`);
 
         if (!currentId) {
             // Se for undefined então o contato está sendo criado
@@ -188,24 +188,28 @@ $(function () {
         if (contatos) {
 
             // Posição 0 é o nome do contato
-            contatos.forEach(contato => nomes.push(contato[0]));
+            contatos.forEach(contato => nomes.push(contato[0].toLowerCase()));
 
             if ($this.val()) {
-                if ($this.attr('data-anterior') != $this.val()) {
-                    if (nomes.indexOf($this.val()) == -1) {
+
+                var value = $this.val().toLowerCase(),
+                    dtAnteriorLower = $this.attr('data-anterior') ? $this.attr('data-anterior') : '';
+
+                if (dtAnteriorLower.toLowerCase() != value) {
+
+                    $this.removeClass('is-invalid is-valid');
+                    $this[0].setCustomValidity('');
+                    
+                    if (nomes.indexOf(value) == -1) {
                         // Não existe, pode seguir
 
-                        $this
-                            .removeClass('is-invalid')
-                            .addClass('is-valid');
+                        $this.addClass('is-valid');
 
                         $this[0].setCustomValidity('');
                     } else {
                         // Já existe, erro
 
-                        $this
-                            .removeClass('is-valid')
-                            .addClass('is-invalid');
+                        $this.addClass('is-invalid');
 
                         $this[0].setCustomValidity('invalid');
 

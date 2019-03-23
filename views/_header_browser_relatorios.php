@@ -70,10 +70,21 @@
     <div class="collapse" id="collapseFiltros">
         <div class="card mt-4">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h3 class="m-0">Filtros</h3>
-                <div>
-                    <label for="limpar-filtro" class="btn cursor-pointer btn-outline-secondary btn-sm m-0">Limpar Filtros</label>
-                    <button id="criar-filtro" type="button" class="btn btn-outline-success btn-sm">Mais Filtros</button>
+                <h5 class="m-0">Filtros</h5>
+                <div class="dropdown">
+                    <button class="btn btn-light dropdown-toggle no-icon-dropdown" type="button" id="dropdownMenuAcoesFiltros" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuAcoesFiltros">
+                        <button id="limpar-filtro" type="button" class="dropdown-item">
+                            <i class="fas fa-eraser mr-2"></i>
+                            <span>Limpar Filtros</span>
+                        </button>
+                        <button id="criar-filtro" type="button" class="dropdown-item">
+                            <i class="fas fa-plus-circle mr-2"></i>
+                            <span>Adicionar Filtros</span>
+                        </button>
+                    </div>
                 </div>
             </div>
             <form id="card-body-filtros" class="card-body pb-1">

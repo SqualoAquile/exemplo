@@ -36,16 +36,14 @@ $(function () {
 
                     // Telefone é obrigatório para PJ, celular não
                 $telefone
-                    .attr('required');
-                $telefone
+                    .attr('required', 'required')
                     .siblings('label')
                     .addClass('font-weight-bold')
                     .find('i')
                     .show();
 
                 $celular
-                    .removeAttr('required');
-                $celular
+                    .removeAttr('required')
                     .siblings('label')
                     .removeClass('font-weight-bold')
                     .find('i')
@@ -84,8 +82,6 @@ $(function () {
                     
                     $telefone
                         .removeAttr('required')
-
-                    $telefone
                         .siblings('label')
                         .removeClass('font-weight-bold')
                         .find('i')
@@ -94,8 +90,7 @@ $(function () {
 
                     // Celular é obrigatório para PF, telefone não
                     $celular
-                        .attr('required');
-                    $celular
+                        .attr('required', 'required')
                         .siblings('label')  
                         .addClass('font-weight-bold')
                         .find('i')
@@ -135,56 +130,56 @@ $(function () {
     var $cpf_cnpj = $('[name=cpf_cnpj]');
 
     $cpf_cnpj
-        .blur(function () {
+        .on('blur', function () {
 
-            var $this = $(this);
+            var $this = $(this),
+                text_label = $this.siblings('label').find('span').text();;
 
             $this.removeClass('is-valid is-invalid');
             $this.siblings('.invalid-feedback').remove();
+            $this[0].setCustomValidity('');
 
             if ($this.val()) {
                 if ($this.attr('data-anterior') != $this.val()) {
+
                     if ($('[name=tipo_pessoa]:checked').val() == 'pj') {
                         // Cnpj
                         if ($this.validationLength(18)) {
                             // Valido
                             if ($this.attr('data-unico')) {
+
                                 $this.unico(function (json) {
-                                    if (!json.length) {
 
-                                        // Não existe, pode seguir
-                                        $this
-                                            .removeClass('is-invalid')
-                                            .addClass('is-valid');
-
-                                        $this[0].setCustomValidity('');
-
-                                    } else {
+                                    if (json.length) {
 
                                         // Já existe, erro
-                                        var text_label = $this.siblings('label').find('span').text();
 
-                                        $this
-                                            .removeClass('is-valid')
-                                            .addClass('is-invalid');
+                                        $this.addClass('is-invalid');
 
                                         $this[0].setCustomValidity('invalid');
 
                                         $this.after('<div class="invalid-feedback">Este ' + text_label.toLowerCase() + ' já está sendo usado</div>');
+
+                                    } else {
+
+                                        $this.addClass('is-valid');
+
+                                        $this[0].setCustomValidity('');
+
                                     }
+
                                 });
+
                             } else {
-                                $this
-                                    .removeClass('is-invalid')
-                                    .addClass('is-valid');
+
+                                $this.addClass('is-valid');
 
                                 $this[0].setCustomValidity('');
+
                             }
                         } else {
                             // Inválido
-                            $this
-                                .removeClass('is-valid')
-                                .addClass('is-invalid');
+                            $this.addClass('is-invalid');
 
                             $this[0].setCustomValidity('invalid');
 
@@ -196,45 +191,47 @@ $(function () {
                             // Valido
                             if ($this.attr('data-unico')) {
                                 $this.unico(function (json) {
-                                    if (!json.length) {
 
-                                        // Não existe, pode seguir
-                                        $this
-                                            .removeClass('is-invalid')
-                                            .addClass('is-valid');
+                                    $this.addClass('is-valid');
+    
+                                    $this[0].setCustomValidity('');
 
-                                        $this[0].setCustomValidity('');
-
-                                    } else {
+                                    if (json.length) {
 
                                         // Já existe, erro
-                                        var text_label = $this.siblings('label').find('span').text();
 
-                                        $this
-                                            .removeClass('is-valid')
-                                            .addClass('is-invalid');
+                                        $this.addClass('is-invalid');
 
                                         $this[0].setCustomValidity('invalid');
 
                                         $this.after('<div class="invalid-feedback">Este ' + text_label.toLowerCase() + ' já está sendo usado</div>');
+
+                                    } else {
+
+                                        $this.addClass('is-valid');
+
+                                        $this[0].setCustomValidity('');
+
                                     }
+
                                 });
                             } else {
-                                $this
-                                    .removeClass('is-invalid')
-                                    .addClass('is-valid');
+
+                                $this.addClass('is-valid');
 
                                 $this[0].setCustomValidity('');
+
                             }
                         } else {
-                            // Inválido
-                            $this
-                                .removeClass('is-valid')
-                                .addClass('is-invalid');
 
-                            $this[0].setCustomValidity('invalido');
+                            // Inválido
+
+                            $this.addClass('is-invalid');
+
+                            $this[0].setCustomValidity('invalid');
 
                             $this.after('<div class="invalid-feedback">Preencha o campo no formato: 000.000.000-00</div>');
+
                         }
                     }
                 }
