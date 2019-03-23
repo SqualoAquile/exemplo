@@ -1175,11 +1175,11 @@ $(function () {
             $('.relacional-dropdown-element').show();
             $('.relacional-dropdown-element:not(:contains(' + $this.val() + '))').hide();
         })
-        .on('focusout', '.relacional-dropdown-input', function () {
+        .on('blur', '.relacional-dropdown-input', function () {
 
             var $this = $(this);
 
-            $this.removeClass('is-valid is-invalid');
+            console.log('passei aqui')
             
             if ($this.val()) {
                 
@@ -1188,32 +1188,24 @@ $(function () {
                 });
                 
                 if (!$filtereds.length && $this.attr('data-pode_nao_cadastrado') != 'true') {
-                    $this.addClass('is-invalid');
+                    console.log('if', this)
+                    
+                    $this
+                        .removeClass('is-valid')
+                        .addClass('is-invalid');
+
                     this.setCustomValidity('invalid');
+
                 } else {
-                    $this.addClass('is-valid');
+                    console.log('else')
+                    
+                    $this
+                        .removeClass('is-invalid')
+                        .addClass('is-valid');
+
                     this.setCustomValidity('');
+
                 }
             }
-        })
-        .on('click', '.relacional-dropdown .adicionar', function () {
-
-            var $this = $(this),
-                $parent = $this.parents('.relacional-dropdown-wrapper'),
-                $input = $parent.find('.relacional-dropdown-input');
-
-            $.ajax({
-                url: baselink + '/ajax/addRelacionalDropdown',
-                type: 'POST',
-                data: {
-                    tabela: $input.attr('data-tabela'),
-                    value: $input.val(),
-                    campo: $input.attr('data-campo')
-                },
-                dataType: 'json',
-                success: function (data) {
-                    console.log(data);
-                }
-            });
         });
 });
