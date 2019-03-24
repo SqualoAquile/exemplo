@@ -20,6 +20,21 @@ $(function () {
     $('#senhaaux').attr('autocomplete','off');
 
     
+    $('#form-principal').on('submit', function(e){
+        if($(this)[0].checkValidity() == true ) {
+            if($('#email').attr('data-anterior') != ''){
+                if( ( $('#senha').val() != '' && $('#senhaaux').val() == '' ) || ( $('#senhaaux').val() != '' && $('#senha').val() == '' ) ){
+                    alert('Caso queira alterar a senha, os dois campos devem estar preenchidos.');
+                    return false;
+                }
+            }
+
+        }else{
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }    
+    });
     ///////////////////////////////////////////////////////////////////////
     ///                                                                /// 
     ///                                                                /// 
