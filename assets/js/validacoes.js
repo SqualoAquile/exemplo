@@ -1178,8 +1178,6 @@ $(function () {
         .on('blur', '.relacional-dropdown-input', function () {
 
             var $this = $(this);
-
-            console.log('passei aqui')
             
             if ($this.val()) {
                 
@@ -1188,7 +1186,6 @@ $(function () {
                 });
                 
                 if (!$filtereds.length && $this.attr('data-pode_nao_cadastrado') != 'true') {
-                    console.log('if', this)
                     
                     $this
                         .removeClass('is-valid')
@@ -1197,7 +1194,6 @@ $(function () {
                     this.setCustomValidity('invalid');
 
                 } else {
-                    console.log('else')
                     
                     $this
                         .removeClass('is-invalid')

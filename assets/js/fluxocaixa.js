@@ -1,5 +1,3 @@
-// import { exists } from "fs";
-
 $(function () {
     //só para teste de programação
     $('#Receita').click();
@@ -74,29 +72,29 @@ $(function () {
                 var $this = $(this),
                     $relacionalDropdown = $this.parents('.relacional-dropdown-wrapper').find('.relacional-dropdown'),
                     campo = 'nome';
-                tabela = 'clientes';
+                    tabela = 'clientes';
 
-                $.ajax({
-                    url: baselink + '/ajax/relacionalDropdown',
-                    type: 'POST',
-                    data: {
-                        tabela: tabela,
-                        campo: campo
-                    },
-                    dataType: 'json',
-                    success: function (data) {
+                    $.ajax({
+                        url: baselink + '/ajax/getRelacionalDropdown',
+                        type: 'POST',
+                        data: {
+                            tabela: tabela,
+                            campo: campo
+                        },
+                        dataType: 'json',
+                        success: function (data) {
 
-                        var htmlDropdown = '';
-                        data.forEach(element => {
-                            htmlDropdown += `
-                                <div class="list-group-item list-group-item-action relacional-dropdown-element">` + element[campo] + `</div>
-                            `;
-                        });
+                            var htmlDropdown = '';
+                            data.forEach(element => {
+                                htmlDropdown += `
+                                    <div class="list-group-item list-group-item-action relacional-dropdown-element">` + element[campo] + `</div>
+                                `;
+                            });
 
-                        $relacionalDropdown.find('.dropdown-menu-wrapper').html(htmlDropdown);
-                    }
+                            $relacionalDropdown.find('.dropdown-menu-wrapper').html(htmlDropdown);
+                        }
+                    });
                 });
-            });
 
 
         } else {
@@ -122,7 +120,7 @@ $(function () {
                 tabela = 'fornecedores';
 
                 $.ajax({
-                    url: baselink + '/ajax/relacionalDropdown',
+                    url: baselink + '/ajax/getRelacionalDropdown',
                     type: 'POST',
                     data: {
                         tabela: tabela,
@@ -1191,9 +1189,12 @@ $(function () {
                     .removeClass('form-control-plaintext').addClass('form-control');
 
         }else{ //botão de salvar
-
+            
+            $(obj).closest('tr').children('td:eq(5)').children('input:eq(0)').blur();        
+            $(obj).closest('tr').children('td:eq(6)').children('input:eq(0)').blur();
+            
             // fazer a validação dos inputs se estão preenchidos
-            botarMascaraInputs();    
+            botarMascaraInputs();
             
             // retornar o botão de editar
             $(obj).removeClass('btn-success').addClass('btn-primary');
