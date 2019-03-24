@@ -16,7 +16,7 @@ class Shared extends model {
         $stringBtn = '';
 
         if ($this->table == "fluxocaixa") {
-
+                
             $stringBtn .=  '<input type="checkbox" name="checkboxFluxoCaixa" value="' . $id . '">';
             if( in_array( $this->table.'_edt' , $_SESSION["permissoesUsuario"]) ){
                 if (strtolower($row["Status"]) != "quitado") {

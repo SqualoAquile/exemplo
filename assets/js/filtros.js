@@ -1,5 +1,19 @@
 $(function () {
 
+    function floatPadraoInternacional(valor1){
+        valor = valor1;
+
+        if(valor != ""){
+            valor = valor.replace(".","").replace(".","").replace(".","").replace(".","");
+            valor = valor.replace(",",".");
+            valor = parseFloat(valor);
+            return valor;
+        }else{
+            valor = '';
+            return valor;
+        }
+    }
+
     var dataTable = window.dataTable;
 
     function addMask (mask, $els) {
@@ -95,6 +109,11 @@ $(function () {
 
                 addMask(mascara, [$min, $max]);
 
+                if (mascara == 'monetario'){
+                    min = floatPadraoInternacional(min);
+                    max = floatPadraoInternacional(max);
+                }
+
                 if (indexAnterior && indexAnterior != selectVal) {
                     dataTable
                         .columns(indexAnterior)
@@ -182,11 +201,15 @@ $(function () {
             // Limpar Filtros
 
             var $cardBodyFiltros = $('#card-body-filtros'),
-                $select = $cardBodyFiltros.find('select');
+            $select = $cardBodyFiltros.find('select'),
+            $searchDataTable = $('#searchDataTable');
             
             removeMask();
 
             $select
+                .val('');
+
+            $searchDataTable
                 .val('');
 
             $cardBodyFiltros
@@ -197,6 +220,9 @@ $(function () {
                 .columns()
                 .search('')
                 .draw();
+
+            dataTable.search('').draw();
+            
         })
         .on('change', '[name=movimentacao]', function () {
 
