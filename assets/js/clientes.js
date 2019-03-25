@@ -160,7 +160,7 @@ $(function () {
                                         $this[0].setCustomValidity('invalid');
 
                                         if (!$this.siblings('.invalid-feedback').length) {
-                                            $this.after('<div class="invalid-feedback">Este ' + text_label.toLowerCase() + ' já está sendo usado</div>');
+                                            $this.after('<div class="invalid-feedback clientesjs">Este ' + text_label.toLowerCase() + ' já está sendo usado</div>');
                                         }
 
                                     } else {
@@ -204,7 +204,7 @@ $(function () {
                                         $this[0].setCustomValidity('invalid');
 
                                         if (!$this.siblings('.invalid-feedback').length) {
-                                            $this.after('<div class="invalid-feedback">Este ' + text_label.toLowerCase() + ' já está sendo usado</div>');
+                                            $this.after('<div class="invalid-feedback clientesjs">Este ' + text_label.toLowerCase() + ' já está sendo usado</div>');
                                         }
 
                                     } else {
