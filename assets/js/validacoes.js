@@ -1207,7 +1207,7 @@ $(function () {
                     $this.dropdown('toggle');
                 }
             })
-            .change(function() {
+            .on('blur change', function() {
 
                 var $this = $(this),
                 $dropdownMenu = $this.siblings('.dropdown-menu');
@@ -1225,26 +1225,23 @@ $(function () {
                     
                     if (!$filtereds.length) {
 
-                        if ($this.attr('data-pode_nao_cadastrado') == 'true') {
+                        if ($this.attr('data-pode_nao_cadastrado') == 'false') {
 
-                            $this.addClass('is-valid');
-                            this.setCustomValidity('');
-                            
-                        } else {
-
-                            $this.css('border-color', 'red!important');
-
-                                // .removeClass('is-valid')
-                                // .addClass('is-invalid');
+                            $this
+                                .removeClass('is-valid')
+                                .addClass('is-invalid');
                                 
                             this.setCustomValidity('invalid');
                             $this.after('<div class="invalid-feedback">Selecione um item existente.</div>');
+                            
+                        } else {
+                            
+                            $this.addClass('is-valid');
+                            this.setCustomValidity('');
 
                         }
 
                     } else {
-
-                        console.log('else 2');
                         
                         $this.addClass('is-valid');
                         this.setCustomValidity('');
