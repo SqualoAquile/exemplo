@@ -19,7 +19,11 @@ $(function () {
                     $celular = $('[name=celular]');
 
                 $(this).parents('form').removeClass('was-validated');
-                $input.removeClass('is-valid is-invalid');
+                
+                $input
+                    .removeClass('is-valid is-invalid')
+                    .trigger('checar');
+
                 $input.siblings('.invalid-feedback').remove();
 
                 if ($input.attr('data-anterior-aux') == undefined) {
