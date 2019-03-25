@@ -41,6 +41,7 @@ $(function () {
             $preco.removeClass('is-valid').addClass('is-invalid');
             $preco[0].setCustomValidity('invalid');
             $preco.after('<div class="invalid-feedback feedback-maiorque">O valor do preço deve ser maior do que o valor do custo.</div>');
+            $preco.val("");
             return;
         }
         
@@ -51,6 +52,7 @@ $(function () {
                 $preco[0].setCustomValidity('invalid');
                 $preco.siblings('.feedback-maiorque').remove();
                 $preco.after('<div class="invalid-feedback feedback-maiorque">O valor do preço deve ser maior do que o valor do custo.</div>');
+                $preco.val("");
                 return;
             }    
         }

@@ -242,6 +242,7 @@ $(function () {
     
                                 $cardBodyFiltros.trigger('reset');
                                 $('.collapse').collapse('hide');
+                                dataTable.ajax.reload();
                             }
                         }
                     });
