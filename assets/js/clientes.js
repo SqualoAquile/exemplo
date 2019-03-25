@@ -20,7 +20,10 @@ $(function () {
 
                 $(this).parents('form').removeClass('was-validated');
                 
-                $input.removeClass('is-valid is-invalid');
+                $input
+                    .removeClass('is-valid is-invalid')
+                    .trigger('blur');
+
                 $input.siblings('.invalid-feedback').remove();
 
                 if ($input.attr('data-anterior-aux') == undefined) {
@@ -28,7 +31,7 @@ $(function () {
                 } else {
                     $input
                         .val($input.attr('data-anterior-aux'))
-                        .change();
+                        .blur();
                 }
 
                 $input.trigger('blur');
