@@ -121,7 +121,9 @@
                                 </div>
                             </div>
                             <div class="col-lg flex-lg-grow-0">
-                                <button type="submit" class="btn btn-primary btn-block" disabled="disabled">Salvar</button>
+                                <?php if (in_array($modulo . "_edt", $_SESSION["permissoesUsuario"])) : ?>
+                                    <button type="submit" class="btn btn-primary btn-block" disabled="disabled">Salvar</button>
+                                <?php endif ?>
                             </div>
                         </div>
                     </form>
