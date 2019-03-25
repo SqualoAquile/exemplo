@@ -144,8 +144,6 @@ $(function () {
             var $this = $(this),
                 text_label = $this.siblings('label').find('span').text();;
 
-            $this.removeClass('is-valid is-invalid');
-
             if ($this.val()) {
                 if ($this.attr('data-anterior') != $this.val()) {
 
@@ -157,6 +155,9 @@ $(function () {
 
                                 $this.unico(function (json) {
 
+                                    $this.removeClass('is-valid is-invalid');
+                                    $this.siblings('.invalid-feedback').remove();
+
                                     if (json.length) {
 
                                         // Já existe, erro
@@ -165,7 +166,6 @@ $(function () {
 
                                         $this[0].setCustomValidity('invalid');
 
-                                        $this.siblings('.invalid-feedback').remove();
                                         $this.after('<div class="invalid-feedback">Este ' + text_label.toLowerCase() + ' já está sendo usado</div>');
 
                                     } else {
@@ -200,6 +200,9 @@ $(function () {
                             if ($this.attr('data-unico')) {
                                 $this.unico(function (json) {
 
+                                    $this.removeClass('is-valid is-invalid');
+                                    $this.siblings('.invalid-feedback').remove();
+
                                     if (json.length) {
 
                                         // Já existe, erro
@@ -207,8 +210,7 @@ $(function () {
                                         $this.addClass('is-invalid');
 
                                         $this[0].setCustomValidity('invalid');
-
-                                        $this.siblings('.invalid-feedback').remove();
+                                        
                                         $this.after('<div class="invalid-feedback">Este ' + text_label.toLowerCase() + ' já está sendo usado</div>');
 
                                     } else {
