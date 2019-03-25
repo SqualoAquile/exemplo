@@ -18,6 +18,7 @@ $(function () {
                     $telefone = $('[name=telefone]');
                     $celular = $('[name=celular]');
 
+                $(this).parents('form').removeClass('was-validated');
                 $input.removeClass('is-valid is-invalid');
                 $input.siblings('.invalid-feedback').remove();
 
