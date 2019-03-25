@@ -187,11 +187,15 @@ $(function () {
                             if (!json.length) {
                                 // Não existe, pode seguir
 
-                                $this
-                                    .removeClass('is-invalid')
-                                    .addClass('is-valid');
+                                if (!$this.hasClass('is-invalid')) {
+                                    
+                                    $this
+                                        .removeClass('is-invalid')
+                                        .addClass('is-valid');
+    
+                                    $this[0].setCustomValidity('');
 
-                                $this[0].setCustomValidity('');
+                                }
 
                             } else {
                                 // Já existe, erro
@@ -1207,8 +1211,7 @@ $(function () {
                 var $this = $(this),
                 $dropdownMenu = $this.siblings('.dropdown-menu');
 
-                // $this.removeClass('is-valid is-invalid');
-                console.log($this.hasClass('is-valid'));
+                $this.removeClass('is-valid is-invalid');
                 
                 if ($this.val()) {
 
@@ -1221,24 +1224,17 @@ $(function () {
                     
                     if (!$filtereds.length) {
 
-                        console.log('if 1');
-
-                        if ($this.attr('data-pode_nao_cadastrado') != 'true') {
-
-                            console.log('if 2');
+                        if ($this.attr('data-pode_nao_cadastrado') == 'true') {
 
                             $this.addClass('is-valid');
                             this.setCustomValidity('');
                             
                         } else {
 
-                            console.log('else 1');
-                            // $this.addClass('murilinho');
+                            $this.css('border-color', 'red!important');
 
-                            $this
-                                .css('background', 'red!important')
-                                .removeClass('is-valid')
-                                .addClass('is-invalid');
+                                // .removeClass('is-valid')
+                                // .addClass('is-invalid');
                                 
                             this.setCustomValidity('invalid');
                             $this.after('<div class="invalid-feedback">Selecione um item existente.</div>');
