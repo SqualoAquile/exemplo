@@ -247,8 +247,8 @@
         <button id="main-form" class="d-none"></button>
     </form>
     <div class="row">
-        <div class="col-lg-4" id='esquerda'></div>
-        <div class="col-lg-8" id='direita'></div>
+        <div class="col-lg-4 bg-warning" id='esquerda'></div>
+        <div class="col-lg-8 bg-success" id='direita'></div>
     </div>
     <?php if($table) include "_contatos_form.php" ?>
     <div class="row">
