@@ -836,7 +836,8 @@ $(function () {
 
             var $this = $(this),
                 value = $this.val().replace('%', ''),
-                anterior = $this.attr('data-anterior').replace('%', ''),
+                dtAnterior = $this.attr('data-anterior'),
+                anterior = dtAnterior ? dtAnterior.replace('%', '') : dtAnterior,
                 text_label = $this.siblings('label').find('span').text();
 
             var pode_zero = $this.attr('data-podeZero');
