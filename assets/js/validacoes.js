@@ -1146,62 +1146,114 @@ $(function () {
                 });
             });
         })
-        .on('click touchstart', '.relacional-dropdown-element', function () {
+        .on('click', '.relacional-dropdown-element', function () {
 
             var $this = $(this),
                 $input = $this.parents('.relacional-dropdown-wrapper').find('.relacional-dropdown-input');
 
-            $('.relacional-dropdown-element').removeClass('active');
-            $this.addClass('active');
-
             $input
                 .val($this.text())
-                .blur();
+                .change();
         })
-        .on('keyup', '.relacional-dropdown-input', function () {
+        .on('keyup', '.relacional-dropdown-input', function (event) {
+
+            var code = event.keyCode || event.which;
+
+            if (code == 27) {
+                $(this)
+                    .dropdown('hide')
+                    .blur();
+                return;
+            }
 
             var $this = $(this),
                 $dropdownMenu = $this.siblings('.dropdown-menu'),
-                $nenhumResult = $dropdownMenu.find('.nenhum-result');
+                $nenhumResult = $dropdownMenu.find('.nenhum-result'),
+                $elements = $dropdownMenu.find('.relacional-dropdown-element');
 
-            if (!$('.relacional-dropdown-element:contains(' + $this.val() + ')').length) {
+            if ($this.attr('data-anterior') != $this.val()) {
                 
-                $nenhumResult.removeClass('d-none');
+                $filtereds = $elements.filter(function() {
+                    return $(this).text().toLowerCase().indexOf($this.val().toLowerCase()) != -1;
+                });
+    
+                if (!$filtereds.length) {
+                    $nenhumResult.removeClass('d-none');
+                } else {
+                    $nenhumResult.addClass('d-none');
+                }
+    
+                $elements.not($filtereds).hide();
+                $filtereds.show();
 
             } else {
+
                 $nenhumResult.addClass('d-none');
+                $elements.show();
+
             }
 
-            $('.relacional-dropdown-element').show();
-            $('.relacional-dropdown-element:not(:contains(' + $this.val() + '))').hide();
-        })
-        .on('blur', '.relacional-dropdown-input', function () {
+        });
+        
+        $('.relacional-dropdown-input')
+            .click(function() {
+                var $this = $(this)
+                if ($this.parents('.dropdown').hasClass('show')) {
+                    $this.dropdown('toggle');
+                }
+            })
+            .change(function() {
 
-            var $this = $(this);
-            
-            if ($this.val()) {
+                var $this = $(this),
+                $dropdownMenu = $this.siblings('.dropdown-menu');
+
+                // $this.removeClass('is-valid is-invalid');
+                console.log($this.hasClass('is-valid'));
                 
-                $filtereds = $('.relacional-dropdown-element').filter(function() {
-                    return $(this).text() === $this.val();
-                });
-                
-                if (!$filtereds.length && $this.attr('data-pode_nao_cadastrado') != 'true') {
+                if ($this.val()) {
+
+                    $dropdownMenu.find('.nenhum-result').addClass('d-none');
+                    $('.relacional-dropdown-element').show();
                     
-                    $this
-                        .removeClass('is-valid')
-                        .addClass('is-invalid');
-
-                    this.setCustomValidity('invalid');
-
-                } else {
+                    $filtereds = $dropdownMenu.find('.relacional-dropdown-element').filter(function() {
+                        return $(this).text().toLowerCase().indexOf($this.val().toLowerCase()) != -1;
+                    });
                     
-                    $this
-                        .removeClass('is-invalid')
-                        .addClass('is-valid');
+                    if (!$filtereds.length) {
 
-                    this.setCustomValidity('');
+                        console.log('if 1');
+
+                        if ($this.attr('data-pode_nao_cadastrado') != 'true') {
+
+                            console.log('if 2');
+
+                            $this.addClass('is-valid');
+                            this.setCustomValidity('');
+                            
+                        } else {
+
+                            console.log('else 1');
+                            // $this.addClass('murilinho');
+
+                            $this
+                                .css('background', 'red!important')
+                                .removeClass('is-valid')
+                                .addClass('is-invalid');
+                                
+                            this.setCustomValidity('invalid');
+                            $this.after('<div class="invalid-feedback">Selecione um item existente.</div>');
+
+                        }
+
+                    } else {
+
+                        console.log('else 2');
+                        
+                        $this.addClass('is-valid');
+                        this.setCustomValidity('');
+
+                    }
 
                 }
-            }
-        });
+            });
 });
