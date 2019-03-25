@@ -1,76 +1,79 @@
 $(function () {
 
+    var $cpf_cnpj = $('[name=cpf_cnpj]');
+
     //
     // Escuta o clique dos radios CPF/CPNJ pra mostra e esconder os inputs de CPF/CNPJ
     //
-    $('[name=tipo_pessoa]').change(function () {
-        if ($(this).is(':checked')) {
+    $('[name=tipo_pessoa]')
+        .change(function () {
+            if ($(this).is(':checked')) {
 
-            var $input = $('[name=cpf_cnpj]'),
-                $contatosForm = $('#contatos-form'),
-                $hiddenContatos = $('[name=contatos]'),
-                $nome = $('[name=nome]'),
-                $dtNascimento = $('[name=data_nascimento]'),
-                $razaoSocial = $('[name=razao_social]');
-                $telefone = $('[name=telefone]');
-                $celular = $('[name=celular]');
+                var $input = $('[name=cpf_cnpj]'),
+                    $contatosForm = $('#contatos-form'),
+                    $hiddenContatos = $('[name=contatos]'),
+                    $nome = $('[name=nome]'),
+                    $dtNascimento = $('[name=data_nascimento]'),
+                    $razaoSocial = $('[name=razao_social]');
+                    $telefone = $('[name=telefone]');
+                    $celular = $('[name=celular]');
 
-            $input.removeClass('is-valid is-invalid');
-            $input.siblings('.invalid-feedback').remove();
+                $input.removeClass('is-valid is-invalid');
+                $input.siblings('.invalid-feedback').remove();
 
-            if ($input.attr('data-anterior-aux') == undefined) {
-                $input.attr('data-anterior-aux', $input.val());
-            } else {
-                $input
-                    .val($input.attr('data-anterior-aux'))
-                    .change();
-            }
-
-            if ($(this).attr('id') == 'pj') {
-
-                $input
-                    .mask('00.000.000/0000-00')
-                    .siblings('label')
-                    .find('span')
-                    .text('CNPJ');
-
-                    // Telefone é obrigatório para PJ, celular não
-                $telefone
-                    .attr('required', 'required')
-                    .siblings('label')
-                    .addClass('font-weight-bold')
-                    .find('i')
-                    .show();
-
-                $celular
-                    .removeAttr('required')
-                    .siblings('label')
-                    .removeClass('font-weight-bold')
-                    .find('i')
-                    .hide();
-
-                var dadosAnteriores = '';
-                if ($hiddenContatos.attr('data-anterior-aux') != undefined) {
-                    dadosAnteriores = $hiddenContatos.attr('data-anterior-aux');
+                if ($input.attr('data-anterior-aux') == undefined) {
+                    $input.attr('data-anterior-aux', $input.val());
                 } else {
-                    dadosAnteriores = $hiddenContatos.attr('data-anterior');
+                    $input
+                        .val($input.attr('data-anterior-aux'))
+                        .change();
                 }
 
-                $contatosForm.show();
-                $hiddenContatos.val(dadosAnteriores);
+                if ($(this).attr('id') == 'pj') {
 
-                $nome
-                    .siblings('label')
-                    .find('span')
-                    .text('Nome Fantasia');
+                    $input
+                        .mask('00.000.000/0000-00')
+                        .siblings('label')
+                        .find('span')
+                        .text('CNPJ');
 
-                $razaoSocial
-                    .parents('[class^=col-]')
-                    .show();
+                    // Telefone é obrigatório para PJ, celular não
+                    $telefone
+                        .attr('required', 'required')
+                        .siblings('label')
+                        .addClass('font-weight-bold')
+                        .find('i')
+                        .show();
 
-                $dtNascimento
-                    .parents('[class^=col-]')
-                    .hide();
+                    $celular
+                        .removeAttr('required')
+                        .siblings('label')
+                        .removeClass('font-weight-bold')
+                        .find('i')
+                        .hide();
+
+                    var dadosAnteriores = '';
+                    if ($hiddenContatos.attr('data-anterior-aux') != undefined) {
+                        dadosAnteriores = $hiddenContatos.attr('data-anterior-aux');
+                    } else {
+                        dadosAnteriores = $hiddenContatos.attr('data-anterior');
+                    }
+
+                    $contatosForm.show();
+                    $hiddenContatos.val(dadosAnteriores);
+
+                    $nome
+                        .siblings('label')
+                        .find('span')
+                        .text('Nome Fantasia');
+
+                    $razaoSocial
+                        .parents('[class^=col-]')
+                        .show();
+
+                    $dtNascimento
+                        .parents('[class^=col-]')
+                        .hide();
 
                 } else {
                     
@@ -123,21 +126,19 @@ $(function () {
                         .parents('[class^=col-]')
                         .show();
 
+                }
             }
-        }
-    }).change();
-
-    var $cpf_cnpj = $('[name=cpf_cnpj]');
+        })
+        .change();
 
     $cpf_cnpj
-        .on('blur', function () {
+        .on('blur checar', function () {
 
             var $this = $(this),
                 text_label = $this.siblings('label').find('span').text();;
 
             $this.removeClass('is-valid is-invalid');
             $this.siblings('.invalid-feedback').remove();
-            $this[0].setCustomValidity('');
 
             if ($this.val()) {
                 if ($this.attr('data-anterior') != $this.val()) {
@@ -158,7 +159,9 @@ $(function () {
 
                                         $this[0].setCustomValidity('invalid');
 
-                                        $this.after('<div class="invalid-feedback">Este ' + text_label.toLowerCase() + ' já está sendo usado</div>');
+                                        if (!$this.siblings('.invalid-feedback').length) {
+                                            $this.after('<div class="invalid-feedback">Este ' + text_label.toLowerCase() + ' já está sendo usado</div>');
+                                        }
 
                                     } else {
 
@@ -192,10 +195,6 @@ $(function () {
                             if ($this.attr('data-unico')) {
                                 $this.unico(function (json) {
 
-                                    $this.addClass('is-valid');
-    
-                                    $this[0].setCustomValidity('');
-
                                     if (json.length) {
 
                                         // Já existe, erro
@@ -204,7 +203,9 @@ $(function () {
 
                                         $this[0].setCustomValidity('invalid');
 
-                                        $this.after('<div class="invalid-feedback">Este ' + text_label.toLowerCase() + ' já está sendo usado</div>');
+                                        if (!$this.siblings('.invalid-feedback').length) {
+                                            $this.after('<div class="invalid-feedback">Este ' + text_label.toLowerCase() + ' já está sendo usado</div>');
+                                        }
 
                                     } else {
 
@@ -236,7 +237,16 @@ $(function () {
                     }
                 }
             }
+        })
+        .on('keyup', function () {
+            if ($('[name=tipo_pessoa]:checked').val() == 'pj') {
+                if ($(this).val().length >= 18) {
+                    $(this).trigger('checar');
+                }
+            } else {
+                if ($(this).val().length >= 14) {
+                    $(this).trigger('checar');
+                }
+            }
         });
-
-    $cpf_cnpj.addClass('has-validation');
 });
