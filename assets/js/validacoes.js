@@ -208,6 +208,7 @@ $(function () {
 
                                 $this[0].setCustomValidity('invalid');
 
+                                $this.siblings('.invalid-feedback').remove();
                                 $this.after('<div class="invalid-feedback">Este ' + text_label.toLowerCase() + ' já está sendo usado</div>');
                             }
                         });
