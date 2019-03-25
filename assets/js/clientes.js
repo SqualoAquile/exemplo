@@ -139,8 +139,6 @@ $(function () {
     $cpf_cnpj
         .on('blur checar', function () {
 
-            console.log('blur nimim')
-
             var $this = $(this),
                 text_label = $this.siblings('label').find('span').text();
 
