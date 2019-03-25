@@ -142,7 +142,10 @@ $(function () {
             console.log('blur nimim')
 
             var $this = $(this),
-                text_label = $this.siblings('label').find('span').text();;
+                text_label = $this.siblings('label').find('span').text();
+
+            $this.removeClass('is-valid is-invalid');
+            $this.siblings('.invalid-feedback').remove();
 
             if ($this.val()) {
                 if ($this.attr('data-anterior') != $this.val()) {
