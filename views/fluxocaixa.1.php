@@ -13,14 +13,12 @@ require "_header_browser_filtros.php";
                     <p class="m-0">Itens Selecionados</p>
                     <h2 id="itensSelecionados"></h2>
                 </div>
-                <?php if( in_array( $this->table.'_exc' , $_SESSION["permissoesUsuario"]) ): ?>
                 <button class="btn btn-danger btn-block" id="excluir">
                     <i class="fas fa-trash-alt mr-2"></i>
                     <span>Excluir</span>
                 </button>
-                <?php endif ?>
             </div>
-            <div class="col-lg">    
+            <div class="col-lg">
                 <div class="row mb-3">
                     <div class="col-lg offset-lg-1">
                         <div class="card card-body py-2 text-danger text-center">

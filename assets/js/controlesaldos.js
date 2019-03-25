@@ -238,7 +238,7 @@ $(document).ready(function () {
     });    
 
     $('#form-principal').on('submit', function(e){
-        if($(this)[0].checkValidity() == true) {
+        if($(this)[0].checkValidity() == true && confirm('Tem certeza?')) {
             $(this).find('input').removeAttr('disabled');
         }else{
             e.preventDefault();

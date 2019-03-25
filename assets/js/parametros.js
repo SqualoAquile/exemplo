@@ -16,6 +16,10 @@ const parametrosSemAcoes = [
     'Hipercard'
 ];
 
+var data_add = $('#data_usuario').attr('data-add')
+    data_edt = $('#data_usuario').attr('data-edt'),
+    data_exc = $('#data_usuario').attr('data-exc');
+
 function Ajax (url, callback, send = {}) {
     $.ajax({
         url: baselink + '/parametros/' + url,
@@ -35,14 +39,28 @@ function Popula ($wrapper, data, campo) {
         var htmlAcoes = '';
 
         if (parametrosSemAcoes.indexOf(element[campo]) == -1) {
+           
             htmlAcoes = `
                 <div>
+                `;
+        
+            if(data_edt == true){
+                htmlAcoes += `
                     <button class="editar btn btn-sm btn-primary" tabindex="-1">
                         <i class="fas fa-edit"></i>
                     </button>
+                    `;
+            }
+
+            if(data_exc == true){
+                htmlAcoes += `
                     <button class="excluir btn btn-sm btn-danger" tabindex="-1">
                         <i class="fas fa-trash-alt"></i>
                     </button>
+                    `;
+            }
+
+            htmlAcoes += `
                 </div>
             `;
         }
@@ -203,7 +221,7 @@ $(document)
 
                 var htmlElAdd = '';
                     
-                if (!data.length) {
+                if (!data.length && data_add == true ) {
                     htmlElAdd += `
                         <div class="p-3">
                             <span>Nenhum resultado encontrado</span>
@@ -295,6 +313,7 @@ $(document)
                         class: 'alert-success'
                     });
 
+                    $input.val('');
                     $parent.remove();
                     $input.focus();
                 }
