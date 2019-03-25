@@ -22,7 +22,7 @@ $(function () {
                 
                 $input
                     .removeClass('is-valid is-invalid')
-                    .trigger('checar');
+                    .trigger('blur');
 
                 $input.siblings('.invalid-feedback').remove();
 
@@ -138,6 +138,8 @@ $(function () {
 
     $cpf_cnpj
         .on('blur checar', function () {
+
+            console.log('blur nimim')
 
             var $this = $(this),
                 text_label = $this.siblings('label').find('span').text();;
