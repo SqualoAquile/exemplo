@@ -17,24 +17,12 @@ $(function () {
                     $razaoSocial = $('[name=razao_social]');
                     $telefone = $('[name=telefone]');
                     $celular = $('[name=celular]');
-
-                $(this).parents('form').removeClass('was-validated');
                 
-                $input
-                    .removeClass('is-valid is-invalid')
-                    .trigger('blur');
+                $input.removeClass('is-valid is-invalid');
 
                 $input.siblings('.invalid-feedback').remove();
-
-                if ($input.attr('data-anterior-aux') == undefined) {
-                    $input.attr('data-anterior-aux', $input.val());
-                } else {
-                    $input
-                        .val($input.attr('data-anterior-aux'))
-                        .blur();
-                }
-
-                $input.trigger('blur');
+                
+                $input[0].setCustomValidity('');
 
                 if ($(this).attr('id') == 'pj') {
 
@@ -59,15 +47,8 @@ $(function () {
                         .find('i')
                         .hide();
 
-                    var dadosAnteriores = '';
-                    if ($hiddenContatos.attr('data-anterior-aux') != undefined) {
-                        dadosAnteriores = $hiddenContatos.attr('data-anterior-aux');
-                    } else {
-                        dadosAnteriores = $hiddenContatos.attr('data-anterior');
-                    }
-
                     $contatosForm.show();
-                    $hiddenContatos.val(dadosAnteriores);
+                    $hiddenContatos.val($hiddenContatos.attr('data-anterior'));
 
                     $nome
                         .siblings('label')
@@ -146,6 +127,7 @@ $(function () {
 
             $this.removeClass('is-valid is-invalid');
             $this.siblings('.invalid-feedback').remove();
+            $this[0].setCustomValidity('');
 
             if ($this.val()) {
                 if ($this.attr('data-anterior') != $this.val()) {
@@ -160,6 +142,7 @@ $(function () {
 
                                     $this.removeClass('is-valid is-invalid');
                                     $this.siblings('.invalid-feedback').remove();
+                                    $this[0].setCustomValidity('');
 
                                     if (json.length) {
 
@@ -205,6 +188,7 @@ $(function () {
 
                                     $this.removeClass('is-valid is-invalid');
                                     $this.siblings('.invalid-feedback').remove();
+                                    $this[0].setCustomValidity('');
 
                                     if (json.length) {
 
