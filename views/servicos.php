@@ -52,23 +52,23 @@
                                 <?php endif ?>
                             <?php endforeach ?>
                             <?php if(in_array($modulo . "_edt", $infoUser["permissoesUsuario"])): ?>
-                                <div class="col-lg flex-lg-grow-0">
+                                <div class="col-lg-3">
                                     <label>&nbsp;</label>
                                     <button type="submit" class="btn btn-primary btn-block">Salvar</button>
                                 </div>
                             <?php endif ?>
-                        </div>
-
-                        <div class="row">
-                            <?php if (isset($value["alteracoes"]) && strlen($value["alteracoes"])): ?>
-                                <?php
-                                    $item = $value;
-                                    $iteracao = $key;
-                                ?>
-                                <div class="col-lg flex-lg-grow-0">
-                                    <button class="btn btn-dark btn-block text-truncate" type="button" data-toggle="collapse" data-target="#historico<?php echo $iteracao ?>" aria-expanded="false" aria-controls="historico<?php echo $iteracao ?>">Histórico de Alterações</button>
-                                </div>
-                            <?php endif ?>
+                            <div class="col-lg flex-lg-grow-0">
+                                <?php if (isset($value["alteracoes"]) && strlen($value["alteracoes"])): ?>
+                                    <?php
+                                        $item = $value;
+                                        $iteracao = $key;
+                                    ?>
+                                    <label>&nbsp;</label>
+                                    <button class="btn btn-dark btn-block" title="Histórico" type="button" data-toggle="collapse" data-target="#historico<?php echo $iteracao ?>" aria-expanded="false" aria-controls="historico<?php echo $iteracao ?>">
+                                        <i class="fas fa-code-branch"></i>
+                                    </button>
+                                <?php endif ?>
+                            </div>
                         </div>
 
                         <?php include "_historico.php" ?>

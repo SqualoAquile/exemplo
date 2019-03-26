@@ -1,27 +1,52 @@
 $(function () {
 
-    function floatPadraoInternacional(valor1){
-        valor = valor1.val();
+    function floatParaPadraoBrasileiro(valor){
+        var valortotal = valor;
+        valortotal = number_format(valortotal,2,',','.');
+        return valortotal;
+    }
 
-        if(valor != ""){
-            valor = valor.replace(".","").replace(".","").replace(".","").replace(".","");
-            valor = valor.replace(",",".");
-            valor = parseFloat(valor);
-            return valor;
-        }else{
-            valor = '';
-            return valor;
+    function floatParaPadraoInternacional(valor){
+        
+        var valortotal = valor;
+        valortotal = valortotal.replace(".", "").replace(".", "").replace(".", "").replace(".", "");
+        valortotal = valortotal.replace(",", ".");
+        valortotal = parseFloat(valortotal).toFixed(2);
+        return valortotal;
+    }
+
+    function number_format( numero, decimal, decimal_separador, milhar_separador ){ 
+        numero = (numero + '').replace(/[^0-9+\-Ee.]/g, '');
+        var n = !isFinite(+numero) ? 0 : +numero,
+            prec = !isFinite(+decimal) ? 0 : Math.abs(decimal),
+            sep = (typeof milhar_separador === 'undefined') ? ',' : milhar_separador,
+            dec = (typeof decimal_separador === 'undefined') ? '.' : decimal_separador,
+            s = '',
+            toFixedFix = function (n, prec) {
+                var k = Math.pow(10, prec);
+                return '' + Math.round(n * k) / k;
+            };
+    
+        // Fix para IE: parseFloat(0.55).toFixed(0) = 0;
+        s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+        if (s[0].length > 3) {
+            s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
         }
+        if ((s[1] || '').length < prec) {
+            s[1] = s[1] || '';
+            s[1] += new Array(prec - s[1].length + 1).join('0');
+        }
+        return s.join(dec);
     }
     
     function maiorque (valMenor, valMaior){
 
-        valorMenor = floatPadraoInternacional(valMenor);
-        valorMaior = floatPadraoInternacional(valMaior);        
+        valorMenor = floatParaPadraoInternacional(valMenor.val());
+        valorMaior = floatParaPadraoInternacional(valMaior.val());        
 
         if( valorMenor != '' && valorMaior != ''){
 
-            if(valorMenor < valorMaior){
+            if(parseFloat(valorMenor) < parseFloat(valorMaior)){
                 return true; 
             }else{
                 return false;
@@ -31,7 +56,7 @@ $(function () {
         }
     }
 
-    function comparar ($custo, $preco, $element) {
+    function comparar ($custo, $preco) {
 
         if( $custo.val() != "" && $preco.val() == "" ){
             return;
@@ -86,12 +111,14 @@ $(function () {
                 $inputs.each(function () {
     
                     var $input = $(this),
-                        $label = $input.siblings('label').find('span');
+                        $label = $input.siblings('label').find('span'),
+                        value = floatParaPadraoInternacional($input.val()),
+                        dtAnt = parseFloat($input.attr('data-anterior'));
     
-                    objSend[$input.attr('name')] = $input.val();
+                    objSend[$input.attr('name')] = value;
     
-                    if ($input.val() != $input.attr('data-anterior')) {
-                        campos_alterados += '{' + $label.text().toUpperCase() + ' de (' + $input.attr('data-anterior') + ') para (' + $input.val() + ')}';
+                    if (value != dtAnt) {
+                        campos_alterados += '{' + $label.text().toUpperCase() + ' de (' + floatParaPadraoBrasileiro($input.attr('data-anterior')) + ') para (' + $input.val() + ')}';
                     }
 
                     $input.attr('data-anterior', $input.val());
@@ -150,7 +177,7 @@ $(function () {
             var $this = $(this),
                 $submit = $this.parents('form').find('[type=submit]');
     
-            if ($this.val() != $this.attr('data-anterior')) {
+            if (floatParaPadraoInternacional($this.val()) != parseFloat($this.attr('data-anterior'))) {
                 $submit.removeAttr('disabled');
             } else {
                 $submit.attr('disabled', 'disabled');
@@ -163,6 +190,6 @@ $(function () {
             $custo = $pai.find('[name="custo"]'),
             $preco = $pai.find('[name="preco_venda"]');
 
-        comparar($custo, $preco, $(this));
+        comparar($custo, $preco);
     });
 });
