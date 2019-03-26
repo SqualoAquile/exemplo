@@ -144,4 +144,18 @@ class Orcamentos extends model {
             }
         }
     }
+
+    public function getRelacionalDropdown($request) {
+
+        if ($request["tabela"]) {
+            $tabela = trim($request["tabela"]);
+            $tabela = addslashes($tabela);
+        }
+
+        $sql = "SELECT * FROM " . $tabela . " WHERE situacao = 'ativo'";
+
+        $sql = self::db()->query($sql);
+        
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

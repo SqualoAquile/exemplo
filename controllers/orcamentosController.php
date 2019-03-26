@@ -99,5 +99,11 @@ class orcamentosController extends controller{
             $this->loadTemplate($this->table . "-form", $dados); 
         }
     }
+
+    public function getRelacionalDropdown() {
+        if (isset($_POST) && !empty($_POST)) {
+            echo json_encode($this->model->getRelacionalDropdown($_POST));
+        }
+    }
 }   
 ?>

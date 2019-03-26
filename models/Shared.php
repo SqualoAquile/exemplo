@@ -181,24 +181,6 @@ class Shared extends model {
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function addRelacionalDropdown($request) {
-
-        if ($request["campo"] && $request["value"]) {
-            
-            $campo = trim($request["campo"]);
-            $campo = addslashes($campo);
-            
-            $value = trim($request["value"]);
-            $value = addslashes($value);
-        }
-
-        $sql = "INSERT INTO " . $this->table . " (" . $campo . ") VALUES ('" . $value . "')";
-
-        self::db()->query($sql);
-        
-        return self::db()->errorInfo();
-    }
-
     public function nomeDasColunas(){
 
         if ($this->table == "relatoriofluxocaixa"){

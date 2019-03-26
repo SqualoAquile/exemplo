@@ -41,13 +41,6 @@ class ajaxController extends controller{
       echo json_encode($shared->getRelacionalDropdown($_POST));
     }
   }
-
-  public function addRelacionalDropdown() {
-    if (isset($_POST) && !empty($_POST)) {
-      $shared = new Shared($_POST["tabela"]);
-      echo json_encode($shared->addRelacionalDropdown($_POST));
-    }
-  }
     
   public function index() {
       //no index não existe função específica, módulo usado para as requisições ajax    
