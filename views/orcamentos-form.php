@@ -473,7 +473,8 @@
                         <?php endif ?>
                     <?php endif ?>
                 <?php endforeach ?>
-                <button id="main-form" class="d-none"></button>
+                <button id="btn_incluir" class="btn btn-primary btn-block mx-5" style='order: 100;'>Incluir</button>
+                                                            
             </div> 
             <div class="row" id='tabelaOrc'>
                 <div class="col-lg">

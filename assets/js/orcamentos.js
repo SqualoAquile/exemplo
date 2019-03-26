@@ -1,7 +1,23 @@
 $(function () {
 
+    //coloca os inputs dentros das div certas pra acertar o layout da página
     $('#form-principal').children('.row').children('[class^="col-lg"]:nth-child(-n+17)').appendTo('#esquerda .row');
     $('#form-principal').children('.row').children('[class^="col-lg"]:nth-child(n+2):nth-child(-n+9)').appendTo('#embaixo .row');
+
+    //inicializa os inputs da página
+    $('#status').attr('disabled','disabled');
+
+    $('#quant_usada').attr('disabled','disabled');
+    $('#material_complementar').attr('disabled','disabled');
+    $('#unidade').attr('disabled','disabled');
+
+    // coloca as opções de produtos/serviços 
+    $('#tipo_serviço_produto').empty()
+    .append('<option value="produtos" selected      >Produtos</option>')
+    .append('<option value="servicos"               >Serviços</option>')
+    .append('<option value="servicoscomplementares" >Serviços Complementares</option>')
+    
+
 
     $(document)
         .ready(function () {
