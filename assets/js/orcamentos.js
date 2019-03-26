@@ -12,11 +12,93 @@ $(function () {
     $('#unidade').attr('disabled','disabled');
 
     // coloca as opções de produtos/serviços 
-    $('#tipo_serviço_produto').empty()
-    .append('<option value="produtos" selected      >Produtos</option>')
-    .append('<option value="servicos"               >Serviços</option>')
-    .append('<option value="servicoscomplementares" >Serviços Complementares</option>')
-    
+    $('#tipo_serviço_produto')
+        .empty()
+        .append('<option value="produtos" selected>Produtos</option>')
+        .append('<option value="servicos">Serviços</option>')
+        .append('<option value="servicoscomplementares">Serviços Complementares</option>')
+        .on('change', function() {
+            
+            var $this = $(this),
+                $material = $('[name=material_servico]'),
+                $materialComplementar = $('[name=material_complementar]'),
+                val = $this.val();
+
+            $.ajax({
+                url: baselink + '/ajax/getRelacionalDropdownOrcamentos',
+                type: 'POST',
+                data: {
+                    tabela: val
+                },
+                dataType: 'json',
+                success: function (data) {
+
+                    var $materialDropdown = $material.siblings('.dropdown-menu').find('.dropdown-menu-wrapper'),
+                        $materialComplementarDropdown = $materialComplementar.siblings('.dropdown-menu').find('.dropdown-menu-wrapper'),
+                        $unidade = $('[name="unidade"]'),
+                        $custo = $('[name="custo_tot_ subitem"]'),
+                        $preco = $('[name="preco_tot_subitem"]'),
+                        htmlDropdown = '';
+
+                    data.forEach(element => {
+                        htmlDropdown += `
+                            <div 
+                                class="list-group-item list-group-item-action relacional-dropdown-element" 
+                                data-tabela="` + val + `"
+                                data-custo="` + element['custo'] + `"
+                                data-preco="` + element['preco_venda'] + `"
+                                data-unidade="` + element['unidade'] + `"
+                            >` + element['descricao'] + `</div>
+                        `;
+                    });
+
+                    $material
+                        .removeClass('is-valid is-invalid')
+                        .val('');
+
+                    $materialComplementar
+                        .removeClass('is-valid is-invalid')
+                        .val('');
+
+                    $unidade
+                        .removeClass('is-valid is-invalid')
+                        .val('');
+
+                    $preco
+                        .removeClass('is-valid is-invalid')
+                        .val('');
+
+                    $custo
+                        .removeClass('is-valid is-invalid')
+                        .val('');
+
+                    if (val == 'produtos') {
+
+                        $material.removeAttr('disabled');
+                        $materialDropdown.html(htmlDropdown);
+
+                        $materialComplementar.removeAttr('disabled');
+                        $materialComplementarDropdown.html(htmlDropdown);
+                            
+                    } else if (val == 'servicos') {
+
+                        $material.removeAttr('disabled');
+                        $materialDropdown.html(htmlDropdown);
+
+                        $materialComplementar.attr('disabled', 'disabled');
+
+                    } else {
+
+                        $material.removeAttr('disabled');
+                        $materialDropdown.html(htmlDropdown);
+
+                        $materialComplementar.attr('disabled', 'disabled');
+
+                    }
+                }
+            });
+
+        });
 
 
     $(document)
@@ -49,6 +131,7 @@ $(function () {
                         .html(htmlDropdown.trim());
 
                     $('[name="pf_pj"]').change();
+                    $('[name="tipo_serviço_produto"]').change();
 
                 }
             });
@@ -77,6 +160,23 @@ $(function () {
             $esquerda
                 .find('[name=como_conheceu]')
                     .val($this.attr('data-comoconheceu'));
+        })
+        .on('click', '[name="material_servico"] ~ .relacional-dropdown .relacional-dropdown-element', function() {
+            
+            var $this = $(this),
+                $unidade = $('[name="unidade"]'),
+                $custo = $('[name="custo_tot_ subitem"]'),
+                $preco = $('[name="preco_tot_subitem"]');
+
+            $custo.val($this.attr('data-custo'));
+            $preco.val($this.attr('data-preco'));
+
+            if ($this.attr('data-tabela') != 'servicos') {
+                $unidade.val($this.attr('data-unidade'));
+            } else {
+                $unidade.val('M²');
+            }
+
         })
         .on('change', '[name="pf_pj"]', function() {
             if ($(this).is(':checked')) {
