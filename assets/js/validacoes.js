@@ -187,11 +187,15 @@ $(function () {
                             if (!json.length) {
                                 // Não existe, pode seguir
 
-                                $this
-                                    .removeClass('is-invalid')
-                                    .addClass('is-valid');
+                                if (!$this.hasClass('is-invalid')) {
+                                    
+                                    $this
+                                        .removeClass('is-invalid')
+                                        .addClass('is-valid');
+    
+                                    $this[0].setCustomValidity('');
 
-                                $this[0].setCustomValidity('');
+                                }
 
                             } else {
                                 // Já existe, erro
@@ -204,6 +208,7 @@ $(function () {
 
                                 $this[0].setCustomValidity('invalid');
 
+                                $this.siblings('.invalid-feedback').remove();
                                 $this.after('<div class="invalid-feedback">Este ' + text_label.toLowerCase() + ' já está sendo usado</div>');
                             }
                         });
@@ -831,7 +836,8 @@ $(function () {
 
             var $this = $(this),
                 value = $this.val().replace('%', ''),
-                anterior = $this.attr('data-anterior').replace('%', ''),
+                dtAnterior = $this.attr('data-anterior'),
+                anterior = dtAnterior ? dtAnterior.replace('%', '') : dtAnterior,
                 text_label = $this.siblings('label').find('span').text();
 
             var pode_zero = $this.attr('data-podeZero');
@@ -1202,13 +1208,12 @@ $(function () {
                     $this.dropdown('toggle');
                 }
             })
-            .change(function() {
+            .on('blur change', function() {
 
                 var $this = $(this),
                 $dropdownMenu = $this.siblings('.dropdown-menu');
 
-                // $this.removeClass('is-valid is-invalid');
-                console.log($this.hasClass('is-valid'));
+                $this.removeClass('is-valid is-invalid');
                 
                 if ($this.val()) {
 
@@ -1221,33 +1226,23 @@ $(function () {
                     
                     if (!$filtereds.length) {
 
-                        console.log('if 1');
-
-                        if ($this.attr('data-pode_nao_cadastrado') != 'true') {
-
-                            console.log('if 2');
-
-                            $this.addClass('is-valid');
-                            this.setCustomValidity('');
-                            
-                        } else {
-
-                            console.log('else 1');
-                            // $this.addClass('murilinho');
+                        if ($this.attr('data-pode_nao_cadastrado') == 'false') {
 
                             $this
-                                .css('background', 'red!important')
                                 .removeClass('is-valid')
                                 .addClass('is-invalid');
                                 
                             this.setCustomValidity('invalid');
                             $this.after('<div class="invalid-feedback">Selecione um item existente.</div>');
+                            
+                        } else {
+                            
+                            $this.addClass('is-valid');
+                            this.setCustomValidity('');
 
                         }
 
                     } else {
-
-                        console.log('else 2');
                         
                         $this.addClass('is-valid');
                         this.setCustomValidity('');

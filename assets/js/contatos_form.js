@@ -53,7 +53,7 @@ $(function () {
     // Retorna um array de contatos puxados do campo hidden com o atributo nome igual a contatos
     function Contatos() {
         var returnContatos = [];
-        if ($('[name=contatos]').val().length) {
+        if ($('[name=contatos]') && $('[name=contatos]').val().length) {
             var contatos = $('[name=contatos]').val().split('[');
             for (var i = 0; i < contatos.length; i++) {
                 var contato = contatos[i];

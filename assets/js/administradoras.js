@@ -35,6 +35,43 @@ $(function () {
                 }
             }
 
+        })
+        .on('click', '#cancelar-wrapper > button', function() {
+            
+            $(this)
+                .trigger('reset')
+                .find('.form-control')
+                .removeClass('is-valid is-invalid');
+
+            $nroparc
+                .change();
+            
+            $('#table-inclusoes button.disabled')
+                .removeClass('disabled')
+                .removeAttr('disabled');
+
+            $formBandeiras
+                .find('.form-control')
+                .removeAttr('data-anterior');
+        })
+        .on('change', '.form-control', function () {
+        
+            var $this = $(this),
+                $form = $this.parents('form'),
+                $submit = $form.find('[type="submit"]'),
+                temAlteracao = false;
+            
+            $form.find('.form-control').each(function() {
+                if ($(this).attr('data-anterior') != $(this).val()) {
+                    temAlteracao = true;
+                }
+            });
+
+            if ($form[0].checkValidity() && temAlteracao) {
+                $submit.removeAttr('disabled');
+            } else {
+                $submit.attr('disabled', 'disabled');
+            }
         });
 
     $('label[for="form-send"]')
@@ -54,6 +91,8 @@ $(function () {
                 $taxas = $('#tabela-taxas'),
                 value = $this.val();
 
+            $this.removeClass('is-valid is-invalid');
+
             if (value) {
 
                 var $taxasTr = $taxas.find('tbody tr');
@@ -61,26 +100,34 @@ $(function () {
                 $taxasTr.hide();
                 
                 $taxasTr
+                    .find('input')
+                        .removeClass('is-valid is-invalid');
+
+                if ($this.attr('data-anterior') != $this.val()) {
+                    $this.addClass('is-valid');
+                }
+                
+                $taxasTr
                     .not(':lt(' + value + ')')
                     .find('input')
                         .val('0%')
-                        .removeClass('is-valid is-invalid active');
+                        .removeClass('active');
+
+                $taxas
+                    .find('tbody tr')
+                    .eq(value - 1)
+                    .find('input')
+                    .each(function () {
+                        if ($(this).val() == '0%') {
+                            $(this).val('');
+                        }
+                    });
                 
                 $taxas
                     .find('tbody tr:lt(' + value + ')')
                         .show()
                         .find('.taxas')
                         .addClass('active');
-
-                $taxas
-                    .find('.taxas.active')
-                        .each(function () {
-                            if ($(this).val() == '0%') {
-                                $(this)
-                                    .val('')
-                                    .change();
-                            }
-                        });
 
                 $taxas.show();
 
@@ -112,30 +159,6 @@ $(function () {
                 $this[0].setCustomValidity('invalid');
 
                 $this.after('<div class="invalid-feedback">Essa bandeira já está sendo usada.</div>');
-            }
-        });
-
-    function soZero() {
-        var soma = 0;
-        $('#form-bandeiras [data-mascara_validacao="porcentagem"]').each(function () {
-            var value = $(this).val().replace(',', '.');
-            soma += parseFloat(value);
-        });
-        return soma;
-    }
-
-    $('#form-bandeiras .form-control')
-        .on('change keyup', function () {
-        
-            var $this = $(this),
-                $form = $this.parents('form'),
-                $submit = $form.find('[type="submit"]'),
-                alteracaoNumParcelas = $nroparc.attr('data-anterior') != $nroparc.val();
-
-            if ($form[0].checkValidity() && alteracaoNumParcelas) {
-                $submit.removeAttr('disabled');
-            } else {
-                $submit.attr('disabled', 'disabled');
             }
         });
 
@@ -222,6 +245,10 @@ $(function () {
 
         var antecipacoes = [],
             creditos = [];
+
+        $formBandeiras
+            .find('.form-control')
+            .removeAttr('data-anterior');
         
         $('.taxas-antecipacao').each(function(index, el) {
 
@@ -343,6 +370,7 @@ $(function () {
 
         $('#form-bandeiras').trigger('reset').find('.form-control').removeClass('is-valid is-invalid');
         $('[name="nroparc"]').change();
+        $('#cancelar-wrapper').addClass('d-none');
 
         if (!indexEditando) {
             $('#table-inclusoes tbody')
@@ -556,9 +584,14 @@ $(function () {
 
         $divHiddensEditando.addClass('sendo-editado');
 
-        $bandeira.val(id_bandeira).focus();
+        $bandeira
+            .attr('data-anterior', id_bandeira)
+            .val(id_bandeira)
+            .focus();
 
         $('#form-bandeiras').attr('data-editando', par.attr('data-index'));
+
+        $('#cancelar-wrapper').removeClass('d-none');
 
         var infos = $divHiddensEditando.find('.infos').val().split('-'),
             taxas_antecipacao = $divHiddensEditando.find('.txant').val().split('-'),
@@ -570,11 +603,28 @@ $(function () {
             dias_antecipacao = infos[4],
             parcelas = infos[5];
 
-        $taxa_debito.val(taxa_debito.replace('.', ',') + '%');
-        $dias_debito.val(dias_debito);
-        $taxa_credito.val(taxa_credito.replace('.', ',') + '%');
-        $dias_credito.val(dias_credito);
-        $dias_antecipacao.val(dias_antecipacao);
+        var rplcTaxaDebito = taxa_debito.replace('.', ',') + '%',
+            rplcTaxaCredito = taxa_credito.replace('.', ',') + '%';
+
+        $taxa_debito
+            .attr('data-anterior', rplcTaxaDebito)
+            .val(rplcTaxaDebito);
+
+        $dias_debito
+            .attr('data-anterior', dias_debito)
+            .val(dias_debito);
+
+        $taxa_credito
+            .attr('data-anterior', rplcTaxaCredito)
+            .val(rplcTaxaCredito);
+
+        $dias_credito
+            .attr('data-anterior', dias_credito)
+            .val(dias_credito);
+
+        $dias_antecipacao
+            .attr('data-anterior', dias_antecipacao)
+            .val(dias_antecipacao);
         
         $nroparc
             .attr('data-anterior', parcelas)
@@ -582,34 +632,36 @@ $(function () {
             .change();
 
         taxas_antecipacao.forEach(function (taxa, index) {
-            $('#itxantecip_' + (index + 1)).val(taxa.replace('.', ',') + '%');
+            var rplcTaxaAntecip = taxa.replace('.', ',') + '%';
+            $('#itxantecip_' + (index + 1))
+                .attr('data-anterior', rplcTaxaAntecip)
+                .val(rplcTaxaAntecip);
         });
 
         taxas_credito.forEach(function (taxa, index) {
-            $('#itxcredsemjuros_' + (index + 1)).val(taxa.replace('.', ',') + '%');
+            var rplcTaxaCredit = taxa.replace('.', ',') + '%';
+            $('#itxcredsemjuros_' + (index + 1))
+                .attr('data-anterior', rplcTaxaCredit)
+                .val(rplcTaxaCredit);
         });
 
     };
 
     function Delete(_this) {
+            
+        var $par = $(_this).closest('tr'),
+            id_bandeira = $par.find('.id_bandeira input').val(),
+            $envolta = $('.conteudos-escondidos').find('label.labelBandeira[for="bandeira' + id_bandeira + '"]').parents('.envolta-inputs-alteracoes'),
+            $bandeira = $envolta.find('input.bandeira'),
+            $conteudoEscondido = $envolta.parent('.conteudos-escondidos');
 
-        if (confirm('Tem Certeza?')) {
-            
-            var $par = $(_this).closest('tr'),
-                id_bandeira = $par.find('.id_bandeira input').val(),
-                $envolta = $('.conteudos-escondidos').find('label.labelBandeira[for="bandeira' + id_bandeira + '"]').parents('.envolta-inputs-alteracoes'),
-                $bandeira = $envolta.find('input.bandeira'),
-                $conteudoEscondido = $envolta.parent('.conteudos-escondidos');
-    
-            $envolta.siblings('.envolta-inputs-alteracoes').remove();
-            $par.remove();
-    
-            $conteudoEscondido.addClass('excluido');
-    
-            $bandeira.siblings('label.labelBandeira').find('span').text('BANDEIRA ' + $bandeira.val());
-            $bandeira.val('EXCLUIDA');
-            
-        }
+        $envolta.siblings('.envolta-inputs-alteracoes').remove();
+        $par.remove();
+
+        $conteudoEscondido.addClass('excluido');
+
+        $bandeira.siblings('label.labelBandeira').find('span').text('BANDEIRA ' + $bandeira.val());
+        $bandeira.val('EXCLUIDA');
 
     };
 
@@ -623,25 +675,35 @@ $(function () {
         return exist;
     };
 
+    function soZero() {
+        var soma = 0;
+        $('#form-bandeiras [data-mascara_validacao="porcentagem"]').each(function () {
+            var value = $(this).val().replace(',', '.');
+            soma += parseFloat(value);
+        });
+        return soma;
+    };
+
     //
     // Historico
     //
-    $('#historico').on('shown.bs.collapse', function () {
-        
-        var $div = $(this).find('.cada-alteracao .card.card-body .card-text > div'),
-            $span = $div.find('span'),
-            $delVazio = $span.siblings('del:contains(∅)');
+    $('#historico')
+        .on('shown.bs.collapse', function () {
+            
+            var $div = $(this).find('.cada-alteracao .card.card-body .card-text > div'),
+                $span = $div.find('span'),
+                $delVazio = $span.siblings('del:contains(∅)');
 
-        $div.each(function () {
-            var content = $(this).text();
-            if (content.indexOf('EXCLUIDA') != -1) {
-                $(this).find('strong, del').hide();
-            }
+            $div.each(function () {
+                var content = $(this).text();
+                if (content.indexOf('EXCLUIDA') != -1) {
+                    $(this).find('strong, del').hide();
+                }
+            });
+
+            $delVazio.hide();
+            $delVazio.siblings('strong').hide();
+            
+            $delVazio.parent().addClass('text-uppercase');
         });
-
-        $delVazio.hide();
-        $delVazio.siblings('strong').hide();
-        
-        $delVazio.parent().addClass('text-uppercase');
-    });
 });
