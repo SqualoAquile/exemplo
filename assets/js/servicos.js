@@ -46,7 +46,7 @@ $(function () {
 
         if( valorMenor != '' && valorMaior != ''){
 
-            if(valorMenor < valorMaior){
+            if(parseFloat(valorMenor) < parseFloat(valorMaior)){
                 return true; 
             }else{
                 return false;
@@ -56,7 +56,7 @@ $(function () {
         }
     }
 
-    function comparar ($custo, $preco, $element) {
+    function comparar ($custo, $preco) {
 
         if( $custo.val() != "" && $preco.val() == "" ){
             return;
@@ -190,6 +190,6 @@ $(function () {
             $custo = $pai.find('[name="custo"]'),
             $preco = $pai.find('[name="preco_venda"]');
 
-        comparar($custo, $preco, $(this));
+        comparar($custo, $preco);
     });
 });
