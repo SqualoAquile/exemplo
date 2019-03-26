@@ -1142,7 +1142,7 @@ $(function () {
     
                         var htmlDropdown = '';
                         data.forEach(element => {
-                            htmlDropdown +=`
+                            htmlDropdown += `
                                 <div class="list-group-item list-group-item-action relacional-dropdown-element">` + element[campo] + `</div>
                             `;
                         });
