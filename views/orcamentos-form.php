@@ -51,7 +51,7 @@
                                 <?php echo $value["Null"] == "NO" ? "required" : "" ?>
                             />
                         <?php else: ?>
-                            <div    class="col-lg-<?php echo isset($value["Comment"]["column"]) ? $value["Comment"]["column"] : "12" ?>" 
+                            <div    class="col-xl-<?php echo isset($value["Comment"]["column"]) ? $value["Comment"]["column"] : "12" ?>" 
                                     style="order:<?php echo isset($value["Comment"]["ordem_form"]) ? $value["Comment"]["ordem_form"] : 100 ?>;">
                                 <div class="form-group">
 
@@ -246,10 +246,10 @@
         <button id="main-form" class="d-none"></button>
     </form>
     <div class="row">
-        <div class="col-lg-4 bg-warning" id='esquerda'>
+        <div class="col-lg-5 bg-white border" id='esquerda'>
             <div class="row"></div>
         </div>
-        <div class="col-lg-8 bg-success" id='direita'>
+        <div class="col-lg-7 card card-body" id='direita'>
             <div class="row" id='camposOrc'>
                 <?php foreach ($colunasItensOrcamentos as $key => $value): ?>
                     <?php if(isset($value["Comment"]) && array_key_exists("form", $value["Comment"]) && $value["Comment"]["form"] != "false") : ?>
@@ -284,7 +284,7 @@
                                 <?php echo $value["Null"] == "NO" ? "required" : "" ?>
                             />
                         <?php else: ?>
-                            <div    class="col-lg-<?php echo isset($value["Comment"]["column"]) ? $value["Comment"]["column"] : "12" ?>" 
+                            <div    class="col-xl-<?php echo isset($value["Comment"]["column"]) ? $value["Comment"]["column"] : "12" ?>" 
                                     style="order:<?php echo isset($value["Comment"]["ordem_form"]) ? $value["Comment"]["ordem_form"] : 100 ?>;">
                                 <div class="form-group">
 
@@ -487,7 +487,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col bg-info" id='embaixo'> <div class="row"> </div> </div>
+        <div class="col card card-body" id='embaixo'> <div class="row"> </div> </div>
     </div>
     <div class="row">
         <div class="col-xl-2 col-lg-3">
