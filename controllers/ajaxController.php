@@ -360,5 +360,12 @@ class ajaxController extends controller{
     
     echo json_encode($dados);
   }
+
+  public function getRelacionalDropdownOrcamentos() {
+    if (isset($_POST) && !empty($_POST)) {
+      $orcamento = new Orcamentos;
+      echo json_encode($orcamento->getRelacionalDropdown($_POST));
+    }
+  }
 }   
 ?>

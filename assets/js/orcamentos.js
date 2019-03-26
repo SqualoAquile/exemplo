@@ -6,7 +6,7 @@ $(function () {
     $(document)
         .ready(function () {
             $.ajax({
-                url: baselink + '/orcamentos/getRelacionalDropdown',
+                url: baselink + '/ajax/getRelacionalDropdownOrcamentos',
                 type: 'POST',
                 data: {
                     tabela: 'clientes'
@@ -43,6 +43,10 @@ $(function () {
                 $esquerda = $('#esquerda');
 
             $esquerda
+                .find('[name=faturado_para]')
+                    .val($this.text());
+
+            $esquerda
                 .find('[name=telefone]')
                     .val($this.attr('data-telefone'));
 
@@ -70,7 +74,7 @@ $(function () {
                 $elements.hide();
                 $filtereds.show();
 
-                $('[name="nome_cliente"], [name=telefone], [name=celular], [name=email], [name=como_conheceu]')
+                $('[name="nome_cliente"], [name=faturado_para], [name=telefone], [name=celular], [name=email], [name=como_conheceu]')
                     .removeClass('is-valid is-invalid')
                     .val('');
 
