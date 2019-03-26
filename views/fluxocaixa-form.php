@@ -201,29 +201,27 @@
                                         id="<?php echo $value['Field'] ?>" 
                                         name="<?php echo $value['Field'] ?>" 
                                         type="text" 
+                                        class="dropdown-toggle form-control relacional-dropdown-input" 
                                         data-toggle="dropdown" 
                                         aria-haspopup="true" 
-                                        aria-expanded="false" 
-                                        class="dropdown-toggle form-control relacional-dropdown-input" 
+                                        aria-expanded="false"
                                         maxlength="<?php echo $value["tamanhoMax"] ?>"
                                         value="<?php echo isset($item) && !empty($item) ? $item[$value["Field"]] : "" ?>"
                                         data-tabela="<?php echo $value["Comment"]["info_relacional"]["tabela"] ?>" 
                                         data-campo="<?php echo $value["Comment"]["info_relacional"]["campo"] ?>" 
                                         data-pode_nao_cadastrado="<?php echo array_key_exists("pode_nao_cadastrado", $value["Comment"]["info_relacional"]) ? $value["Comment"]["info_relacional"]["pode_nao_cadastrado"] : "false" ?>" 
-                                        data-mascara_validacao= "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
+                                        data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                         data-unico="<?php echo array_key_exists("unico", $value["Comment"]) && $value["Comment"]["unico"]  == true ? "unico" : "" ?>"
                                         data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
-                                        tabindex="<?php echo isset($value["Comment"]["ordem_form"]) ? $value["Comment"]["ordem_form"] : "" ?>"
                                         <?php echo $value['Null'] == "NO" ? "required" : "" ?>
                                         <?php if( array_key_exists("mascara_validacao", $value["Comment"]) && 
                                                  ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" )):?>
                                             data-podeZero="<?php echo array_key_exists("pode_zero", $value["Comment"]) && $value["Comment"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
                                         <?php endif?> 
                                         />
-                                        <label for="<?php echo $value['Field'] ?>" class="btn btn-sm text-secondary icon-dropdown my-0 mx-1 close-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
-                                            <i class="fas fa-times-circle icon-close"></i>
+                                        <label data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent" for="<?php echo $value['Field'] ?>" class="btn btn-sm text-secondary icon-dropdown m-0 toggle-btn dropdown-toggle">
+                                            <i class="fas fa-caret-down"></i>
                                         </label>
-                                        <div class="invalid-feedback">Selecione um item existente.</div>
                                         <div class="dropdown-menu w-100 p-0 list-group-flush relacional-dropdown" aria-labelledby="<?php echo $value["Field"] ?>">
                                             <div class="p-3 nenhum-result d-none">Nenhum resultado encontrado</div>
                                             <div class="dropdown-menu-wrapper"></div>
