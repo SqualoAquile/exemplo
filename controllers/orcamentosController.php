@@ -62,10 +62,16 @@ class orcamentosController extends controller{
         if(isset($_POST) && !empty($_POST)){ 
             $this->model->adicionar($_POST);
             header("Location: " . BASE_URL . "/" . $this->table);
+
         }else{ 
-            $dados["colunas"] = $this->colunas;
+            $dados["colunasOrcamentos"] = $this->colunas;
             $dados["viewInfo"] = ["title" => "Adicionar"];
             $dados["labelTabela"] = $this->shared->labelTabela();
+
+            $itm = new Shared('orcamentositens');
+            $dados["colunasItensOrcamentos"] = $itm->nomeDasColunas();
+            
+            // print_r($dados["colunasItensOrcamentos"]); exit;
             $this->loadTemplate($this->table . "-form", $dados);
         }
     }

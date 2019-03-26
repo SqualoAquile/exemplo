@@ -226,7 +226,6 @@ class Shared extends model {
                 
                 $tabela =  lcfirst($result[$key]["Comment"]["info_relacional"]["tabela"]);
                 $campo = lcfirst($result[$key]["Comment"]["info_relacional"]["campo"]);
-
                 
                 if( !empty($tabela) && !empty($campo) ){
 
