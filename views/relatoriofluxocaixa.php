@@ -1,6 +1,6 @@
 <?php $modulo = str_replace("-form", "", basename(__FILE__, ".php")) ?>
 
-<script src="<?php echo BASE_URL?>/assets/js/controlecaixa.js" type="text/javascript"></script>
+<script src="<?php echo BASE_URL?>/assets/js/relatoriofluxocaixa.js" type="text/javascript"></script>
 
 <?php
 // Constroi o cabeçalho
@@ -8,54 +8,182 @@ require "_header_browser_relatorios.php";
 require "_graficosNOVO.php";
 ?>
 
+
 <div class="collapse mb-5" id="collapseFluxocaixaResumo">
-    <div class="card card-body">
-        <div class="row mb-3" id="somasResumo">
-            <div class="col-lg-3">
-                <div class="card card-body py-2 text-center mb-3">
-                    <p class="m-0">Itens Selecionados</p>
-                    <h2 id="itensSelecionados"></h2>
-                </div>
-                <button class="btn btn-danger btn-block" id="excluir">Excluir</button>
-            </div>
-            <div class="col-lg">
-                <div class="row mb-3">
-                    <div class="col-lg offset-lg-1">
-                        <div class="card card-body py-2 text-danger text-center">
-                            <p class="m-0">Despesa Total</p>
-                            <h2 id="despesasTotal"></h2>
-                        </div>
-                    </div>
-                    <div class="col-lg">
-                        <div class="card card-body py-2 text-success text-center">
-                            <p class="m-0">Receita Total</p>
-                            <h2 id="receitasTotal"></h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg offset-lg-1 col-data-quitacao">
-                        <div class="row align-items-center">
-                            <div class="col-lg flex-grow-0">
-                                <label for="data_quitacao" class="text-truncate m-0 font-weight-bold">
-                                    <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Campo Obrigatório">*</i>
-                                    <span>Data de Quitação</span>
-                                </label>
+
+<!-- 
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="cards-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Informações</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="graficos-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Gráficos</a>
+  </li>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+    <div id="collapseFluxocaixaResumo">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="cards-tab">
+            <div class="card card-body">
+                    <div class="row" id="somasResumo">
+                        <div class="col-lg">
+                            <div class="row d-none d-lg-flex">
+                                <div class="col">
+                                    <h4 class="my-4 text-center">
+                                    Operações Realizadas <span class="badge badge-primary badge-pill" data-id="totalQ"></span>
+                                    </h4>
+                                </div>
+                                <div class="col">
+                                    <h4 class="my-4 text-center">
+                                    Operações a Realizar <span class="badge badge-primary badge-pill" data-id="totalAQ"></span>
+                                    </h4>
+                                </div>
+                                <div class="col">
+                                    <h4 class="my-4 text-center">
+                                    Previsão do Mes <span class="badge badge-primary badge-pill" data-id="total"></span>
+                                    </h4>
+                                </div>
                             </div>
-                            <div class="col">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="basic-addon-calendar">
-                                            <i class="fas fa-calendar-alt"></i>
-                                        </span>
+
+                            <div class="row">
+                                <div class="col-lg">
+                                    <h4 class="my-4 text-center d-lg-none">
+                                    Operações Realizadas <span class="badge badge-primary badge-pill" data-id="totalQ"></span>
+                                    </h4>
+                                    <div class="card card-body py-2 text-success text-center my-3">
+                                        <p class="m-0">Receitas Realizadas</p>
+                                        <h2 id="receitasQuitadas"></h2>
                                     </div>
-                                    <input type="text" id="data_quitacao" class="form-control" data-provide="datepicker" aria-label="Data de Quitação" aria-describedby="basic-addon-calendar" name="data_quitacao" required>
+                                    <div class="card card-body py-2 text-danger text-center my-3">
+                                        <p class="m-0">Despesas Realizadas</p>
+                                        <h2 id="despesasQuitadas"></h2>
+                                    </div>
+                                    <div class="card card-body py-2 text-center">
+                                        <p class="m-0">Resultado Realizado</p>
+                                        <h2 id="resultadoRealizado"></h2>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg">
+                                    <h4 class="text-center my-4 d-lg-none">
+                                    Operações a Realizar <span class="badge badge-primary badge-pill" data-id="totalAQ"></span>
+                                    </h4>
+                                    <div class="card card-body py-2 text-success text-center my-3">
+                                        <p class="m-0">Receitas a Realizar</p>
+                                        <h2 id="receitasAQuitar"></h2>
+                                    </div>
+                                    <div class="card card-body py-2 text-danger text-center my-3">
+                                        <p class="m-0">Despesas a Realizar</p>
+                                        <h2 id="despesasAQuitar"></h2>
+                                    </div>
+                                    <div class="card card-body py-2 text-center">
+                                        <p class="m-0">Resultado A Realizar</p>
+                                        <h2 id="resultadoARealizar"></h2>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg">
+                                    <h4 class="text-center my-4 d-lg-none">
+                                    Previsão do Mês <span class="badge badge-primary badge-pill" data-id="total"></span>
+                                    </h4>
+                                    <div class="card card-body py-2 text-success text-center my-3">
+                                        <p class="m-0">Previsão de Receitas</p>
+                                        <h2 id="previsaoReceitas"></h2>
+                                    </div>
+                                    <div class="card card-body py-2 text-danger text-center my-3">
+                                        <p class="m-0">Previsão de Despesas</p>
+                                        <h2 id="previsaoDespesas"></h2>
+                                    </div>
+                                    <div class="card card-body py-2 text-center">
+                                        <p class="m-0">Previsão de Resultado</p>
+                                        <h2 id="previsaoResultados"></h2>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg col-btn-quitar">
-                        <button class="btn btn-primary btn-block" id="quitar">Quitar <span class="lengthQuitar"></span> Lançamentos</button>
+                </div>
+            </div>
+        </div> 
+    </div> 
+    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="graficos-tab">...</div>
+</div> -->
+
+
+    <div class="card card-body">
+        <div class="row" id="somasResumo">
+            <div class="col-lg">
+                <div class="row d-none d-lg-flex">
+                    <div class="col">
+                        <h5 class="my-4 text-center">
+                        Operações Realizadas <span class="badge badge-primary badge-pill" data-id="totalQ"></span>
+                        </h5>
+                    </div>
+                    <div class="col">
+                        <h5 class="my-4 text-center">
+                        Operações a Realizar <span class="badge badge-primary badge-pill" data-id="totalAQ"></span>
+                        </h5>
+                    </div>
+                    <div class="col">
+                        <h5 class="my-4 text-center">
+                        Previsão do Mes <span class="badge badge-primary badge-pill" data-id="total"></span>
+                        </h5>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg">
+                        <h5 class="my-4 text-center d-lg-none">
+                        Operações Realizadas <span class="badge badge-primary badge-pill" data-id="totalQ"></span>
+                        </h5>
+                        <div class="card card-body py-1 text-success text-center my-3">
+                            <p class="m-0">Receitas Realizadas</p>
+                            <h5 id="receitasQuitadas"></h5>
+                        </div>
+                        <div class="card card-body py-1 text-danger text-center my-3">
+                            <p class="m-0">Despesas Realizadas</p>
+                            <h5 id="despesasQuitadas"></h5>
+                        </div>
+                        <div class="card card-body py-1 text-center" id = "cardResultadoRealizado">
+                            <p class="m-0">Resultado Realizado</p>
+                            <h5 id="resultadoRealizado"></h5>
+                        </div>
+                    </div>
+
+                    <div class="col-lg">
+                        <h5 class="text-center my-4 d-lg-none">
+                        Operações a Realizar <span class="badge badge-primary badge-pill" data-id="totalAQ"></span>
+                        </h5>
+                        <div class="card card-body py-1 text-success text-center my-3">
+                            <p class="m-0">Receitas a Realizar</p>
+                            <h5 id="receitasAQuitar"></h5>
+                        </div>
+                        <div class="card card-body py-1 text-danger text-center my-3">
+                            <p class="m-0">Despesas a Realizar</p>
+                            <h5 id="despesasAQuitar"></h5>
+                        </div>
+                        <div class="card card-body py-1 text-center" id = "cardResultadoARealizar">
+                            <p class="m-0">Resultado A Realizar</p>
+                            <h5 id="resultadoARealizar"></h5>
+                        </div>
+                    </div>
+
+                    <div class="col-lg">
+                        <h5 class="text-center my-4 d-lg-none">
+                        Previsão do Mês <span class="badge badge-primary badge-pill" data-id="total"></span>
+                        </h5>
+                        <div class="card card-body py-1 text-success text-center my-3">
+                            <p class="m-0">Previsão de Receitas</p>
+                            <h5 id="previsaoReceitas"></h5>
+                        </div>
+                        <div class="card card-body py-1 text-danger text-center my-3">
+                            <p class="m-0">Previsão de Despesas</p>
+                            <h5 id="previsaoDespesas"></h5>
+                        </div>
+                        <div class="card card-body py-1 text-center my-3" id = "cardPrevisaoResultados">
+                            <p class="m-0">Previsão de Resultado</p>
+                            <h5 id="previsaoResultados"></h5>
+                        </div>
                     </div>
                 </div>
             </div>
