@@ -5,19 +5,19 @@
     <table id="itensOrcamento" class="table table-striped table-hover table-fixed bg-white">
         <thead>
             <tr role="form">
-                <th class="col-sm-2">Ações</th>
-                <th class="col-sm-2">Item</th>
-                <th class="col-sm-2">SubItem</th>
-                <th class="col-sm-2">Quant</th>
-                <th class="col-sm-2">Largura</th>
-                <th class="col-sm-2">Comprimento</th>
-                <th class="col-sm-2">Quant. Usada</th>
-                <th class="col-sm-2">Serviço/Produto</th>
-                <th class="col-sm-2">Material/Serviço</th>
-                <th class="col-sm-2">Material Complem.</th>
-                <th class="col-sm-2">Unidade</th>
-                <th class="col-sm-2">Custo</th>
-                <th class="col-sm-2">Preço</th>
+                <th>Ações</th>
+                <th>Item</th>
+                <th>SubItem</th>
+                <th>Quant</th>
+                <th>Largura</th>
+                <th>Comprimento</th>
+                <th>Quant. Usada</th>
+                <th>Serviço/Produto</th>
+                <th>Material/Serviço</th>
+                <th>Material Complem.</th>
+                <th>Unidade</th>
+                <th>Custo</th>
+                <th>Preço</th>
             </tr>
         </thead>
         <tbody>
