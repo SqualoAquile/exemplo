@@ -165,7 +165,6 @@ $(function () {
         $('[data-id=totalQ]').text(parseInt(totalQ));
         $('[data-id=totalAQ]').text(parseInt(totalAQ));
   
-        
     };
 
     $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
