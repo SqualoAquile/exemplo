@@ -44,7 +44,7 @@ $(function () {
                     var $materialDropdown = $material.siblings('.dropdown-menu').find('.dropdown-menu-wrapper'),
                         $materialComplementarDropdown = $materialComplementar.siblings('.dropdown-menu').find('.dropdown-menu-wrapper'),
                         $unidade = $('[name="unidade"]'),
-                        $custo = $('[name="custo_tot_ subitem"]'),
+                        $custo = $('[name="custo_tot_subitem"]'),
                         $preco = $('[name="preco_tot_subitem"]'),
                         htmlDropdown = '';
 
@@ -70,6 +70,10 @@ $(function () {
 
                     $materialComplementar
                         .removeClass('is-valid is-invalid')
+                        .removeAttr('data-tabela')
+                        .removeAttr('data-custo')
+                        .removeAttr('data-preco')
+                        .removeAttr('data-unidade')
                         .val('');
 
                     $unidade
@@ -176,7 +180,7 @@ $(function () {
                         .html(htmlDropdown.trim());
 
                     $('[name="pf_pj"]').change();
-                    $('[name="tipo_serviço_produto"]').change();
+                    $('[name="tipo_servico_produto"]').change();
 
                 }
             });
@@ -206,12 +210,28 @@ $(function () {
                 .find('[name=como_conheceu]')
                     .val($this.attr('data-comoconheceu'));
         })
+        .on('click', '[name="material_complementar"] ~ .relacional-dropdown .relacional-dropdown-element', function() {
+
+            var $this = $(this),
+                $materialComplementar = $('[name="material_complementar"]'),
+                data_tabela = $this.attr('data-tabela'),
+                data_unidade = $this.attr('data-unidade'),
+                data_preco = $this.attr('data-preco'),
+                data_custo = $this.attr('data-custo');
+
+                $materialComplementar
+                    .attr('data-tabela', data_tabela)
+                    .attr('data-unidade', data_unidade)
+                    .attr('data-preco', data_preco)
+                    .attr('data-custo', data_custo);
+                    
+        })
         .on('click', '[name="material_servico"] ~ .relacional-dropdown .relacional-dropdown-element', function() {
             
             var $this = $(this),
                 $material = $('[name="material_servico"]'),
                 $unidade = $('[name="unidade"]'),
-                $custo = $('[name="custo_tot_ subitem"]'),
+                $custo = $('[name="custo_tot_subitem"]'),
                 $preco = $('[name="preco_tot_subitem"]'),
                 data_tabela = $this.attr('data-tabela'),
                 data_unidade = $this.attr('data-unidade'),
@@ -219,9 +239,17 @@ $(function () {
                 data_custo = $this.attr('data-custo'),
                 unidade = data_tabela != 'servicos' ? data_unidade : 'M²';
 
-            $custo.val(data_custo);
-            $preco.val(data_preco);
-            $unidade.val(unidade);
+            $custo
+                .val(data_custo)
+                .blur();
+
+            $preco
+                .val(data_preco)
+                .blur();
+
+            $unidade
+                .val(unidade)
+                .blur();
 
             $material
                 .attr('data-tabela', data_tabela)

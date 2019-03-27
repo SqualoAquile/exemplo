@@ -2,22 +2,23 @@
 
 <h3 class="mt-5 mb-4">Itens do Orçamento</h3>
 <div class="table-responsive mb-lg-5 mb-3">
-    <table id="itensOrcamento" class="table table-striped table-hover table-fixed bg-white">
+    <table id="itensOrcamento" class="table table-striped table-hover bg-white">
         <thead>
-            <tr role="form">
-                <th>Ações</th>
-                <th>Item</th>
-                <th>SubItem</th>
-                <th>Quant</th>
-                <th>Largura</th>
-                <th>Comprimento</th>
-                <th>Quant. Usada</th>
-                <th>Serviço/Produto</th>
-                <th>Material/Serviço</th>
-                <th>Material Complem.</th>
-                <th>Unidade</th>
-                <th>Custo</th>
-                <th>Preço</th>
+            <tr>
+                <th class="text-truncate">Item</th>
+                <th class="text-truncate">SubItem</th>
+                <th class="text-truncate">Quant</th>
+                <th class="text-truncate">Largura</th>
+                <th class="text-truncate">Comprimento</th>
+                <th class="text-truncate">Quant. Usada</th>
+                <th class="text-truncate">Serviço/Produto</th>
+                <th class="text-truncate">Material/Serviço</th>
+                <th class="text-truncate">Material Complem.</th>
+                <th class="text-truncate">Unidade</th>
+                <th class="text-truncate">Custo</th>
+                <th class="text-truncate">Preço</th>
+                <th class="text-truncate">Observação</th>
+                <th class="text-truncate">Ações</th>
             </tr>
         </thead>
         <tbody>
