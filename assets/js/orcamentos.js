@@ -9,7 +9,7 @@ $(function () {
     $('#status').attr('disabled','disabled');
 
     $('#quant_usada').attr('disabled','disabled');
-    $('#material_complementar').attr('disabled','disabled');
+    // $('#material_complementar').attr('disabled','disabled');
     $('#unidade').attr('disabled','disabled');
     $('#custo_tot_subitem').attr('disabled','disabled');
 
@@ -62,6 +62,10 @@ $(function () {
 
                     $material
                         .removeClass('is-valid is-invalid')
+                        .removeAttr('data-tabela')
+                        .removeAttr('data-custo')
+                        .removeAttr('data-preco')
+                        .removeAttr('data-unidade')
                         .val('');
 
                     $materialComplementar
@@ -205,18 +209,25 @@ $(function () {
         .on('click', '[name="material_servico"] ~ .relacional-dropdown .relacional-dropdown-element', function() {
             
             var $this = $(this),
+                $material = $('[name="material_servico"]'),
                 $unidade = $('[name="unidade"]'),
                 $custo = $('[name="custo_tot_ subitem"]'),
-                $preco = $('[name="preco_tot_subitem"]');
+                $preco = $('[name="preco_tot_subitem"]'),
+                data_tabela = $this.attr('data-tabela'),
+                data_unidade = $this.attr('data-unidade'),
+                data_preco = $this.attr('data-preco'),
+                data_custo = $this.attr('data-custo'),
+                unidade = data_tabela != 'servicos' ? data_unidade : 'M²';
 
-            $custo.val($this.attr('data-custo'));
-            $preco.val($this.attr('data-preco'));
+            $custo.val(data_custo);
+            $preco.val(data_preco);
+            $unidade.val(unidade);
 
-            if ($this.attr('data-tabela') != 'servicos') {
-                $unidade.val($this.attr('data-unidade'));
-            } else {
-                $unidade.val('M²');
-            }
+            $material
+                .attr('data-tabela', data_tabela)
+                .attr('data-unidade', unidade)
+                .attr('data-preco', data_preco)
+                .attr('data-custo', data_custo);
 
         })
         .on('change', '[name="pf_pj"]', function() {
