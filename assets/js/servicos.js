@@ -118,7 +118,7 @@ $(function () {
                     objSend[$input.attr('name')] = value;
     
                     if (value != dtAnt) {
-                        campos_alterados += '{' + $label.text().toUpperCase() + ' de (' + $input.attr('data-anterior') + ') para (' + floatParaPadraoBrasileiro($input.val()) + ')}';
+                        campos_alterados += '{' + $label.text().toUpperCase() + ' de (' + $input.attr('data-anterior') + ') para (' + $input.val() + ')}';
                         console.log(campos_alterados);
                     }
 
