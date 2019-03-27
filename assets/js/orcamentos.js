@@ -15,9 +15,9 @@ $(function () {
 
     $('#titulo_orcamento').attr('placeholder','Nome - Trabalho...');
 
-    $('#data_emissao').val(dataAtual()).blur();
-    $('#data_validade').val(proximoDiaUtil($('#data_emissao').val(), 15)).blur();
-    $('#data_retorno').val(proximoDiaUtil(dataAtual(), 3)).blur();
+    // $('#data_emissao').val(dataAtual()).blur();
+    // $('#data_validade').val(proximoDiaUtil($('#data_emissao').val(), 15)).blur();
+    // $('#data_retorno').val(proximoDiaUtil(dataAtual(), 3)).blur();
 
     // coloca as opções de produtos/serviços 
     $('#tipo_servico_produto')
@@ -108,37 +108,37 @@ $(function () {
 
         });
 
-        $('#data_emissao').change(function(){
-            if($('#data_emissao').val() != ''){
-                $('#data_validade').val(proximoDiaUtil($('#data_emissao').val(), 15)).blur();
-                $('#data_retorno').val(proximoDiaUtil($('#data_emissao').val(), 3)).blur();
-            }
-        });
+        // $('#data_emissao').change(function(){
+        //     if($('#data_emissao').val() != ''){
+        //         $('#data_validade').val(proximoDiaUtil($('#data_emissao').val(), 15)).blur();
+        //         $('#data_retorno').val(proximoDiaUtil($('#data_emissao').val(), 3)).blur();
+        //     }
+        // });
 
-        $('#data_validade').on('change blur',function(){
-            if($('#data_validade').val() != '' ){
-                if($('#data_emissao').val() != ''){
-                    var dtEmis, dtValid;
-                    dtEmis = $('#data_emissao').val();
-                    dtEmis = dtEmis.split('/');
-                    dtEmis = parseInt(dtEmis[2]+dtEmis[1]+dtEmis[0]);
+        // $('#data_validade').on('change blur',function(){
+        //     if($('#data_validade').val() != '' ){
+        //         if($('#data_emissao').val() != ''){
+        //             var dtEmis, dtValid;
+        //             dtEmis = $('#data_emissao').val();
+        //             dtEmis = dtEmis.split('/');
+        //             dtEmis = parseInt(dtEmis[2]+dtEmis[1]+dtEmis[0]);
 
-                    dtValid = $('#data_validade').val();
-                    dtValid = dtValid.split('/');
-                    dtValid = parseInt(dtValid[2]+dtValid[1]+dtValid[0]);
+        //             dtValid = $('#data_validade').val();
+        //             dtValid = dtValid.split('/');
+        //             dtValid = parseInt(dtValid[2]+dtValid[1]+dtValid[0]);
 
-                    if( dtValid < dtEmis){
-                        alert('A data de validade não pode ser maior do que a data de emissão.');
-                        $('#data_validade').val('');
-                        $('#data_emissao').focus();
-                    }
-                }else{
-                    alert('Preencha a Data de Emissão.');
-                    $('#data_validade').val('');
-                    $('#data_emissao').focus();
-                }
-            }    
-        });
+        //             if( dtValid < dtEmis){
+        //                 alert('A data de validade não pode ser maior do que a data de emissão.');
+        //                 $('#data_validade').val('');
+        //                 $('#data_emissao').focus();
+        //             }
+        //         }else{
+        //             alert('Preencha a Data de Emissão.');
+        //             $('#data_validade').val('');
+        //             $('#data_emissao').focus();
+        //         }
+        //     }    
+        // });
     
 
 
