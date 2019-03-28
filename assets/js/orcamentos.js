@@ -20,21 +20,25 @@ $(function () {
     
     $('#unidade').attr('disabled','disabled');
     $.ajax({
-        url: baselink + '/ajax/buscaParametroTamanhoBocaRolo',
+        url: baselink + '/ajax/buscaParametrosMaterial',
         type: 'POST',
         data: {
             tabela: 'parametros',
-            parametro: 'tamanho_boca_rolo'
         },
         dataType: 'json',
         success: function (data) {
-            data = floatParaPadraoInternacional(data);
-            $('#unidade').attr('data-bocarolo',data);
+
+            var bocarolo, margem;
+            bocarolo = floatParaPadraoInternacional(data['tamanho_boca_rolo']);
+            margem = floatParaPadraoInternacional(data['margem_erro_material']);
+            $('#unidade').attr('data-bocarolo',bocarolo);
+            $('#unidade').attr('data-margemerro',margem);
+
         }
     });
 
-    $('#largura').attr('disabled','disabled');
-    $('#comprimento').attr('disabled','disabled');
+    // $('#largura').attr('disabled','disabled');
+    // $('#comprimento').attr('disabled','disabled');
     
     
     // coloca as opções de produtos/serviços 
@@ -202,7 +206,7 @@ $(function () {
                 $largura.attr('disabled','disabled');
                 $comprimento.attr('disabled','disabled');
             }
-
+            calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
         });
 
         $('#unidade').on('change', function(){
@@ -474,13 +478,17 @@ function calculaCustoPreco(qtd, unid, custo, preco) {
 }
 
 function calculaQuantidadeUsadaMaterial(unid, larg, comp, qtdUsada){ // recebe os objetos (campos)
+    console.log('calcula quant material disparou');
+    
     var $unidade = unid;
     var $largura = larg;
     var $comprimento = comp;
     var $qtdUsada = qtdUsada;
-    var bocaRolo = $unidade.attr('data-bocarolo');
+    var bocaRolo = parseFloat($unidade.attr('data-bocarolo'));
+    var margemErro = parseFloat($unidade.attr('data-margemerro'));
+    
+    console.log(parseFloat( parseFloat(1) + parseFloat(margemErro/100)));
 
-    console.log($unidade);
     if($unidade.val() != 'M²'){
         $largura.val('').attr('disabled','disabled');
         $comprimento.val('').attr('disabled','disabled');
@@ -492,11 +500,21 @@ function calculaQuantidadeUsadaMaterial(unid, larg, comp, qtdUsada){ // recebe o
         
         if($largura.val() != '' && $comprimento.val() != ''){
             
-            var tamMaior, larg, comp;
-            larg = floatParaPadraoInternacional($largura.val());
-            comp = floatParaPadraoInternacional($comprimento.val());
-            tamMaior = Math.max(larg, comp);
-            console.log(tamMaior);
+            var tamMaior, larg, comp, quantUs;
+            larg = parseFloat(floatParaPadraoInternacional($largura.val()));
+            console.log(larg);
+            larg = parseFloat(   parseFloat( parseFloat(1) + parseFloat(margemErro/100)) );
+            comp = parseFloat( parseFloat(floatParaPadraoInternacional($comprimento.val())) * parseFloat( parseFloat(1) + parseFloat(margemErro/100)) );
+            tamMaior = parseFloat(Math.max(larg, comp));
+            console.log(larg)
+            console.log(comp)
+            console.log(tamMaior)
+
+            quantUs = Math.ceil((tamMaior / bocaRolo),0);
+
+            console.log(quantUs);
+            
+
         
         }else{
             $qtdUsada.val('');
