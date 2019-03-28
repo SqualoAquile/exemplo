@@ -112,17 +112,13 @@ $(function () {
     
                     var $input = $(this),
                         $label = $input.siblings('label').find('span'),
-                        value = floatParaPadraoInternacional($input.val()),
-                        dtAnt = parseFloat($input.attr('data-anterior'));
+                        valInternacional = floatParaPadraoInternacional($input.val());
     
-                    objSend[$input.attr('name')] = value;
+                    objSend[$input.attr('name')] = valInternacional;
     
-                    if (value != dtAnt) {
-                        campos_alterados += '{' + $label.text().toUpperCase() + ' de (' + $input.attr('data-anterior') + ') para (' + $input.val() + ')}';
-                        console.log(campos_alterados);
+                    if ($input.val() != $input.attr('data-anterior')) {
+                        campos_alterados += '{' + $label.text().toUpperCase() + ' de (' + $input.attr('data-anterior') + ') para (' + floatParaPadraoBrasileiro(valInternacional) + ')}';
                     }
-
-                    $input.attr('data-anterior', $input.val());
 
                 });
 
@@ -178,7 +174,7 @@ $(function () {
             var $this = $(this),
                 $submit = $this.parents('form').find('[type=submit]');
     
-            if (floatParaPadraoInternacional($this.val()) != parseFloat($this.attr('data-anterior'))) {
+            if ($this.val() != $this.attr('data-anterior')) {
                 $submit.removeAttr('disabled');
             } else {
                 $submit.attr('disabled', 'disabled');

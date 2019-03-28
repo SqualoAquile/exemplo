@@ -57,12 +57,12 @@
                                     <button type="submit" class="btn btn-primary btn-block">Salvar</button>
                                 </div>
                             <?php endif ?>
+                            <?php
+                                $item = $value;
+                                $iteracao = $key;
+                            ?>
                             <?php if (isset($value["alteracoes"]) && strlen($value["alteracoes"])): ?>
                                 <div class="col-lg flex-lg-grow-0">
-                                    <?php
-                                        $item = $value;
-                                        $iteracao = $key;
-                                    ?>
                                     <label>&nbsp;</label>
                                     <button class="btn btn-dark btn-block" title="Histórico" type="button" data-toggle="collapse" data-target="#historico<?php echo $iteracao ?>" aria-expanded="false" aria-controls="historico<?php echo $iteracao ?>">
                                         <i class="fas fa-code-branch"></i>
