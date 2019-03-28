@@ -63,13 +63,18 @@
     </div>
         <div class="card mt-4">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="m-0">Filtros</h5>
+                <h5 class="m-0 h5" id="tituloHeader">
+                    <span>
+                        <i class="fas fa-plus-square" id="botaoCardFiltros" data-toggle="collapse" data-target="#collapseFiltros"></i>
+                    </span>
+                Ações</h5>
                 <div>
-                    <button id="limpar-filtro" type = "button" class="btn cursor-pointer btn-outline-secondary btn-sm">Limpar Filtros</button>
-                    <button id="criar-filtro" type="button" class="btn cursor-pointer btn-outline-success btn-sm">Mais Filtros</button>
-                    <button id="graficos"  type="button" class="btn btn-warning  cursor-pointer btn-sm" data-toggle="collapse" data-target="#collapseGraficos2">Gráficos</button>
+
+                    <button id="limpar-filtro" type = "button" class="btn cursor-pointer btn-outline-warning btn-sm">Limpar Filtros</button>
+                    <button id="criar-filtro" type="button" class="btn cursor-pointer btn-outline-secondary btn-sm">Mais Filtros</button>
+                    <button id="graficos"  type="button" class="btn btn-outline-warning cursor-pointer btn-sm" data-toggle="collapse" data-target="#collapseGraficos2">Gráficos</button>
                            
-                    <button class="btn btn-primary btn-sm" id="botaoRelatorio" data-toggle="collapse" data-target="#collapseFluxocaixaResumo" aria-expanded="false" aria-controls="collapseFluxocaixaResumo">Gerar Relatório </button>
+                    <button class="btn btn-outline-success btn-sm" id="botaoRelatorio" data-toggle="collapse" data-target="#collapseFluxocaixaResumo" aria-expanded="false" aria-controls="collapseFluxocaixaResumo">Gerar Relatório </button>
                 </div>
             </div>
 

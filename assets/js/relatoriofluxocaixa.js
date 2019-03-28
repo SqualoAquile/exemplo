@@ -167,16 +167,29 @@ $(function () {
   
     };
 
+    $('#DataTables_Table_0_length').addClass('d-none');
+    $('#DataTables_Table_0_wrapper').addClass('d-none');
+
     $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
         resumo();
+        $('#DataTables_Table_0_wrapper').removeClass('d-none')
       });
 
     $('#botaoRelatorio, #limpar-filtro').on('click', function () {
         $('#collapseFluxocaixaResumo').collapse('hide');
+        $('#DataTables_Table_0_wrapper').addClass('d-none');
+        
+    });
+
+    $('#botaoRelatorio').on('click', function () {
+        $('#collapseFiltros').collapse('hide');
     });
 
     $('#card-body-filtros').on('change', function () {
         $('#collapseFluxocaixaResumo').collapse('hide');
+        $('#DataTables_Table_0_wrapper').addClass('d-none');
     });
+
+
       
 });

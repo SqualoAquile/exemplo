@@ -23,7 +23,7 @@ $(function () {
             if (mask == 'data') {
     
                 $(el)
-                    .mask('00/00/0000', {maxlength: false})
+                    .mask('00/00/0000', {max: false})
                     .datepicker();
 
             } else if (mask == 'monetario') {
@@ -88,7 +88,7 @@ $(function () {
             removeMask($inputs);
 
         })
-        .on('change blur', '.filtros-faixa .input-filtro-faixa', function () {
+        .on('keyup', '.filtros-faixa .input-filtro-faixa', function () {
 
             // Filtros Faixa
 
@@ -164,7 +164,7 @@ $(function () {
                 }
             });
         })
-        .on('change blur', '.filtros-texto .input-filtro-texto', function () {
+        .on('keyup', '.filtros-texto .input-filtro-texto', function () {
 
             // Filtros Texto
 
@@ -272,4 +272,14 @@ $(function () {
                 $criar.show();
             }
         });
+
+        $(function(){
+            $('#collapseFiltros').on('hiden.bs.collapse', function () {
+                $('#botaoCardFiltros').html('<span><i class="fas fa-plus-square" id="botaoCardFiltros" data-toggle="collapse" data-target="#collapseFiltros"></i></span>');
+            })
+            $('#collapseFiltros').on('shown.bs.collapse', function () {
+                $('#botaoCardFiltros').html('<span><i class="fas fa-minus-square" id="botaoCardFiltros" data-toggle="collapse" data-target="#collapseFiltros"></i></span>');
+            })
+          })
+          
 });

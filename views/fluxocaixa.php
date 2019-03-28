@@ -35,31 +35,33 @@ require "_header_browser_filtros.php";
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-lg offset-lg-1 col-data-quitacao">
-                        <div class="row align-items-center">
-                            <div class="col-lg flex-grow-0">
-                                <label for="data_quitacao" class="text-truncate m-0 font-weight-bold">
-                                    <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Campo Obrigatório">*</i>
-                                    <span>Data de Quitação</span>
-                                </label>
-                            </div>
-                            <div class="col">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="basic-addon-calendar">
-                                            <i class="fas fa-calendar-alt"></i>
-                                        </span>
+                <?php if( in_array( $this->table.'_edt' , $_SESSION["permissoesUsuario"]) ): ?>
+                    <div class="row">
+                        <div class="col-lg offset-lg-1 col-data-quitacao">
+                            <div class="row align-items-center">
+                                <div class="col-lg flex-grow-0">
+                                    <label for="data_quitacao" class="text-truncate m-0 font-weight-bold">
+                                        <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Campo Obrigatório">*</i>
+                                        <span>Data de Quitação</span>
+                                    </label>
+                                </div>
+                                <div class="col">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon-calendar">
+                                                <i class="fas fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" id="data_quitacao" class="form-control" data-provide="datepicker" aria-label="Data de Quitação" aria-describedby="basic-addon-calendar" name="data_quitacao" required>
                                     </div>
-                                    <input type="text" id="data_quitacao" class="form-control" data-provide="datepicker" aria-label="Data de Quitação" aria-describedby="basic-addon-calendar" name="data_quitacao" required>
                                 </div>
                             </div>
                         </div>
+                        <div class="col-lg col-btn-quitar">
+                            <button class="btn btn-primary btn-block" id="quitar">Quitar <span class="lengthQuitar"></span> Lançamentos</button>
+                        </div>
                     </div>
-                    <div class="col-lg col-btn-quitar">
-                        <button class="btn btn-primary btn-block" id="quitar">Quitar <span class="lengthQuitar"></span> Lançamentos</button>
-                    </div>
-                </div>
+                <?php endif ?>
             </div>
         </div>
     </div>
