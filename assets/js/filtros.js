@@ -272,13 +272,13 @@ $(function () {
             }
         });
 
-        $(function(){
-            $('#collapseFiltros').on('hiden.bs.collapse', function () {
-                $('#botaoCardFiltros').html('<span><i class="fas fa-plus-square" id="botaoCardFiltros" data-toggle="collapse" data-target="#collapseFiltros"></i></span>');
+        $('#collapseFiltros')
+            .on('hide.bs.collapse', function () {
+                $('#tituloHeader .fas').removeClass('fa-minus-square').addClass('fa-plus-square');
             })
-            $('#collapseFiltros').on('shown.bs.collapse', function () {
-                $('#botaoCardFiltros').html('<span><i class="fas fa-minus-square" id="botaoCardFiltros" data-toggle="collapse" data-target="#collapseFiltros"></i></span>');
-            })
-          })
+            .on('show.bs.collapse', function () {
+                $('#tituloHeader .fas').removeClass('fa-plus-square').addClass('fa-minus-square');
+            });
+
           
 });

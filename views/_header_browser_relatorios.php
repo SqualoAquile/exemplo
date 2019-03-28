@@ -23,43 +23,6 @@
                 <h1 class="display-4 text-capitalize font-weight-bold"><?php echo isset($labelTabela["labelBrowser"]) && !empty($labelTabela["labelBrowser"]) ? $labelTabela["labelBrowser"] : $modulo ?></h1>
             <?php endif ?>
         </div>
-        <!-- <div class="col-lg"> 
-            <div class="input-group mb-3 mb-lg-0">
-
-                <input type="text" name="searchDataTable" id="searchDataTable" aria-label="Pesquise por qualquer campo..." class="form-control" placeholder="Pesquise por qualquer campo..." aria-describedby="search-addon">
-                <div class="input-group-append">
-                    <span class="input-group-text" id="search-addon">
-                        <i class="fas fa-search"></i>
-                    </span>
-                </div>
-            </div>
-        </div> -->
-
-        <!-- <div class="col-lg flex-lg-grow-0">
-            <div class="btn-group-toggle" data-toggle="buttons">
-                <label class="btn btn-info btn-block cursor-pointer" data-toggle="collapse" data-target="#collapseFiltros" aria-expanded="false" aria-controls="collapseFiltros">
-                    <input type="checkbox" checked autocomplete="off">
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-filter mr-2"></i>
-                        <span>Filtros</span>
-                    </div>
-                </label>
-            </div>
-        </div> -->
-
-        <!-- <div class="col-lg flex-lg-grow-0">
-            <div class="btn-group-toggle" data-toggle="buttons">
-                <label class="btn btn-warning btn-block cursor-pointer" data-toggle="collapse" data-target="#collapseGraficos" aria-expanded="false" aria-controls="collapseGraficos">
-                    <input type="checkbox" checked autocomplete="off">
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-chart-pie mr-2"></i>
-                        <span>Gráficos</span>
-                    </div>
-                </label>
-            </div>
-        </div> -->
-
-
     </div>
         <div class="card mt-4">
             <div class="card-header d-flex justify-content-between align-items-center">
@@ -67,6 +30,8 @@
                     <span>
                         <i class="fas fa-plus-square" id="botaoCardFiltros" data-toggle="collapse" data-target="#collapseFiltros"></i>
                     </span>
+
+                    
                 Ações</h5>
                 <div>
 
@@ -146,5 +111,4 @@
                 </form>
             </div>  
     </div>
-
 </header>

@@ -175,14 +175,25 @@ $(function () {
         $('#DataTables_Table_0_wrapper').removeClass('d-none')
       });
 
-    $('#botaoRelatorio, #limpar-filtro').on('click', function () {
+    $('#botaoRelatorio').on('click', function () {
+        $('#collapseFiltros').removeClass('hide').addClass('show');
+        $('#collapseGraficos2').collapse('hide');
         $('#collapseFluxocaixaResumo').collapse('hide');
         $('#DataTables_Table_0_wrapper').addClass('d-none');
         
     });
 
-    $('#botaoRelatorio').on('click', function () {
+    $('#limpar-filtro').on('click', function () {
+        $('#collapseGraficos2').collapse('hide');
+        $('#collapseFluxocaixaResumo').collapse('hide');
+        $('#DataTables_Table_0_wrapper').addClass('d-none');
+        
+    });
+
+    $('#graficos').on('click', function () {
         $('#collapseFiltros').collapse('hide');
+        $('#collapseFluxocaixaResumo').collapse('hide');
+        $('#DataTables_Table_0_wrapper').addClass('d-none');
     });
 
     $('#card-body-filtros').on('change', function () {
