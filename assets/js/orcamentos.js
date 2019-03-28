@@ -9,9 +9,10 @@ $(function () {
     $('#status').attr('disabled','disabled');
     $('#titulo_orcamento').attr('placeholder','Nome - Trabalho...');
 
-    $('#data_emissao').val(dataAtual());
-    $('#data_validade').val(proximoDiaUtil($('#data_emissao').val(), 15));
-    $('#data_retorno').val(proximoDiaUtil(dataAtual(), 3));
+    $('#data_emissao').val(dataAtual()).datepicker('update');
+
+    $('#data_validade').val(proximoDiaUtil($('#data_emissao').val(), 15)).datepicker('update');
+    $('#data_retorno').val(proximoDiaUtil(dataAtual(), 3)).datepicker('update');
 
     // inicializa os inputs da pagina - parte de itens do orçamento
     $('#quant_usada').attr('disabled','disabled');
@@ -134,8 +135,8 @@ $(function () {
 
         $('#data_emissao').on('change blur',function(){
             if($('#data_emissao').val() != ''){
-                $('#data_validade').val(proximoDiaUtil($('#data_emissao').val(), 15)).blur();
-                $('#data_retorno').val(proximoDiaUtil($('#data_emissao').val(), 3)).blur();
+                $('#data_validade').val(proximoDiaUtil($('#data_emissao').val(), 15)).datepicker('update').blur();
+                $('#data_retorno').val(proximoDiaUtil($('#data_emissao').val(), 3)).datepicker('update').blur();
             }
         });
 
