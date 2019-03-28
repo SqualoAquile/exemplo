@@ -52,7 +52,10 @@ const parametrosSemAcoes = [
     'BanriCompras',
     'Hiper',
     'Visa Electron',
-    'Hipercard'
+    'Hipercard',
+    'M²',
+    'm²',
+    'ml'
 ];
 
 var data_add = $('#data_usuario').attr('data-add')
@@ -467,7 +470,7 @@ $(document)
                 campos_alterados += '{' + $label.text().toUpperCase() + ' de (' + $input.attr('data-anterior') + ') para (' + $input.val() + ')}';
                 campos_alterados = $input.attr('data-alteracoes') + '##' + campos_alterados;
             }
-            
+
             if ($input.attr('data-mascara_validacao') == 'monetario') {
                 value = floatParaPadraoInternacional(value);
                 value = floatParaPadraoBrasileiro(value);
