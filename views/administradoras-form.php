@@ -152,9 +152,9 @@
                             <button type="submit" class="btn btn-block btn-primary">Incluir</button>
                         </div>
                         <div id="cancelar-wrapper" class="col-lg flex-lg-grow-0 d-none">
-                            <button class="btn btn-block btn-light" data-toggle="tooltip" data-placement="top" title="Cancelar">
+                            <div class="btn btn-block btn-light cursor-pointer" data-toggle="tooltip" data-placement="top" title="Cancelar">
                                 <i class="fas fa-times"></i>
-                            </button>
+                            </div>
                         </div>
                     </div>
                 </div>

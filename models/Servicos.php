@@ -17,6 +17,8 @@ class Servicos extends model {
         $result = $sql->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($result as $key => $value) {
+            $result[$key]["preco_venda"] = number_format(floatval(addslashes($result[$key]["preco_venda"])),2,',','.');
+            $result[$key]["custo"] = number_format(floatval(addslashes($result[$key]["custo"])),2,',','.');
             $result[$key]["comentarios"] = json_decode($value["comentarios"], true);
         }
 

@@ -3,7 +3,7 @@ $(function () {
     var $formContatos = $('#itensOrcamento thead tr[role=form]'),
         lastInsertId = 0,
         botoes = `
-            <td class="col-lg-2">
+            <td class="text-truncate">
                 <a href="javascript:void(0)" class="editar-contato btn btn-sm btn-primary">
                     <i class="fas fa-edit"></i>
                 </a>
@@ -69,14 +69,14 @@ $(function () {
 
     // Escreve o html na tabela
     function Popula(values) {
-        console.log(values);
+
         if (!values) return;
 
         var currentId = $formContatos.attr('data-current-id'),
             tds = '';
 
         // Coloca a tag html TD em volta de cada valor vindo do form de contatos
-        values.forEach(value => tds += `<td class="col-lg-2 text-truncate">` + value + `</td>`);
+        values.forEach(value => tds += `<td class="text-truncate">` + value + `</td>`);
 
         if (!currentId) {
             // Se for undefined então o contato está sendo criado
@@ -85,7 +85,7 @@ $(function () {
             lastInsertId += 1;
 
             $('#itensOrcamento tbody')
-                .prepend('<tr class="d-flex flex-column flex-lg-row" data-id="' + lastInsertId + '">' + tds + botoes + '</tr>');
+                .prepend('<tr data-id="' + lastInsertId + '">' + tds + botoes + '</tr>');
 
         } else {
             // Caso tenha algum valor é por que o contato está sendo editado
@@ -188,31 +188,21 @@ $(function () {
 
     // Ao dar submit neste form, chama essa funcão que pega os dados do formula e Popula a tabela
     function Save() {
-        var botoes = `
-                <td class="col-lg-2">
-                    <a href="javascript:void(0)" class="editar-contato btn btn-sm btn-primary">
-                        <i class="fas fa-edit"></i>
-                    </a>
-                    <a href="javascript:void(0)" class="excluir-contato btn btn-sm btn-danger">
-                        <i class="fas fa-trash-alt"></i>
-                    </a>
-                </td>
-            `;
 
         Popula([
-            $('input[name=descricao_item]').val(),
-            $('input[name=descricao_subitem]').val(),
-            $('input[name=quant]').val(),
-            $('input[name=largura]').val(),
-            $('input[name=comprimento]').val(),
-            $('input[name=quant_usada]').val(),
-            $('input[name=tipo_servico_produto]').val(),
-            $('input[name=material_produto]').val(),
-            $('input[name=material_complementar]').val(),
-            $('input[name=unidade]').val(),
-            $('input[name=custo_tot_subitem]').val(),
-            $('input[name=preco_tot_subitem]').val(),
-            $('input[name=observacao_subitem]').val(),
+            $('[name=descricao_item]').val(),
+            $('[name=descricao_subitem]').val(),
+            $('[name=quant]').val(),
+            $('[name=largura]').val(),
+            $('[name=comprimento]').val(),
+            $('[name=quant_usada]').val(),
+            $('[name=tipo_servico_produto]').val(),
+            $('[name=material_servico]').val(),
+            $('[name=material_complementar]').val(),
+            $('[name=unidade]').val(),
+            $('[name=custo_tot_subitem]').val(),
+            $('[name=preco_tot_subitem]').val(),
+            $('[name=observacao_subitem]').val(),
         ]);
 
         SetInput();

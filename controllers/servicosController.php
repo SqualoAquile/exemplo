@@ -50,13 +50,5 @@ class servicosController extends controller{
 
         $this->loadTemplate($this->table, $dados);      
     }
-
-    public function editar($id) {
-        if (isset($_POST) && !empty($_POST)) {
-            if (isset($id) && !empty($id)) {
-                echo json_encode($this->model->editar($_POST, $id));
-            }
-        }
-    }
 }   
 ?>
