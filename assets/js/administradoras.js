@@ -50,6 +50,8 @@ $(function () {
             $('#table-inclusoes button.disabled')
                 .removeClass('disabled')
                 .removeAttr('disabled');
+
+            $('#cancelar-wrapper').addClass('d-none');
         })
         .on('change', '.form-control', function () {
         
@@ -273,6 +275,8 @@ $(function () {
 
         $('.conteudos-escondidos.sendo-editado').removeClass('sendo-editado');
 
+        $('#cancelar-wrapper').addClass('d-none');
+
         Popula(
             true,
             id_bandeira,
@@ -363,9 +367,12 @@ $(function () {
 
         SetInput(adicionando, paramIdBandeira, bandeira, infos, txantecipacaojoin, txcreditojoin, bandeiraAceitaId);
 
-        $('#form-bandeiras').trigger('reset').find('.form-control').removeClass('is-valid is-invalid');
+        $('#form-bandeiras')
+            .trigger('reset')
+            .find('.form-control')
+            .removeClass('is-valid is-invalid');
+
         $('[name="nroparc"]').change();
-        $('#cancelar-wrapper').addClass('d-none');
 
         if (!indexEditando) {
             $('#table-inclusoes tbody')
