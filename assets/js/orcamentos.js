@@ -274,6 +274,40 @@ $(function () {
                     .removeClass('is-valid is-invalid')
                     .val('');
 
+                if ($(this).attr('id') == 'pj') {
+
+                    $('[name=telefone]')
+                        .attr('required', 'required')
+                        .siblings('label')
+                        .addClass('font-weight-bold')
+                        .find('> i')
+                        .removeClass('d-none');
+
+                    $('[name=celular]')
+                        .removeAttr('required', 'required')
+                        .siblings('label')
+                        .removeClass('font-weight-bold')
+                        .find('> i')
+                        .addClass('d-none');
+
+                } else {
+
+                    $('[name=celular]')
+                        .attr('required', 'required')
+                        .siblings('label')
+                        .addClass('font-weight-bold')
+                        .find('> i')
+                        .removeClass('d-none');
+
+                    $('[name=telefone]')
+                        .removeAttr('required', 'required')
+                        .siblings('label')
+                        .removeClass('font-weight-bold')
+                        .find('> i')
+                        .addClass('d-none');
+
+                }
+
             }
         });
 
