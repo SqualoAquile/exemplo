@@ -1,9 +1,13 @@
 <?php
 class ajaxController extends controller{
 
+  private $parametros;
+
   public function __construct() {
 
     $user = new Usuarios();
+
+    $this->parametros = new Parametros;
 
     //verifica se está logado
     if($user->isLogged() == false){
@@ -365,6 +369,45 @@ class ajaxController extends controller{
     if (isset($_POST) && !empty($_POST)) {
       $orcamento = new Orcamentos;
       echo json_encode($orcamento->getRelacionalDropdown($_POST));
+    }
+  }
+
+  //
+  // PARAMETROS
+  //
+  public function listarParametros() {
+    if (isset($_POST) && !empty($_POST)) {
+      echo json_encode($this->parametros->listar($_POST));
+    }
+  }
+
+  public function adicionarParametros() {
+    if (isset($_POST) && !empty($_POST)) {
+      echo json_encode($this->parametros->adicionar($_POST));
+    }
+  }
+
+  public function excluirParametros($id) {
+    if (isset($_POST) && !empty($_POST)) {
+      if (isset($id) && !empty($id)) {
+        echo json_encode($this->parametros->excluir($_POST, $id));
+      }
+    }
+  }
+
+  public function editarParametros($id) {
+    if (isset($_POST) && !empty($_POST)) {
+      if (isset($id) && !empty($id)) {
+        echo json_encode($this->parametros->editar($_POST, $id));
+      }
+    }
+  }
+
+  public function editarParametrosFixos($id) {
+    if (isset($_POST) && !empty($_POST)) {
+      if (isset($id) && !empty($id)) {
+        echo json_encode($this->parametros->editarFixos($_POST, $id));
+      }
     }
   }
 }   

@@ -1,3 +1,42 @@
+function floatParaPadraoBrasileiro(valor) {
+    var valortotal = valor;
+    valortotal = number_format(valortotal, 2, ',', '.');
+    return valortotal;
+}
+
+function floatParaPadraoInternacional(valor) {
+
+    var valortotal = valor;
+    valortotal = valortotal.replace(".", "").replace(".", "").replace(".", "").replace(".", "");
+    valortotal = valortotal.replace(",", ".");
+    valortotal = parseFloat(valortotal).toFixed(2);
+    return valortotal;
+}
+
+function number_format(numero, decimal, decimal_separador, milhar_separador) {
+    numero = (numero + '').replace(/[^0-9+\-Ee.]/g, '');
+    var n = !isFinite(+numero) ? 0 : +numero,
+        prec = !isFinite(+decimal) ? 0 : Math.abs(decimal),
+        sep = (typeof milhar_separador === 'undefined') ? ',' : milhar_separador,
+        dec = (typeof decimal_separador === 'undefined') ? '.' : decimal_separador,
+        s = '',
+        toFixedFix = function (n, prec) {
+            var k = Math.pow(10, prec);
+            return '' + Math.round(n * k) / k;
+        };
+
+    // Fix para IE: parseFloat(0.55).toFixed(0) = 0;
+    s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+    if (s[0].length > 3) {
+        s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+    }
+    if ((s[1] || '').length < prec) {
+        s[1] = s[1] || '';
+        s[1] += new Array(prec - s[1].length + 1).join('0');
+    }
+    return s.join(dec);
+}
+
 const parametrosSemAcoes = [
     'dinheiro',
     'cartão débito',
@@ -17,12 +56,12 @@ const parametrosSemAcoes = [
 ];
 
 var data_add = $('#data_usuario').attr('data-add')
-    data_edt = $('#data_usuario').attr('data-edt'),
+data_edt = $('#data_usuario').attr('data-edt'),
     data_exc = $('#data_usuario').attr('data-exc');
 
-function Ajax (url, callback, send = {}) {
+function Ajax(url, callback, send = {}) {
     $.ajax({
-        url: baselink + '/parametros/' + url,
+        url: baselink + '/ajax/' + url,
         type: 'POST',
         data: send,
         dataType: 'json',
@@ -30,8 +69,8 @@ function Ajax (url, callback, send = {}) {
     });
 };
 
-function Popula ($wrapper, data, campo) {
-    
+function Popula($wrapper, data, campo) {
+
     var htmlContentSearch = '';
 
     data.forEach(element => {
@@ -39,12 +78,12 @@ function Popula ($wrapper, data, campo) {
         var htmlAcoes = '';
 
         if (parametrosSemAcoes.indexOf(element[campo]) == -1) {
-           
+
             htmlAcoes = `
                 <div>
                 `;
-        
-            if(data_edt == true){
+
+            if (data_edt == true) {
                 htmlAcoes += `
                     <button class="editar btn btn-sm btn-primary" tabindex="-1">
                         <i class="fas fa-edit"></i>
@@ -52,7 +91,7 @@ function Popula ($wrapper, data, campo) {
                     `;
             }
 
-            if(data_exc == true){
+            if (data_exc == true) {
                 htmlAcoes += `
                     <button class="excluir btn btn-sm btn-danger" tabindex="-1">
                         <i class="fas fa-trash-alt"></i>
@@ -64,13 +103,13 @@ function Popula ($wrapper, data, campo) {
                 </div>
             `;
         }
-        
+
         htmlContentSearch += `
             <div id="` + element.id + `" class="list-group-item">
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="text">` + element[campo] + `</span>`
-                    + htmlAcoes +
-                `</div>
+            + htmlAcoes +
+            `</div>
             </div>
         `;
     });
@@ -117,7 +156,7 @@ $(document)
         }
     })
     .on('click touchstart', function (event) {
-        
+
         var $currentElement = $(event.target);
 
         if (!$currentElement.parents('.search-body').length) {
@@ -131,7 +170,7 @@ $(document)
             $searchBodyActive
                 .removeClass('active')
                 .find('.list-group-filtereds-wrapper')
-                    .hide();
+                .hide();
 
         } else {
 
@@ -145,26 +184,26 @@ $(document)
         }
     })
     .on('DOMNodeInserted', '.list-group-item', function (event) {
-        
+
         var $created = $(event.target),
             $inputSearch = $created.parents('.list-group-filtereds-wrapper').siblings('.search-input');
 
         if ($created.attr('id') == $inputSearch.attr('data-id')) {
-    
-            $created
-                .find('.excluir')
-                    .hide();
-    
-            $created
-                .find('.editar')
-                    .removeClass('editar btn-primary')
-                    .addClass('salvar btn-success')
-                .find('.fas')
-                    .removeClass('fa-edit')
-                    .addClass('fa-save');
 
             $created
-                
+                .find('.excluir')
+                .hide();
+
+            $created
+                .find('.editar')
+                .removeClass('editar btn-primary')
+                .addClass('salvar btn-success')
+                .find('.fas')
+                .removeClass('fa-edit')
+                .addClass('fa-save');
+
+            $created
+
         }
     })
     .on('focus', '.search-input', function () {
@@ -185,19 +224,19 @@ $(document)
 
         if (($this.val() && $this.attr('data-id')) || (!$this.val() && !$this.attr('data-id'))) {
 
-            Ajax('listar', function(data) {
-                
+            Ajax('listarParametros', function (data) {
+
                 Popula($contentSearchThis, data, campo);
 
                 if ($this.attr('data-id')) {
                     $this.trigger('input');
                 }
-    
+
             }, {
-                value: value,
-                tabela: $searchBody.attr('id'),
-                campo: campo
-            });
+                    value: value,
+                    tabela: $searchBody.attr('id'),
+                    campo: campo
+                });
         }
 
     })
@@ -208,20 +247,20 @@ $(document)
             id = $this.attr('data-id'),
             $searchBody = $this.parents('.search-body'),
             campo = $searchBody.attr('data-campo');
-            tabela = $searchBody.attr('id'),
+        tabela = $searchBody.attr('id'),
             $elAdd = $contentSearchThis.siblings('.elements-add'),
             $saveParametros = $searchBody.find('.salvar');
 
         if (id == undefined) {
             // Pesquisando
 
-            Ajax('listar', function(data) {
+            Ajax('listarParametros', function (data) {
 
                 Popula($contentSearchThis, data, campo);
 
                 var htmlElAdd = '';
-                    
-                if (!data.length && data_add == true ) {
+
+                if (!data.length && data_add == true) {
                     htmlElAdd += `
                         <div class="p-3">
                             <span>Nenhum resultado encontrado</span>
@@ -233,10 +272,10 @@ $(document)
                 $elAdd.html(htmlElAdd);
 
             }, {
-                value: $this.val(),
-                tabela: tabela,
-                campo: campo
-            });
+                    value: $this.val(),
+                    tabela: tabela,
+                    campo: campo
+                });
 
         } else {
             // Editando
@@ -247,7 +286,7 @@ $(document)
 
             if ($this.val()) {
                 if ($this.val() != $this.attr('data-anterior')) {
-                    
+
                     $this[0].setCustomValidity('');
                     $this.addClass('is-valid');
 
@@ -267,10 +306,10 @@ $(document)
             }
 
             $('.list-group-filtereds #' + id + ' .text').text($this.val());
-            
+
         }
     })
-    .on('keydown', '.search-input', function(event) {
+    .on('keydown', '.search-input', function (event) {
 
         var $this = $(this),
             $searchBody = $this.parents('.search-body'),
@@ -291,21 +330,21 @@ $(document)
 
             $searchBody
                 .find('.elements-add')
-                    .html('');
+                .html('');
 
             $searchBody.find('.icons-search-input .close-btn').click();
 
         }
     })
-    .on('click', '.excluir', function() {
-        
+    .on('click', '.excluir', function () {
+
         var $this = $(this),
             $parent = $this.closest('.list-group-item'),
             $input = $this.parents('.search-body').find('.search-input')
-            tabela = $parent.parents('.search-body').attr('id');
+        tabela = $parent.parents('.search-body').attr('id');
 
         if (confirm('Tem Certeza?')) {
-            Ajax('excluir/' + $parent.attr('id'), function(data) {
+            Ajax('excluirParametros/' + $parent.attr('id'), function (data) {
                 if (data[0] == '00000') {
 
                     Toast({
@@ -318,12 +357,12 @@ $(document)
                     $input.focus();
                 }
             }, {
-                tabela: tabela
-            });
+                    tabela: tabela
+                });
         }
     })
-    .on('click', '.salvar', function() {
-        
+    .on('click', '.salvar', function () {
+
         var $this = $(this),
             $searchBody = $this.parents('.search-body'),
             $inputSearch = $searchBody.find('.search-input'),
@@ -332,8 +371,8 @@ $(document)
 
         if ($inputSearch.attr('data-id') != $inputSearch.val() && $inputSearch.val()) {
             if ($inputSearch.attr('data-id') == undefined) {
-    
-                Ajax('adicionar', function(data) {
+
+                Ajax('adicionarParametros', function (data) {
                     if (data[0] == '00000') {
 
                         Toast({
@@ -349,14 +388,14 @@ $(document)
 
                     }
                 }, {
-                    value: $inputSearch.val(),
-                    campo: campo,
-                    tabela: tabela
-                });
-    
+                        value: $inputSearch.val(),
+                        campo: campo,
+                        tabela: tabela
+                    });
+
             } else {
-    
-                Ajax('editar/' + $inputSearch.attr('data-id'), function(data) {
+
+                Ajax('editarParametros/' + $inputSearch.attr('data-id'), function (data) {
                     if (data[0] == '00000') {
 
                         Toast({
@@ -372,27 +411,27 @@ $(document)
                             .trigger('input');
                     }
                 }, {
-                    value: $inputSearch.val(),
-                    tabela: tabela,
-                    campo: campo
-                });
-    
+                        value: $inputSearch.val(),
+                        tabela: tabela,
+                        campo: campo
+                    });
+
             }
         } else {
 
             $inputSearch[0].setCustomValidity('invalid');
-            
+
             $inputSearch
                 .focus()
                 .addClass('is-invalid');
         }
 
     })
-    .on('click', '.editar', function() {
+    .on('click', '.editar', function () {
 
         var $parent = $(this).closest('.list-group-item'),
             $inputSearch = $parent.parents('.list-group-filtereds-wrapper').siblings('.search-input');
-        
+
         $inputSearch
             .val($parent.find('.text').text())
             .attr('data-id', $parent.attr('id'))
@@ -408,7 +447,7 @@ $(document)
 
         var $this = $(this),
             $input = $this.find('.input-fixos');
-            value = $input.val(),
+        value = $input.val(),
             campos_alterados = '',
             id = $input.attr('data-id'),
             $label = $this.find('label span');
@@ -428,12 +467,17 @@ $(document)
                 campos_alterados += '{' + $label.text().toUpperCase() + ' de (' + $input.attr('data-anterior') + ') para (' + $input.val() + ')}';
                 campos_alterados = $input.attr('data-alteracoes') + '##' + campos_alterados;
             }
-    
+            
+            if ($input.attr('data-mascara_validacao') == 'monetario') {
+                value = floatParaPadraoInternacional(value);
+                value = floatParaPadraoBrasileiro(value);
+            }
+
             if (confirm('Tem Certeza?')) {
-                Ajax('editarFixos/' + id, function(data) {
-    
+                Ajax('editarParametrosFixos/' + id, function (data) {
+
                     if (data.erro[0] == '00000') {
-    
+
                         Toast({
                             message: 'Parâmetro editado com sucesso!',
                             class: 'alert-success'
@@ -441,19 +485,19 @@ $(document)
 
                         $this
                             .removeClass('was-validated');
-        
+
                         $input
                             .attr('data-anterior', value)
                             .attr('data-alteracoes', data.result.alteracoes)
                             .removeClass('is-valid is-invalid')
                             .keyup();
-    
+
                     }
-    
+
                 }, {
-                    value: value,
-                    alteracoes: campos_alterados
-                });
+                        value: value,
+                        alteracoes: campos_alterados
+                    });
             }
 
         }
@@ -462,7 +506,7 @@ $(document)
 
     })
     .on('keyup', '.input-fixos', function () {
-        
+
         var $this = $(this),
             $submit = $this.parents('form').find('[type=submit]');
 
@@ -470,5 +514,12 @@ $(document)
             $submit.removeAttr('disabled');
         } else {
             $submit.attr('disabled', 'disabled');
+        }
+    })
+    .on('blur', '.input-fixos', function () {
+        if (!$(this).val()) {
+            $(this)
+                .val($(this).attr('data-anterior'))
+                .keyup();
         }
     });
