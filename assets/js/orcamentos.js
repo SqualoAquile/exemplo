@@ -6,18 +6,18 @@ $(function () {
 
     //inicializa os inputs da página - parte do orçamento
     $('#motivo_desistencia').parent().parent().addClass('d-none');
-    $('#status').attr('disabled','disabled');
-    $('#titulo_orcamento').attr('placeholder','Nome - Trabalho...');
+    $('#status').attr('disabled', 'disabled');
+    $('#titulo_orcamento').attr('placeholder', 'Nome - Trabalho...');
 
     $('#data_emissao').val(dataAtual());
     $('#data_validade').val(proximoDiaUtil($('#data_emissao').val(), 15));
     $('#data_retorno').val(proximoDiaUtil(dataAtual(), 3));
 
     // inicializa os inputs da pagina - parte de itens do orçamento
-    $('#quant_usada').attr('disabled','disabled');
-    $('#custo_tot_subitem').attr('disabled','disabled');
-    
-    $('#unidade').attr('disabled','disabled');
+    $('#quant_usada').attr('disabled', 'disabled');
+    $('#custo_tot_subitem').attr('disabled', 'disabled');
+
+    $('#unidade').attr('disabled', 'disabled');
     $.ajax({
         url: baselink + '/ajax/buscaParametroTamanhoBocaRolo',
         type: 'POST',
@@ -28,22 +28,22 @@ $(function () {
         dataType: 'json',
         success: function (data) {
             data = floatParaPadraoInternacional(data);
-            $('#unidade').attr('data-bocarolo',data);
+            $('#unidade').attr('data-bocarolo', data);
         }
     });
 
-    $('#largura').attr('disabled','disabled');
-    $('#comprimento').attr('disabled','disabled');
-    
-    
+    $('#largura').attr('disabled', 'disabled');
+    $('#comprimento').attr('disabled', 'disabled');
+
+
     // coloca as opções de produtos/serviços 
     $('#tipo_servico_produto')
         .empty()
         .append('<option value="produtos" selected>Produtos</option>')
         .append('<option value="servicos">Serviços</option>')
         .append('<option value="servicoscomplementares">Serviços Complementares</option>')
-        .on('change', function() {
-            
+        .on('change', function () {
+
             var $this = $(this),
                 $material = $('[name=material_servico]'),
                 $materialComplementar = $('[name=material_complementar]'),
@@ -57,6 +57,12 @@ $(function () {
                 },
                 dataType: 'json',
                 success: function (data) {
+
+                    data.sort(function (a, b) {
+                        a = a.descricao.toLowerCase();
+                        b = b.descricao.toLowerCase();
+                        return a < b ? -1 : a > b ? 1 : 0;
+                    });
 
                     var $materialDropdown = $material.siblings('.dropdown-menu').find('.dropdown-menu-wrapper'),
                         $materialComplementarDropdown = $materialComplementar.siblings('.dropdown-menu').find('.dropdown-menu-wrapper'),
@@ -112,7 +118,7 @@ $(function () {
 
                         $materialComplementar.removeAttr('disabled');
                         $materialComplementarDropdown.html(htmlDropdown);
-                            
+
                     } else if (val == 'servicos') {
 
                         $material.removeAttr('disabled');
@@ -132,81 +138,81 @@ $(function () {
 
         });
 
-        $('#data_emissao').on('change blur',function(){
-            if($('#data_emissao').val() != ''){
-                $('#data_validade').val(proximoDiaUtil($('#data_emissao').val(), 15)).blur();
-                $('#data_retorno').val(proximoDiaUtil($('#data_emissao').val(), 3)).blur();
-            }
-        });
+    $('#data_emissao').on('change blur', function () {
+        if ($('#data_emissao').val() != '') {
+            $('#data_validade').val(proximoDiaUtil($('#data_emissao').val(), 15)).blur();
+            $('#data_retorno').val(proximoDiaUtil($('#data_emissao').val(), 3)).blur();
+        }
+    });
 
-        $('#data_validade').on('change blur',function(){
-            if($('#data_validade').val() != '' ){
-                if($('#data_emissao').val() != ''){
-                    var dtEmis, dtValid;
-                    dtEmis = $('#data_emissao').val();
-                    dtEmis = dtEmis.split('/');
-                    dtEmis = parseInt(dtEmis[2]+dtEmis[1]+dtEmis[0]);
+    $('#data_validade').on('change blur', function () {
+        if ($('#data_validade').val() != '') {
+            if ($('#data_emissao').val() != '') {
+                var dtEmis, dtValid;
+                dtEmis = $('#data_emissao').val();
+                dtEmis = dtEmis.split('/');
+                dtEmis = parseInt(dtEmis[2] + dtEmis[1] + dtEmis[0]);
 
-                    dtValid = $('#data_validade').val();
-                    dtValid = dtValid.split('/');
-                    dtValid = parseInt(dtValid[2]+dtValid[1]+dtValid[0]);
+                dtValid = $('#data_validade').val();
+                dtValid = dtValid.split('/');
+                dtValid = parseInt(dtValid[2] + dtValid[1] + dtValid[0]);
 
-                    if( dtValid < dtEmis){
-                        alert('A data de validade não pode ser maior do que a data de emissão.');
-                        $('#data_validade').val('');
-                        $('#data_emissao').focus();
-                    }
-                }else{
-                    alert('Preencha a Data de Emissão.');
+                if (dtValid < dtEmis) {
+                    alert('A data de validade não pode ser maior do que a data de emissão.');
                     $('#data_validade').val('');
                     $('#data_emissao').focus();
                 }
-            }    
-        });
-        
-        $('#data_retorno').on('change blur',function(){
-            if($('#data_retorno').val() != '' ){
-                if($('#data_emissao').val() != ''){
-                    var dtEmis, dtRetor;
-                    dtEmis = $('#data_emissao').val();
-                    dtEmis = dtEmis.split('/');
-                    dtEmis = parseInt(dtEmis[2]+dtEmis[1]+dtEmis[0]);
+            } else {
+                alert('Preencha a Data de Emissão.');
+                $('#data_validade').val('');
+                $('#data_emissao').focus();
+            }
+        }
+    });
 
-                    dtRetor = $('#data_retorno').val();
-                    dtRetor = dtRetor.split('/');
-                    dtRetor = parseInt(dtRetor[2]+dtRetor[1]+dtRetor[0]);
+    $('#data_retorno').on('change blur', function () {
+        if ($('#data_retorno').val() != '') {
+            if ($('#data_emissao').val() != '') {
+                var dtEmis, dtRetor;
+                dtEmis = $('#data_emissao').val();
+                dtEmis = dtEmis.split('/');
+                dtEmis = parseInt(dtEmis[2] + dtEmis[1] + dtEmis[0]);
 
-                    if( dtRetor < dtEmis){
-                        alert('A data de retorno não pode ser maior do que a data de emissão.');
-                        $('#data_retorno').val('');
-                        $('#data_emissao').focus();
-                    }
-                }else{
-                    alert('Preencha a Data de Emissão.');
+                dtRetor = $('#data_retorno').val();
+                dtRetor = dtRetor.split('/');
+                dtRetor = parseInt(dtRetor[2] + dtRetor[1] + dtRetor[0]);
+
+                if (dtRetor < dtEmis) {
+                    alert('A data de retorno não pode ser maior do que a data de emissão.');
                     $('#data_retorno').val('');
                     $('#data_emissao').focus();
                 }
-            }    
-        });
-
-        $('#material_servico').on('change blur',function(){
-            var $unidade = $(this);
-            var $largura = $('#largura');
-            var $comprimento = $('#comprimento');
-            
-            if( $unidade.val() == 'M²' ){
-                $largura.removeAttr('disabled');
-                $comprimento.removeAttr('disabled')
-            }else{
-                $largura.attr('disabled','disabled');
-                $comprimento.attr('disabled','disabled');
+            } else {
+                alert('Preencha a Data de Emissão.');
+                $('#data_retorno').val('');
+                $('#data_emissao').focus();
             }
+        }
+    });
 
-        });
+    $('#material_servico').on('change blur', function () {
+        var $unidade = $(this);
+        var $largura = $('#largura');
+        var $comprimento = $('#comprimento');
 
-        $('#unidade').on('change', function(){
-            calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
-        });
+        if ($unidade.val() == 'M²') {
+            $largura.removeAttr('disabled');
+            $comprimento.removeAttr('disabled')
+        } else {
+            $largura.attr('disabled', 'disabled');
+            $comprimento.attr('disabled', 'disabled');
+        }
+
+    });
+
+    $('#unidade').on('change', function () {
+        calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+    });
 
 
     $(document)
@@ -219,6 +225,12 @@ $(function () {
                 },
                 dataType: 'json',
                 success: function (data) {
+
+                    data.sort(function (a, b) {
+                        a = a.nome.toLowerCase();
+                        b = b.nome.toLowerCase();
+                        return a < b ? -1 : a > b ? 1 : 0;
+                    });
 
                     var htmlDropdown = '';
 
@@ -244,32 +256,32 @@ $(function () {
                 }
             });
         })
-        .on('click', '#esquerda .relacional-dropdown-element', function() {
+        .on('click', '#esquerda .relacional-dropdown-element', function () {
 
             var $this = $(this),
                 $esquerda = $('#esquerda');
 
             $esquerda
                 .find('[name=faturado_para]')
-                    .val($this.text());
+                .val($this.text());
 
             $esquerda
                 .find('[name=telefone]')
-                    .val($this.attr('data-telefone'));
+                .val($this.attr('data-telefone'));
 
             $esquerda
                 .find('[name=celular]')
-                    .val($this.attr('data-celular'));
+                .val($this.attr('data-celular'));
 
             $esquerda
                 .find('[name=email]')
-                    .val($this.attr('data-email'));
+                .val($this.attr('data-email'));
 
             $esquerda
                 .find('[name=como_conheceu]')
-                    .val($this.attr('data-comoconheceu'));
+                .val($this.attr('data-comoconheceu'));
         })
-        .on('click', '[name="material_complementar"] ~ .relacional-dropdown .relacional-dropdown-element', function() {
+        .on('click', '[name="material_complementar"] ~ .relacional-dropdown .relacional-dropdown-element', function () {
 
             var $this = $(this),
                 $materialComplementar = $('[name="material_complementar"]'),
@@ -278,15 +290,15 @@ $(function () {
                 data_preco = $this.attr('data-preco'),
                 data_custo = $this.attr('data-custo');
 
-                $materialComplementar
-                    .attr('data-tabela', data_tabela)
-                    .attr('data-unidade', data_unidade)
-                    .attr('data-preco', data_preco)
-                    .attr('data-custo', data_custo);
-                    
+            $materialComplementar
+                .attr('data-tabela', data_tabela)
+                .attr('data-unidade', data_unidade)
+                .attr('data-preco', data_preco)
+                .attr('data-custo', data_custo);
+
         })
-        .on('click', '[name="material_servico"] ~ .relacional-dropdown .relacional-dropdown-element', function() {
-            
+        .on('click', '[name="material_servico"] ~ .relacional-dropdown .relacional-dropdown-element', function () {
+
             var $this = $(this),
                 $material = $('[name="material_servico"]'),
                 $unidade = $('[name="unidade"]'),
@@ -317,12 +329,12 @@ $(function () {
                 .attr('data-custo', data_custo);
 
         })
-        .on('change', '[name="pf_pj"]', function() {
+        .on('change', '[name="pf_pj"]', function () {
             if ($(this).is(':checked')) {
 
                 var $radio = $(this),
                     $elements = $('#esquerda [name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element'),
-                    $filtereds = $elements.filter(function() {
+                    $filtereds = $elements.filter(function () {
                         return $(this).attr('data-tipo_pessoa') == $radio.attr('id');
                     });
 
@@ -372,7 +384,7 @@ $(function () {
 
 });
 
-function dataAtual(){
+function dataAtual() {
     var dt, dia, mes, ano, dtretorno;
     dt = new Date();
     dia = dt.getDate();
@@ -391,7 +403,7 @@ function dataAtual(){
     return dtretorno;
 }
 
-function proximoDiaUtil(dataInicio, distdias){
+function proximoDiaUtil(dataInicio, distdias) {
 
     if (distdias != 0) {
         var dtaux = dataInicio.split("/");
@@ -420,19 +432,19 @@ function proximoDiaUtil(dataInicio, distdias){
         }
         dtvenc = dia + "/" + mes + "/" + ano;
         return dtvenc;
-    }else{
+    } else {
         return dataInicio;
     }
 }
 
-function floatParaPadraoBrasileiro(valor){
+function floatParaPadraoBrasileiro(valor) {
     var valortotal = valor;
-    valortotal = number_format(valortotal,2,',','.');
+    valortotal = number_format(valortotal, 2, ',', '.');
     return valortotal;
 }
 
-function floatParaPadraoInternacional(valor){
-    
+function floatParaPadraoInternacional(valor) {
+
     var valortotal = valor;
     valortotal = valortotal.replace(".", "").replace(".", "").replace(".", "").replace(".", "");
     valortotal = valortotal.replace(",", ".");
@@ -440,28 +452,28 @@ function floatParaPadraoInternacional(valor){
     return valortotal;
 }
 
-function number_format( numero, decimal, decimal_separador, milhar_separador ){ 
-        numero = (numero + '').replace(/[^0-9+\-Ee.]/g, '');
-        var n = !isFinite(+numero) ? 0 : +numero,
-            prec = !isFinite(+decimal) ? 0 : Math.abs(decimal),
-            sep = (typeof milhar_separador === 'undefined') ? ',' : milhar_separador,
-            dec = (typeof decimal_separador === 'undefined') ? '.' : decimal_separador,
-            s = '',
-            toFixedFix = function (n, prec) {
-                var k = Math.pow(10, prec);
-                return '' + Math.round(n * k) / k;
-            };
- 
-        // Fix para IE: parseFloat(0.55).toFixed(0) = 0;
-        s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
-        if (s[0].length > 3) {
-            s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
-        }
-        if ((s[1] || '').length < prec) {
-            s[1] = s[1] || '';
-            s[1] += new Array(prec - s[1].length + 1).join('0');
-        }
-        return s.join(dec);
+function number_format(numero, decimal, decimal_separador, milhar_separador) {
+    numero = (numero + '').replace(/[^0-9+\-Ee.]/g, '');
+    var n = !isFinite(+numero) ? 0 : +numero,
+        prec = !isFinite(+decimal) ? 0 : Math.abs(decimal),
+        sep = (typeof milhar_separador === 'undefined') ? ',' : milhar_separador,
+        dec = (typeof decimal_separador === 'undefined') ? '.' : decimal_separador,
+        s = '',
+        toFixedFix = function (n, prec) {
+            var k = Math.pow(10, prec);
+            return '' + Math.round(n * k) / k;
+        };
+
+    // Fix para IE: parseFloat(0.55).toFixed(0) = 0;
+    s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+    if (s[0].length > 3) {
+        s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+    }
+    if ((s[1] || '').length < prec) {
+        s[1] = s[1] || '';
+        s[1] += new Array(prec - s[1].length + 1).join('0');
+    }
+    return s.join(dec);
 }
 
 function calculaCustoPreco(qtd, unid, custo, preco) {
@@ -472,7 +484,7 @@ function calculaCustoPreco(qtd, unid, custo, preco) {
 
 }
 
-function calculaQuantidadeUsadaMaterial(unid, larg, comp, qtdUsada){ // recebe os objetos (campos)
+function calculaQuantidadeUsadaMaterial(unid, larg, comp, qtdUsada) { // recebe os objetos (campos)
     var $unidade = unid;
     var $largura = larg;
     var $comprimento = comp;
@@ -480,24 +492,24 @@ function calculaQuantidadeUsadaMaterial(unid, larg, comp, qtdUsada){ // recebe o
     var bocaRolo = $unidade.attr('data-bocarolo');
 
     console.log($unidade);
-    if($unidade.val() != 'M²'){
-        $largura.val('').attr('disabled','disabled');
-        $comprimento.val('').attr('disabled','disabled');
+    if ($unidade.val() != 'M²') {
+        $largura.val('').attr('disabled', 'disabled');
+        $comprimento.val('').attr('disabled', 'disabled');
         $qtdUsada.val('');
 
-    }else{
+    } else {
         $largura.removeAttr('disabled');
         $comprimento.removeAttr('disabled')
-        
-        if($largura.val() != '' && $comprimento.val() != ''){
-            
+
+        if ($largura.val() != '' && $comprimento.val() != '') {
+
             var tamMaior, larg, comp;
             larg = floatParaPadraoInternacional($largura.val());
             comp = floatParaPadraoInternacional($comprimento.val());
             tamMaior = Math.max(larg, comp);
             console.log(tamMaior);
-        
-        }else{
+
+        } else {
             $qtdUsada.val('');
             return;
         }
