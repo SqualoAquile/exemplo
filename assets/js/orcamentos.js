@@ -241,7 +241,7 @@ $(function () {
                     });
 
                     $('#esquerda .relacional-dropdown-wrapper .dropdown-menu .dropdown-menu-wrapper')
-                        .html(htmlDropdown.trim());
+                        .html(htmlDropdown);
 
                     $('[name="pf_pj"]').change();
                     $('[name="tipo_servico_produto"]').change();
@@ -326,7 +326,7 @@ $(function () {
             if ($(this).is(':checked')) {
 
                 var $radio = $(this),
-                    $elements = $('#esquerda .relacional-dropdown-element'),
+                    $elements = $('#esquerda [name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element'),
                     $filtereds = $elements.filter(function() {
                         return $(this).attr('data-tipo_pessoa') == $radio.attr('id');
                     });
@@ -338,7 +338,7 @@ $(function () {
                     .removeClass('is-valid is-invalid')
                     .val('');
 
-                if ($(this).attr('id') == 'pj') {
+                if ($radio.attr('id') == 'pj') {
 
                     $('[name=telefone]')
                         .attr('required', 'required')
