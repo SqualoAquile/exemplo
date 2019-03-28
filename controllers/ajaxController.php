@@ -2,12 +2,14 @@
 class ajaxController extends controller{
 
   private $parametros;
+  private $servicos;
 
   public function __construct() {
 
     $user = new Usuarios();
 
     $this->parametros = new Parametros;
+    $this->servicos = new Servicos;
 
     //verifica se está logado
     if($user->isLogged() == false){
@@ -407,6 +409,17 @@ class ajaxController extends controller{
     if (isset($_POST) && !empty($_POST)) {
       if (isset($id) && !empty($id)) {
         echo json_encode($this->parametros->editarFixos($_POST, $id));
+      }
+    }
+  }
+
+  //
+  // SERVICOS
+  //
+  public function editarServicos($id) {
+    if (isset($_POST) && !empty($_POST)) {
+      if (isset($id) && !empty($id)) {
+        echo json_encode($this->servicos->editar($_POST, $id));
       }
     }
   }

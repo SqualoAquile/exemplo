@@ -130,7 +130,7 @@ $(function () {
                     if (confirm('Tem Certeza?')) {
                     
                         $.ajax({
-                            url: baselink + '/servicos/editar/' + id,
+                            url: baselink + '/ajax/editarServicos/' + id,
                             type: 'POST',
                             data: objSend,
                             dataType: 'json',
