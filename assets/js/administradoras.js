@@ -109,12 +109,19 @@ $(function () {
                     .find('input')
                         .val('0%')
                         .removeClass('active');
+
+                $taxas
+                    .find('tbody tr:lt(' + value + ') .taxas')
+                    .each(function() {
+                        if (!$(this).hasClass('active')) {
+                            $(this).val('');
+                        }
+                    });
                 
                 $taxas
                     .find('tbody tr:lt(' + value + ')')
                         .show()
                         .find('.taxas')
-                            .val('')
                             .addClass('active');
 
                 $taxas.show();
