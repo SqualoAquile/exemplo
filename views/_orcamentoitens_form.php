@@ -5,6 +5,7 @@
     <table id="itensOrcamento" class="table table-striped table-hover bg-white">
         <thead>
             <tr>
+                <th class="text-truncate">Ações</th>
                 <th class="text-truncate">Item</th>
                 <th class="text-truncate">SubItem</th>
                 <th class="text-truncate">Quant</th>
@@ -18,7 +19,6 @@
                 <th class="text-truncate">Custo</th>
                 <th class="text-truncate">Preço</th>
                 <th class="text-truncate">Observação</th>
-                <th class="text-truncate">Ações</th>
             </tr>
         </thead>
         <tbody>

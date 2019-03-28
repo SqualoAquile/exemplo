@@ -540,12 +540,10 @@ $(function () {
 
     $(this)
         .on('change', '[data-mascara_validacao="data"]', function () {
-
             var $this = $(this),
                 valor = $this.val();
 
             valor = valor.split('/');
-
             var data = valor[0] + '/' + valor[1] + '/' + valor[2];
 
             $this.removeClass('is-valid is-invalid');

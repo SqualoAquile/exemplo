@@ -175,4 +175,22 @@ class Parametros extends model {
         ];
 
     }
+
+    public function parametroTamanhoBocaRolo($nomeParam){
+        $result = '';
+
+        $this->table = "parametros";
+        
+        $sql = "SELECT * FROM " . $this->table . " WHERE parametro = '$nomeParam' AND situacao = 'ativo'";
+        $sql = self::db()->query($sql);
+
+        if ($sql->rowCount() > 0) {
+
+            $sql = $sql->fetch(PDO::FETCH_ASSOC);            
+            $result = $sql["valor"];
+        }
+        
+        return $result;
+
+    }
 }

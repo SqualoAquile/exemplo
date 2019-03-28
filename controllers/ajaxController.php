@@ -367,12 +367,23 @@ class ajaxController extends controller{
     echo json_encode($dados);
   }
 
+  //////// ORÇAMENTOS
   public function getRelacionalDropdownOrcamentos() {
     if (isset($_POST) && !empty($_POST)) {
       $orcamento = new Orcamentos;
       echo json_encode($orcamento->getRelacionalDropdown($_POST));
     }
   }
+
+  public function buscaParametroTamanhoBocaRolo() {
+    if (isset($_POST) && !empty($_POST)) {
+      $param = new Parametros();
+      $tamanho = $param->parametroTamanhoBocaRolo($_POST['parametro']);
+      echo json_encode($tamanho);
+    }
+  }
+  
+
 
   //
   // PARAMETROS
