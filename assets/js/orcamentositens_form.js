@@ -208,23 +208,4 @@ $(function () {
         SetInput();
     };
 
-    function calculaCustoPreco(qtd, unid, custo, preco) {
-            var qtd = $('#quantidade');
-            var qtd = $('#unidade');
-            var qtd = $('#preco');
-            var qtd = $('#quantidade');
-   
-    }
-
-    function calculaQuantidadeUsadaMaterial(unid, larg, comp, qtdUsada){ // recebe os objetos (campos)
-        var unidade = unid.val();
-        var largura = larg.val();
-        var comprimento = comp.val();
-        var quantUsada = qtdUsada;
-
-        if(unidade == '' || largura == '' || comprimento == ''){
-            return quantUsada.val('');
-        }
-    }
-
 });

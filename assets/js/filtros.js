@@ -27,7 +27,7 @@ $(function () {
                     .datepicker();
 
             } else if (mask == 'monetario') {
-    
+                
                 $(el)
                     .mask('#.##0,00', {
                         reverse: true
@@ -78,7 +78,6 @@ $(function () {
         .on('change', '#card-body-filtros select', function () {
 
             // Change dos Selects
-            
             var $this = $(this),
                 $pai = $this.parents('.input-group'),
                 $inputs = $pai.find('input[type=text]');
@@ -121,13 +120,8 @@ $(function () {
                         .draw();
                 }
 
-                $max
-                    .removeClass('is-invalid')
-                    .siblings('.invalid-feedback')
-                    .remove();
-
                 $max[0].setCustomValidity('');
-
+                
                 if (min && max) {
                     
                     $max.removeClass('is-invalid');
@@ -139,11 +133,14 @@ $(function () {
                     if (min >= max) {
 
                         $max.addClass('is-invalid');
+
                         $max[0].setCustomValidity('invalid');
                         $max.after('<div class="invalid-feedback col-lg-4 m-0">O valor deste campo deve ser maior que o campo anterior.</div>');
-
+                        
                         $max.val('');
                         $min.val('');
+
+                        dataTable.columns().search('').draw();
 
                         return false;
                     }
@@ -256,6 +253,8 @@ $(function () {
                     $cloned.find('.filtros-texto').removeClass('col-lg-6').addClass('col-lg-5');
                 }
 
+                $cloned.find('.filtros-faixa .input-filtro-faixa').removeClass('is-invalid').siblings('.invalid-feedback').remove();
+
                 $cloned.appendTo('#card-body-filtros .filtros-wrapper');
             }
         })
@@ -272,4 +271,14 @@ $(function () {
                 $criar.show();
             }
         });
+
+        $('#collapseFiltros')
+            .on('hide.bs.collapse', function () {
+                $('#tituloHeader .fas').removeClass('fa-minus-square').addClass('fa-plus-square');
+            })
+            .on('show.bs.collapse', function () {
+                $('#tituloHeader .fas').removeClass('fa-plus-square').addClass('fa-minus-square');
+            });
+
+          
 });

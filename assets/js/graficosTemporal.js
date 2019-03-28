@@ -4,11 +4,15 @@ $(function () {
 
     var $selectGrafTemporal = $('#selectGraficosTemporal')
         $selectGrafOpcoes = $('#selectGrafOpcoes'),
+        $selectGrafOpcoesAQ= $('#selectGrafOpcoes2'),
         dataTable = window.dataTable,
         modo = "agrupar", // agrupar (doughnut, bar, horizontalBar), temporal(line, bar, combo)
         id = "#chart-div2",
+        idAQ = "#chart-div3",
         tipo = "bar",
-        ctx = document.getElementById(id.substr(1)).getContext('2d');
+        ctx = document.getElementById(id.substr(1)).getContext('2d'),
+        ctxAQ = document.getElementById(idAQ.substr(1)).getContext('2d');
+
 
     $('.dataTable') 
         .on('draw.dt', function() {
@@ -34,9 +38,9 @@ $(function () {
                 $selectGrafOpcoes.val($selectGrafOpcoes.find('option:not([disabled])').first().val()).change();
             };
 
-            coluna = $selectGrafTemporal.val();
-            titulo = 'Agrupar registros por ' + $selectGrafTemporal.children("option:selected").text().trim() + ' de ' + $selectGrafOpcoes.children("option:selected").text().trim() +' até hoje.';
-            intervalo = intervaloDatas($selectGrafOpcoes.val());
+            coluna = "data_quitacao";
+            titulo = 'Fluxo de Caixa Realizado de ' + $selectGrafOpcoes.children("option:selected").text().trim() +' até hoje.';
+            intervalo = $selectGrafOpcoes.val();
             
             $.ajax({ 
                 url: baselink + '/ajax/gerarGraficoFiltroIntervaloDatas', 
@@ -122,8 +126,8 @@ $(function () {
                             this.chart=new Chart(this.ctx, config);
                             })();     
                         } else {
-                            charts[id].chart.destroy(); // "destroy" the "old chart"
-                            charts[id].chart=new Chart(charts[id].ctx, config); // create the chart with same id and el
+                            charts[id].chart.destroy();
+                            charts[id].chart=new Chart(charts[id].ctx, config); 
                         }
                     }
                 }

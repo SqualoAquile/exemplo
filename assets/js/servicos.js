@@ -112,16 +112,14 @@ $(function () {
     
                     var $input = $(this),
                         $label = $input.siblings('label').find('span'),
-                        value = floatParaPadraoInternacional($input.val()),
-                        dtAnt = parseFloat($input.attr('data-anterior'));
+                        valInternacional = floatParaPadraoInternacional($input.val()),
+                        valueBrasileiro = floatParaPadraoBrasileiro(valInternacional);
     
-                    objSend[$input.attr('name')] = value;
+                    objSend[$input.attr('name')] = valInternacional;
     
-                    if (value != dtAnt) {
-                        campos_alterados += '{' + $label.text().toUpperCase() + ' de (' + floatParaPadraoBrasileiro($input.attr('data-anterior')) + ') para (' + $input.val() + ')}';
+                    if (valueBrasileiro != $input.attr('data-anterior')) {
+                        campos_alterados += '{' + $label.text().toUpperCase() + ' de (' + $input.attr('data-anterior') + ') para (' + valueBrasileiro + ')}';
                     }
-
-                    $input.attr('data-anterior', $input.val());
 
                 });
 
@@ -132,7 +130,7 @@ $(function () {
                     if (confirm('Tem Certeza?')) {
                     
                         $.ajax({
-                            url: baselink + '/servicos/editar/' + id,
+                            url: baselink + '/ajax/editarServicos/' + id,
                             type: 'POST',
                             data: objSend,
                             dataType: 'json',
@@ -175,9 +173,11 @@ $(function () {
         .on('keyup', '.input-servicos', function () {
             
             var $this = $(this),
-                $submit = $this.parents('form').find('[type=submit]');
+                $submit = $this.parents('form').find('[type=submit]'),
+                valInternacional = floatParaPadraoInternacional($this.val()),
+                valueBrasileiro = floatParaPadraoBrasileiro(valInternacional);
     
-            if (floatParaPadraoInternacional($this.val()) != parseFloat($this.attr('data-anterior'))) {
+            if (valueBrasileiro != $this.attr('data-anterior')) {
                 $submit.removeAttr('disabled');
             } else {
                 $submit.attr('disabled', 'disabled');

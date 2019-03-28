@@ -36,11 +36,12 @@ $(function () {
             }
 
         })
-        .on('click', '#cancelar-wrapper > button', function() {
-            
-            $(this)
+        .on('click', '#cancelar-wrapper > .btn', function() {
+
+            $formBandeiras
                 .trigger('reset')
                 .find('.form-control')
+                .removeAttr('data-anterior')
                 .removeClass('is-valid is-invalid');
 
             $nroparc
@@ -50,9 +51,7 @@ $(function () {
                 .removeClass('disabled')
                 .removeAttr('disabled');
 
-            $formBandeiras
-                .find('.form-control')
-                .removeAttr('data-anterior');
+            $('#cancelar-wrapper').addClass('d-none');
         })
         .on('change', '.form-control', function () {
         
@@ -114,11 +113,9 @@ $(function () {
                         .removeClass('active');
 
                 $taxas
-                    .find('tbody tr')
-                    .eq(value - 1)
-                    .find('input')
-                    .each(function () {
-                        if ($(this).val() == '0%') {
+                    .find('tbody tr:lt(' + value + ') .taxas')
+                    .each(function() {
+                        if (!$(this).hasClass('active')) {
                             $(this).val('');
                         }
                     });
@@ -127,7 +124,7 @@ $(function () {
                     .find('tbody tr:lt(' + value + ')')
                         .show()
                         .find('.taxas')
-                        .addClass('active');
+                            .addClass('active');
 
                 $taxas.show();
 
@@ -278,6 +275,8 @@ $(function () {
 
         $('.conteudos-escondidos.sendo-editado').removeClass('sendo-editado');
 
+        $('#cancelar-wrapper').addClass('d-none');
+
         Popula(
             true,
             id_bandeira,
@@ -368,9 +367,12 @@ $(function () {
 
         SetInput(adicionando, paramIdBandeira, bandeira, infos, txantecipacaojoin, txcreditojoin, bandeiraAceitaId);
 
-        $('#form-bandeiras').trigger('reset').find('.form-control').removeClass('is-valid is-invalid');
+        $('#form-bandeiras')
+            .trigger('reset')
+            .find('.form-control')
+            .removeClass('is-valid is-invalid');
+
         $('[name="nroparc"]').change();
-        $('#cancelar-wrapper').addClass('d-none');
 
         if (!indexEditando) {
             $('#table-inclusoes tbody')

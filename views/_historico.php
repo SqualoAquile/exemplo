@@ -1,6 +1,6 @@
 <?php if (isset($item) && !empty($item)): ?>
     <?php $alteracoes = explode("|", $item["alteracoes"]) ?>
-    <section id="historico<?php echo isset($iteracao) ? $iteracao : "" ?>" class="card card-body collapse my-5">
+    <section id="historico<?php echo isset($iteracao) ? $iteracao : "" ?>" class="historico card card-body collapse my-5">
         <h4 class="text-center py-4">Histórico de Alterações</h4>
         <div class="wrapper px-3">
             <?php foreach (array_reverse($alteracoes) as $key => $alteracao): ?>
