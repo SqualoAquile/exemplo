@@ -49,8 +49,6 @@ $(function () {
 
             var $this = $(this);
 
-            console.log('removeMask');
-
             $this
                 .val('')
                 .removeClass('is-invalid is-valid')
@@ -122,12 +120,6 @@ $(function () {
                         .draw();
                 }
 
-                console.log('change blur');
-                // $max
-                //     .removeClass('is-invalid')
-                //     .siblings('.invalid-feedback')
-                //     .remove();
-
                 $max[0].setCustomValidity('');
                 
                 if (min && max) {
@@ -145,10 +137,10 @@ $(function () {
                         $max[0].setCustomValidity('invalid');
                         $max.after('<div class="invalid-feedback col-lg-4 m-0">O valor deste campo deve ser maior que o campo anterior.</div>');
                         
-                        console.log($max);
-                        
                         $max.val('');
                         $min.val('');
+
+                        dataTable.columns().search('').draw();
 
                         return false;
                     }
