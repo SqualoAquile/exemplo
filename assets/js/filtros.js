@@ -23,11 +23,11 @@ $(function () {
             if (mask == 'data') {
     
                 $(el)
-                    .mask('00/00/0000', {max: false})
+                    .mask('00/00/0000', {maxlength: false})
                     .datepicker();
 
             } else if (mask == 'monetario') {
-    
+                
                 $(el)
                     .mask('#.##0,00', {
                         reverse: true
@@ -48,6 +48,8 @@ $(function () {
         $elements.each(function () {
 
             var $this = $(this);
+
+            console.log('removeMask');
 
             $this
                 .val('')
@@ -78,7 +80,6 @@ $(function () {
         .on('change', '#card-body-filtros select', function () {
 
             // Change dos Selects
-            
             var $this = $(this),
                 $pai = $this.parents('.input-group'),
                 $inputs = $pai.find('input[type=text]');
@@ -88,7 +89,7 @@ $(function () {
             removeMask($inputs);
 
         })
-        .on('keyup', '.filtros-faixa .input-filtro-faixa', function () {
+        .on('change blur', '.filtros-faixa .input-filtro-faixa', function () {
 
             // Filtros Faixa
 
@@ -121,13 +122,14 @@ $(function () {
                         .draw();
                 }
 
-                $max
-                    .removeClass('is-invalid')
-                    .siblings('.invalid-feedback')
-                    .remove();
+                console.log('change blur');
+                // $max
+                //     .removeClass('is-invalid')
+                //     .siblings('.invalid-feedback')
+                //     .remove();
 
                 $max[0].setCustomValidity('');
-
+                
                 if (min && max) {
                     
                     $max.removeClass('is-invalid');
@@ -139,9 +141,12 @@ $(function () {
                     if (min >= max) {
 
                         $max.addClass('is-invalid');
+
                         $max[0].setCustomValidity('invalid');
                         $max.after('<div class="invalid-feedback col-lg-4 m-0">O valor deste campo deve ser maior que o campo anterior.</div>');
-
+                        
+                        console.log($max);
+                        
                         $max.val('');
                         $min.val('');
 
@@ -164,7 +169,7 @@ $(function () {
                 }
             });
         })
-        .on('keyup', '.filtros-texto .input-filtro-texto', function () {
+        .on('change blur', '.filtros-texto .input-filtro-texto', function () {
 
             // Filtros Texto
 
@@ -255,6 +260,8 @@ $(function () {
                 } else {
                     $cloned.find('.filtros-texto').removeClass('col-lg-6').addClass('col-lg-5');
                 }
+
+                $cloned.find('.filtros-faixa .input-filtro-faixa').removeClass('is-invalid').siblings('.invalid-feedback').remove();
 
                 $cloned.appendTo('#card-body-filtros .filtros-wrapper');
             }

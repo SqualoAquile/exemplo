@@ -373,7 +373,7 @@ $(function () {
 
     $(this)
         .on('blur', '[data-mascara_validacao="monetario"], textarea', function () {
-
+            
             var $this = $(this);
 
             if (!$this.val()) {

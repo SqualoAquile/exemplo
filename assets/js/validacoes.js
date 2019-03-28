@@ -768,7 +768,6 @@ $(function () {
     
     $(this)
         .on('blur touchstart', '[data-mascara_validacao="monetario"]', function () {
-
             var $this = $(this),
                 value = $this.val(),
                 anterior = $this.attr('data-anterior'),
