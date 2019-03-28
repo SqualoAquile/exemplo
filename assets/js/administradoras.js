@@ -36,11 +36,12 @@ $(function () {
             }
 
         })
-        .on('click', '#cancelar-wrapper > button', function() {
-            
-            $(this)
+        .on('click', '#cancelar-wrapper > .btn', function() {
+
+            $formBandeiras
                 .trigger('reset')
                 .find('.form-control')
+                .removeAttr('data-anterior')
                 .removeClass('is-valid is-invalid');
 
             $nroparc
@@ -49,10 +50,6 @@ $(function () {
             $('#table-inclusoes button.disabled')
                 .removeClass('disabled')
                 .removeAttr('disabled');
-
-            $formBandeiras
-                .find('.form-control')
-                .removeAttr('data-anterior');
         })
         .on('change', '.form-control', function () {
         
@@ -112,22 +109,13 @@ $(function () {
                     .find('input')
                         .val('0%')
                         .removeClass('active');
-
-                $taxas
-                    .find('tbody tr')
-                    .eq(value - 1)
-                    .find('input')
-                    .each(function () {
-                        if ($(this).val() == '0%') {
-                            $(this).val('');
-                        }
-                    });
                 
                 $taxas
                     .find('tbody tr:lt(' + value + ')')
                         .show()
                         .find('.taxas')
-                        .addClass('active');
+                            .val('')
+                            .addClass('active');
 
                 $taxas.show();
 
