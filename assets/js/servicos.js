@@ -112,12 +112,13 @@ $(function () {
     
                     var $input = $(this),
                         $label = $input.siblings('label').find('span'),
-                        valInternacional = floatParaPadraoInternacional($input.val());
+                        valInternacional = floatParaPadraoInternacional($input.val()),
+                        valueBrasileiro = floatParaPadraoBrasileiro(valInternacional);
     
                     objSend[$input.attr('name')] = valInternacional;
     
-                    if ($input.val() != $input.attr('data-anterior')) {
-                        campos_alterados += '{' + $label.text().toUpperCase() + ' de (' + $input.attr('data-anterior') + ') para (' + floatParaPadraoBrasileiro(valInternacional) + ')}';
+                    if (valueBrasileiro != $input.attr('data-anterior')) {
+                        campos_alterados += '{' + $label.text().toUpperCase() + ' de (' + $input.attr('data-anterior') + ') para (' + valueBrasileiro + ')}';
                     }
 
                 });
@@ -172,9 +173,11 @@ $(function () {
         .on('keyup', '.input-servicos', function () {
             
             var $this = $(this),
-                $submit = $this.parents('form').find('[type=submit]');
+                $submit = $this.parents('form').find('[type=submit]'),
+                valInternacional = floatParaPadraoInternacional($this.val()),
+                valueBrasileiro = floatParaPadraoBrasileiro(valInternacional);
     
-            if ($this.val() != $this.attr('data-anterior')) {
+            if (valueBrasileiro != $this.attr('data-anterior')) {
                 $submit.removeAttr('disabled');
             } else {
                 $submit.attr('disabled', 'disabled');
