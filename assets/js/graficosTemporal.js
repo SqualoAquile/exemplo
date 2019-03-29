@@ -22,7 +22,6 @@ $(function () {
 
     $selectGrafOpcoes
         .on('change', function() {
-            console.log('mudei a opção');
             drawChart(id,tipo);
         });
 

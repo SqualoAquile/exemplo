@@ -18,7 +18,9 @@ require "_graficosNOVO.php";
                 <div    class="progress-bar bg-info" role="progressbar" 
                         style="width: <?php echo $meta?>%;" 
                         aria-valuenow="<?php echo $meta?>" 
-                        aria-valuemin="0" aria-valuemax="100"> <?php echo $meta?>% </div>
+                        aria-valuemin="0" aria-valuemax="100"> 
+                        <div class="h5"><?php echo $meta?>% </div>
+                </div>
             </div>
         </div>
     </div>

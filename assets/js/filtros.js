@@ -113,6 +113,14 @@ $(function () {
                     max = floatPadraoInternacional(max);
                 }
 
+                // if(mascara == 'data'){
+                //     min = min.split('/').reverse().join('-');
+                //     max = max.split('/').reverse().join('-');
+                //     console.log(min);
+                //     console.log(max);   
+                // } 
+                //ta fudendo a busca
+
                 if (indexAnterior && indexAnterior != selectVal) {
                     dataTable
                         .columns(indexAnterior)
