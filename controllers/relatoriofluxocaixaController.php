@@ -49,6 +49,7 @@ class relatoriofluxocaixaController extends controller{
         
         $dados['infoUser'] = $_SESSION;
         $dados["colunas"] = $this->colunas;
+        $dados["meta"] = $this->model->meta();
         $dados["labelTabela"]["labelBrowser"] = 'Controle de Fluxo de Caixa';
 
         $this->loadTemplate('relatoriofluxocaixa', $dados);
@@ -117,5 +118,7 @@ class relatoriofluxocaixaController extends controller{
             echo json_encode($this->model->inlineEdit($_POST));
         }
     }
+    
+
 }   
 ?>
