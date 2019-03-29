@@ -367,6 +367,16 @@ class ajaxController extends controller{
     echo json_encode($dados);
   }
 
+  public function gerarGraficoFiltroIntervaloDatas2(){
+    
+    if(isset($_POST) && !empty($_POST)){
+      $shared = new Shared($_POST['modulo']);
+      $dados = $shared->gerarGraficoFiltroIntervaloDatas2($_POST);
+    }
+    
+    echo json_encode($dados);
+  }
+
   public function getRelacionalDropdownOrcamentos() {
     if (isset($_POST) && !empty($_POST)) {
       $orcamento = new Orcamentos;

@@ -1,32 +1,31 @@
-var charts = [];
+var charts2 = [];
 
 $(function () {
 
     var $selectGrafTemporal = $('#selectGraficosTemporal'),
-        $selectGrafOpcoes = $('#selectGrafOpcoes'),
+        $selectGrafOpcoes = $('#selectGrafOpcoes2'),
         dataTable = window.dataTable,
         modo = "agrupar", // agrupar (doughnut, bar, horizontalBar), temporal(line, bar, combo)
-        id = "#chart-div2",
+        id = "#chart-div3",
         tipo = "bar",
         ctx = document.getElementById(id.substr(1)).getContext('2d');
 
     $('.dataTable') 
         .on('draw.dt', function() {
-            drawChart(id,tipo);
+            drawChart2(id,tipo);
         });
 
     $selectGrafTemporal
         .on('change', function() {
-            drawChart(id,tipo);
+            drawChart2(id,tipo);
         });
 
     $selectGrafOpcoes
         .on('change', function() {
-            console.log('mudei a opção');
-            drawChart(id,tipo);
+            drawChart2(id,tipo);
         });
 
-    function drawChart(id, tipo) {
+    function drawChart2(id, tipo) {
         var coluna, titulo, intervalo = [];
 
             if (!$selectGrafTemporal.val() && !$selectGrafOpcoes.val() ) {
@@ -35,12 +34,12 @@ $(function () {
                 $selectGrafOpcoes.val($selectGrafOpcoes.find('option:not([disabled])').first().val()).change();
             };
 
-            coluna = "data_quitacao";
-            titulo = 'Fluxo de Caixa Realizado de ' + $selectGrafOpcoes.children("option:selected").text().trim() +' até hoje.';
-            intervalo = intervaloDatas($selectGrafOpcoes.val());
+            coluna = "data_vencimento";
+            titulo = 'Fluxo de Caixa A Realizar de hoje até ' + $selectGrafOpcoes.children("option:selected").text().trim() +'.';
+            intervalo = intervaloDatas2($selectGrafOpcoes.val());
             
             $.ajax({ 
-                url: baselink + '/ajax/gerarGraficoFiltroIntervaloDatas', 
+                url: baselink + '/ajax/gerarGraficoFiltroIntervaloDatas2', 
                 type: 'POST', 
                 data: {
                     columns: dataTable.ajax.params(), 
@@ -117,14 +116,14 @@ $(function () {
                             }
                         }
     
-                        if(typeof charts[id] == "undefined") {   
-                            charts[id]= new (function(){
+                        if(typeof charts2[id] == "undefined") {   
+                            charts2[id]= new (function(){
                             this.ctx=$(id); 
                             this.chart=new Chart(this.ctx, config);
                             })();     
                         } else {
-                            charts[id].chart.destroy();
-                            charts[id].chart=new Chart(charts[id].ctx, config); 
+                            charts2[id].chart.destroy();
+                            charts2[id].chart=new Chart(charts2[id].ctx, config); 
                         }
                     }
                 }
@@ -133,7 +132,7 @@ $(function () {
     }
 });
 
-function intervaloDatas(intervalo) {
+function intervaloDatas2(intervalo) {
     var hoje, dtaux, dtaux1, dia, mes, ano, dia1, mes1, ano1, retorno = [];
 
         // calculando o valor de HOJE
@@ -155,11 +154,11 @@ function intervaloDatas(intervalo) {
         // criando o array de DATAS
 
         if(parseInt(intervalo) != parseInt(0)){
-            k=0;
-            for(i = parseInt(intervalo) ; i > 0 ; i--){
+            k=1;
+            for(i = 1; i < parseInt(intervalo)  ; i++){
                 dtaux1 = new Date(ano, parseInt(mes) - 1, dia); 
-                dtaux1.setDate(dtaux1.getDate() - i);
-
+                dtaux1.setDate(dtaux1.getDate() + i);
+                
                 dia1 = dtaux1.getDate();
                 if (dia1.toString().length == 1) {
                     dia1 = "0" + dtaux1.getDate();
@@ -170,14 +169,14 @@ function intervaloDatas(intervalo) {
                     mes1 = "0" + mes1;
                 }
                 ano1 = dtaux1.getFullYear();
-
+                
                 retorno[k] = ano1 + '-' + mes1 + '-' + dia1;
                 k++;
             }
         }
         
-        retorno[parseInt(intervalo)] = hoje;
-
+        retorno[0] = hoje;
+        
         return retorno;
 
 }
