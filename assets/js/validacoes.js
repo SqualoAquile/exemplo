@@ -91,7 +91,7 @@ $(function () {
             valorAtual = String(valorAtual).trim().toUpperCase();
             dataAnterior = String(dataAnterior).trim().toUpperCase();
 
-            
+
             if (dataAnterior != valorAtual) {
                 temAlteracao = true;
             }
@@ -188,11 +188,11 @@ $(function () {
                                 // Não existe, pode seguir
 
                                 if (!$this.hasClass('is-invalid')) {
-                                    
+
                                     $this
                                         .removeClass('is-invalid')
                                         .addClass('is-valid');
-    
+
                                     $this[0].setCustomValidity('');
 
                                 }
@@ -763,7 +763,7 @@ $(function () {
         .mask('#.##0,00', {
             reverse: true
         })
-    
+
     $(this)
         .on('blur touchstart', '[data-mascara_validacao="monetario"]', function () {
             var $this = $(this),
@@ -892,10 +892,10 @@ $(function () {
             var dtAnterior = $(this).attr('data-anterior');
 
             if (dtAnterior && dtAnterior.length) {
-                
+
                 dtAnterior = dtAnterior.replace('%', '');
                 dtAnterior = dtAnterior + '%';
-    
+
                 $(this).attr('data-anterior', dtAnterior);
             }
         })
@@ -910,8 +910,8 @@ $(function () {
     //
     // Desabilitar a tecla Enter
     //
-    $('input').keypress(function(event){
-        if(event.keyCode == 13){
+    $('input').keypress(function (event) {
+        if (event.keyCode == 13) {
             event.preventDefault();
             event.stopPropagation();
             return false;
@@ -922,7 +922,7 @@ $(function () {
     // Função que valida as alterações necessárias para o submit
     //
     $('.needs-validation').submit(function (event) {
-        
+
         // deixa o enter destivado para submitar o formulario    
         var form = this;
 
@@ -965,16 +965,16 @@ $(function () {
 
                         if (dataAnterior != valorAtual) {
 
-                            if($(el).attr('id') == 'senha'){
+                            if ($(el).attr('id') == 'senha') {
                                 campos_alterados += '{ A SENHA foi alteradaa }';
 
-                            }else if ($(el).attr('id') == 'senhaaux'){
+                            } else if ($(el).attr('id') == 'senhaaux') {
                                 //não faz nada
 
-                            }else{
+                            } else {
                                 campos_alterados += '{' + text_label.toUpperCase() + ' de (' + $(el).attr('data-anterior') + ') para (' + $(el).val() + ')}';
                             }
-                            
+
                         }
                     });
 
@@ -1003,7 +1003,7 @@ $(function () {
     });
 
     // Filtrar contatos pela busca
-    $('#searchDataTable').on('keyup', function() {
+    $('#searchDataTable').on('keyup', function () {
 
         var searchValue = $(this).val();
 
@@ -1013,14 +1013,14 @@ $(function () {
                 var $filtered = $(this),
                     textFiltered = $filtered.text(),
                     textDisplay = $display.text();
-    
+
                 $display.text(textFiltered);
                 $filtered.text(textDisplay);
             });
         });
-    
+
         var body = $(dataTable.table().body());
-    
+
         body.unhighlight();
         body.highlight(searchValue);
 
@@ -1090,12 +1090,12 @@ $(function () {
 
     var $campos = $('#form-principal').find('input[type=text], input[type=password], input[type=hidden]:not([name=alteracoes]), input[type=radio], textarea, select');
     $campos
-    .ready(function () {
-        habilitaBotao($campos);
-    })
-    .on('change blur touchstart', function () {
-        habilitaBotao($campos);
-    });
+        .ready(function () {
+            habilitaBotao($campos);
+        })
+        .on('change blur touchstart', function () {
+            habilitaBotao($campos);
+        });
 
     $('input, textarea, select').on('blur touchstart', function () {
         if ($(this)[0].hasAttribute('data-mascara_validacao') && $(this).attr('data-mascara_validacao') == 'false') {
@@ -1126,7 +1126,7 @@ $(function () {
                 var $this = $(this),
                     $relacionalDropdown = $this.parents('.relacional-dropdown-wrapper').find('.relacional-dropdown'),
                     campo = $this.attr('data-campo');
-    
+
                 $.ajax({
                     url: baselink + '/ajax/getRelacionalDropdown',
                     type: 'POST',
@@ -1136,14 +1136,20 @@ $(function () {
                     },
                     dataType: 'json',
                     success: function (data) {
-    
+
+                        data.sort(function (a, b) {
+                            a = a[campo].toLowerCase();
+                            b = b[campo].toLowerCase();
+                            return a < b ? -1 : a > b ? 1 : 0;
+                        });
+
                         var htmlDropdown = '';
                         data.forEach(element => {
                             htmlDropdown += `
                                 <div class="list-group-item list-group-item-action relacional-dropdown-element">` + element[campo] + `</div>
                             `;
                         });
-    
+
                         $relacionalDropdown.find('.dropdown-menu-wrapper').html(htmlDropdown);
                     }
                 });
@@ -1175,17 +1181,17 @@ $(function () {
                 $elements = $dropdownMenu.find('.relacional-dropdown-element');
 
             if ($this.attr('data-anterior') != $this.val()) {
-                
-                $filtereds = $elements.filter(function() {
+
+                $filtereds = $elements.filter(function () {
                     return $(this).text().toLowerCase().indexOf($this.val().toLowerCase()) != -1;
                 });
-    
+
                 if (!$filtereds.length) {
                     $nenhumResult.removeClass('d-none');
                 } else {
                     $nenhumResult.addClass('d-none');
                 }
-    
+
                 $elements.not($filtereds).hide();
                 $filtereds.show();
 
@@ -1197,55 +1203,55 @@ $(function () {
             }
 
         });
-        
-        $('.relacional-dropdown-input')
-            .click(function() {
-                var $this = $(this)
-                if ($this.parents('.dropdown').hasClass('show')) {
-                    $this.dropdown('toggle');
-                }
-            })
-            .on('blur change', function() {
 
-                var $this = $(this),
+    $('.relacional-dropdown-input')
+        .click(function () {
+            var $this = $(this)
+            if ($this.parents('.dropdown').hasClass('show')) {
+                $this.dropdown('toggle');
+            }
+        })
+        .on('blur change', function () {
+
+            var $this = $(this),
                 $dropdownMenu = $this.siblings('.dropdown-menu');
 
-                $this.removeClass('is-valid is-invalid');
-                
-                if ($this.val()) {
+            $this.removeClass('is-valid is-invalid');
 
-                    $dropdownMenu.find('.nenhum-result').addClass('d-none');
-                    $('.relacional-dropdown-element').show();
-                    
-                    $filtereds = $dropdownMenu.find('.relacional-dropdown-element').filter(function() {
-                        return $(this).text().toLowerCase().indexOf($this.val().toLowerCase()) != -1;
-                    });
-                    
-                    if (!$filtereds.length) {
+            if ($this.val()) {
 
-                        if ($this.attr('data-pode_nao_cadastrado') == 'false') {
+                $dropdownMenu.find('.nenhum-result').addClass('d-none');
+                $('.relacional-dropdown-element').show();
 
-                            $this
-                                .removeClass('is-valid')
-                                .addClass('is-invalid');
-                                
-                            this.setCustomValidity('invalid');
-                            $this.after('<div class="invalid-feedback">Selecione um item existente.</div>');
-                            
-                        } else {
-                            
-                            $this.addClass('is-valid');
-                            this.setCustomValidity('');
+                $filtereds = $dropdownMenu.find('.relacional-dropdown-element').filter(function () {
+                    return $(this).text().toLowerCase().indexOf($this.val().toLowerCase()) != -1;
+                });
 
-                        }
+                if (!$filtereds.length) {
+
+                    if ($this.attr('data-pode_nao_cadastrado') == 'false') {
+
+                        $this
+                            .removeClass('is-valid')
+                            .addClass('is-invalid');
+
+                        this.setCustomValidity('invalid');
+                        $this.after('<div class="invalid-feedback">Selecione um item existente.</div>');
 
                     } else {
-                        
+
                         $this.addClass('is-valid');
                         this.setCustomValidity('');
 
                     }
 
+                } else {
+
+                    $this.addClass('is-valid');
+                    this.setCustomValidity('');
+
                 }
-            });
+
+            }
+        });
 });
