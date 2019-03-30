@@ -34,7 +34,7 @@ $(function () {
             Save();
 
             // Limpar formulario
-            $form.reset();
+            // $form.reset();
             $($form).removeClass('was-validated');
             
             $fields

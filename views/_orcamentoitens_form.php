@@ -9,15 +9,15 @@
                 <th class="text-truncate">Item</th>
                 <th class="text-truncate">SubItem</th>
                 <th class="text-truncate">Quant</th>
-                <th class="text-truncate">Largura</th>
-                <th class="text-truncate">Comprimento</th>
-                <th class="text-truncate">Quant. Usada</th>
+                <th class="text-truncate">Largura Unit.</th>
+                <th class="text-truncate">Comprimento Unit.</th>
+                <th class="text-truncate">Quant. Usada Unit.</th>
                 <th class="text-truncate">Serviço/Produto</th>
                 <th class="text-truncate">Material/Serviço</th>
                 <th class="text-truncate">Material Complem.</th>
                 <th class="text-truncate">Unidade</th>
-                <th class="text-truncate">Custo</th>
-                <th class="text-truncate">Preço</th>
+                <th class="text-truncate">Custo Total</th>
+                <th class="text-truncate">Preço Total</th>
                 <th class="text-truncate">Observação</th>
             </tr>
         </thead>

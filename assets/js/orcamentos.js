@@ -218,36 +218,55 @@ $(function () {
         }    
     });
 
-        $('#material_servico').on('change blur',function(){
-            var $unidade = $(this);
-            var $largura = $('#largura');
-            var $comprimento = $('#comprimento');
-            var $materialComplementar = $('#material_complementar');
-            
-            if( $unidade.val() == 'M²' ){
-                $largura.removeAttr('disabled');
-                $comprimento.removeAttr('disabled');
-                $materialComplementar.removeAttr('disabled');
-                calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
-            }else{
-                $largura.attr('disabled','disabled');
-                $comprimento.attr('disabled','disabled');
-                $materialComplementar.attr('disabled','disabled');
-            }
-        });
+    $('#unidade').on('change blur', function(){
+        calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+    });
+    $('#quantidade').on('change blur', function(){
+        calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+    });
+    $('#largura').on('change blur', function(){
+        calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+    });
+    $('#comprimento').on('change blur', function(){
+        calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+    });
 
-        $('#unidade').on('change blur', function(){
-            calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
-        });
-        $('#quantidade').on('change blur', function(){
-            calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
-        });
-        $('#largura').on('change blur', function(){
-            calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
-        });
-        $('#comprimento').on('change blur', function(){
-            calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
-        });
+    $('#material_complementar').on('change blur', function(){
+        $material = $('#material_servico');
+        $materialComplementar = $('#material_complementar');
+
+        if( $material.val().toLowerCase() == $materialComplementar.val().toLowerCase() ){
+            $materialComplementar.val('');
+            $materialComplementar.removeClass('is-valid is-invalid');
+            $materialComplementar.attr('data-preco','');
+            $materialComplementar.attr('data-custo','');
+        }
+    });
+
+    $("#custo_tot_subitem, #preco_tot_subitem").on('change blur',function(){
+        var $custo = $("#custo_tot_subitem");
+        var $preco = $("#preco_tot_subitem");
+        var $material = $('#material_servico');
+
+        if( $custo.val() != "" && $preco.val() == "" ){
+            
+            $preco.val(floatParaPadraoBrasileiro( $material.attr('data-preco') ) );
+            return;
+        }
+        
+        if( $custo.val() == "" && $preco.val() != "" ){
+            $material.val('').change().blur();
+            return;
+        }
+        
+        if( $custo.val() != "" && $preco.val() != "" ){
+            if( parseFloat(floatParaPadraoInternacional( $custo.val())) > parseFloat(floatParaPadraoInternacional( $preco.val())) ){
+                
+                $preco.val(floatParaPadraoBrasileiro( $material.attr('data-preco') ) );
+                return;
+            }    
+        }
+    });
 
 
     $(document)
@@ -335,10 +354,14 @@ $(function () {
         .on('click', '[name="material_servico"] ~ .relacional-dropdown .relacional-dropdown-element', function () {
 
             var $this = $(this),
+                $tipoProdServ = $('[name="tipo_servico_produto"]'),
                 $material = $('[name="material_servico"]'),
                 $unidade = $('[name="unidade"]'),
                 $custo = $('[name="custo_tot_subitem"]'),
                 $preco = $('[name="preco_tot_subitem"]'),
+                $largura = $('[name="largura"]'),
+                $comprimento = $('[name="comprimento"]'),
+                $materialComplementar = $('[name="material_complementar"]'),
                 data_tabela = $this.attr('data-tabela'),
                 data_unidade = $this.attr('data-unidade'),
                 data_preco = $this.attr('data-preco'),
@@ -362,6 +385,29 @@ $(function () {
                 .attr('data-unidade', unidade)
                 .attr('data-preco', data_preco)
                 .attr('data-custo', data_custo);
+
+            if( $tipoProdServ.val() == 'produtos'){
+                if($unidade.val() == 'M²' ){
+                    console.log('m² e produtos - ',$tipoProdServ.val());
+                    $largura.val('').removeAttr('disabled').removeClass('is-valid is-invalid');
+                    $comprimento.val('').removeAttr('disabled').removeClass('is-valid is-invalid');
+                    $materialComplementar.val('').removeAttr('disabled').removeClass('is-valid is-invalid');
+                }else{
+                    console.log('!m² || !produtos - ',$tipoProdServ.val());    
+                    $largura.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
+                    $comprimento.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
+                    $materialComplementar.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
+                }
+                
+
+            }else{
+                console.log('!m² || !produtos - ',$tipoProdServ.val());
+                $largura.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
+                $comprimento.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
+                $materialComplementar.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
+
+            } 
+            calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));   
 
         })
         .on('change', '[name="pf_pj"]', function () {
@@ -566,5 +612,22 @@ function calculaQuantidadeUsadaMaterial(unid, larg, comp, qtdUsada){ // recebe o
             return;
         }
 
+    }
+}
+
+function maiorque (valMenor, valMaior){
+
+    valorMenor = floatParaPadraoInternacional(valMenor);
+    valorMaior = floatParaPadraoInternacional(valMaior);        
+
+    if( valorMenor != '' && valorMaior != ''){
+
+        if(valorMenor < valorMaior){
+           return true; 
+        }else{
+            return false;
+        }
+    }else{
+        return false;
     }
 }
