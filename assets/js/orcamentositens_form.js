@@ -85,13 +85,13 @@ $(function () {
             lastInsertId += 1;
 
             $('#itensOrcamento tbody')
-                .prepend('<tr data-id="' + lastInsertId + '">' + tds + botoes + '</tr>');
+                .prepend('<tr data-id="' + lastInsertId + '">' + botoes + tds + '</tr>');
 
         } else {
             // Caso tenha algum valor é por que o contato está sendo editado
 
             $('#itensOrcamento tbody tr[data-id="' + currentId + '"]')
-                .html(tds + botoes);
+                .html(botoes + tds);
 
             // Seta o data id como undefined para novos contatos poderem ser cadastrados
             $formContatos.removeAttr('data-current-id');
@@ -108,21 +108,21 @@ $(function () {
             var par = $(this).closest('tr');
             var tdItem = par.children("td:nth-child(1)");
             var tdSubItem = par.children("td:nth-child(2)");
-            var tdQuant = par.children("td:nth-child(3)");
-            var tdLargura = par.children("td:nth-child(4)");
-            var tdComprimento = par.children("td:nth-child(5)");
-            var tdQuantUsada = par.children("td:nth-child(6)");
-            var tdServicoProduto = par.children("td:nth-child(7)");
-            var tdMaterialServico = par.children("td:nth-child(8)");
-            var tdMaterialComplementar = par.children("td:nth-child(9)");
-            var tdUnidade = par.children("td:nth-child(10)");
-            var tdCusto = par.children("td:nth-child(11)");
-            var tdPreco = par.children("td:nth-child(12)");
+            var tdServicoProduto = par.children("td:nth-child(3)");
+            var tdMaterialServico = par.children("td:nth-child(4)");
+            var tdMaterialComplementar = par.children("td:nth-child(5)");
+            var tdUnidade = par.children("td:nth-child(6)");
+            var tdCusto = par.children("td:nth-child(7)");
+            var tdPreco = par.children("td:nth-child(8)");
+            var tdQuant = par.children("td:nth-child(9)");
+            var tdLargura = par.children("td:nth-child(10)");
+            var tdComprimento = par.children("td:nth-child(11)");
+            var tdQuantUsada = par.children("td:nth-child(12)");
             var tdObservacao = par.children("td:nth-child(13)");
 
-            content += '[' + tdItem.text() + ' * ' + tdSubItem.text() + ' * ' + tdQuant.text() + ' * ' + tdLargura.text() + ' * ' + 
-                             tdComprimento.text() + ' * ' + tdQuantUsada.text() + ' * ' + tdServicoProduto.text() + ' * ' + tdMaterialServico.text() + ' * ' + 
-                             tdMaterialComplementar.text() + ' * ' + tdUnidade.text() + ' * ' + tdCusto.text() + ' * ' + tdPreco.text() + ' * ' + tdObservacao.text() + ']';
+            content += '[' + tdItem.text() + ' * ' + tdSubItem.text() + ' * ' + tdServicoProduto.text() + ' * ' + tdMaterialServico.text() + ' * ' + 
+                             tdMaterialComplementar.text() + ' * ' + tdUnidade.text() + ' * ' + tdCusto.text() + ' * ' + tdPreco.text() + ' * ' + 
+                             tdQuant.text() + ' * ' + tdLargura.text() + ' * ' + tdComprimento.text() + ' * ' + tdQuantUsada.text() + ' * ' + tdObservacao.text() + ']';
         });
 
         $('[name=itens]')
@@ -149,17 +149,17 @@ $(function () {
             var $par = $(this).closest('tr');
                 tdItem = $par.children("td:nth-child(1)");
                 tdSubItem = $par.children("td:nth-child(2)");
-                tdQuant = $par.children("td:nth-child(3)");
-                tdLargura = $par.children("td:nth-child(4)");
-                tdComprimento = $par.children("td:nth-child(5)");
-                tdQuantUsada = $par.children("td:nth-child(6)");
-                tdServicoProduto = $par.children("td:nth-child(7)");
-                tdMaterialServico = $par.children("td:nth-child(8)");
-                tdMaterialComplementar = $par.children("td:nth-child(9)");
-                tdUnidade = $par.children("td:nth-child(10)");
-                tdCusto = $par.children("td:nth-child(11)");
-                tdPreco = $par.children("td:nth-child(12)");
-                tdObservacao = $par.children("td:nth-child(13)");
+                tdServicoProduto = $par.children("td:nth-child(3)");
+                tdMaterialServico = $par.children("td:nth-child(4)");
+                tdMaterialComplementar = $par.children("td:nth-child(5)");
+                tdUnidade = $par.children("td:nth-child(6)");
+                tdCusto = $par.children("td:nth-child(7)");
+                tdPreco = $par.children("td:nth-child(8)");
+                tdQuant = $par.children("td:nth-child(9)");
+                tdLargura = $par.children("td:nth-child(10)");
+                tdComprimento = $par.children("td:nth-child(11)");
+                tdQuantUsada = $par.children("td:nth-child(12)");
+                tdObservacao = $par.children("td:nth-child(13)");    
 
         // Desabilita ele mesmo e os botões irmãos de editar e excluir da linha atual
         $par
@@ -208,49 +208,4 @@ $(function () {
         SetInput();
     };
 
-    // Validacão se o nome já existe entre os contatos daquela tabela auxiliar
-    // $('[name=contato_nome]').blur(function () {
-
-    //     var $this = $(this),
-    //         contatos = Contatos(),
-    //         nomes = [];
-
-    //     $this.removeClass('is-valid is-invalid');
-    //     $this.siblings('.invalid-feedback').remove();
-
-    //     if (contatos) {
-
-    //         // Posicão 0 é o nome do contato
-    //         contatos.forEach(contato => nomes.push(contato[0].toLowerCase()));
-
-    //         if ($this.val()) {
-
-    //             var value = $this.val().toLowerCase(),
-    //                 dtAnteriorLower = $this.attr('data-anterior') ? $this.attr('data-anterior') : '';
-
-    //             if (dtAnteriorLower.toLowerCase() != value) {
-
-    //                 $this.removeClass('is-invalid is-valid');
-    //                 $this[0].setCustomValidity('');
-                    
-    //                 if (nomes.indexOf(value) == -1) {
-    //                     // Não existe, pode seguir
-
-    //                     $this.addClass('is-valid');
-
-    //                     $this[0].setCustomValidity('');
-    //                 } else {
-    //                     // Já existe, erro
-
-    //                     $this.addClass('is-invalid');
-
-    //                     $this[0].setCustomValidity('invalid');
-
-    //                     $this.after('<div class="invalid-feedback">Já existe um contato com este nome</div>');
-    //                 }
-    //             }
-    //         }
-
-    //     }
-    // });
 });
