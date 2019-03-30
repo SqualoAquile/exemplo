@@ -15,7 +15,7 @@ $(function () {
     $('#data_retorno').val(proximoDiaUtil(dataAtual(), 3)).datepicker('update');
 
     // inicializa os inputs da pagina - parte de itens do orçamento
-    $('#material_complementar').attr('disabled','disabled');
+    // $('#material_complementar').attr('disabled','disabled');
     $('#quant_usada').attr('disabled','disabled');
     $('#custo_tot_subitem').attr('disabled','disabled');
     
@@ -30,10 +30,14 @@ $(function () {
         success: function (data) {
 
             var bocarolo, margem;
-            bocarolo = floatParaPadraoInternacional(data['tamanho_boca_rolo']);
-            margem = floatParaPadraoInternacional(data['margem_erro_material']);
-            $('#unidade').attr('data-bocarolo',bocarolo);
-            $('#unidade').attr('data-margemerro',margem);
+            if (data['tamanho_boca_rolo']) {
+                bocarolo = floatParaPadraoInternacional(data['tamanho_boca_rolo']);
+                $('#unidade').attr('data-bocarolo',bocarolo);
+            }
+            if (data['margem_erro_material']) {
+                margem = floatParaPadraoInternacional(data['margem_erro_material']);
+                $('#unidade').attr('data-margemerro',margem);
+            }
 
         }
     });
@@ -64,6 +68,7 @@ $(function () {
                 dataType: 'json',
                 success: function (data) {
 
+                    // JSON Response - Ordem Alfabética
                     data.sort(function (a, b) {
                         a = a.descricao.toLowerCase();
                         b = b.descricao.toLowerCase();
@@ -94,18 +99,12 @@ $(function () {
 
                     $material
                         .removeClass('is-valid is-invalid')
-                        .removeAttr('data-tabela')
-                        .removeAttr('data-custo')
-                        .removeAttr('data-preco')
-                        .removeAttr('data-unidade')
+                        .removeAttr('data-tabela data-custo data-preco data-unidade')
                         .val('');
 
                     $materialComplementar
                         .removeClass('is-valid is-invalid')
-                        .removeAttr('data-tabela')
-                        .removeAttr('data-custo')
-                        .removeAttr('data-preco')
-                        .removeAttr('data-unidade')
+                        .removeAttr('data-tabela data-custo data-preco data-unidade')
                         .val('');
 
                     $unidade
@@ -135,15 +134,13 @@ $(function () {
                         .removeClass('is-valid is-invalid')
                         .val('');
 
-
-
                     if (val == 'produtos') {
 
                         $material.removeAttr('disabled');
                         $materialDropdown.html(htmlDropdown);
 
+                        $materialComplementar.removeAttr('disabled');
                         $materialComplementarDropdown.html(htmlDropdown);
-                        // $materialComplementar.removeAttr('disabled');
                         
                             
                     } else if (val == 'servicos') {
@@ -165,12 +162,12 @@ $(function () {
 
         });
 
-        $('#data_emissao').on('change blur',function(){
-            if($('#data_emissao').val() != ''){
-                $('#data_validade').val(proximoDiaUtil($('#data_emissao').val(), 15)).datepicker('update').blur();
-                $('#data_retorno').val(proximoDiaUtil($('#data_emissao').val(), 3)).datepicker('update').blur();
-            }
-        });
+    $('#data_emissao').on('change blur',function(){
+        if($('#data_emissao').val() != ''){
+            $('#data_validade').val(proximoDiaUtil($('#data_emissao').val(), 15)).datepicker('update').blur();
+            $('#data_retorno').val(proximoDiaUtil($('#data_emissao').val(), 3)).datepicker('update').blur();
+        }
+    });
 
     $('#data_validade').on('change blur', function () {
         if ($('#data_validade').val() != '') {
@@ -264,10 +261,43 @@ $(function () {
                 
                 $preco.val(floatParaPadraoBrasileiro( $material.attr('data-preco') ) );
                 return;
-            }    
+            }
+        }        
+    });
+        
+    $('#material_servico').on('change blur',function(){
+        var $unidade = $(this);
+        var $largura = $('#largura');
+        var $comprimento = $('#comprimento');
+        var $materialComplementar = $('#material_complementar');
+        
+        if( $unidade.val() == 'M²' ){
+            $largura.removeAttr('disabled');
+            $comprimento.removeAttr('disabled');
+            $materialComplementar.removeAttr('disabled');
+            calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+        }else{
+            $largura.attr('disabled','disabled');
+            $comprimento.attr('disabled','disabled');
+            // Aqui está quebrando uma funcionalidade feita
+            // Checar com @matheuspoppl
+            $materialComplementar.attr('disabled','disabled');
+            //
         }
     });
 
+    $('#unidade').on('change blur', function(){
+        calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+    });
+    $('#quantidade').on('change blur', function(){
+        calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+    });
+    $('#largura').on('change blur', function(){
+        calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+    });
+    $('#comprimento').on('change blur', function(){
+        calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+    });
 
     $(document)
         .ready(function () {
@@ -280,6 +310,7 @@ $(function () {
                 dataType: 'json',
                 success: function (data) {
 
+                    // JSON Response - Ordem Alfabética
                     data.sort(function (a, b) {
                         a = a.nome.toLowerCase();
                         b = b.nome.toLowerCase();
@@ -422,7 +453,7 @@ $(function () {
                 $elements.hide();
                 $filtereds.show();
 
-                $('[name="nome_cliente"], [name=faturado_para], [name=telefone], [name=celular], [name=email], [name=como_conheceu]')
+                $('[name="nome_cliente"], [name=faturado_para], [name=telefone], [name=celular], [name=email]')
                     .removeClass('is-valid is-invalid')
                     .val('');
 
@@ -463,6 +494,69 @@ $(function () {
             }
         });
 
+    $('#como_conheceu')
+        .on('change', function () {
+
+            var $this = $(this);
+
+            $('.column-quem-indicou').remove();
+
+            if (!$this.val() && $this.attr('data-anterior')) {
+                if ($this.attr('data-anterior').startsWith('Contato - ')) {
+                    $this.val('Contato');
+                }
+            }
+
+            if ($this.val()) {
+                if ($this.val().toLocaleLowerCase() == 'contato' || $this.val().startsWith('Contato - ')) {
+
+                    $this
+                        .parents('[class^=col]')
+                        .not('#esquerda')
+                        .after(`
+                            <div class="column-quem-indicou col-xl-12" style="order:12;">
+                                <div class="form-group">
+                                    <label class="font-weight-bold" for="quem_indicou">
+                                        <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Campo Obrigatório">*</i>
+                                        <span>Quem Indicou</span>
+                                    </label>
+                                    <input type="text" class="form-control" name="quem_indicou" value="" required data-unico="" data-anterior="" id="quem_indicou" tabindex="12" data-mascara_validacao="false">
+                                </div>
+                            </div>
+                        `);
+
+                    $('#quem_indicou')
+                        .val($this.attr('data-anterior').replace('Contato - ', ''));
+                }
+            }
+        })
+        .change();
+
+    $(document)
+        .on('blur', '#quem_indicou', function() {
+
+            var $this = $(this),
+                value = $this.val(),
+                $comoConhec = $('#como_conheceu'),
+                comoConhecVal = $comoConhec.val(),
+                camposConcat = comoConhecVal + ' - ' + value;
+
+            $this.removeClass('is-valid is-invalid');
+            $this[0].setCustomValidity('');
+
+            if (value) {
+                
+                $comoConhec
+                    .children('option:contains(' + comoConhecVal + ')')
+                    .attr('value', camposConcat);
+
+                $this.addClass('is-valid');
+                $this[0].setCustomValidity('');
+                
+            }
+
+        });
+
 });
 
 function dataAtual() {
@@ -486,35 +580,39 @@ function dataAtual() {
 
 function proximoDiaUtil(dataInicio, distdias) {
 
-    if (distdias != 0) {
-        var dtaux = dataInicio.split("/");
-        var dtvenc = new Date(dtaux[2], parseInt(dtaux[1]) - 1, dtaux[0]);
-
-        //soma a quantidade de dias para o recebimento/pagamento
-        dtvenc.setDate(dtvenc.getDate() + distdias);
-
-        //verifica se a data final cai no final de semana, se sim, coloca para o primeiro dia útil seguinte
-        if (dtvenc.getDay() == 6) {
-            dtvenc.setDate(dtvenc.getDate() + 2);
+    if (dataInicio) {
+        if (distdias != 0) {
+            var dtaux = dataInicio.split("/");
+            var dtvenc = new Date(dtaux[2], parseInt(dtaux[1]) - 1, dtaux[0]);
+    
+            //soma a quantidade de dias para o recebimento/pagamento
+            dtvenc.setDate(dtvenc.getDate() + distdias);
+    
+            //verifica se a data final cai no final de semana, se sim, coloca para o primeiro dia útil seguinte
+            if (dtvenc.getDay() == 6) {
+                dtvenc.setDate(dtvenc.getDate() + 2);
+            }
+            if (dtvenc.getDay() == 0) {
+                dtvenc.setDate(dtvenc.getDate() + 1);
+            }
+    
+            //monta a data no padrao brasileiro
+            var dia = dtvenc.getDate();
+            var mes = dtvenc.getMonth() + 1;
+            var ano = dtvenc.getFullYear();
+            if (dia.toString().length == 1) {
+                dia = "0" + dtvenc.getDate();
+            }
+            if (mes.toString().length == 1) {
+                mes = "0" + mes;
+            }
+            dtvenc = dia + "/" + mes + "/" + ano;
+            return dtvenc;
+        } else {
+            return dataInicio;
         }
-        if (dtvenc.getDay() == 0) {
-            dtvenc.setDate(dtvenc.getDate() + 1);
-        }
-
-        //monta a data no padrao brasileiro
-        var dia = dtvenc.getDate();
-        var mes = dtvenc.getMonth() + 1;
-        var ano = dtvenc.getFullYear();
-        if (dia.toString().length == 1) {
-            dia = "0" + dtvenc.getDate();
-        }
-        if (mes.toString().length == 1) {
-            mes = "0" + mes;
-        }
-        dtvenc = dia + "/" + mes + "/" + ano;
-        return dtvenc;
     } else {
-        return dataInicio;
+        return false;
     }
 }
 

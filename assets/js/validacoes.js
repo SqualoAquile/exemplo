@@ -1137,6 +1137,7 @@ $(function () {
                     dataType: 'json',
                     success: function (data) {
 
+                        // JSON Response - Ordem Alfabética
                         data.sort(function (a, b) {
                             a = a[campo].toLowerCase();
                             b = b[campo].toLowerCase();

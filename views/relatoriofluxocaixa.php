@@ -8,6 +8,23 @@ require "_header_browser_relatorios.php";
 require "_graficosNOVO.php";
 ?>
 
+<div class="collapse mb-5 show" id="collapseMeta">
+    <div class="card card-body">
+        <div class="col-lg">
+            <h5 class="text-center my-1">
+            Meta Mensal Atingida <span class="badge badge-primary badge-pill" data-id="meta"></span>
+            </h5>
+            <div class="progress my-1" style="height: 50px;">
+                <div    class="progress-bar bg-info" role="progressbar" 
+                        style="width: <?php echo $meta?>%;" 
+                        aria-valuenow="<?php echo $meta?>" 
+                        aria-valuemin="0" aria-valuemax="100"> 
+                        <div class="h5"><?php echo $meta?>% </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="collapse mb-5" id="collapseFluxocaixaResumo">
     <div class="card card-body">
@@ -90,6 +107,7 @@ require "_graficosNOVO.php";
         </div>
     </div>
 </div>
+
 
 <?php require "_table_datatable.php" ?>
 

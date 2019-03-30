@@ -367,6 +367,16 @@ class ajaxController extends controller{
     echo json_encode($dados);
   }
 
+  public function gerarGraficoFiltroIntervaloDatas2(){
+    
+    if(isset($_POST) && !empty($_POST)){
+      $shared = new Shared($_POST['modulo']);
+      $dados = $shared->gerarGraficoFiltroIntervaloDatas2($_POST);
+    }
+    
+    echo json_encode($dados);
+  }
+
   //////// ORÇAMENTOS
   public function getRelacionalDropdownOrcamentos() {
     if (isset($_POST) && !empty($_POST)) {
@@ -374,6 +384,7 @@ class ajaxController extends controller{
       echo json_encode($orcamento->getRelacionalDropdown($_POST));
     }
   }
+  
 
   public function buscaParametrosMaterial() {
     $array = array();
@@ -393,6 +404,12 @@ class ajaxController extends controller{
   public function listarParametros() {
     if (isset($_POST) && !empty($_POST)) {
       echo json_encode($this->parametros->listar($_POST));
+    }
+  }
+
+  public function listarParametrosDoiscampos() {
+    if (isset($_POST) && !empty($_POST)) {
+      echo json_encode($this->parametros->listarDoiscampos($_POST));
     }
   }
 

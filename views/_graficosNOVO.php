@@ -1,5 +1,6 @@
 <script src="<?php echo BASE_URL?>/assets/js/graficosPizzaFuncionando.js" type="text/javascript"></script>
 <script src="<?php echo BASE_URL?>/assets/js/graficosTemporal.js" type="text/javascript"></script>
+<script src="<?php echo BASE_URL?>/assets/js/graficosTemporalAQuitar.js" type="text/javascript"></script>
 <!-- <script src="<?php echo BASE_URL?>/assets/js/graficos.js" type="text/javascript"></script> -->
 
 
@@ -54,7 +55,7 @@
             <div class="row">
                 <div class="col-lg-12 h3">Fluxo de Caixa A Realizar</div>
                 <div class="col-lg-6">
-                    <select class="custom-select" id="selectGrafOpcoe2">
+                    <select class="custom-select" id="selectGrafOpcoes2">
                         <option selected disabled>Agrupar por</option>
                         <option value="0" >Hoje</option>
                         <option value="7" >7 dias</option>
