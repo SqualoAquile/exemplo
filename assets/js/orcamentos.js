@@ -503,35 +503,39 @@ function dataAtual() {
 
 function proximoDiaUtil(dataInicio, distdias) {
 
-    if (distdias != 0) {
-        var dtaux = dataInicio.split("/");
-        var dtvenc = new Date(dtaux[2], parseInt(dtaux[1]) - 1, dtaux[0]);
-
-        //soma a quantidade de dias para o recebimento/pagamento
-        dtvenc.setDate(dtvenc.getDate() + distdias);
-
-        //verifica se a data final cai no final de semana, se sim, coloca para o primeiro dia útil seguinte
-        if (dtvenc.getDay() == 6) {
-            dtvenc.setDate(dtvenc.getDate() + 2);
+    if (dataInicio) {
+        if (distdias != 0) {
+            var dtaux = dataInicio.split("/");
+            var dtvenc = new Date(dtaux[2], parseInt(dtaux[1]) - 1, dtaux[0]);
+    
+            //soma a quantidade de dias para o recebimento/pagamento
+            dtvenc.setDate(dtvenc.getDate() + distdias);
+    
+            //verifica se a data final cai no final de semana, se sim, coloca para o primeiro dia útil seguinte
+            if (dtvenc.getDay() == 6) {
+                dtvenc.setDate(dtvenc.getDate() + 2);
+            }
+            if (dtvenc.getDay() == 0) {
+                dtvenc.setDate(dtvenc.getDate() + 1);
+            }
+    
+            //monta a data no padrao brasileiro
+            var dia = dtvenc.getDate();
+            var mes = dtvenc.getMonth() + 1;
+            var ano = dtvenc.getFullYear();
+            if (dia.toString().length == 1) {
+                dia = "0" + dtvenc.getDate();
+            }
+            if (mes.toString().length == 1) {
+                mes = "0" + mes;
+            }
+            dtvenc = dia + "/" + mes + "/" + ano;
+            return dtvenc;
+        } else {
+            return dataInicio;
         }
-        if (dtvenc.getDay() == 0) {
-            dtvenc.setDate(dtvenc.getDate() + 1);
-        }
-
-        //monta a data no padrao brasileiro
-        var dia = dtvenc.getDate();
-        var mes = dtvenc.getMonth() + 1;
-        var ano = dtvenc.getFullYear();
-        if (dia.toString().length == 1) {
-            dia = "0" + dtvenc.getDate();
-        }
-        if (mes.toString().length == 1) {
-            mes = "0" + mes;
-        }
-        dtvenc = dia + "/" + mes + "/" + ano;
-        return dtvenc;
     } else {
-        return dataInicio;
+        return false;
     }
 }
 

@@ -718,7 +718,7 @@ $(document)
 
         }
     })
-    .on('click', '.excluir', function () {
+    .on('click', '.excluir-doiscampos', function () {
 
         var $this = $(this),
             $parent = $this.closest('.list-group-item'),
@@ -743,7 +743,7 @@ $(document)
                 });
         }
     })
-    .on('click', '.salvar', function () {
+    .on('click', '.salvar-doiscampos', function () {
 
         var $this = $(this),
             $searchBody = $this.parents('.search-body-doiscampos'),
@@ -801,6 +801,8 @@ $(document)
             }
         } else {
 
+            console.log($inputSearch[0])
+
             $inputSearch[0].setCustomValidity('invalid');
 
             $inputSearch
@@ -809,7 +811,7 @@ $(document)
         }
 
     })
-    .on('click', '.editar', function () {
+    .on('click', '.editar-doiscampos', function () {
 
         var $parent = $(this).closest('.list-group-item'),
             $inputSearch = $parent.parents('.list-group-filtereds-wrapper-doiscampos').siblings('.search-input-doiscampos');
