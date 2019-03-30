@@ -15,7 +15,7 @@ $(function () {
     $('#data_retorno').val(proximoDiaUtil(dataAtual(), 3)).datepicker('update');
 
     // inicializa os inputs da pagina - parte de itens do orçamento
-    $('#material_complementar').attr('disabled','disabled');
+    // $('#material_complementar').attr('disabled','disabled');
     $('#quant_usada').attr('disabled','disabled');
     $('#custo_tot_subitem').attr('disabled','disabled');
     
@@ -30,10 +30,14 @@ $(function () {
         success: function (data) {
 
             var bocarolo, margem;
-            bocarolo = floatParaPadraoInternacional(data['tamanho_boca_rolo']);
-            margem = floatParaPadraoInternacional(data['margem_erro_material']);
-            $('#unidade').attr('data-bocarolo',bocarolo);
-            $('#unidade').attr('data-margemerro',margem);
+            if (data['tamanho_boca_rolo']) {
+                bocarolo = floatParaPadraoInternacional(data['tamanho_boca_rolo']);
+                $('#unidade').attr('data-bocarolo',bocarolo);
+            }
+            if (data['margem_erro_material']) {
+                margem = floatParaPadraoInternacional(data['margem_erro_material']);
+                $('#unidade').attr('data-margemerro',margem);
+            }
 
         }
     });
@@ -130,15 +134,13 @@ $(function () {
                         .removeClass('is-valid is-invalid')
                         .val('');
 
-
-
                     if (val == 'produtos') {
 
                         $material.removeAttr('disabled');
                         $materialDropdown.html(htmlDropdown);
 
+                        $materialComplementar.removeAttr('disabled');
                         $materialComplementarDropdown.html(htmlDropdown);
-                        // $materialComplementar.removeAttr('disabled');
                         
                             
                     } else if (val == 'servicos') {
@@ -160,12 +162,12 @@ $(function () {
 
         });
 
-        $('#data_emissao').on('change blur',function(){
-            if($('#data_emissao').val() != ''){
-                $('#data_validade').val(proximoDiaUtil($('#data_emissao').val(), 15)).datepicker('update').blur();
-                $('#data_retorno').val(proximoDiaUtil($('#data_emissao').val(), 3)).datepicker('update').blur();
-            }
-        });
+    $('#data_emissao').on('change blur',function(){
+        if($('#data_emissao').val() != ''){
+            $('#data_validade').val(proximoDiaUtil($('#data_emissao').val(), 15)).datepicker('update').blur();
+            $('#data_retorno').val(proximoDiaUtil($('#data_emissao').val(), 3)).datepicker('update').blur();
+        }
+    });
 
     $('#data_validade').on('change blur', function () {
         if ($('#data_validade').val() != '') {
@@ -213,37 +215,39 @@ $(function () {
         }    
     });
 
-        $('#material_servico').on('change blur',function(){
-            var $unidade = $(this);
-            var $largura = $('#largura');
-            var $comprimento = $('#comprimento');
-            var $materialComplementar = $('#material_complementar');
-            
-            if( $unidade.val() == 'M²' ){
-                $largura.removeAttr('disabled');
-                $comprimento.removeAttr('disabled');
-                $materialComplementar.removeAttr('disabled');
-                calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
-            }else{
-                $largura.attr('disabled','disabled');
-                $comprimento.attr('disabled','disabled');
-                $materialComplementar.attr('disabled','disabled');
-            }
-        });
+    $('#material_servico').on('change blur',function(){
+        var $unidade = $(this);
+        var $largura = $('#largura');
+        var $comprimento = $('#comprimento');
+        var $materialComplementar = $('#material_complementar');
+        
+        if( $unidade.val() == 'M²' ){
+            $largura.removeAttr('disabled');
+            $comprimento.removeAttr('disabled');
+            $materialComplementar.removeAttr('disabled');
+            calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+        }else{
+            $largura.attr('disabled','disabled');
+            $comprimento.attr('disabled','disabled');
+            // Aqui está quebrando uma funcionalidade feita
+            // Checar com @matheuspoppl
+            $materialComplementar.attr('disabled','disabled');
+            //
+        }
+    });
 
-        $('#unidade').on('change blur', function(){
-            calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
-        });
-        $('#quantidade').on('change blur', function(){
-            calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
-        });
-        $('#largura').on('change blur', function(){
-            calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
-        });
-        $('#comprimento').on('change blur', function(){
-            calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
-        });
-
+    $('#unidade').on('change blur', function(){
+        calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+    });
+    $('#quantidade').on('change blur', function(){
+        calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+    });
+    $('#largura').on('change blur', function(){
+        calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+    });
+    $('#comprimento').on('change blur', function(){
+        calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+    });
 
     $(document)
         .ready(function () {
@@ -372,7 +376,7 @@ $(function () {
                 $elements.hide();
                 $filtereds.show();
 
-                $('[name="nome_cliente"], [name=faturado_para], [name=telefone], [name=celular], [name=email], [name=como_conheceu]')
+                $('[name="nome_cliente"], [name=faturado_para], [name=telefone], [name=celular], [name=email]')
                     .removeClass('is-valid is-invalid')
                     .val('');
 
@@ -415,10 +419,20 @@ $(function () {
 
     $('#como_conheceu')
         .on('change', function () {
+
             var $this = $(this);
+
             $('.column-quem-indicou').remove();
+
+            if (!$this.val() && $this.attr('data-anterior')) {
+                if ($this.attr('data-anterior').startsWith('Contato - ')) {
+                    $this.val('Contato');
+                }
+            }
+
             if ($this.val()) {
-                if ($this.val().toLocaleLowerCase() == 'contato') {
+                if ($this.val().toLocaleLowerCase() == 'contato' || $this.val().startsWith('Contato - ')) {
+
                     $this
                         .parents('[class^=col]')
                         .not('#esquerda')
@@ -435,7 +449,7 @@ $(function () {
                         `);
 
                     $('#quem_indicou')
-                        .focus();
+                        .val($this.attr('data-anterior').replace('Contato - ', ''));
                 }
             }
         })
@@ -458,7 +472,7 @@ $(function () {
                 $comoConhec
                     .children('option:contains(' + comoConhecVal + ')')
                     .attr('value', camposConcat);
-                
+
                 $this.addClass('is-valid');
                 $this[0].setCustomValidity('');
                 
