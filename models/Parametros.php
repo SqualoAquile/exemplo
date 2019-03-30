@@ -54,6 +54,41 @@ class Parametros extends model {
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function listarDoiscampos($request) {
+        
+        $this->table = $request["tabela"];
+
+        $value_sql1 = "";
+        if ($request["value1"] && $request["campo1"]) {
+
+            $value1 = trim($request["value1"]);
+            $value1 = addslashes($value1);
+            
+            $campo1 = trim($request["campo1"]);
+            $campo1 = addslashes($campo1);
+
+            $value_sql1 = " AND " . $campo1 . " LIKE '%" . $value1 . "%'";
+        }
+
+        $value_sql2 = "";
+        if ($request["value2"] && $request["campo2"]) {
+
+            $value2 = trim($request["value2"]);
+            $value2 = addslashes($value2);
+            
+            $campo2 = trim($request["campo2"]);
+            $campo2 = addslashes($campo2);
+
+            $value_sql2 = " AND " . $campo2 . " LIKE '%" . $value2 . "%'";
+        }
+
+        $sql = "SELECT * FROM " . $this->table . " WHERE situacao = 'ativo'" . $value_sql1 . $value_sql2;
+
+        $sql = self::db()->query($sql);
+        
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function adicionar($request) {
 
         $this->table = $request["tabela"];

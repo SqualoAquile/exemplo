@@ -18,6 +18,7 @@ $(function () {
     $('#custo_tot_subitem').attr('disabled', 'disabled');
 
     $('#unidade').attr('disabled', 'disabled');
+
     $.ajax({
         url: baselink + '/ajax/buscaParametroTamanhoBocaRolo',
         type: 'POST',
@@ -58,6 +59,7 @@ $(function () {
                 dataType: 'json',
                 success: function (data) {
 
+                    // JSON Response - Ordem Alfabética
                     data.sort(function (a, b) {
                         a = a.descricao.toLowerCase();
                         b = b.descricao.toLowerCase();
@@ -85,18 +87,12 @@ $(function () {
 
                     $material
                         .removeClass('is-valid is-invalid')
-                        .removeAttr('data-tabela')
-                        .removeAttr('data-custo')
-                        .removeAttr('data-preco')
-                        .removeAttr('data-unidade')
+                        .removeAttr('data-tabela data-custo data-preco data-unidade')
                         .val('');
 
                     $materialComplementar
                         .removeClass('is-valid is-invalid')
-                        .removeAttr('data-tabela')
-                        .removeAttr('data-custo')
-                        .removeAttr('data-preco')
-                        .removeAttr('data-unidade')
+                        .removeAttr('data-tabela data-custo data-preco data-unidade')
                         .val('');
 
                     $unidade
@@ -226,6 +222,7 @@ $(function () {
                 dataType: 'json',
                 success: function (data) {
 
+                    // JSON Response - Ordem Alfabética
                     data.sort(function (a, b) {
                         a = a.nome.toLowerCase();
                         b = b.nome.toLowerCase();
@@ -380,6 +377,59 @@ $(function () {
                 }
 
             }
+        });
+
+    $('#como_conheceu')
+        .on('change', function () {
+            var $this = $(this);
+            $('.column-quem-indicou').remove();
+            if ($this.val()) {
+                if ($this.val().toLocaleLowerCase() == 'contato') {
+                    $this
+                        .parents('[class^=col]')
+                        .not('#esquerda')
+                        .after(`
+                            <div class="column-quem-indicou col-xl-12" style="order:12;">
+                                <div class="form-group">
+                                    <label class="font-weight-bold" for="quem_indicou">
+                                        <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Campo Obrigatório">*</i>
+                                        <span>Quem Indicou</span>
+                                    </label>
+                                    <input type="text" class="form-control" name="quem_indicou" value="" required data-unico="" data-anterior="" id="quem_indicou" tabindex="12" data-mascara_validacao="false">
+                                </div>
+                            </div>
+                        `);
+
+                    $('#quem_indicou')
+                        .focus();
+                }
+            }
+        })
+        .change();
+
+    $(document)
+        .on('blur', '#quem_indicou', function() {
+
+            var $this = $(this),
+                value = $this.val(),
+                $comoConhec = $('#como_conheceu'),
+                comoConhecVal = $comoConhec.val(),
+                camposConcat = comoConhecVal + ' - ' + value;
+
+            $this.removeClass('is-valid is-invalid');
+            $this[0].setCustomValidity('');
+
+            if (value) {
+                
+                $comoConhec
+                    .children('option:contains(' + comoConhecVal + ')')
+                    .attr('value', camposConcat);
+                
+                $this.addClass('is-valid');
+                $this[0].setCustomValidity('');
+                
+            }
+
         });
 
 });
