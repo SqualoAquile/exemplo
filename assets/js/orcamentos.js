@@ -279,10 +279,7 @@ $(function () {
         }else{
             $largura.attr('disabled','disabled');
             $comprimento.attr('disabled','disabled');
-            // Aqui está quebrando uma funcionalidade feita
-            // Checar com @matheuspoppl
             $materialComplementar.attr('disabled','disabled');
-            //
         }
     });
 
