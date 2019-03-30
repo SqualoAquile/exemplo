@@ -341,6 +341,133 @@ class SSP {
 		
 	}
 
+
+	static function complex_graficosIntervaloDatas2 ( $request, $conn, $table, $primaryKey, $columns, $whereResult=null, $whereAll=null,  $coluna_alvo=null, $interval_datas = null )
+	{
+		$bindings = array();
+		$db = self::db( $conn );
+		$localWhereResult = array();
+		$localWhereAll = array();
+		$whereAllSql = '';
+		$groupby = '';
+
+		// Build the SQL query string from the request
+		$limit = self::limit( $request, $columns );
+		$order = self::order( $request, $columns );
+		$where = self::filter( $request, $columns, $bindings );
+		$whereResult = self::_flatten( $whereResult );
+		$whereAll = self::_flatten( $whereAll );
+
+		if ( $whereResult ) {
+			$where = $where ?
+				$where .' AND '.$whereResult :
+				'WHERE '.$whereResult;
+		}
+
+		if ( $whereAll ) {
+			$where = $where ?
+				$where .' AND '.$whereAll :
+				'WHERE '.$whereAll;
+			$whereAllSql = 'WHERE '.$whereAll;
+		}
+
+		// Main query to actually get the data
+		
+		if(count($interval_datas) == 1){
+			$dt1 = 	$interval_datas[0];
+			$dt2 =  $interval_datas[0];
+		}else{
+			$dt1 = $interval_datas[0];
+			$dt2 = $interval_datas[count($interval_datas)-1];
+		}
+				
+		$sum = ', SUM(valor_total) as total ';
+		$groupby = 'GROUP BY '.$coluna_alvo;
+
+		$where1 = $where." AND despesa_receita = 'Despesa' AND status = 'A Quitar' AND $coluna_alvo BETWEEN '$dt1' AND '$dt2' ";
+		$despesaBruta = self::sql_exec( $db, $bindings,
+			"SELECT $coluna_alvo
+			$sum
+			FROM `$table`
+			$where1
+			$groupby
+			"
+		);
+		
+		$despesas = array();
+		for($i = 0; $i < count($despesaBruta); $i++){
+			for($j = 0; $j < count($interval_datas); $j++ ){
+				if($interval_datas[$j] == $despesaBruta[$i][0]){
+					
+					$despesas[$interval_datas[$j]] = floatval($despesaBruta[$i][1]);
+				}
+			}
+		}
+
+		// Verifica se as datas do $interval_datas existem no array $despesas
+		for($j = 0; $j < count($interval_datas); $j++ ){
+			if (array_key_exists($interval_datas[$j],$despesas) == 0){
+				$despesas[$interval_datas[$j]] = 0;
+			}
+		}
+		// Ordena o array pela ordem das keys
+		ksort($despesas);
+
+		//reescreve as chave do array , para datas no padrão brasileiro
+		foreach ($despesas as $key => $value) {
+			$aux = explode('-',$key);
+			$aux = $aux[2].'/'.$aux[1].'/'.$aux[0];
+			unset($despesas[$key]);
+			$despesas[$aux] = $value;
+			
+		}
+
+		// puxa todos os dados de receita
+		$where2 = $where." AND despesa_receita = 'Receita' AND status = 'A Quitar' AND $coluna_alvo BETWEEN '$dt1' AND '$dt2' ";
+		$receitaBruta = self::sql_exec( $db, $bindings,
+			"SELECT $coluna_alvo
+			$sum
+			FROM `$table`
+			$where2
+			$groupby
+			"
+		);
+		
+		$receitas = array();
+		for($i = 0; $i < count($receitaBruta); $i++){
+			for($j = 0; $j < count($interval_datas); $j++ ){
+				if($interval_datas[$j] == $receitaBruta[$i][0]){
+					
+					$receitas[$interval_datas[$j]] = floatval($receitaBruta[$i][1]);
+				}
+			}
+		}
+
+		// Verifica se as datas do $interval_datas existem no array $despesas
+		for($j = 0; $j < count($interval_datas); $j++ ){
+			if (array_key_exists($interval_datas[$j],$receitas) == 0){
+				$receitas[$interval_datas[$j]] = 0;
+			}
+		}
+		// Ordena o array pela ordem das keys
+		ksort($receitas);
+
+		//reescreve as chave do array , para datas no padrão brasileiro
+		foreach ($receitas as $key => $value) {
+			$aux = explode('-',$key);
+			$aux = $aux[2].'/'.$aux[1].'/'.$aux[0];
+			unset($receitas[$key]);
+			$receitas[$aux] = $value;
+			
+		}
+
+		$data = array();
+		$data[0] = $despesas;
+		$data[1] = $receitas;
+		return $data; 
+		
+	}
+
 	static function complex_graficos_count ( $request, $conn, $table, $primaryKey, $columns, $whereResult=null, $whereAll=null, $sum ='', $coluna_alvo=null )
 	{
 		$bindings = array();

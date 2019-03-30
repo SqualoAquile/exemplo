@@ -113,6 +113,11 @@ $(function () {
                     max = floatPadraoInternacional(max);
                 }
 
+                if(mascara == 'data'){
+                    min = min.split('/').reverse().join('-');
+                    max = max.split('/').reverse().join('-');
+                } 
+
                 if (indexAnterior && indexAnterior != selectVal) {
                     dataTable
                         .columns(indexAnterior)
@@ -130,7 +135,7 @@ $(function () {
 
                     console.log('min max', min, max);
 
-                    if (min >= max) {
+                    if (min > max) {
 
                         $max.addClass('is-invalid');
 
@@ -149,6 +154,12 @@ $(function () {
                 if (selectVal) {
 
                     if (min || max) {
+
+                        if(mascara == 'data'){
+                            min = min.split('-').reverse().join('/');
+                            max = max.split('-').reverse().join('/');
+                        } 
+
                         stringSearch = type + ':' + min + '<>' + max;
                     }
 

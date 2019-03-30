@@ -211,20 +211,21 @@ class Parametros extends model {
 
     }
 
-    public function parametroTamanhoBocaRolo($nomeParam){
-        $result = '';
+    public function buscaParametrosMaterial($requisicao){
+        $result = array();
 
-        $this->table = "parametros";
+        $this->table = addslashes($requisicao['tabela']);
         
-        $sql = "SELECT * FROM " . $this->table . " WHERE parametro = '$nomeParam' AND situacao = 'ativo'";
+        $sql = "SELECT parametro, valor FROM " . $this->table . " WHERE situacao = 'ativo'";
         $sql = self::db()->query($sql);
 
         if ($sql->rowCount() > 0) {
 
-            $sql = $sql->fetch(PDO::FETCH_ASSOC);            
-            $result = $sql["valor"];
+            $sql = $sql->fetchAll(PDO::FETCH_ASSOC);         
+            foreach ($sql as $key => $value) {
+                $result[ $value['parametro'] ] = $value['valor'];
+            }
         }
-        
         return $result;
 
     }

@@ -278,4 +278,57 @@ class Relatoriofluxocaixa extends model {
         }
         return $array;
     }
+
+    public function meta() {
+        $retorno = [];
+
+        $sql = "SELECT valor as valor FROM parametros WHERE parametro='meta'";
+        $sql = self::db()->query($sql);
+
+        if($sql->rowCount()>0){
+            $sql = $sql->fetch();
+            $meta = $sql['valor'];
+            $meta = str_replace(".","",$meta);
+            $meta = floatval($meta);
+        }else{
+            $meta = floatval(0);
+        }
+
+        $mes = date('m');
+        $ano = date('Y');
+        
+        // último dia do mês atual
+        $dia = date("t");
+
+        $dt1 = $ano . '-' . $mes . '-01';
+        $dt2 = $ano . '-' . $mes . '-' . $dia;
+
+        $sql = 
+        "SELECT SUM(valor_total) as valor 
+        FROM fluxocaixa 
+        WHERE despesa_receita = 'Receita' 
+        AND status = 'Quitado' AND situacao='ativo' 
+        AND data_quitacao BETWEEN '$dt1' AND '$dt2' 
+        ";
+
+        $sql = self::db()->query($sql);
+
+        if($sql->rowCount()>0){
+            $sql = $sql->fetch();
+            $atingido = $sql['valor'];
+            $atingido = floatval($atingido);
+        }else{
+            $atingido = floatval(0);
+        }
+
+        if ($meta>0 and $atingido>0){
+            $metaAtingida = floatval($atingido)/floatval($meta);
+            $metaAtingida = floatval($metaAtingida)*100;
+        }else{
+            $metaAtingida = floatval(0);
+        }
+
+        $metaAtingida = round($metaAtingida);
+        return $metaAtingida;
+    }
 }

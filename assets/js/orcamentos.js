@@ -9,34 +9,39 @@ $(function () {
     $('#status').attr('disabled', 'disabled');
     $('#titulo_orcamento').attr('placeholder', 'Nome - Trabalho...');
 
-    $('#data_emissao').val(dataAtual());
-    $('#data_validade').val(proximoDiaUtil($('#data_emissao').val(), 15));
-    $('#data_retorno').val(proximoDiaUtil(dataAtual(), 3));
+    $('#data_emissao').val(dataAtual()).datepicker('update');
+
+    $('#data_validade').val(proximoDiaUtil($('#data_emissao').val(), 15)).datepicker('update');
+    $('#data_retorno').val(proximoDiaUtil(dataAtual(), 3)).datepicker('update');
 
     // inicializa os inputs da pagina - parte de itens do orçamento
-    $('#quant_usada').attr('disabled', 'disabled');
-    $('#custo_tot_subitem').attr('disabled', 'disabled');
-
-    $('#unidade').attr('disabled', 'disabled');
-
+    $('#material_complementar').attr('disabled','disabled');
+    $('#quant_usada').attr('disabled','disabled');
+    $('#custo_tot_subitem').attr('disabled','disabled');
+    
+    $('#unidade').attr('disabled','disabled');
     $.ajax({
-        url: baselink + '/ajax/buscaParametroTamanhoBocaRolo',
+        url: baselink + '/ajax/buscaParametrosMaterial',
         type: 'POST',
         data: {
             tabela: 'parametros',
-            parametro: 'tamanho_boca_rolo'
         },
         dataType: 'json',
         success: function (data) {
-            data = floatParaPadraoInternacional(data);
-            $('#unidade').attr('data-bocarolo', data);
+
+            var bocarolo, margem;
+            bocarolo = floatParaPadraoInternacional(data['tamanho_boca_rolo']);
+            margem = floatParaPadraoInternacional(data['margem_erro_material']);
+            $('#unidade').attr('data-bocarolo',bocarolo);
+            $('#unidade').attr('data-margemerro',margem);
+
         }
     });
 
-    $('#largura').attr('disabled', 'disabled');
-    $('#comprimento').attr('disabled', 'disabled');
-
-
+    // $('#largura').attr('disabled','disabled');
+    // $('#comprimento').attr('disabled','disabled');
+    
+    
     // coloca as opções de produtos/serviços 
     $('#tipo_servico_produto')
         .empty()
@@ -71,6 +76,9 @@ $(function () {
                         $unidade = $('[name="unidade"]'),
                         $custo = $('[name="custo_tot_subitem"]'),
                         $preco = $('[name="preco_tot_subitem"]'),
+                        $largura = $('[name="largura"]'),
+                        $comprimento = $('[name="comprimento"]'),
+                        $quantUsada = $('[name="quant_usada"]'),
                         htmlDropdown = '';
 
                     data.forEach(element => {
@@ -105,16 +113,34 @@ $(function () {
 
                     $custo
                         .removeClass('is-valid is-invalid')
+                        .attr('disabled', 'disabled')
                         .val('');
+                    
+                    $largura
+                        .removeClass('is-valid is-invalid')
+                        .attr('disabled', 'disabled')
+                        .val('');
+                        
+                    $comprimento
+                        .removeClass('is-valid is-invalid')
+                        .attr('disabled', 'disabled')
+                        .val('');
+
+                    $quantUsada
+                        .removeClass('is-valid is-invalid')
+                        .val('');
+
+
 
                     if (val == 'produtos') {
 
                         $material.removeAttr('disabled');
                         $materialDropdown.html(htmlDropdown);
 
-                        $materialComplementar.removeAttr('disabled');
                         $materialComplementarDropdown.html(htmlDropdown);
-
+                        // $materialComplementar.removeAttr('disabled');
+                        
+                            
                     } else if (val == 'servicos') {
 
                         $material.removeAttr('disabled');
@@ -134,12 +160,12 @@ $(function () {
 
         });
 
-    $('#data_emissao').on('change blur', function () {
-        if ($('#data_emissao').val() != '') {
-            $('#data_validade').val(proximoDiaUtil($('#data_emissao').val(), 15)).blur();
-            $('#data_retorno').val(proximoDiaUtil($('#data_emissao').val(), 3)).blur();
-        }
-    });
+        $('#data_emissao').on('change blur',function(){
+            if($('#data_emissao').val() != ''){
+                $('#data_validade').val(proximoDiaUtil($('#data_emissao').val(), 15)).datepicker('update').blur();
+                $('#data_retorno').val(proximoDiaUtil($('#data_emissao').val(), 3)).datepicker('update').blur();
+            }
+        });
 
     $('#data_validade').on('change blur', function () {
         if ($('#data_validade').val() != '') {
@@ -183,32 +209,40 @@ $(function () {
                     $('#data_retorno').val('');
                     $('#data_emissao').focus();
                 }
-            } else {
-                alert('Preencha a Data de Emissão.');
-                $('#data_retorno').val('');
-                $('#data_emissao').focus();
+            }    
+        }    
+    });
+
+        $('#material_servico').on('change blur',function(){
+            var $unidade = $(this);
+            var $largura = $('#largura');
+            var $comprimento = $('#comprimento');
+            var $materialComplementar = $('#material_complementar');
+            
+            if( $unidade.val() == 'M²' ){
+                $largura.removeAttr('disabled');
+                $comprimento.removeAttr('disabled');
+                $materialComplementar.removeAttr('disabled');
+                calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+            }else{
+                $largura.attr('disabled','disabled');
+                $comprimento.attr('disabled','disabled');
+                $materialComplementar.attr('disabled','disabled');
             }
-        }
-    });
+        });
 
-    $('#material_servico').on('change blur', function () {
-        var $unidade = $(this);
-        var $largura = $('#largura');
-        var $comprimento = $('#comprimento');
-
-        if ($unidade.val() == 'M²') {
-            $largura.removeAttr('disabled');
-            $comprimento.removeAttr('disabled')
-        } else {
-            $largura.attr('disabled', 'disabled');
-            $comprimento.attr('disabled', 'disabled');
-        }
-
-    });
-
-    $('#unidade').on('change', function () {
-        calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
-    });
+        $('#unidade').on('change blur', function(){
+            calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+        });
+        $('#quantidade').on('change blur', function(){
+            calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+        });
+        $('#largura').on('change blur', function(){
+            calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+        });
+        $('#comprimento').on('change blur', function(){
+            calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+        });
 
 
     $(document)
@@ -308,11 +342,11 @@ $(function () {
                 unidade = data_tabela != 'servicos' ? data_unidade : 'M²';
 
             $custo
-                .val(data_custo)
+                .val(floatParaPadraoBrasileiro(data_custo))
                 .blur();
 
             $preco
-                .val(data_preco)
+                .val(floatParaPadraoBrasileiro(data_preco))
                 .blur();
 
             $unidade
@@ -534,32 +568,49 @@ function calculaCustoPreco(qtd, unid, custo, preco) {
 
 }
 
-function calculaQuantidadeUsadaMaterial(unid, larg, comp, qtdUsada) { // recebe os objetos (campos)
+function calculaQuantidadeUsadaMaterial(unid, larg, comp, qtdUsada){ // recebe os objetos (campos)    
     var $unidade = unid;
     var $largura = larg;
     var $comprimento = comp;
     var $qtdUsada = qtdUsada;
-    var bocaRolo = $unidade.attr('data-bocarolo');
+    var bocaRolo = parseFloat($unidade.attr('data-bocarolo'));
+    var margemErro = parseFloat($unidade.attr('data-margemerro'));    
 
-    console.log($unidade);
-    if ($unidade.val() != 'M²') {
-        $largura.val('').attr('disabled', 'disabled');
-        $comprimento.val('').attr('disabled', 'disabled');
+    if($unidade.val() != 'M²'){
+        $largura.val('').attr('disabled','disabled');
+        $comprimento.val('').attr('disabled','disabled');
         $qtdUsada.val('');
 
     } else {
         $largura.removeAttr('disabled');
         $comprimento.removeAttr('disabled')
+        
+        if($largura.val() != '' && $comprimento.val() != ''){
+            
+            var tamMaior, larg, comp, quantUs, quantUsLarg, quantUsComp;
+            
+            larg = parseFloat(parseFloat(floatParaPadraoInternacional($largura.val())) *  parseFloat( parseFloat(1) + parseFloat(margemErro/100)));
+            comp = parseFloat( parseFloat(floatParaPadraoInternacional($comprimento.val())) * parseFloat( parseFloat(1) + parseFloat(margemErro/100)));
+            
+            if( ( larg > bocaRolo ) && ( comp > bocaRolo) ){
+                quantUsLarg = parseFloat( parseFloat( Math.ceil(parseFloat( larg / bocaRolo))) * parseFloat(Math.ceil(comp)) );
+                quantUsComp = parseFloat(parseFloat( Math.ceil( parseFloat( comp / bocaRolo))) * parseFloat(Math.ceil(larg)) );
+                quantUs = Math.min(quantUsLarg, quantUsComp);
 
-        if ($largura.val() != '' && $comprimento.val() != '') {
+                quantUs = floatParaPadraoBrasileiro(quantUs);
+                $qtdUsada.val(quantUs);
 
-            var tamMaior, larg, comp;
-            larg = floatParaPadraoInternacional($largura.val());
-            comp = floatParaPadraoInternacional($comprimento.val());
-            tamMaior = Math.max(larg, comp);
-            console.log(tamMaior);
+            }else if( (larg < bocaRolo ) && ( comp < bocaRolo) ){
+                quantUs = floatParaPadraoBrasileiro(parseFloat(1));
+                $qtdUsada.val(quantUs);
 
-        } else {
+            }else{
+                quantUs =  parseFloat( Math.ceil( parseFloat(Math.max(larg, comp))));
+                quantUs = floatParaPadraoBrasileiro(quantUs);
+                $qtdUsada.val(quantUs);
+            }
+        
+        }else{
             $qtdUsada.val('');
             return;
         }
