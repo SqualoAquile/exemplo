@@ -39,7 +39,8 @@
                     <button id="criar-filtro" type="button" class="btn cursor-pointer btn-outline-secondary btn-sm">Mais Filtros</button>
                     <button id="graficos"  type="button" class="btn btn-outline-warning cursor-pointer btn-sm" data-toggle="collapse" data-target="#collapseGraficos2">Gráficos</button>
                            
-                    <button class="btn btn-outline-success btn-sm" id="botaoRelatorio" data-toggle="collapse" data-target="#collapseFluxocaixaResumo" aria-expanded="false" aria-controls="collapseFluxocaixaResumo">Gerar Relatório </button>
+                    <button class="btn btn-outline-success btn-sm" id="botaoRelatorio" data-toggle="collapse" data-target="#collapseFluxocaixaResumo" aria-expanded="false" aria-controls="collapseFluxocaixaResumo">Gerar Relatório</button>
+                
                 </div>
             </div>
 

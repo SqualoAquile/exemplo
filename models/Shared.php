@@ -185,7 +185,10 @@ class Shared extends model {
 
         if ($this->table == "relatoriofluxocaixa"){
             $this->table = "fluxocaixa";
+        } else if ( $this->table == "relatorioorcamentos"){
+            $this->table = "orcamentos";
         }
+        
         $sql = self::db()->query("SHOW FULL COLUMNS FROM " . $this->table);
         $result = $sql->fetchAll(PDO::FETCH_ASSOC);
         
