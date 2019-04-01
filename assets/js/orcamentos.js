@@ -16,10 +16,10 @@ $(function () {
 
     // inicializa os inputs da pagina - parte de itens do orçamento
     // $('#material_complementar').attr('disabled','disabled');
-    $('#quant_usada').attr('disabled','disabled');
-    $('#custo_tot_subitem').attr('disabled','disabled');
-    
-    $('#unidade').attr('disabled','disabled');
+    $('#quant_usada').attr('disabled', 'disabled');
+    $('#custo_tot_subitem').attr('disabled', 'disabled');
+
+    $('#unidade').attr('disabled', 'disabled');
     $.ajax({
         url: baselink + '/ajax/buscaParametrosMaterial',
         type: 'POST',
@@ -32,11 +32,11 @@ $(function () {
             var bocarolo, margem;
             if (data['tamanho_boca_rolo']) {
                 bocarolo = floatParaPadraoInternacional(data['tamanho_boca_rolo']);
-                $('#unidade').attr('data-bocarolo',bocarolo);
+                $('#unidade').attr('data-bocarolo', bocarolo);
             }
             if (data['margem_erro_material']) {
                 margem = floatParaPadraoInternacional(data['margem_erro_material']);
-                $('#unidade').attr('data-margemerro',margem);
+                $('#unidade').attr('data-margemerro', margem);
             }
 
         }
@@ -44,8 +44,8 @@ $(function () {
 
     // $('#largura').attr('disabled','disabled');
     // $('#comprimento').attr('disabled','disabled');
-    
-    
+
+
     // coloca as opções de produtos/serviços 
     $('#tipo_servico_produto')
         .empty()
@@ -119,12 +119,12 @@ $(function () {
                         .removeClass('is-valid is-invalid')
                         .attr('disabled', 'disabled')
                         .val('');
-                    
+
                     $largura
                         .removeClass('is-valid is-invalid')
                         .attr('disabled', 'disabled')
                         .val('');
-                        
+
                     $comprimento
                         .removeClass('is-valid is-invalid')
                         .attr('disabled', 'disabled')
@@ -141,8 +141,8 @@ $(function () {
 
                         $materialComplementar.removeAttr('disabled');
                         $materialComplementarDropdown.html(htmlDropdown);
-                        
-                            
+
+
                     } else if (val == 'servicos') {
 
                         $material.removeAttr('disabled');
@@ -162,8 +162,8 @@ $(function () {
 
         });
 
-    $('#data_emissao').on('change blur',function(){
-        if($('#data_emissao').val() != ''){
+    $('#data_emissao').on('change blur', function () {
+        if ($('#data_emissao').val() != '') {
             $('#data_validade').val(proximoDiaUtil($('#data_emissao').val(), 15)).datepicker('update').blur();
             $('#data_retorno').val(proximoDiaUtil($('#data_emissao').val(), 3)).datepicker('update').blur();
         }
@@ -211,38 +211,38 @@ $(function () {
                     $('#data_retorno').val('');
                     $('#data_emissao').focus();
                 }
-            }    
-        }    
+            }
+        }
     });
 
-    $('#material_servico').on('change blur',function(){
+    $('#material_servico').on('change blur', function () {
         var $unidade = $(this);
         var $largura = $('#largura');
         var $comprimento = $('#comprimento');
         var $materialComplementar = $('#material_complementar');
-        
-        if( $unidade.val() == 'M²' ){
+
+        if ($unidade.val() == 'M²') {
             $largura.removeAttr('disabled');
             $comprimento.removeAttr('disabled');
             $materialComplementar.removeAttr('disabled');
             calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
-        }else{
-            $largura.attr('disabled','disabled');
-            $comprimento.attr('disabled','disabled');
-            $materialComplementar.attr('disabled','disabled');
+        } else {
+            $largura.attr('disabled', 'disabled');
+            $comprimento.attr('disabled', 'disabled');
+            $materialComplementar.attr('disabled', 'disabled');
         }
     });
 
-    $('#unidade').on('change blur', function(){
+    $('#unidade').on('change blur', function () {
         calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
     });
-    $('#quantidade').on('change blur', function(){
+    $('#quantidade').on('change blur', function () {
         calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
     });
-    $('#largura').on('change blur', function(){
+    $('#largura').on('change blur', function () {
         calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
     });
-    $('#comprimento').on('change blur', function(){
+    $('#comprimento').on('change blur', function () {
         calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
     });
 
@@ -428,6 +428,9 @@ $(function () {
             }
 
             if ($this.val()) {
+
+                var $quemIndicou = $('#quem_indicou');
+
                 if ($this.val().toLocaleLowerCase() == 'contato' || $this.val().startsWith('Contato - ')) {
 
                     $this
@@ -445,34 +448,53 @@ $(function () {
                             </div>
                         `);
 
-                    $('#quem_indicou')
-                        .val($this.attr('data-anterior').replace('Contato - ', ''));
+                    $quemIndicou
+                        .val($this.attr('data-anterior').replace('Contato - ', ''))
+                        .blur();
+
+                    var valueQuemIndicou = $quemIndicou.val(),
+                        $comoConhec = $('#como_conheceu'),
+                        textOptSelc = $comoConhec.children('option:selected').text(),
+                        camposConcat = textOptSelc + ' - ' + valueQuemIndicou;
+        
+                    if (valueQuemIndicou) {
+                        $comoConhec
+                            .children('option:contains(' + textOptSelc + ')')
+                            .attr('value', camposConcat);
+                    }
+
+                } else {
+
+                    $this
+                        .children('option:contains("Contato")')
+                        .attr('value', 'Contato');
+
                 }
             }
         })
         .change();
 
     $(document)
-        .on('blur', '#quem_indicou', function() {
+        .on('blur', '#quem_indicou', function () {
 
             var $this = $(this),
                 value = $this.val(),
                 $comoConhec = $('#como_conheceu'),
-                comoConhecVal = $comoConhec.val(),
-                camposConcat = comoConhecVal + ' - ' + value;
+                textOptSelc = $comoConhec.children('option:selected').text(),
+                camposConcat = textOptSelc + ' - ' + value;
 
             $this.removeClass('is-valid is-invalid');
             $this[0].setCustomValidity('');
 
             if (value) {
-                
+
                 $comoConhec
-                    .children('option:contains(' + comoConhecVal + ')')
+                    .children('option:contains(' + textOptSelc + ')')
                     .attr('value', camposConcat);
 
                 $this.addClass('is-valid');
                 $this[0].setCustomValidity('');
-                
+
             }
 
         });
@@ -504,10 +526,10 @@ function proximoDiaUtil(dataInicio, distdias) {
         if (distdias != 0) {
             var dtaux = dataInicio.split("/");
             var dtvenc = new Date(dtaux[2], parseInt(dtaux[1]) - 1, dtaux[0]);
-    
+
             //soma a quantidade de dias para o recebimento/pagamento
             dtvenc.setDate(dtvenc.getDate() + distdias);
-    
+
             //verifica se a data final cai no final de semana, se sim, coloca para o primeiro dia útil seguinte
             if (dtvenc.getDay() == 6) {
                 dtvenc.setDate(dtvenc.getDate() + 2);
@@ -515,7 +537,7 @@ function proximoDiaUtil(dataInicio, distdias) {
             if (dtvenc.getDay() == 0) {
                 dtvenc.setDate(dtvenc.getDate() + 1);
             }
-    
+
             //monta a data no padrao brasileiro
             var dia = dtvenc.getDate();
             var mes = dtvenc.getMonth() + 1;
@@ -583,49 +605,49 @@ function calculaCustoPreco(qtd, unid, custo, preco) {
 
 }
 
-function calculaQuantidadeUsadaMaterial(unid, larg, comp, qtdUsada){ // recebe os objetos (campos)    
+function calculaQuantidadeUsadaMaterial(unid, larg, comp, qtdUsada) { // recebe os objetos (campos)    
     var $unidade = unid;
     var $largura = larg;
     var $comprimento = comp;
     var $qtdUsada = qtdUsada;
     var bocaRolo = parseFloat($unidade.attr('data-bocarolo'));
-    var margemErro = parseFloat($unidade.attr('data-margemerro'));    
+    var margemErro = parseFloat($unidade.attr('data-margemerro'));
 
-    if($unidade.val() != 'M²'){
-        $largura.val('').attr('disabled','disabled');
-        $comprimento.val('').attr('disabled','disabled');
+    if ($unidade.val() != 'M²') {
+        $largura.val('').attr('disabled', 'disabled');
+        $comprimento.val('').attr('disabled', 'disabled');
         $qtdUsada.val('');
 
     } else {
         $largura.removeAttr('disabled');
         $comprimento.removeAttr('disabled')
-        
-        if($largura.val() != '' && $comprimento.val() != ''){
-            
+
+        if ($largura.val() != '' && $comprimento.val() != '') {
+
             var tamMaior, larg, comp, quantUs, quantUsLarg, quantUsComp;
-            
-            larg = parseFloat(parseFloat(floatParaPadraoInternacional($largura.val())) *  parseFloat( parseFloat(1) + parseFloat(margemErro/100)));
-            comp = parseFloat( parseFloat(floatParaPadraoInternacional($comprimento.val())) * parseFloat( parseFloat(1) + parseFloat(margemErro/100)));
-            
-            if( ( larg > bocaRolo ) && ( comp > bocaRolo) ){
-                quantUsLarg = parseFloat( parseFloat( Math.ceil(parseFloat( larg / bocaRolo))) * parseFloat(Math.ceil(comp)) );
-                quantUsComp = parseFloat(parseFloat( Math.ceil( parseFloat( comp / bocaRolo))) * parseFloat(Math.ceil(larg)) );
+
+            larg = parseFloat(parseFloat(floatParaPadraoInternacional($largura.val())) * parseFloat(parseFloat(1) + parseFloat(margemErro / 100)));
+            comp = parseFloat(parseFloat(floatParaPadraoInternacional($comprimento.val())) * parseFloat(parseFloat(1) + parseFloat(margemErro / 100)));
+
+            if ((larg > bocaRolo) && (comp > bocaRolo)) {
+                quantUsLarg = parseFloat(parseFloat(Math.ceil(parseFloat(larg / bocaRolo))) * parseFloat(Math.ceil(comp)));
+                quantUsComp = parseFloat(parseFloat(Math.ceil(parseFloat(comp / bocaRolo))) * parseFloat(Math.ceil(larg)));
                 quantUs = Math.min(quantUsLarg, quantUsComp);
 
                 quantUs = floatParaPadraoBrasileiro(quantUs);
                 $qtdUsada.val(quantUs);
 
-            }else if( (larg < bocaRolo ) && ( comp < bocaRolo) ){
+            } else if ((larg < bocaRolo) && (comp < bocaRolo)) {
                 quantUs = floatParaPadraoBrasileiro(parseFloat(1));
                 $qtdUsada.val(quantUs);
 
-            }else{
-                quantUs =  parseFloat( Math.ceil( parseFloat(Math.max(larg, comp))));
+            } else {
+                quantUs = parseFloat(Math.ceil(parseFloat(Math.max(larg, comp))));
                 quantUs = floatParaPadraoBrasileiro(quantUs);
                 $qtdUsada.val(quantUs);
             }
-        
-        }else{
+
+        } else {
             $qtdUsada.val('');
             return;
         }
