@@ -16,12 +16,16 @@
 
 <header class="pt-4 pb-5"> <!-- Cabeçalho -->
     <div class="row align-items-center"> <!-- Alinhar as linhas -->
-        <div class="col-lg"> <!--Colunas da esquerda -->
+        <div class="col-12-lg"> <!--Colunas da esquerda -->
             <?php if($modulo == "relatoriofluxocaixa"): ?>
                 <h1 class="display-4 text-capitalize font-weight-bold">Relatório de Fluxo de Caixa</h1>
             <?php else : ?>
                 <h1 class="display-4 text-capitalize font-weight-bold"><?php echo isset($labelTabela["labelBrowser"]) && !empty($labelTabela["labelBrowser"]) ? $labelTabela["labelBrowser"] : $modulo ?></h1>
             <?php endif ?>
+        </div>
+        <div class="col d-flex justify-content-end align-items-center">
+            <button id="graficos"  type="button" class="btn btn-warning cursor-pointer btn-sm mr-2" data-toggle="collapse" data-target="#collapseGraficos2">Gráficos</button>         
+            <button class="btn btn-success btn-sm" id="botaoRelatorio" data-toggle="collapse" data-target="#collapseFluxocaixaResumo">Gerar Relatório</button>
         </div>
     </div>
         <div class="card mt-4">
@@ -30,16 +34,10 @@
                     <span>
                         <i class="fas fa-plus-square" id="botaoCardFiltros" data-toggle="collapse" data-target="#collapseFiltros"></i>
                     </span>
-
-                    
-                Ações</h5>
+                Filtros</h5>
                 <div>
-
-                    <button id="limpar-filtro" type = "button" class="btn cursor-pointer btn-outline-warning btn-sm">Limpar Filtros</button>
+                    <button id="limpar-filtro" type="button" class="btn cursor-pointer btn-outline-warning btn-sm">Limpar Filtros</button>
                     <button id="criar-filtro" type="button" class="btn cursor-pointer btn-outline-secondary btn-sm">Mais Filtros</button>
-                    <button id="graficos"  type="button" class="btn btn-outline-warning cursor-pointer btn-sm" data-toggle="collapse" data-target="#collapseGraficos2">Gráficos</button>
-                           
-                    <button class="btn btn-outline-success btn-sm" id="botaoRelatorio" data-toggle="collapse" data-target="#collapseFluxocaixaResumo" aria-expanded="false" aria-controls="collapseFluxocaixaResumo">Gerar Relatório </button>
                 </div>
             </div>
 

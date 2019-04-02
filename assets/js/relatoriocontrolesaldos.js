@@ -44,9 +44,9 @@ $(function () {
         dataTable = window.dataTable,
         indexColumns = {
             acoes: 0,
-            movimentacoes: 1,
-            data_operacao: 4,
-            valor_total: 5,
+            mes: 2,
+            total_inicial: 3,
+            total_final: 6,
             data_vencimento: 6,
             status: 16,
             observacao: 21
@@ -171,8 +171,8 @@ $(function () {
     $('#DataTables_Table_0_wrapper').addClass('d-none');
 
     $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
-        $('#DataTables_Table_0_wrapper').removeClass('d-none');
         resumo();
+        $('#DataTables_Table_0_wrapper').removeClass('d-none');
         $('#collapseMeta').removeClass('show').addClass('hide');
         $('#collapseGraficos2').removeClass('show').addClass('hide');
       });
@@ -194,10 +194,12 @@ $(function () {
         $('#collapseMeta').removeClass('hide').addClass('show');
     });
 
+
     $('#limpar-filtro').on('click', function () {
         $('#collapseGraficos2').collapse('hide');
         $('#collapseFluxocaixaResumo').collapse('hide');
         $('#DataTables_Table_0_wrapper').addClass('d-none');
+        
     });
 
     $('#graficos').on('click', function () {
@@ -212,39 +214,5 @@ $(function () {
     });
 
 
-    $('#botaoRelatorio').on('click', function(){
-
-        var selectFaixa = $('.input-filtro-faixa');
-        var selectF = selectFaixa.siblings('input');
-        var faixa = false;
-       
-        selectF.each(function(){
-            if($(this).val()){
-                faixa = true;
-            }
-        });
-        console.log(faixa);      
-
-        var selectTexto = $('.input-filtro-texto');
-        var selectT = selectTexto.siblings('input');
-        var texto = false;
-
-        selectT.each(function(){
-            if($(this).val()){
-                texto = true;
-            }
-        });
-    
-        if(!faixa && !texto) {
-            alert("Aplique um filtro para emitir um relatório!");
-            event.stopPropagation();
-        }else{
-            resumo();
-            $('#DataTables_Table_0_wrapper').removeClass('d-none');
-            $('#collapseMeta').removeClass('show').addClass('hide');
-            $('#collapseGraficos2').removeClass('show').addClass('hide');
-        }
-    });
-
-
+      
 });
