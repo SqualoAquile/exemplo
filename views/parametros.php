@@ -1,14 +1,11 @@
 <?php $modulo = str_replace("-form", "", basename(__FILE__, ".php")) ?>
 <script type="text/javascript">
-    var baselink = '<?php echo BASE_URL;?>',
-        currentModule = '<?php echo $modulo ?>'
+    var baselink = '<?php echo BASE_URL ?>',
+        currentModule = '<?php echo $modulo ?>',
+        data_add = '<?php echo in_array($modulo . "_add", $_SESSION["permissoesUsuario"]) ? true : false ?>',
+        data_edt = '<?php echo in_array($modulo . "_exc", $_SESSION["permissoesUsuario"]) ? true : false ?>',
+        data_exc = '<?php echo in_array($modulo . "_edt", $_SESSION["permissoesUsuario"]) ? true : false ?>';
 </script>
-
-
-<div class = "row" id="data_usuario"
-    data-add = "<?php echo in_array($modulo . "_add", $_SESSION["permissoesUsuario"]) ? true : false ?> " 
-    data-exc = "<?php echo in_array($modulo . "_exc", $_SESSION["permissoesUsuario"]) ? true : false ?> " 
-    data-edt = "<?php echo in_array($modulo . "_edt", $_SESSION["permissoesUsuario"]) ? true : false ?> "> </div>
 
 <!-- Chama o arquivo específico do módulo, caso não exista,  -->
 <!-- Este javaScript serve para fazer verificações inerentes à cada módulo, por exemplo o radio de Clientes -->

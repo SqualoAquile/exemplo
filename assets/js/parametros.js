@@ -58,10 +58,6 @@ const parametrosSemAcoes = [
     'ml'
 ];
 
-var data_add = $('#data_usuario').attr('data-add')
-data_edt = $('#data_usuario').attr('data-edt'),
-    data_exc = $('#data_usuario').attr('data-exc');
-
 function Ajax(url, callback, send = {}) {
     $.ajax({
         url: baselink + '/ajax/' + url,
@@ -534,6 +530,7 @@ $(document)
 
             // Pesquisando
 
+            $this.removeClass('is-invalid is-valid');
             $textarea.removeClass('is-invalid is-valid');
 
             var $filtereds = $elements.filter(function () {
@@ -561,6 +558,13 @@ $(document)
                         </div>
                     </div>
                 `;
+
+                if ($this.val()) {
+                    if ($this.val() != $this.attr('data-anterior')) {
+                        $this[0].setCustomValidity('');
+                        $this.addClass('is-valid');
+                    }
+                }
 
                 if ($textarea.val()) {
                     if ($textarea.val() != $textarea.attr('data-anterior')) {
