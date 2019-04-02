@@ -125,7 +125,7 @@
                                                     </div>
                                                     <div class="form-group mt-3">
                                                         <label for="parametroRelacionalTextarea<?php echo $key ?>">Mensagem</label>
-                                                        <textarea id="parametroRelacionalTextarea<?php echo $key ?>" class="form-control form-control-lg"></textarea>
+                                                        <textarea id="parametroRelacionalTextarea<?php echo $key ?>" class="form-control form-control-lg textarea-doiscampos"></textarea>
                                                     </div>
                                                     <div class="elements-add-doiscampos"></div>
                                                 </div>
