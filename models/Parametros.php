@@ -55,34 +55,8 @@ class Parametros extends model {
     }
 
     public function listarDoiscampos($request) {
-        
-        $this->table = $request["tabela"];
 
-        $value_sql1 = "";
-        if ($request["value1"] && $request["campo1"]) {
-
-            $value1 = trim($request["value1"]);
-            $value1 = addslashes($value1);
-            
-            $campo1 = trim($request["campo1"]);
-            $campo1 = addslashes($campo1);
-
-            $value_sql1 = " AND " . $campo1 . " LIKE '%" . $value1 . "%'";
-        }
-
-        $value_sql2 = "";
-        if ($request["value2"] && $request["campo2"]) {
-
-            $value2 = trim($request["value2"]);
-            $value2 = addslashes($value2);
-            
-            $campo2 = trim($request["campo2"]);
-            $campo2 = addslashes($campo2);
-
-            $value_sql2 = " AND " . $campo2 . " LIKE '%" . $value2 . "%'";
-        }
-
-        $sql = "SELECT * FROM " . $this->table . " WHERE situacao = 'ativo'" . $value_sql1 . $value_sql2;
+        $sql = "SELECT * FROM " . $request["tabela"] . " WHERE situacao = 'ativo'";
 
         $sql = self::db()->query($sql);
         
@@ -93,19 +67,28 @@ class Parametros extends model {
 
         $this->table = $request["tabela"];
 
-        if ($request["value"] && $request["campo"]) {
+        if ($request["value1"] && $request["campo1"]) {
 
-            $value = trim($request["value"]);
-            $value = addslashes($value);
+            $value1 = trim($request["value1"]);
+            $value1 = addslashes($value1);
             
-            $campo = trim($request["campo"]);
-            $campo = addslashes($campo);
+            $campo1 = trim($request["campo1"]);
+            $campo1 = addslashes($campo1);
+        }
+
+        if ($request["value2"] && $request["campo2"]) {
+
+            $value2 = trim($request["value2"]);
+            $value2 = addslashes($value2);
+            
+            $campo2 = trim($request["campo2"]);
+            $campo2 = addslashes($campo2);
         }
 
         $ipcliente = $this->permissoes->pegaIPcliente();
         $alteracoes = ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
 
-        $sql = "INSERT INTO " . $this->table . " (" . $campo . ", alteracoes, situacao) VALUES ('" . $value . "', '" . $alteracoes . "', 'ativo')";
+        $sql = "INSERT INTO " . $this->table . " (" . $campo1 . ", " . $campo2 . ", alteracoes, situacao) VALUES ('" . $value1 . "', '" . $value2 . "', '" . $alteracoes . "', 'ativo')";
         
         self::db()->query($sql);
 
@@ -140,18 +123,27 @@ class Parametros extends model {
         
         $this->table = $request["tabela"];
 
-        if ($request["value"] && $request["campo"]) {
+        if ($request["value1"] && $request["campo1"]) {
 
-            $value = trim($request["value"]);
-            $value = addslashes($value);
+            $value1 = trim($request["value1"]);
+            $value1 = addslashes($value1);
             
-            $campo = trim($request["campo"]);
-            $campo = addslashes($campo);
+            $campo1 = trim($request["campo1"]);
+            $campo1 = addslashes($campo1);
+        }
+
+        if ($request["value2"] && $request["campo2"]) {
+
+            $value2 = trim($request["value2"]);
+            $value2 = addslashes($value2);
+            
+            $campo2 = trim($request["campo2"]);
+            $campo2 = addslashes($campo2);
         }
 
         $id = addslashes(trim($id));
 
-        $sql = "UPDATE " . $this->table . " SET " . $campo . " = '" . $value . "' WHERE id='" . $id . "'";
+        $sql = "UPDATE " . $this->table . " SET " . $campo1 . " = '" . $value1 . "', " . $campo2 . " = '" . $value2 . "' WHERE id='" . $id . "'";
              
         self::db()->query($sql);
 
