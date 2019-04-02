@@ -1183,7 +1183,7 @@ $(function () {
 
             if ($this.attr('data-anterior') != $this.val()) {
 
-                $filtereds = $elements.filter(function () {
+                var $filtereds = $elements.filter(function () {
                     return $(this).text().toLowerCase().indexOf($this.val().toLowerCase()) != -1;
                 });
 
