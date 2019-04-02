@@ -164,6 +164,9 @@ $(function () {
         $('[data-id=total]').text(parseInt(total));
         $('[data-id=totalQ]').text(parseInt(totalQ));
         $('[data-id=totalAQ]').text(parseInt(totalAQ));
+
+        dataTable.page.len(10).draw();
+        $('#DataTables_Table_0_length').removeClass('d-none');
   
     };
 
@@ -179,6 +182,7 @@ $(function () {
 
     $('#collapseFluxocaixaResumo').on('hide.bs.collapse', function () {
         $('#DataTables_Table_0_wrapper').addClass('d-none');
+        dataTable.page.len(-1).draw();
         $('#collapseMeta').removeClass('hide').addClass('show');
     });
 
