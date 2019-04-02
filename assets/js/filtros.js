@@ -133,8 +133,6 @@ $(function () {
                     $max[0].setCustomValidity('');
                     $max.siblings('.invalid-feedback').remove();
 
-                    console.log('min max', min, max);
-
                     if (min > max) {
 
                         $max.addClass('is-invalid');
