@@ -1,5 +1,5 @@
 <?php
-class Relatoriocontrolesaldos extends model {
+class Relatoriosaldos extends model {
 
     protected $table = "controlesaldos";
     protected $permissoes;
