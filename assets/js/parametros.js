@@ -58,10 +58,6 @@ const parametrosSemAcoes = [
     'ml'
 ];
 
-var data_add = $('#data_usuario').attr('data-add')
-data_edt = $('#data_usuario').attr('data-edt'),
-    data_exc = $('#data_usuario').attr('data-exc');
-
 function Ajax(url, callback, send = {}) {
     $.ajax({
         url: baselink + '/ajax/' + url,
@@ -527,11 +523,15 @@ $(document)
             $contentSearchThis = $this.siblings('.list-group-filtereds-wrapper').find('.list-group-filtereds'),
             id = $this.attr('data-id'),
             $elAdd = $searchBody.find('.elements-add-doiscampos'),
-            $elements = $contentSearchThis.find('.list-group-item');
+            $elements = $contentSearchThis.find('.list-group-item'),
+            $textarea = $searchBody.find('textarea');
 
         if (id == undefined) {
 
             // Pesquisando
+
+            $this.removeClass('is-invalid is-valid');
+            $textarea.removeClass('is-invalid is-valid');
 
             var $filtereds = $elements.filter(function () {
                     return $(this).text().toLowerCase().indexOf($this.val().toLowerCase()) != -1;
@@ -539,14 +539,45 @@ $(document)
                 htmlElAdd = '';
 
             if (!$filtereds.length) {
+
+                $searchBody
+                    .find('.icons-search-input')
+                    .removeClass('d-flex')
+                    .addClass('d-none');
                 
                 htmlElAdd += `
-                    <div>
-                        <small>Nenhum resultado encontrado</small>
-                        <button class="salvar-doiscampos btn btn-success btn-block text-truncate mt-2">Adicionar</button>
+                    <small>Nenhum resultado encontrado</small>
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <button class="salvar-doiscampos btn btn-success btn-block text-truncate mt-2">Adicionar</button>
+                        </div>
+                        <div class="col-lg-3">
+                            <button class="cancelar-doiscampos btn btn-light btn-block text-truncate mt-2" title="Cancelar">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
                     </div>
                 `;
 
+                if ($this.val()) {
+                    if ($this.val() != $this.attr('data-anterior')) {
+                        $this[0].setCustomValidity('');
+                        $this.addClass('is-valid');
+                    }
+                }
+
+                if ($textarea.val()) {
+                    if ($textarea.val() != $textarea.attr('data-anterior')) {
+                        $textarea[0].setCustomValidity('');
+                        $textarea.addClass('is-valid');
+                    }
+                }
+
+            } else {
+                $searchBody
+                    .find('.icons-search-input')
+                    .removeClass('d-none')
+                    .addClass('d-flex');
             }
 
             $elAdd.html(htmlElAdd);
@@ -562,6 +593,7 @@ $(document)
             var $btnSalvar = $contentSearchThis.find('.salvar');
 
             $this.removeClass('is-invalid is-valid');
+            $textarea.removeClass('is-invalid is-valid');
 
             if ($this.val()) {
                 if ($this.val() != $this.attr('data-anterior')) {
@@ -584,6 +616,16 @@ $(document)
                 $btnSalvar.attr('disabled', 'disabled');
             }
 
+            if ($textarea.val()) {
+                if ($textarea.val() != $textarea.attr('data-anterior')) {
+                    $textarea[0].setCustomValidity('');
+                    $textarea.addClass('is-valid');
+                }
+            } else {
+                $textarea[0].setCustomValidity('invalid');
+                $textarea.addClass('is-invalid');
+            }
+
         }
     })
     .on('click', '.salvar-doiscampos', function () {
@@ -595,7 +637,7 @@ $(document)
             $textarea = $searchBody.find('textarea'),
             $iconsSearch = $searchBody.find('.icons-search-input');
 
-        if ($inputSearch.attr('data-id') != $inputSearch.val() && $inputSearch.val()) {
+        if ($inputSearch.attr('data-id') != $inputSearch.val() && ($inputSearch.val() && $textarea.val())) {
 
             if ($inputSearch.attr('data-id') == undefined) {
 
@@ -616,6 +658,7 @@ $(document)
                             .trigger('input');
 
                         $textarea
+                            .removeClass('is-valid is-invalid')
                             .val('');
 
                         $iconsSearch
@@ -650,6 +693,7 @@ $(document)
                             .trigger('input');
 
                         $textarea
+                            .removeClass('is-valid is-invalid')
                             .val('');
 
                         $iconsSearch
@@ -666,13 +710,23 @@ $(document)
                     });
 
             }
+
         } else {
 
-            $inputSearch[0].setCustomValidity('invalid');
+            if (!$inputSearch.val()) {
+                $inputSearch[0].setCustomValidity('invalid');
+                $inputSearch.addClass('is-invalid');
+            }
 
-            $inputSearch
-                .focus()
-                .addClass('is-invalid');
+            if (!$textarea.val()) {
+                $textarea[0].setCustomValidity('invalid');
+                $textarea.addClass('is-invalid');
+            }
+
+            $searchBody
+                .find('.form-control.is-invalid')
+                .first()
+                .focus();
         }
 
     })
@@ -710,24 +764,31 @@ $(document)
 
         $elAdd.html(htmlElAdd);
 
-        $iconsSearch.find('.close-btn').click();
-
         $iconsSearch
             .removeClass('d-flex')
             .addClass('d-none');
+
+        $searchBody.removeClass('active');
+        $filteredsWrapper.hide();
             
     })
     .on('click', '.cancelar-doiscampos', function () {
         
         var $this = $(this),
-            $searchBody = $this.parents('.search-body-doiscampos');
+            $searchBody = $this.parents('.search-body-doiscampos'),
+            $inputSearch = $searchBody.find('.search-input-doiscampos');
+
+        $inputSearch
+            .removeClass('is-valid is-invalid')
+            .removeAttr('data-id data-anterior')
+            .val('')
+            .trigger('input');
+
+        $inputSearch[0].setCustomValidity('');
 
         $searchBody
-            .find('.search-input-doiscampos')
-            .removeAttr('data-id data-anterior')
-            .val('');
-
-        $searchBody.find('textarea')
+            .find('textarea')
+            .removeClass('is-valid is-invalid')
             .removeAttr('data-anterior')
             .val('');
 
@@ -749,6 +810,9 @@ $(document)
         $searchBody
             .find('.search-input-doiscampos')
             .trigger('input');
+    })
+    .on('input', '.textarea-doiscampos', function () {
+        $('.search-input-doiscampos').trigger('input');
     });
 
 // Fixos
