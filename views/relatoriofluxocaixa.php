@@ -12,14 +12,16 @@ require "_graficosNOVO.php";
     <div class="card card-body">
         <div class="col-lg">
             <h5 class="text-center my-1">
-            Meta Mensal Atingida <span class="badge badge-primary badge-pill" data-id="meta"></span>
+            Meta Mensal Atingida - <span class="badge badge-primary badge-pill" data-id="meta"></span>
+            <?php echo $meta[1]?> /<?php echo $meta[0]?>
             </h5>
-            <div class="progress my-1" style="height: 50px;">
+            <div class="progress my-1 " style="height: 30px;">
                 <div    class="progress-bar bg-info" role="progressbar" 
-                        style="width: <?php echo $meta?>%;" 
-                        aria-valuenow="<?php echo $meta?>" 
-                        aria-valuemin="0" aria-valuemax="100"> 
-                        <div class="h5"><?php echo $meta?>% </div>
+                        style="width: <?php echo $meta[2]?>%;" 
+                        aria-valuenow="<?php echo $meta[2]?>" 
+                        aria-valuemin="0" aria-valuemax="100">
+                        <div class="h5"><?php echo $meta[2]?> %</div> 
+                        
                 </div>
             </div>
         </div>

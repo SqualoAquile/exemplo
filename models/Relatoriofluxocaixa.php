@@ -288,6 +288,7 @@ class Relatoriofluxocaixa extends model {
         if($sql->rowCount()>0){
             $sql = $sql->fetch();
             $meta = $sql['valor'];
+            $meta1 = strval($meta);
             $meta = str_replace(".","",$meta);
             $meta = floatval($meta);
         }else{
@@ -315,7 +316,8 @@ class Relatoriofluxocaixa extends model {
 
         if($sql->rowCount()>0){
             $sql = $sql->fetch();
-            $atingido = $sql['valor'];
+            $atingido = $sql['valor'];          
+            $atingido1 = strval(number_format(floatval($atingido),2,",","."));
             $atingido = floatval($atingido);
         }else{
             $atingido = floatval(0);
@@ -329,6 +331,10 @@ class Relatoriofluxocaixa extends model {
         }
 
         $metaAtingida = round($metaAtingida);
-        return $metaAtingida;
+
+        $retorno[0] = $meta1;
+        $retorno[1] = $atingido1;
+        $retorno[2] = $metaAtingida;
+        return $retorno;
     }
 }
