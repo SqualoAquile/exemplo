@@ -47,7 +47,7 @@ class RelatoriocontrolesaldosController extends controller{
         $dados['infoUser'] = $_SESSION;
         $dados["colunas"] = $this->colunas;
         $dados["labelTabela"] = $this->shared->labelTabela();
-        $dados["labelTabela"]["labelBrowser"] = "Relatório de Saldos"
+        $dados["labelTabela"]["labelBrowser"] = "Relatório de Saldos";
 
         $this->loadTemplate("relatoriocontrolesaldos", $dados);
     }
