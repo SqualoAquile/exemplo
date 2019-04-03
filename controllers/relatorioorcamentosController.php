@@ -1,9 +1,9 @@
 <?php
-class relatoriofluxocaixaController extends controller{
+class relatorioorcamentosController extends controller{
 
     // Protected - estas variaveis só podem ser usadas nesse arquivo
-    protected $table = "fluxocaixa";
-    protected $nome = "relatoriofluxocaixa";
+    protected $table = "orcamentos";
+    protected $nome = "relatorioorcamentos";
     protected $colunas;
     
     protected $model;
@@ -15,14 +15,14 @@ class relatoriofluxocaixaController extends controller{
         // Instanciando as classes usadas no controller
         $this->shared = new Shared($this->table);
         $tabela = ucfirst($this->table);
-        $this->model = new Relatoriofluxocaixa();
+        $this->model = new Relatorioorcamentos();
         $this->usuario = new Usuarios();
         
         $this->colunas = $this->shared->nomeDasColunas();
 
 
         // verifica se tem permissão para ver esse módulo
-        if(in_array("relatoriofluxocaixa_ver", $_SESSION["permissoesUsuario"]) == false){
+        if(in_array("relatorioorcamentos_ver", $_SESSION["permissoesUsuario"]) == false){
             header("Location: " . BASE_URL . "/home"); 
         }
         // Verificar se está logado ou nao
@@ -36,28 +36,27 @@ class relatoriofluxocaixaController extends controller{
         if(isset($_POST) && !empty($_POST)){ 
             
             $id = addslashes($_POST['id']);
-            if(in_array("relatoriofluxocaixa_exc", $_SESSION["permissoesUsuario"]) == false || empty($id) || !isset($id)){
-                header("Location: " . BASE_URL . "/relatoriofluxocaixa"); 
+            if(in_array("relatorioorcamentos_exc", $_SESSION["permissoesUsuario"]) == false || empty($id) || !isset($id)){
+                header("Location: " . BASE_URL . "/relatorioorcamentos"); 
             }
             if($this->shared->idAtivo($id) == false){
-                header("Location: " . BASE_URL . "/relatoriofluxocaixa"); 
+                header("Location: " . BASE_URL . "/relatorioorcamentos"); 
             }
             $this->model->excluir($id);
-            header("Location: " . BASE_URL . "/relatoriofluxocaixa");
+            header("Location: " . BASE_URL . "/relatorioorcamentos");
         }
         
         $dados['infoUser'] = $_SESSION;
         $dados["colunas"] = $this->colunas;
-        $dados["meta"] = $this->model->meta();
-        $dados["labelTabela"]["labelBrowser"] = 'Relatório de Fluxo de Caixa';
+        $dados["labelTabela"]["labelBrowser"] = 'Relatório de Orçamentos';
 
-        $this->loadTemplate('relatoriofluxocaixa', $dados);
+        $this->loadTemplate('relatorioorcamentos', $dados);
     }
     
     public function adicionar() {
         
-        if(in_array("relatoriofluxocaixa_add", $_SESSION["permissoesUsuario"]) == false){
-            header("Location: " . BASE_URL . "/relatoriofluxocaixa"); 
+        if(in_array("relatorioorcamentos_add", $_SESSION["permissoesUsuario"]) == false){
+            header("Location: " . BASE_URL . "/relatorioorcamentos"); 
         }
     
         $dados['infoUser'] = $_SESSION;

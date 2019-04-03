@@ -58,10 +58,6 @@ const parametrosSemAcoes = [
     'ml'
 ];
 
-var data_add = $('#data_usuario').attr('data-add')
-data_edt = $('#data_usuario').attr('data-edt'),
-    data_exc = $('#data_usuario').attr('data-exc');
-
 function Ajax(url, callback, send = {}) {
     $.ajax({
         url: baselink + '/ajax/' + url,
@@ -128,13 +124,13 @@ function PopulaDoisCampos($wrapper, data, campo1, campo2) {
 
         var htmlAcoes = '';
 
-        // if (parametrosSemAcoes.indexOf(element[campo]) == -1) {
+        if (parametrosSemAcoes.indexOf(element[campo1]) == -1) {
 
             htmlAcoes = '';
 
             if (data_edt == true) {
                 htmlAcoes += `
-                    <button class="editar btn btn-sm btn-primary" tabindex="-1">
+                    <button class="editar-doiscampos btn btn-sm btn-primary" tabindex="-1">
                         <i class="fas fa-edit"></i>
                     </button>
                 `;
@@ -147,18 +143,17 @@ function PopulaDoisCampos($wrapper, data, campo1, campo2) {
                     </button>
                 `;
             }
-        // }
+
+        }
 
         htmlContentSearch += `
-            <div id="` + element.id + `" class="list-group-item">
-                <div class="row">
-                    <div class="col-lg">
-                        <span class="text">` + element[campo1] + `</span>
-                        </div>
-                    <div class="col-lg-4">
-                        <span class="text">` + element[campo2] + `</span>
+            <div id="` + element.id + `" class="list-group-item list-group-item-doiscampos">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="m-0 titulo-avisos">` + element[campo1] + `</h6>
+                        <small>` + element[campo2] + `</small>
                     </div>
-                    <div class="col-lg-2 justify-content-end">`
+                    <div>`
                         + htmlAcoes +
                     `</div>
                 </div>
@@ -254,8 +249,6 @@ $(document)
                 .removeClass('fa-edit')
                 .addClass('fa-save');
 
-            $created
-
         }
     })
     .on('focus', '.search-input', function () {
@@ -315,7 +308,7 @@ $(document)
                 if (!data.length && data_add == true) {
                     htmlElAdd += `
                         <div class="p-3">
-                            <span>Nenhum resultado encontrado</span>
+                            <small>Nenhum resultado encontrado</small>
                             <button class="salvar btn btn-success btn-block text-truncate mt-2">Adicionar: ` + $this.val() + `</button>
                         </div>
                     `;
@@ -493,178 +486,114 @@ $(document)
 
 // Dropdowns Dois Campos
 $(document)
-    .on('click', '.down-btn-doiscampos', function () {
-        $(this).parents('.search-body-doiscampos').find('.search-input-doiscampos').focus();
+    .ready(function () {
+        $(this).trigger('lista-doiscampos');
     })
-    .on('click', '.close-btn-doiscampos', function () {
+    .on('lista-doiscampos', function () {
+        var $searchBody = $('.search-body-doiscampos'),
+            $contentSearchThisWrapper = $searchBody.find('.list-group-filtereds-wrapper'),
+            $contentSearchThis = $contentSearchThisWrapper.find('.list-group-filtereds');
 
-        var $searchBody = $(this).parents('.search-body-doiscampos'),
-            $inputSearch = $searchBody.find('.search-input-doiscampos');
+        Ajax('listarParametrosDoiscampos', function (data) {
 
-        if ($inputSearch.attr('data-id')) {
+            PopulaDoisCampos($contentSearchThis, data, 'titulo', 'mensagem');
 
-            $inputSearch[0].setCustomValidity('');
+            $contentSearchThisWrapper.hide();
 
-            $inputSearch
-                .removeClass('is-invalid is-valid')
-                .removeAttr('data-id')
-                .val('')
-                .focus();
-
-        } else {
-
-            if ($searchBody.find('.elements-add-doiscampos').children().length) {
-
-                $inputSearch
-                    .removeClass('is-invalid is-valid')
-                    .removeAttr('data-id')
-                    .val('')
-                    .trigger('input')
-                    .focus();
-            } else {
-
-                $searchBody.find('.list-group-filtereds-wrapper-doiscampos').hide();
-                $searchBody.removeClass('active');
-            }
-
-        }
-    })
-    .on('click touchstart', function (event) {
-
-        var $currentElement = $(event.target);
-
-        if (!$currentElement.parents('.search-body-doiscampos').length) {
-
-            var $searchBodyActive = $('.search-body-doiscampos');
-
-            $searchBodyActive
-                .find('.search-input-doiscampos')
-                .blur();
-
-            $searchBodyActive
-                .removeClass('active')
-                .find('.list-group-filtereds-wrapper-doiscampos')
-                .hide();
-
-        } else {
-
-            var $notCurrent = $('.search-body-doiscampos.active').not($currentElement.parents('.search-body-doiscampos'))
-
-            $notCurrent
-                .find('.list-group-filtereds-wrapper-doiscampos')
-                .hide();
-
-            $notCurrent.removeClass('active');
-        }
-    })
-    .on('DOMNodeInserted', '.list-group-item', function (event) {
-
-        var $created = $(event.target),
-            $inputSearch = $created.parents('.list-group-filtereds-wrapper-doiscampos').siblings('.search-input-doiscampos');
-
-        if ($created.attr('id') == $inputSearch.attr('data-id')) {
-
-            $created
-                .find('.excluir')
-                .hide();
-
-            $created
-                .find('.editar')
-                .removeClass('editar btn-primary')
-                .addClass('salvar btn-success')
-                .find('.fas')
-                .removeClass('fa-edit')
-                .addClass('fa-save');
-
-            $created
-
-        }
+        }, {
+                tabela: $searchBody.attr('id')
+            });
     })
     .on('focus', '.search-input-doiscampos', function () {
 
         var $this = $(this),
-            $searchBody = $this.parents('.search-body-doiscampos'),
-            $contentSearchThisWrapper = $searchBody.find('.list-group-filtereds-wrapper-doiscampos'),
-            $inputBrother = $this.siblings('.search-input-doiscampos'),
-            $contentSearchThis = $contentSearchThisWrapper.find('.list-group-filtereds-doiscampos');
-            
-        var campo1 = $this.attr('data-campo'),
-            value1 = $this.val(),
-            campo2 = $inputBrother.attr('data-campo'),
-            value2 = $inputBrother.val();
+            $searchBody = $this.parents('.search-body'),
+            $contentSearchThisWrapper = $searchBody.find('.list-group-filtereds-wrapper');
 
-        // $searchBody.addClass('active');
-        // $contentSearchThisWrapper.show();
-
-        $('.dropdown-toggle-avisos').dropdown('show');
-
-        if ($this.attr('data-id')) {
-            // value = $this.attr('data-anterior');
+        if (!$(this).attr('data-id')) {
+            $searchBody.addClass('active');
+            $contentSearchThisWrapper.show();
         }
-
-        // if (($this.val() && $this.attr('data-id')) || (!$this.val() && !$this.attr('data-id'))) {
-
-            Ajax('listarParametrosDoiscampos', function (data) {
-
-                PopulaDoisCampos($contentSearchThis, data, campo1, campo2);
-
-                if ($this.attr('data-id')) {
-                    $this.trigger('input');
-                }
-
-            }, {
-                    tabela: $searchBody.attr('id'),
-                    campo1: campo1,
-                    value1: value1,
-                    campo2: campo2,
-                    value2: value2
-                });
-        // }
 
     })
     .on('input', '.search-input-doiscampos', function () {
 
         var $this = $(this),
-            $contentSearchThis = $this.siblings('.list-group-filtereds-wrapper-doiscampos').find('.list-group-filtereds-doiscampos'),
+            $searchBody = $this.parents('.search-body'),
+            $contentSearchThis = $this.siblings('.list-group-filtereds-wrapper').find('.list-group-filtereds'),
             id = $this.attr('data-id'),
-            $searchBody = $this.parents('.search-body-doiscampos'),
-            campo = $searchBody.attr('data-campo');
-            tabela = $searchBody.attr('id'),
-            $elAdd = $contentSearchThis.siblings('.elements-add-doiscampos'),
-            $saveParametros = $searchBody.find('.salvar');
+            $elAdd = $searchBody.find('.elements-add-doiscampos'),
+            $elements = $contentSearchThis.find('.list-group-item'),
+            $textarea = $searchBody.find('textarea');
 
         if (id == undefined) {
+
             // Pesquisando
 
-            Ajax('listarParametros', function (data) {
+            $this.removeClass('is-invalid is-valid');
+            $textarea.removeClass('is-invalid is-valid');
 
-                Popula($contentSearchThis, data, campo);
+            var $filtereds = $elements.filter(function () {
+                    return $(this).text().toLowerCase().indexOf($this.val().toLowerCase()) != -1;
+                }),
+                htmlElAdd = '';
 
-                var htmlElAdd = '';
+            if (!$filtereds.length) {
 
-                if (!data.length && data_add == true) {
-                    htmlElAdd += `
-                        <div class="p-3">
-                            <span>Nenhum resultado encontrado</span>
-                            <button class="salvar btn btn-success btn-block text-truncate mt-2">Adicionar: ` + $this.val() + `</button>
+                $searchBody
+                    .find('.icons-search-input')
+                    .removeClass('d-flex')
+                    .addClass('d-none');
+                
+                htmlElAdd += `
+                    <small>Nenhum resultado encontrado</small>
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <button class="salvar-doiscampos btn btn-success btn-block text-truncate mt-2">Adicionar</button>
                         </div>
-                    `;
+                        <div class="col-lg-3">
+                            <button class="cancelar-doiscampos btn btn-light btn-block text-truncate mt-2" title="Cancelar">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                if ($this.val()) {
+                    if ($this.val() != $this.attr('data-anterior')) {
+                        $this[0].setCustomValidity('');
+                        $this.addClass('is-valid');
+                    }
                 }
 
-                $elAdd.html(htmlElAdd);
+                if ($textarea.val()) {
+                    if ($textarea.val() != $textarea.attr('data-anterior')) {
+                        $textarea[0].setCustomValidity('');
+                        $textarea.addClass('is-valid');
+                    }
+                }
 
-            }, {
-                    value: $this.val(),
-                    tabela: tabela,
-                    campo: campo
-                });
+            } else {
+                $searchBody
+                    .find('.icons-search-input')
+                    .removeClass('d-none')
+                    .addClass('d-flex');
+            }
+
+            $elAdd.html(htmlElAdd);
+
+            $elements.not($filtereds).hide();
+            $filtereds.show();
 
         } else {
+            
             // Editando
+            $elements.hide();
 
             var $btnSalvar = $contentSearchThis.find('.salvar');
 
             $this.removeClass('is-invalid is-valid');
+            $textarea.removeClass('is-invalid is-valid');
 
             if ($this.val()) {
                 if ($this.val() != $this.attr('data-anterior')) {
@@ -687,75 +616,36 @@ $(document)
                 $btnSalvar.attr('disabled', 'disabled');
             }
 
-            $('.list-group-filtereds-doiscampos #' + id + ' .text').text($this.val());
-
-        }
-    })
-    .on('keydown', '.search-input-doiscampos', function (event) {
-
-        var $this = $(this),
-            $searchBody = $this.parents('.search-body-doiscampos'),
-            $inputSearch = $searchBody.find('.search-input-doiscampos'),
-            code = event.keyCode || event.which;
-
-        if (code == 27 || code == 9) {
-            // Esc || Tab
-
-            $inputSearch[0].setCustomValidity('');
-
-            $inputSearch
-                .removeClass('is-valid is-invalid')
-                .removeAttr('data-id')
-                .val('')
-                .trigger('input')
-                .blur();
-
-            $searchBody
-                .find('.elements-add-doiscampos')
-                .html('');
-
-            $searchBody.find('.icons-search-input-doiscampos .close-btn-doiscampos').click();
-
-        }
-    })
-    .on('click', '.excluir-doiscampos', function () {
-
-        var $this = $(this),
-            $parent = $this.closest('.list-group-item'),
-            $input = $this.parents('.search-body-doiscampos').find('.search-input-doiscampos')
-        tabela = $parent.parents('.search-body-doiscampos').attr('id');
-
-        if (confirm('Tem Certeza?')) {
-            Ajax('excluirParametros/' + $parent.attr('id'), function (data) {
-                if (data[0] == '00000') {
-
-                    Toast({
-                        message: 'Parâmetro excluido com sucesso!',
-                        class: 'alert-success'
-                    });
-
-                    $input.val('');
-                    $parent.remove();
-                    $input.focus();
+            if ($textarea.val()) {
+                if ($textarea.val() != $textarea.attr('data-anterior')) {
+                    $textarea[0].setCustomValidity('');
+                    $textarea.addClass('is-valid');
                 }
-            }, {
-                    tabela: tabela
-                });
+            } else {
+                $textarea[0].setCustomValidity('invalid');
+                $textarea.addClass('is-invalid');
+            }
+
         }
     })
     .on('click', '.salvar-doiscampos', function () {
 
         var $this = $(this),
-            $searchBody = $this.parents('.search-body-doiscampos'),
+            $searchBody = $this.parents('.search-body'),
             $inputSearch = $searchBody.find('.search-input-doiscampos'),
             tabela = $searchBody.attr('id'),
-            campo = $searchBody.attr('data-campo');
+            $textarea = $searchBody.find('textarea'),
+            $iconsSearch = $searchBody.find('.icons-search-input');
 
-        if ($inputSearch.attr('data-id') != $inputSearch.val() && $inputSearch.val()) {
+        if ($inputSearch.attr('data-id') != $inputSearch.val() && ($inputSearch.val() && $textarea.val())) {
+
             if ($inputSearch.attr('data-id') == undefined) {
 
                 Ajax('adicionarParametros', function (data) {
+
                     if (data[0] == '00000') {
+
+                        $(document).trigger('lista-doiscampos');
 
                         Toast({
                             message: 'Parâmetro incluso com sucesso!',
@@ -765,13 +655,22 @@ $(document)
                         $inputSearch
                             .removeClass('is-valid is-invalid')
                             .val('')
-                            .focus()
                             .trigger('input');
+
+                        $textarea
+                            .removeClass('is-valid is-invalid')
+                            .val('');
+
+                        $iconsSearch
+                            .find('.close-btn')
+                            .click();
 
                     }
                 }, {
-                        value: $inputSearch.val(),
-                        campo: campo,
+                        value1: $inputSearch.val(),
+                        campo1: 'titulo',
+                        value2: $textarea.val(),
+                        campo2: 'mensagem',
                         tabela: tabela
                     });
 
@@ -779,6 +678,8 @@ $(document)
 
                 Ajax('editarParametros/' + $inputSearch.attr('data-id'), function (data) {
                     if (data[0] == '00000') {
+
+                        $(document).trigger('lista-doiscampos');
 
                         Toast({
                             message: 'Parâmetro editado com sucesso!',
@@ -789,38 +690,129 @@ $(document)
                             .removeClass('is-valid is-invalid')
                             .removeAttr('data-id')
                             .val('')
-                            .focus()
                             .trigger('input');
+
+                        $textarea
+                            .removeClass('is-valid is-invalid')
+                            .val('');
+
+                        $iconsSearch
+                            .removeClass('d-none')
+                            .addClass('d-flex');
+
                     }
                 }, {
-                        value: $inputSearch.val(),
-                        tabela: tabela,
-                        campo: campo
+                        value1: $inputSearch.val(),
+                        campo1: 'titulo',
+                        value2: $textarea.val(),
+                        campo2: 'mensagem',
+                        tabela: tabela
                     });
 
             }
+
         } else {
 
-            console.log($inputSearch[0])
+            if (!$inputSearch.val()) {
+                $inputSearch[0].setCustomValidity('invalid');
+                $inputSearch.addClass('is-invalid');
+            }
 
-            $inputSearch[0].setCustomValidity('invalid');
+            if (!$textarea.val()) {
+                $textarea[0].setCustomValidity('invalid');
+                $textarea.addClass('is-invalid');
+            }
 
-            $inputSearch
-                .focus()
-                .addClass('is-invalid');
+            $searchBody
+                .find('.form-control.is-invalid')
+                .first()
+                .focus();
         }
 
     })
     .on('click', '.editar-doiscampos', function () {
 
         var $parent = $(this).closest('.list-group-item'),
-            $inputSearch = $parent.parents('.list-group-filtereds-wrapper-doiscampos').siblings('.search-input-doiscampos');
+            $searchBody = $parent.parents('.search-body'),
+            $filteredsWrapper = $parent.parents('.list-group-filtereds-wrapper'),
+            $inputSearch = $filteredsWrapper.siblings('.search-input-doiscampos'),
+            $elAdd = $searchBody.find('.elements-add-doiscampos'),
+            $textarea = $searchBody.find('textarea'),
+            $iconsSearch = $inputSearch.siblings('.icons-search-input'),
+            htmlElAdd = `
+                <div class="row">
+                    <div class="col-lg-9">
+                        <button class="salvar-doiscampos btn btn-primary btn-block text-truncate mt-2">Salvar</button>
+                    </div>
+                    <div class="col-lg-3">
+                        <button class="cancelar-doiscampos btn btn-light btn-block text-truncate mt-2" title="Cancelar">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
 
         $inputSearch
-            .val($parent.find('.text').text())
+            .val($parent.find('.titulo-avisos').text())
             .attr('data-id', $parent.attr('id'))
             .attr('data-anterior', $parent.find('.text').text())
             .focus();
+
+        $textarea
+            .val($parent.find('.titulo-avisos ~ small').text())
+            .attr('data-anterior', $parent.find('.titulo-avisos ~ small').text());
+
+        $elAdd.html(htmlElAdd);
+
+        $iconsSearch
+            .removeClass('d-flex')
+            .addClass('d-none');
+
+        $searchBody.removeClass('active');
+        $filteredsWrapper.hide();
+            
+    })
+    .on('click', '.cancelar-doiscampos', function () {
+        
+        var $this = $(this),
+            $searchBody = $this.parents('.search-body-doiscampos'),
+            $inputSearch = $searchBody.find('.search-input-doiscampos');
+
+        $inputSearch
+            .removeClass('is-valid is-invalid')
+            .removeAttr('data-id data-anterior')
+            .val('')
+            .trigger('input');
+
+        $inputSearch[0].setCustomValidity('');
+
+        $searchBody
+            .find('textarea')
+            .removeClass('is-valid is-invalid')
+            .removeAttr('data-anterior')
+            .val('');
+
+        $('.elements-add-doiscampos').empty();
+
+        $searchBody.find('.icons-search-input')
+            .removeClass('d-none')
+            .addClass('d-flex');
+    })
+    .on('click', '.close-btn-doiscampos', function () {
+
+        var $this = $(this),
+            $searchBody = $this.parents('.search-body-doiscampos');
+
+        $searchBody
+            .find('.form-control')
+            .val('');
+
+        $searchBody
+            .find('.search-input-doiscampos')
+            .trigger('input');
+    })
+    .on('input', '.textarea-doiscampos', function () {
+        $('.search-input-doiscampos').trigger('input');
     });
 
 // Fixos

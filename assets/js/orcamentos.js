@@ -20,10 +20,10 @@ $(function () {
 
     // inicializa os inputs da pagina - parte de itens do orçamento
     // $('#material_complementar').attr('disabled','disabled');
-    $('#quant_usada').attr('disabled','disabled');
-    $('#custo_tot_subitem').attr('disabled','disabled');
-    
-    $('#unidade').attr('disabled','disabled');
+    $('#quant_usada').attr('disabled', 'disabled');
+    $('#custo_tot_subitem').attr('disabled', 'disabled');
+
+    $('#unidade').attr('disabled', 'disabled');
     $.ajax({
         url: baselink + '/ajax/buscaParametrosMaterial',
         type: 'POST',
@@ -36,11 +36,11 @@ $(function () {
             var bocarolo, margem;
             if (data['tamanho_boca_rolo']) {
                 bocarolo = floatParaPadraoInternacional(data['tamanho_boca_rolo']);
-                $('#unidade').attr('data-bocarolo',bocarolo);
+                $('#unidade').attr('data-bocarolo', bocarolo);
             }
             if (data['margem_erro_material']) {
                 margem = floatParaPadraoInternacional(data['margem_erro_material']);
-                $('#unidade').attr('data-margemerro',margem);
+                $('#unidade').attr('data-margemerro', margem);
             }
 
         }
@@ -48,8 +48,8 @@ $(function () {
 
     // $('#largura').attr('disabled','disabled');
     // $('#comprimento').attr('disabled','disabled');
-    
-    
+
+
     // coloca as opções de produtos/serviços 
     $('#tipo_servico_produto')
         .empty()
@@ -146,8 +146,8 @@ $(function () {
 
                         // $materialComplementar.removeAttr('disabled');
                         $materialComplementarDropdown.html(htmlDropdown);
-                        
-                            
+
+
                     } else if (val == 'servicos') {
 
                         $material.removeAttr('disabled');
@@ -167,8 +167,8 @@ $(function () {
 
         });
 
-    $('#data_emissao').on('change blur',function(){
-        if($('#data_emissao').val() != ''){
+    $('#data_emissao').on('change blur', function () {
+        if ($('#data_emissao').val() != '') {
             $('#data_validade').val(proximoDiaUtil($('#data_emissao').val(), 15)).datepicker('update').blur();
             $('#data_retorno').val(proximoDiaUtil($('#data_emissao').val(), 3)).datepicker('update').blur();
         }
@@ -216,8 +216,8 @@ $(function () {
                     $('#data_retorno').val('');
                     $('#data_emissao').focus();
                 }
-            }    
-        }    
+            }
+        }
     });
 
     $('#unidade').on('change blur', function(){
@@ -499,6 +499,9 @@ $(function () {
             }
 
             if ($this.val()) {
+
+                var $quemIndicou = $('#quem_indicou');
+
                 if ($this.val().toLocaleLowerCase() == 'contato' || $this.val().startsWith('Contato - ')) {
 
                     $this
@@ -516,34 +519,53 @@ $(function () {
                             </div>
                         `);
 
-                    $('#quem_indicou')
-                        .val($this.attr('data-anterior').replace('Contato - ', ''));
+                    $quemIndicou
+                        .val($this.attr('data-anterior').replace('Contato - ', ''))
+                        .blur();
+
+                    var valueQuemIndicou = $quemIndicou.val(),
+                        $comoConhec = $('#como_conheceu'),
+                        textOptSelc = $comoConhec.children('option:selected').text(),
+                        camposConcat = textOptSelc + ' - ' + valueQuemIndicou;
+        
+                    if (valueQuemIndicou) {
+                        $comoConhec
+                            .children('option:contains(' + textOptSelc + ')')
+                            .attr('value', camposConcat);
+                    }
+
+                } else {
+
+                    $this
+                        .children('option:contains("Contato")')
+                        .attr('value', 'Contato');
+
                 }
             }
         })
         .change();
 
     $(document)
-        .on('blur', '#quem_indicou', function() {
+        .on('blur', '#quem_indicou', function () {
 
             var $this = $(this),
                 value = $this.val(),
                 $comoConhec = $('#como_conheceu'),
-                comoConhecVal = $comoConhec.val(),
-                camposConcat = comoConhecVal + ' - ' + value;
+                textOptSelc = $comoConhec.children('option:selected').text(),
+                camposConcat = textOptSelc + ' - ' + value;
 
             $this.removeClass('is-valid is-invalid');
             $this[0].setCustomValidity('');
 
             if (value) {
-                
+
                 $comoConhec
-                    .children('option:contains(' + comoConhecVal + ')')
+                    .children('option:contains(' + textOptSelc + ')')
                     .attr('value', camposConcat);
 
                 $this.addClass('is-valid');
                 $this[0].setCustomValidity('');
-                
+
             }
 
         });
@@ -575,10 +597,10 @@ function proximoDiaUtil(dataInicio, distdias) {
         if (distdias != 0) {
             var dtaux = dataInicio.split("/");
             var dtvenc = new Date(dtaux[2], parseInt(dtaux[1]) - 1, dtaux[0]);
-    
+
             //soma a quantidade de dias para o recebimento/pagamento
             dtvenc.setDate(dtvenc.getDate() + distdias);
-    
+
             //verifica se a data final cai no final de semana, se sim, coloca para o primeiro dia útil seguinte
             if (dtvenc.getDay() == 6) {
                 dtvenc.setDate(dtvenc.getDate() + 2);
@@ -586,7 +608,7 @@ function proximoDiaUtil(dataInicio, distdias) {
             if (dtvenc.getDay() == 0) {
                 dtvenc.setDate(dtvenc.getDate() + 1);
             }
-    
+
             //monta a data no padrao brasileiro
             var dia = dtvenc.getDate();
             var mes = dtvenc.getMonth() + 1;

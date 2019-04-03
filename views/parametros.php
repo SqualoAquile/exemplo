@@ -1,14 +1,11 @@
 <?php $modulo = str_replace("-form", "", basename(__FILE__, ".php")) ?>
 <script type="text/javascript">
-    var baselink = '<?php echo BASE_URL;?>',
-        currentModule = '<?php echo $modulo ?>'
+    var baselink = '<?php echo BASE_URL ?>',
+        currentModule = '<?php echo $modulo ?>',
+        data_add = '<?php echo in_array($modulo . "_add", $_SESSION["permissoesUsuario"]) ? true : false ?>',
+        data_edt = '<?php echo in_array($modulo . "_exc", $_SESSION["permissoesUsuario"]) ? true : false ?>',
+        data_exc = '<?php echo in_array($modulo . "_edt", $_SESSION["permissoesUsuario"]) ? true : false ?>';
 </script>
-
-
-<div class = "row" id="data_usuario"
-    data-add = "<?php echo in_array($modulo . "_add", $_SESSION["permissoesUsuario"]) ? true : false ?> " 
-    data-exc = "<?php echo in_array($modulo . "_exc", $_SESSION["permissoesUsuario"]) ? true : false ?> " 
-    data-edt = "<?php echo in_array($modulo . "_edt", $_SESSION["permissoesUsuario"]) ? true : false ?> "> </div>
 
 <!-- Chama o arquivo específico do módulo, caso não exista,  -->
 <!-- Este javaScript serve para fazer verificações inerentes à cada módulo, por exemplo o radio de Clientes -->
@@ -104,48 +101,30 @@
                                         <?php echo array_key_exists("label", $comment) ? $comment["label"] : $parametro ?>
                                     </label>
                                     
-                                    <ul id="<?php echo $parametro ?>" class="search-body-doiscampos list-unstyled mt-2">
+                                    <ul id="<?php echo $parametro ?>" class="search-body search-body-doiscampos list-unstyled mt-2">
                                         <li>
                                             <div class="row">
                                                 <div class="col-lg">
+                                                    <label for="parametroRelacional<?php echo $key ?>">Título</label>
                                                     <div class="position-relative">
-                                                        <?php foreach ($campos as $campo_key => $campo_value): ?>
-                                                        <?php endforeach ?>
-                                                        <div class="form-group">
-                                                            <label for="parametroRelacional<?php echo $key ?>">Título</label>
-                                                            <div class="input-group">
-                                                                <input id="parametroRelacional<?php echo $key ?>" type="text" data-campo="<?php echo $campo_value ?>" class="form-control form-control-lg search-input-doiscampos">
-                                                                <div class="input-group-append">
-                                                                    <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        <span class="sr-only">Abrir o Menu</span>
-                                                                    </button>
-                                                                    <div class="dropdown-toggle-avisos dropdown-menu dropdown-menu-right w-100 mt-0">
-                                                                        <a class="dropdown-item" href="#">Action</a>
-                                                                        <a class="dropdown-item" href="#">Another action</a>
-                                                                        <a class="dropdown-item" href="#">Something else here</a>
-                                                                        <div role="separator" class="dropdown-divider"></div>
-                                                                        <a class="dropdown-item" href="#">Separated link</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="parametroRelacionalTextarea<?php echo $key ?>">Mensagem</label>
-                                                            <textarea id="parametroRelacionalTextarea<?php echo $key ?>" class="form-control form-control-lg"></textarea>
-                                                        </div>
-                                                        <div class="icons-search-input-doiscampos d-flex px-1">
-                                                            <button class="btn btn-sm down-btn-doiscampos" tabindex="-1">
+                                                        <input id="parametroRelacional<?php echo $key ?>" type="text" class="form-control form-control-lg search-input-doiscampos">
+                                                        <div class="icons-search-input d-flex px-1">
+                                                            <button class="btn btn-sm down-btn" tabindex="-1">
                                                                 <i class="fas fa-caret-down"></i>
                                                             </button>
-                                                            <button class="btn btn-sm text-secondary close-btn-doiscampos" tabindex="-1">
+                                                            <button class="btn btn-sm text-secondary close-btn close-btn-doiscampos" tabindex="-1">
                                                                 <i class="fas fa-times-circle"></i>
                                                             </button>
                                                         </div>
-                                                        <div class="list-group-filtereds-wrapper-doiscampos position-absolute w-100 shadow bg-white">
-                                                            <div class="elements-add-doiscampos"></div>
-                                                            <div class="list-group-filtereds-doiscampos list-group list-group-flush"></div>
+                                                        <div class="list-group-filtereds-wrapper position-absolute w-100 shadow bg-white">
+                                                            <div class="list-group-filtereds list-group list-group-flush"></div>
                                                         </div>
                                                     </div>
+                                                    <div class="form-group mt-3">
+                                                        <label for="parametroRelacionalTextarea<?php echo $key ?>">Mensagem</label>
+                                                        <textarea id="parametroRelacionalTextarea<?php echo $key ?>" class="form-control form-control-lg textarea-doiscampos"></textarea>
+                                                    </div>
+                                                    <div class="elements-add-doiscampos"></div>
                                                 </div>
                                             </div>
                                         </li>
