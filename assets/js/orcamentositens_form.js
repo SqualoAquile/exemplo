@@ -34,7 +34,7 @@ $(function () {
             Save();
 
             // Limpar formulario
-            $form.reset();
+            // $form.reset();
             $($form).removeClass('was-validated');
             
             $fields
@@ -99,6 +99,7 @@ $(function () {
 
         $('.editar-contato').bind('click', Edit);
         $('.excluir-contato').bind('click', Delete);
+        calculaSubtotalCustotal();
     };
 
     // Pega as linhas da tabela auxiliar e manipula o hidden de contatos
@@ -136,6 +137,7 @@ $(function () {
         var par = $(this).closest('tr');
         par.remove();
         SetInput();
+        calculaSubtotalCustotal();
     };
 
     // Seta no form o contato clicado para editar, desabilita os botoes de acões deste contato e seta o id desse contato
@@ -147,19 +149,19 @@ $(function () {
             .removeClass('disabled');
 
             var $par = $(this).closest('tr');
-                tdItem = $par.children("td:nth-child(1)");
-                tdSubItem = $par.children("td:nth-child(2)");
-                tdServicoProduto = $par.children("td:nth-child(3)");
-                tdMaterialServico = $par.children("td:nth-child(4)");
-                tdMaterialComplementar = $par.children("td:nth-child(5)");
-                tdUnidade = $par.children("td:nth-child(6)");
-                tdCusto = $par.children("td:nth-child(7)");
-                tdPreco = $par.children("td:nth-child(8)");
-                tdQuant = $par.children("td:nth-child(9)");
-                tdLargura = $par.children("td:nth-child(10)");
-                tdComprimento = $par.children("td:nth-child(11)");
-                tdQuantUsada = $par.children("td:nth-child(12)");
-                tdObservacao = $par.children("td:nth-child(13)");    
+                tdItem = $par.children("td:nth-child(2)");
+                tdSubItem = $par.children("td:nth-child(3)");
+                tdServicoProduto = $par.children("td:nth-child(4)");
+                tdMaterialServico = $par.children("td:nth-child(5)");
+                tdMaterialComplementar = $par.children("td:nth-child(6)");
+                tdUnidade = $par.children("td:nth-child(7)");
+                tdCusto = $par.children("td:nth-child(8)");
+                tdPreco = $par.children("td:nth-child(9)");
+                tdQuant = $par.children("td:nth-child(10)");
+                tdLargura = $par.children("td:nth-child(11)");
+                tdComprimento = $par.children("td:nth-child(12)");
+                tdQuantUsada = $par.children("td:nth-child(13)");
+                tdObservacao = $par.children("td:nth-child(14)");    
 
         // Desabilita ele mesmo e os botões irmãos de editar e excluir da linha atual
         $par
@@ -167,23 +169,37 @@ $(function () {
             .addClass('disabled');
 
         $('input[name=descricao_item]').val(tdItem.text()).attr('data-anterior', tdItem.text()).focus();
+
         $('input[name=descricao_subitem]').val(tdSubItem.text()).attr('data-anterior', tdSubItem.text());
+
         $('input[name=quant]').val(tdQuant.text()).attr('data-anterior', tdQuant.text());
+
         $('input[name=largura]').val(tdLargura.text()).attr('data-anterior', tdLargura.text());
+
         $('input[name=comprimento]').val(tdComprimento.text()).attr('data-anterior', tdComprimento.text());
+        
         $('input[name=quant_usada]').val(tdQuantUsada.text()).attr('data-anterior', tdQuantUsada.text());
+
         $('input[name=tipo_servico_produto]').val(tdServicoProduto.text()).attr('data-anterior', tdServicoProduto.text());
+
         $('input[name=material_produto]').val(tdMaterialServico.text()).attr('data-anterior', tdMaterialServico.text());
+
         $('input[name=material_complementar]').val(tdMaterialComplementar.text()).attr('data-anterior', tdMaterialComplementar.text());
+
         $('input[name=unidade]').val(tdUnidade.text()).attr('data-anterior', tdUnidade.text());
+
         $('input[name=custo_tot_subitem]').val(tdCusto.text()).attr('data-anterior', tdCusto.text());
+
         $('input[name=preco_tot_subitem]').val(tdPreco.text()).attr('data-anterior', tdPreco.text());
-        $('input[name=observacao_subitem]').val(tdPreco.text()).attr('data-anterior', tdSetor.text());
+
+        $('input[name=observacao_subitem]').val(tdPreco.text()).attr('data-anterior', tdObservacao.text());
 
         $('table#itensOrcamento thead tr[role=form]')
             .attr('data-current-id', $par.attr('data-id'))
             .find('.is-valid, .is-invalid')
             .removeClass('is-valid is-invalid');
+        
+        calculaSubtotalCustotal();    
     };
 
     // Ao dar submit neste form, chama essa funcão que pega os dados do formula e Popula a tabela
@@ -200,12 +216,54 @@ $(function () {
             $('[name=material_servico]').val(),
             $('[name=material_complementar]').val(),
             $('[name=unidade]').val(),
-            $('[name=custo_tot_subitem]').val(),
-            $('[name=preco_tot_subitem]').val(),
+            $('[name=custo_tot_subitem]').attr('data-totalsubitem'),
+            $('[name=preco_tot_subitem]').attr('data-totalsubitem'),
             $('[name=observacao_subitem]').val(),
         ]);
 
         SetInput();
+        calculaSubtotalCustotal();
     };
 
-});
+    // Toda movimentação que acontece na tabela ( adição, edição, exclusão ) dispara o cálculo do subtotal e custo total
+    function calculaSubtotalCustotal() {
+        var custoaux, precoaux;
+        var custototal = 0;
+        var precototal = 0;
+        var $subtot = $('#sub_total');
+        var $custotot = $('#custo_total');
+
+        if ( $("#itensOrcamento tbody").length > 0 ) {
+    
+            $("#itensOrcamento tbody tr").each(function () {
+                custoaux = 0;
+                precoaux = 0;
+
+                custoaux = $(this).closest('tr').children('td:eq(11)').text();
+                custoaux = floatParaPadraoInternacional(custoaux);
+                custoaux = parseFloat(custoaux);
+                custototal = custototal + custoaux;
+
+                precoaux = $(this).closest('tr').children('td:eq(12)').text();
+                precoaux = floatParaPadraoInternacional(precoaux);
+                precoaux = parseFloat(precoaux);
+                precototal = precototal + precoaux;
+               
+            });
+
+            precototal = parseFloat(precototal);
+            precototal = floatParaPadraoBrasileiro(precototal);
+            
+            custototal = parseFloat(custototal);
+            custototal = floatParaPadraoBrasileiro(custototal);
+
+            $custotot.val(custototal);
+            $subtot.val(precototal); 
+    
+        }else{
+            
+            $custotot.val('0,00');
+            $subtot.val('0,00');    
+        }
+    };
+});    

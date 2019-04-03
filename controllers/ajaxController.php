@@ -49,7 +49,13 @@ class ajaxController extends controller{
   }
     
   public function index() {
-      //no index não existe função específica, módulo usado para as requisições ajax    
+      //no index não existe função específica, módulo usado para as requisições ajax  
+      //é redirecionado para home
+      header("Location: ".BASE_URL."/home");   
+      $_SESSION["returnMessage"] = [
+        "mensagem" => "Erro no endereço, você foi redirecionado para o início.",
+        "class" => "alert-danger"
+    ];
   } 
   
   /////// cadastro de ADM CARTOES
