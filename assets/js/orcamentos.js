@@ -1,5 +1,5 @@
 $(function () {
-
+    // linha de comentário teste pro push do git
     // variável global que vai ser usada para guardar o valor do total de material e valor total do subitem do orçamento
     var valorTotalSubitem, custoTotalSubitem, quantTotalMaterial;
 
