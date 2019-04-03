@@ -1,5 +1,9 @@
 $(function () {
 
+    // variável global que vai ser usada para guardar o valor do total de material e valor total do subitem do orçamento
+    var valorTotalSubitem, custoTotalSubitem, quantTotalMaterial;
+
+
     //coloca os inputs dentros das div certas pra acertar o layout da página
     $('#form-principal').children('.row').children('[class^="col-xl"]:nth-child(-n+17)').appendTo('#esquerda .row');
     $('#form-principal').children('.row').children('[class^="col-xl"]:nth-child(n+2):nth-child(-n+10)').appendTo('#embaixo .row');
@@ -100,6 +104,7 @@ $(function () {
                     $material
                         .removeClass('is-valid is-invalid')
                         .removeAttr('data-tabela data-custo data-preco data-unidade')
+                        .blur()
                         .val('');
 
                     $materialComplementar
@@ -107,39 +112,39 @@ $(function () {
                         .removeAttr('data-tabela data-custo data-preco data-unidade')
                         .val('');
 
-                    $unidade
-                        .removeClass('is-valid is-invalid')
-                        .val('');
+                    // $unidade
+                    //     .removeClass('is-valid is-invalid')
+                    //     .val('');
 
-                    $preco
-                        .removeClass('is-valid is-invalid')
-                        .val('');
+                    // $preco
+                    //     .removeClass('is-valid is-invalid')
+                    //     .val('');
 
-                    $custo
-                        .removeClass('is-valid is-invalid')
-                        .attr('disabled', 'disabled')
-                        .val('');
+                    // $custo
+                    //     .removeClass('is-valid is-invalid')
+                    //     .attr('disabled', 'disabled')
+                    //     .val('');
                     
-                    $largura
-                        .removeClass('is-valid is-invalid')
-                        .attr('disabled', 'disabled')
-                        .val('');
+                    // $largura
+                    //     .removeClass('is-valid is-invalid')
+                    //     // .attr('disabled', 'disabled')
+                    //     .val('');
                         
-                    $comprimento
-                        .removeClass('is-valid is-invalid')
-                        .attr('disabled', 'disabled')
-                        .val('');
+                    // $comprimento
+                    //     .removeClass('is-valid is-invalid')
+                    //     // .attr('disabled', 'disabled')
+                    //     .val('');
 
-                    $quantUsada
-                        .removeClass('is-valid is-invalid')
-                        .val('');
+                    // $quantUsada
+                    //     .removeClass('is-valid is-invalid')
+                    //     .val('');
 
                     if (val == 'produtos') {
 
                         $material.removeAttr('disabled');
                         $materialDropdown.html(htmlDropdown);
 
-                        $materialComplementar.removeAttr('disabled');
+                        // $materialComplementar.removeAttr('disabled');
                         $materialComplementarDropdown.html(htmlDropdown);
                         
                             
@@ -155,7 +160,7 @@ $(function () {
                         $material.removeAttr('disabled');
                         $materialDropdown.html(htmlDropdown);
 
-                        $materialComplementar.attr('disabled', 'disabled');
+                        // $materialComplementar.attr('disabled', 'disabled');
                     }
                 }
             });
@@ -216,19 +221,28 @@ $(function () {
     });
 
     $('#unidade').on('change blur', function(){
-        calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+        
+        calculaQuantidadeUsadaMaterial();
+        calculaMaterialCustoPreco()
     });
-    $('#quantidade').on('change blur', function(){
-        calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+    $('#quant').on('change blur', function(){
+        
+        calculaQuantidadeUsadaMaterial();
+        calculaMaterialCustoPreco()
     });
     $('#largura').on('change blur', function(){
-        calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+        
+        calculaQuantidadeUsadaMaterial();
+        calculaMaterialCustoPreco()
     });
     $('#comprimento').on('change blur', function(){
-        calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+        
+        calculaQuantidadeUsadaMaterial();
+        calculaMaterialCustoPreco()
     });
 
     $('#material_complementar').on('change blur', function(){
+        
         $material = $('#material_servico');
         $materialComplementar = $('#material_complementar');
 
@@ -241,6 +255,7 @@ $(function () {
     });
 
     $("#custo_tot_subitem, #preco_tot_subitem").on('change blur',function(){
+        
         var $custo = $("#custo_tot_subitem");
         var $preco = $("#preco_tot_subitem");
         var $material = $('#material_servico');
@@ -248,52 +263,56 @@ $(function () {
         if( $custo.val() != "" && $preco.val() == "" ){
             
             $preco.val(floatParaPadraoBrasileiro( $material.attr('data-preco') ) );
-            return;
         }
         
         if( $custo.val() == "" && $preco.val() != "" ){
-            $material.val('').change().blur();
-            return;
+            // $material.val('').change().blur();
         }
         
         if( $custo.val() != "" && $preco.val() != "" ){
-            if( parseFloat(floatParaPadraoInternacional( $custo.val())) > parseFloat(floatParaPadraoInternacional( $preco.val())) ){
-                
+            if( parseFloat(floatParaPadraoInternacional( $custo.val())) >= parseFloat(floatParaPadraoInternacional( $preco.val())) ){
+                // alert('O preço do item deve ser maior do que o seu custo.');
                 $preco.val(floatParaPadraoBrasileiro( $material.attr('data-preco') ) );
-                return;
             }
-        }        
+        }
+        
+        calculaMaterialCustoPreco();
     });
         
     $('#material_servico').on('change blur',function(){
-        var $unidade = $(this);
+        
+        var $unidade = $('#unidade');
         var $largura = $('#largura');
         var $comprimento = $('#comprimento');
         var $materialComplementar = $('#material_complementar');
-        
-        if( $unidade.val() == 'M²' ){
-            $largura.removeAttr('disabled');
-            $comprimento.removeAttr('disabled');
-            $materialComplementar.removeAttr('disabled');
-            calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
-        }else{
-            $largura.attr('disabled','disabled');
-            $comprimento.attr('disabled','disabled');
-            $materialComplementar.attr('disabled','disabled');
-        }
-    });
+        var $tipoProdServ = $('[name="tipo_servico_produto"]');
 
-    $('#unidade').on('change blur', function(){
-        calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
-    });
-    $('#quantidade').on('change blur', function(){
-        calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
-    });
-    $('#largura').on('change blur', function(){
-        calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
-    });
-    $('#comprimento').on('change blur', function(){
-        calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));
+        var $custo_tot = $('[name="custo_tot_subitem"]');
+        var $preco_tot = $('[name="preco_tot_subitem"]');
+
+        if( $(this).val() == ''){
+            $unidade.val('').removeClass('is-valid is-invalid').blur();
+            $custo_tot.val('').removeClass('is-valid is-invalid').blur();
+            $preco_tot.val('').removeClass('is-valid is-invalid').blur();  
+            return;
+        }
+
+        if($unidade.val() == 'ML' || $unidade.val() == 'M²' ){
+
+            $largura.removeAttr('disabled').removeClass('is-valid is-invalid');
+            $comprimento.removeAttr('disabled').removeClass('is-valid is-invalid');
+            
+        }else{
+
+            $largura.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
+            $comprimento.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
+        }
+
+        if( $tipoProdServ.val() == 'produtos' && $unidade.val() == 'ML' ){
+            $materialComplementar.removeAttr('disabled').removeClass('is-valid is-invalid');
+        }else{
+            $materialComplementar.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
+        } 
     });
 
     $(document)
@@ -380,7 +399,7 @@ $(function () {
 
         })
         .on('click', '[name="material_servico"] ~ .relacional-dropdown .relacional-dropdown-element', function () {
-
+            
             var $this = $(this),
                 $tipoProdServ = $('[name="tipo_servico_produto"]'),
                 $material = $('[name="material_servico"]'),
@@ -396,46 +415,21 @@ $(function () {
                 data_custo = $this.attr('data-custo'),
                 unidade = data_tabela != 'servicos' ? data_unidade : 'M²';
 
-            $custo
-                .val(floatParaPadraoBrasileiro(data_custo))
-                .blur();
+            $preco.val(floatParaPadraoBrasileiro(data_preco)).blur();
 
-            $preco
-                .val(floatParaPadraoBrasileiro(data_preco))
-                .blur();
+            $custo.val(floatParaPadraoBrasileiro(data_custo)).blur();
 
-            $unidade
-                .val(unidade)
-                .blur();
+            $unidade.val(unidade).blur();
 
-            $material
-                .attr('data-tabela', data_tabela)
-                .attr('data-unidade', unidade)
-                .attr('data-preco', data_preco)
-                .attr('data-custo', data_custo);
+            $material.attr('data-tabela', data_tabela).attr('data-unidade', unidade).attr('data-preco', data_preco).attr('data-custo', data_custo);
 
-            if( $tipoProdServ.val() == 'produtos'){
-                if($unidade.val() == 'M²' ){
-                    console.log('m² e produtos - ',$tipoProdServ.val());
-                    $largura.val('').removeAttr('disabled').removeClass('is-valid is-invalid');
-                    $comprimento.val('').removeAttr('disabled').removeClass('is-valid is-invalid');
-                    $materialComplementar.val('').removeAttr('disabled').removeClass('is-valid is-invalid');
-                }else{
-                    console.log('!m² || !produtos - ',$tipoProdServ.val());    
-                    $largura.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
-                    $comprimento.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
-                    $materialComplementar.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
-                }
-                
+            // $largura.val('').removeClass('is-valid is-invalid');
+            
+            // $comprimento.val('').removeClass('is-valid is-invalid');
+            
+            // $materialComplementar.val('').removeClass('is-valid is-invalid');
 
-            }else{
-                console.log('!m² || !produtos - ',$tipoProdServ.val());
-                $largura.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
-                $comprimento.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
-                $materialComplementar.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
-
-            } 
-            calculaQuantidadeUsadaMaterial($('#unidade'), $('#largura'), $('#comprimento'), $('#quant_usada'));   
+            calculaQuantidadeUsadaMaterial();   
 
         })
         .on('change', '[name="pf_pj"]', function () {
@@ -652,77 +646,115 @@ function number_format(numero, decimal, decimal_separador, milhar_separador) {
     return s.join(dec);
 }
 
-function calculaCustoPreco(qtd, unid, custo, preco) {
-    var qtd = $('#quantidade');
-    var qtd = $('#unidade');
-    var qtd = $('#preco');
-    var qtd = $('#quantidade');
+function calculaMaterialCustoPreco() {
 
+    var $qtd = $('#quant');
+    var $unidade = $('#unidade');
+    var $custo = $('#custo_tot_subitem');
+    var $preco = $('#preco_tot_subitem');
+    var $qtdUsada = $('#quant_usada');
+    var $subtotal = $('#sub_total');
+    var $custototal = $('#custo_total');
+    var custoaux, precoaux;
+
+    if( $qtd.val() != '' && $unidade.val() != '' && $custo.val() != '' && $preco.val() != ''){
+        if($qtdUsada.val() == ''){
+            //material ou serviço que não tem unidade em m², o que interessa é o preço e a quantidade
+            quantTotalMaterial = parseFloat(0);
+            
+            custoaux =  parseFloat( parseFloat($qtd.val()) * parseFloat( floatParaPadraoInternacional( $custo.val() ) ) );
+            custoTotalSubitem = floatParaPadraoBrasileiro(custoaux);
+
+            precoaux =  parseFloat( parseFloat($qtd.val()) * parseFloat( floatParaPadraoInternacional( $preco.val() ) ) );
+            valorTotalSubitem = floatParaPadraoBrasileiro(precoaux);
+            
+        }else{
+           //material ou serviço que a unidade é m², o que interessa é o preço e a quantidade e quantUsada
+            quantTotalMaterial = parseFloat( parseFloat($qtd.val()) * parseFloat( floatParaPadraoInternacional( $qtdUsada.val() ) ).toFixed(0) );
+
+            custoaux = parseFloat( quantTotalMaterial * parseFloat( floatParaPadraoInternacional( $custo.val() ) ) );
+            custoTotalSubitem = floatParaPadraoBrasileiro(custoaux);
+
+            precoaux = parseFloat( quantTotalMaterial * parseFloat( floatParaPadraoInternacional( $preco.val() ) ) );
+            valorTotalSubitem = floatParaPadraoBrasileiro(precoaux);
+        }
+    }else{
+        quantTotalMaterial = parseFloat(0);
+        custoTotalSubitem = parseFloat(0);
+        valorTotalSubitem = parseFloat(0);
+    }
+
+    $custo.attr('data-totalsubitem', custoTotalSubitem);
+    $preco.attr('data-totalsubitem', valorTotalSubitem);
 }
 
-function calculaQuantidadeUsadaMaterial(unid, larg, comp, qtdUsada){ // recebe os objetos (campos)    
-    var $unidade = unid;
-    var $largura = larg;
-    var $comprimento = comp;
-    var $qtdUsada = qtdUsada;
+function calculaQuantidadeUsadaMaterial(){ // recebe os objetos (campos)    
+    
+    var $unidade = $('#unidade');
+    var $largura = $('#largura');
+    var $comprimento = $('#comprimento');
+    var $qtdUsada = $('#quant_usada');
     var bocaRolo = parseFloat($unidade.attr('data-bocarolo'));
     var margemErro = parseFloat($unidade.attr('data-margemerro'));    
+    var larg, comp, quantUs, quantUsLarg, quantUsComp;
 
-    if($unidade.val() != 'M²'){
-        $largura.val('').attr('disabled','disabled');
-        $comprimento.val('').attr('disabled','disabled');
-        $qtdUsada.val('');
-
-    } else {
-        $largura.removeAttr('disabled');
-        $comprimento.removeAttr('disabled')
+    if($unidade.val() == 'ML'){
+        // $largura.removeAttr('disabled');
+        // $comprimento.removeAttr('disabled');
         
         if($largura.val() != '' && $comprimento.val() != ''){
-            
-            var tamMaior, larg, comp, quantUs, quantUsLarg, quantUsComp;
+
+                larg = parseFloat(parseFloat(floatParaPadraoInternacional($largura.val())) *  parseFloat( parseFloat(1) + parseFloat(margemErro/100)));
+                comp = parseFloat( parseFloat(floatParaPadraoInternacional($comprimento.val())) * parseFloat( parseFloat(1) + parseFloat(margemErro/100)));
+                
+                if( ( larg > bocaRolo ) && ( comp > bocaRolo) ){
+                    quantUsLarg = parseFloat( parseFloat( Math.ceil(parseFloat( larg / bocaRolo))) * parseFloat(Math.ceil(comp)) );
+                    quantUsComp = parseFloat(parseFloat( Math.ceil( parseFloat( comp / bocaRolo))) * parseFloat(Math.ceil(larg)) );
+                    quantUs = Math.min(quantUsLarg, quantUsComp);
+
+                    quantUs = floatParaPadraoBrasileiro(quantUs);
+                    $qtdUsada.val(quantUs);
+
+                }else if( (larg < bocaRolo ) && ( comp < bocaRolo) ){
+                    quantUs = floatParaPadraoBrasileiro(parseFloat(1));
+                    $qtdUsada.val(quantUs);
+
+                }else{
+                    quantUs =  parseFloat( Math.ceil( parseFloat(Math.max(larg, comp))));
+                    quantUs = floatParaPadraoBrasileiro(quantUs);
+                    $qtdUsada.val(quantUs);
+                }
+        
+        }else{
+                $qtdUsada.val('');
+                return;
+        }
+
+    }else if( $unidade.val() == 'M²' ){
+        // $largura.removeAttr('disabled');
+        // $comprimento.removeAttr('disabled');
+
+        if($largura.val() != '' && $comprimento.val() != ''){
             
             larg = parseFloat(parseFloat(floatParaPadraoInternacional($largura.val())) *  parseFloat( parseFloat(1) + parseFloat(margemErro/100)));
             comp = parseFloat( parseFloat(floatParaPadraoInternacional($comprimento.val())) * parseFloat( parseFloat(1) + parseFloat(margemErro/100)));
-            
-            if( ( larg > bocaRolo ) && ( comp > bocaRolo) ){
-                quantUsLarg = parseFloat( parseFloat( Math.ceil(parseFloat( larg / bocaRolo))) * parseFloat(Math.ceil(comp)) );
-                quantUsComp = parseFloat(parseFloat( Math.ceil( parseFloat( comp / bocaRolo))) * parseFloat(Math.ceil(larg)) );
-                quantUs = Math.min(quantUsLarg, quantUsComp);
+            quantUs = parseFloat(larg * comp).toFixed(2);
+            quantUs = floatParaPadraoBrasileiro(quantUs);
+            $qtdUsada.val(quantUs);
 
-                quantUs = floatParaPadraoBrasileiro(quantUs);
-                $qtdUsada.val(quantUs);
-
-            }else if( (larg < bocaRolo ) && ( comp < bocaRolo) ){
-                quantUs = floatParaPadraoBrasileiro(parseFloat(1));
-                $qtdUsada.val(quantUs);
-
-            }else{
-                quantUs =  parseFloat( Math.ceil( parseFloat(Math.max(larg, comp))));
-                quantUs = floatParaPadraoBrasileiro(quantUs);
-                $qtdUsada.val(quantUs);
-            }
-        
         }else{
+
             $qtdUsada.val('');
             return;
         }
-
+    
+    }else {
+        // $largura.val('').attr('disabled','disabled').removeClass('is-valid is-invalid');
+        // $comprimento.val('').attr('disabled','disabled').removeClass('is-valid is-invalid');
+        $largura.val('').removeClass('is-valid is-invalid');
+        $comprimento.val('').removeClass('is-valid is-invalid');
+        $qtdUsada.val('');
     }
-}
 
-function maiorque (valMenor, valMaior){
-
-    valorMenor = floatParaPadraoInternacional(valMenor);
-    valorMaior = floatParaPadraoInternacional(valMaior);        
-
-    if( valorMenor != '' && valorMaior != ''){
-
-        if(valorMenor < valorMaior){
-           return true; 
-        }else{
-            return false;
-        }
-    }else{
-        return false;
-    }
+        
 }
