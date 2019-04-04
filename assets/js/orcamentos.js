@@ -429,7 +429,17 @@ $(function () {
             
             // $materialComplementar.val('').removeClass('is-valid is-invalid');
 
-            calculaQuantidadeUsadaMaterial();   
+            calculaQuantidadeUsadaMaterial();
+
+            if ($tipoProdServ.val().toLowerCase() == 'produtos') {
+                var $elementsMaterialComp = $materialComplementar.siblings('.relacional-dropdown').find('.relacional-dropdown-element');
+                $filteredsElementsMaterialComp = $elementsMaterialComp.filter(function () {
+                    return $(this).attr('data-unidade').toLowerCase() == $this.attr('data-unidade').toLowerCase();
+                });
+
+                // $elementsMaterialComp.hide();
+                // $filteredsElementsMaterialComp.show();
+            }
 
         })
         .on('change', '[name="pf_pj"]', function () {
