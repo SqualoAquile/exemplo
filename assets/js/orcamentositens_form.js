@@ -145,54 +145,48 @@ $(function () {
     function Edit() {
 
         // Volta para válido todos os botoões de editar e excluir
-        $('table#itensOrcamento tbody tr .btn')
-            .removeClass('disabled');
+        $('table#itensOrcamento tbody tr .btn').removeClass('disabled');
+        var custoUnit,  precoUnit, quantAux, quantUsadaAux;
+        var $par = $(this).closest('tr');
+            tdItem = $par.children("td:nth-child(2)");
+            tdSubItem = $par.children("td:nth-child(3)");
+            tdQuant = $par.children("td:nth-child(4)");
+            tdLargura = $par.children("td:nth-child(5)");
+            tdComprimento = $par.children("td:nth-child(6)");
+            tdQuantUsada = $par.children("td:nth-child(7)");
+            tdServicoProduto = $par.children("td:nth-child(8)");
+            tdMaterialServico = $par.children("td:nth-child(9)");
+            tdMaterialComplementar = $par.children("td:nth-child(10)");
+            tdUnidade = $par.children("td:nth-child(11)");
+            tdCusto = $par.children("td:nth-child(12)");
+            tdPreco = $par.children("td:nth-child(13)");
+            tdObservacao = $par.children("td:nth-child(14)"); 
 
-            var $par = $(this).closest('tr');
-                tdItem = $par.children("td:nth-child(2)");
-                tdSubItem = $par.children("td:nth-child(3)");
-                tdServicoProduto = $par.children("td:nth-child(4)");
-                tdMaterialServico = $par.children("td:nth-child(5)");
-                tdMaterialComplementar = $par.children("td:nth-child(6)");
-                tdUnidade = $par.children("td:nth-child(7)");
-                tdCusto = $par.children("td:nth-child(8)");
-                tdPreco = $par.children("td:nth-child(9)");
-                tdQuant = $par.children("td:nth-child(10)");
-                tdLargura = $par.children("td:nth-child(11)");
-                tdComprimento = $par.children("td:nth-child(12)");
-                tdQuantUsada = $par.children("td:nth-child(13)");
-                tdObservacao = $par.children("td:nth-child(14)");    
+            quantUsadaAux = parseFloat( floatParaPadraoInternacional( tdQuantUsada.text() ) );
+            quantAux = parseFloat( floatParaPadraoInternacional( tdQuant.text() ) );
+           
+            custoUnit = parseFloat( parseFloat( floatParaPadraoInternacional( tdCusto.text() )) / quantUsadaAux ); 
+            custoUnit = floatParaPadraoBrasileiro( parseFloat( custoUnit / quantAux ).toFixed(2) ); 
+            precoUnit = parseFloat( parseFloat( floatParaPadraoInternacional( tdPreco.text() )) / quantUsadaAux ); 
+            precoUnit = floatParaPadraoBrasileiro( parseFloat( precoUnit / quantAux ).toFixed(2) );    
 
         // Desabilita ele mesmo e os botões irmãos de editar e excluir da linha atual
-        $par
-            .find('.btn')
-            .addClass('disabled');
+        $par.find('.btn').addClass('disabled');
 
-        $('input[name=descricao_item]').val(tdItem.text()).attr('data-anterior', tdItem.text()).focus();
+        $('input[name=descricao_item]').val(tdItem.text()).attr('data-anterior', tdItem.text()).blur().focus();
+        $('input[name=descricao_subitem]').val(tdSubItem.text()).attr('data-anterior', tdSubItem.text()).blur();
+        $('input[name=tipo_servico_produto]').val(tdServicoProduto.text()).attr('data-anterior', tdServicoProduto.text()).blur();
+        $('input[name=material_servico]').val(tdMaterialServico.text()).attr('data-anterior', tdMaterialServico.text()).blur();
+        $('input[name=material_complementar]').val(tdMaterialComplementar.text()).attr('data-anterior', tdMaterialComplementar.text()).blur();
+        $('input[name=unidade]').val(tdUnidade.text()).attr('data-anterior', tdUnidade.text()).blur();
 
-        $('input[name=descricao_subitem]').val(tdSubItem.text()).attr('data-anterior', tdSubItem.text());
-
-        $('input[name=quant]').val(tdQuant.text()).attr('data-anterior', tdQuant.text());
-
-        $('input[name=largura]').val(tdLargura.text()).attr('data-anterior', tdLargura.text());
-
-        $('input[name=comprimento]').val(tdComprimento.text()).attr('data-anterior', tdComprimento.text());
-        
+        $('input[name=custo_tot_subitem]').val(custoUnit).attr('data-anterior', custoUnit).blur();
+        $('input[name=preco_tot_subitem]').val(precoUnit).attr('data-anterior', precoUnit).blur();
+        $('input[name=quant]').val(tdQuant.text()).attr('data-anterior', tdQuant.text()).blur();
+        $('input[name=largura]').val(tdLargura.text()).attr('data-anterior', tdLargura.text()).blur();
+        $('input[name=comprimento]').val(tdComprimento.text()).attr('data-anterior', tdComprimento.text()).blur();
         $('input[name=quant_usada]').val(tdQuantUsada.text()).attr('data-anterior', tdQuantUsada.text());
-
-        $('input[name=tipo_servico_produto]').val(tdServicoProduto.text()).attr('data-anterior', tdServicoProduto.text());
-
-        $('input[name=material_produto]').val(tdMaterialServico.text()).attr('data-anterior', tdMaterialServico.text());
-
-        $('input[name=material_complementar]').val(tdMaterialComplementar.text()).attr('data-anterior', tdMaterialComplementar.text());
-
-        $('input[name=unidade]').val(tdUnidade.text()).attr('data-anterior', tdUnidade.text());
-
-        $('input[name=custo_tot_subitem]').val(tdCusto.text()).attr('data-anterior', tdCusto.text());
-
-        $('input[name=preco_tot_subitem]').val(tdPreco.text()).attr('data-anterior', tdPreco.text());
-
-        $('input[name=observacao_subitem]').val(tdPreco.text()).attr('data-anterior', tdObservacao.text());
+        $('input[name=observacao_subitem]').val(tdObservacao.text()).attr('data-anterior', tdObservacao.text());
 
         $('table#itensOrcamento thead tr[role=form]')
             .attr('data-current-id', $par.attr('data-id'))

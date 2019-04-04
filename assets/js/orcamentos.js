@@ -383,7 +383,7 @@ $(function () {
             }else{
                 $materialComplementar.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
             } 
-
+            $materialComplementar.blur();
             calculaQuantidadeUsadaMaterial();   
 
         })
