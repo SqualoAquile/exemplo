@@ -378,7 +378,7 @@ $(function () {
                 $comprimento.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
             }
     
-            if( $tipoProdServ.val() == 'produtos' && $unidade.val() == 'ML' ){
+            if( $tipoProdServ.val() == 'produtos' && ( $unidade.val() == 'ML' || $unidade.val() == 'M²' ) ){
                 $materialComplementar.removeAttr('disabled').removeClass('is-valid is-invalid');
             }else{
                 $materialComplementar.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
