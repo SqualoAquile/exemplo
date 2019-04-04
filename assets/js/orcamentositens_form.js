@@ -167,24 +167,26 @@ $(function () {
            
             custoUnit = parseFloat( parseFloat( floatParaPadraoInternacional( tdCusto.text() )) / quantUsadaAux ); 
             custoUnit = floatParaPadraoBrasileiro( parseFloat( custoUnit / quantAux ).toFixed(2) ); 
+            
             precoUnit = parseFloat( parseFloat( floatParaPadraoInternacional( tdPreco.text() )) / quantUsadaAux ); 
             precoUnit = floatParaPadraoBrasileiro( parseFloat( precoUnit / quantAux ).toFixed(2) );    
 
         // Desabilita ele mesmo e os botões irmãos de editar e excluir da linha atual
         $par.find('.btn').addClass('disabled');
 
-        $('input[name=descricao_item]').val(tdItem.text()).attr('data-anterior', tdItem.text()).blur().focus();
-        $('input[name=descricao_subitem]').val(tdSubItem.text()).attr('data-anterior', tdSubItem.text()).blur();
-        $('input[name=tipo_servico_produto]').val(tdServicoProduto.text()).attr('data-anterior', tdServicoProduto.text()).blur();
-        $('input[name=material_servico]').val(tdMaterialServico.text()).attr('data-anterior', tdMaterialServico.text()).blur();
-        $('input[name=material_complementar]').val(tdMaterialComplementar.text()).attr('data-anterior', tdMaterialComplementar.text()).blur();
-        $('input[name=unidade]').val(tdUnidade.text()).attr('data-anterior', tdUnidade.text()).blur();
+        $('input[name=descricao_item]').val(tdItem.text()).attr('data-anterior', tdItem.text()).blur().change().focus();
+        $('input[name=descricao_subitem]').val(tdSubItem.text()).attr('data-anterior', tdSubItem.text()).blur().change();
+        console.log('tiposerv:  ',tdServicoProduto);
+        $('[name=tipo_servico_produto]').val(tdServicoProduto.text() ).attr('data-anterior', tdServicoProduto.text()).blur().change();
+        $('input[name=material_servico]').val(tdMaterialServico.text()).attr('data-anterior', tdMaterialServico.text()).blur().change();
+        $('input[name=material_complementar]').val(tdMaterialComplementar.text()).attr('data-anterior', tdMaterialComplementar.text()).blur().change();
+        $('input[name=unidade]').val(tdUnidade.text()).attr('data-anterior', tdUnidade.text()).blur().change();
 
-        $('input[name=custo_tot_subitem]').val(custoUnit).attr('data-anterior', custoUnit).blur();
-        $('input[name=preco_tot_subitem]').val(precoUnit).attr('data-anterior', precoUnit).blur();
-        $('input[name=quant]').val(tdQuant.text()).attr('data-anterior', tdQuant.text()).blur();
-        $('input[name=largura]').val(tdLargura.text()).attr('data-anterior', tdLargura.text()).blur();
-        $('input[name=comprimento]').val(tdComprimento.text()).attr('data-anterior', tdComprimento.text()).blur();
+        $('input[name=custo_tot_subitem]').val(custoUnit).attr('data-anterior', custoUnit).blur().change();
+        $('input[name=preco_tot_subitem]').val(precoUnit).attr('data-anterior', precoUnit).blur().change();
+        $('input[name=quant]').val(tdQuant.text()).attr('data-anterior', tdQuant.text()).blur().change();
+        $('input[name=largura]').val(tdLargura.text()).attr('data-anterior', tdLargura.text()).blur().change();
+        $('input[name=comprimento]').val(tdComprimento.text()).attr('data-anterior', tdComprimento.text()).blur().change();
         $('input[name=quant_usada]').val(tdQuantUsada.text()).attr('data-anterior', tdQuantUsada.text());
         $('input[name=observacao_subitem]').val(tdObservacao.text()).attr('data-anterior', tdObservacao.text());
 
