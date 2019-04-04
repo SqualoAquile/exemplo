@@ -641,7 +641,7 @@ $(document)
 
             if ($inputSearch.attr('data-id') == undefined) {
 
-                Ajax('adicionarParametros', function (data) {
+                Ajax('adicionarParametrosDoisCampos', function (data) {
 
                     if (data[0] == '00000') {
 
@@ -676,7 +676,7 @@ $(document)
 
             } else {
 
-                Ajax('editarParametros/' + $inputSearch.attr('data-id'), function (data) {
+                Ajax('editarParametrosDoisCampos/' + $inputSearch.attr('data-id'), function (data) {
                     if (data[0] == '00000') {
 
                         $(document).trigger('lista-doiscampos');

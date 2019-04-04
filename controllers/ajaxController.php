@@ -425,6 +425,12 @@ class ajaxController extends controller{
     }
   }
 
+  public function adicionarParametrosDoisCampos() {
+    if (isset($_POST) && !empty($_POST)) {
+      echo json_encode($this->parametros->adicionarDoisCampos($_POST));
+    }
+  }
+
   public function excluirParametros($id) {
     if (isset($_POST) && !empty($_POST)) {
       if (isset($id) && !empty($id)) {
@@ -437,6 +443,14 @@ class ajaxController extends controller{
     if (isset($_POST) && !empty($_POST)) {
       if (isset($id) && !empty($id)) {
         echo json_encode($this->parametros->editar($_POST, $id));
+      }
+    }
+  }
+
+  public function editarParametrosDoisCampos($id) {
+    if (isset($_POST) && !empty($_POST)) {
+      if (isset($id) && !empty($id)) {
+        echo json_encode($this->parametros->editarDoisCampos($_POST, $id));
       }
     }
   }

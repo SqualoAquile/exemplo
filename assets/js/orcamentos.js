@@ -387,13 +387,23 @@ $(function () {
             calculaQuantidadeUsadaMaterial();
 
             if ($tipoProdServ.val().toLowerCase() == 'produtos') {
+
                 var $elementsMaterialComp = $materialComplementar.siblings('.relacional-dropdown').find('.relacional-dropdown-element');
+                
                 $filteredsElementsMaterialComp = $elementsMaterialComp.filter(function () {
-                    return $(this).attr('data-unidade').toLowerCase() == $this.attr('data-unidade').toLowerCase();
+                    
+                    var currentUnidade = $(this).attr('data-unidade').toLowerCase(),
+                        thisUnidade = $this.attr('data-unidade').toLowerCase();
+
+                    if (currentUnidade == 'm²' || currentUnidade == 'ml') {
+                        if ($(this).text().toLowerCase() != $this.text().toLowerCase()) {
+                            return currentUnidade == thisUnidade;
+                        }
+                    }
                 });
 
-                // $elementsMaterialComp.hide();
-                // $filteredsElementsMaterialComp.show();
+                $elementsMaterialComp.hide();
+                $filteredsElementsMaterialComp.show();
             }
 
         })
