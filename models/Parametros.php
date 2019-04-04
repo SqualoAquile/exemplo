@@ -64,6 +64,23 @@ class Parametros extends model {
     }
 
     public function adicionar($request) {
+        $this->table = $request["tabela"];
+        if ($request["value"] && $request["campo"]) {
+            $value = trim($request["value"]);
+            $value = addslashes($value);
+            
+            $campo = trim($request["campo"]);
+            $campo = addslashes($campo);
+        }
+        $ipcliente = $this->permissoes->pegaIPcliente();
+        $alteracoes = ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
+        $sql = "INSERT INTO " . $this->table . " (" . $campo . ", alteracoes, situacao) VALUES ('" . $value . "', '" . $alteracoes . "', 'ativo')";
+        
+        self::db()->query($sql);
+        return self::db()->errorInfo();
+    }
+
+    public function adicionarDoisCampos($request) {
 
         $this->table = $request["tabela"];
 
@@ -122,31 +139,17 @@ class Parametros extends model {
     public function editar($request, $id) {
         
         $this->table = $request["tabela"];
-
-        if ($request["value1"] && $request["campo1"]) {
-
-            $value1 = trim($request["value1"]);
-            $value1 = addslashes($value1);
+        if ($request["value"] && $request["campo"]) {
+            $value = trim($request["value"]);
+            $value = addslashes($value);
             
-            $campo1 = trim($request["campo1"]);
-            $campo1 = addslashes($campo1);
+            $campo = trim($request["campo"]);
+            $campo = addslashes($campo);
         }
-
-        if ($request["value2"] && $request["campo2"]) {
-
-            $value2 = trim($request["value2"]);
-            $value2 = addslashes($value2);
-            
-            $campo2 = trim($request["campo2"]);
-            $campo2 = addslashes($campo2);
-        }
-
         $id = addslashes(trim($id));
-
-        $sql = "UPDATE " . $this->table . " SET " . $campo1 . " = '" . $value1 . "', " . $campo2 . " = '" . $value2 . "' WHERE id='" . $id . "'";
+        $sql = "UPDATE " . $this->table . " SET " . $campo . " = '" . $value . "' WHERE id='" . $id . "'";
              
         self::db()->query($sql);
-
         return self::db()->errorInfo();
     }
 
