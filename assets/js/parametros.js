@@ -55,7 +55,8 @@ const parametrosSemAcoes = [
     'Hipercard',
     'M²',
     'm²',
-    'ml'
+    'ml',
+    'ML'
 ];
 
 function Ajax(url, callback, send = {}) {
