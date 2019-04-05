@@ -24,11 +24,11 @@
             <?php endif ?>
         </div>
         <div class="col d-flex justify-content-end align-items-center">
-            <button id="graficos"  type="button" class="btn btn-warning cursor-pointer btn-sm mr-2" data-toggle="collapse" data-target="#collapseGraficos2">Gráficos</button>         
-            <button class="btn btn-success btn-sm" id="botaoRelatorio" data-toggle="collapse" data-target="#collapseFluxocaixaResumo">Gerar Relatório</button>
+            <button id="graficos"  type="button" class="btn btn-warning cursor-pointer mr-2" data-toggle="collapse" data-target="#collapseGraficos2">Gráficos</button>         
+            <button class="btn btn-success" id="botaoRelatorio" data-toggle="collapse" data-target="#collapseFluxocaixaResumo">Gerar Relatório</button>
         </div>
     </div>
-        <div class="card mt-4">
+        <div class="card mt-4" id="cardFiltros">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="m-0 h5" id="tituloHeader">
                     <span>

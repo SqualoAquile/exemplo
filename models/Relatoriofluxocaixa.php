@@ -321,6 +321,7 @@ class Relatoriofluxocaixa extends model {
             $atingido = floatval($atingido);
         }else{
             $atingido = floatval(0);
+            $atingido1 = floatval(0);
         }
 
         if ($meta>0 and $atingido>0){
@@ -332,9 +333,12 @@ class Relatoriofluxocaixa extends model {
 
         $metaAtingida = round($metaAtingida);
 
-        $retorno[0] = $meta1;
-        $retorno[1] = $atingido1;
-        $retorno[2] = $metaAtingida;
+        $retorno[0] = $meta1;                   //meta
+        $retorno[1] = $atingido1;               //faturamento atingido
+        $retorno[2] = $metaAtingida;            //porcentagem da meta atingida
+        $retorno[3] = number_format(($meta - $atingido),2,",",".");        //diferença
+        $retorno[4] = date("t") - date("j");    //dias que faltam pra acabar o mês
+        $retorno[5] = number_format((($meta - $atingido)/$retorno[4]),2,",",".");  //faturamento médio para atingir a média
         return $retorno;
     }
 }
