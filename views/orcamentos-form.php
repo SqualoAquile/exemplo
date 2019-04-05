@@ -480,7 +480,7 @@
                     <button id="btn_incluir" class="d-none"></button>
                 </form>
                 <div class="row" style='order: 100;'>
-                    <div class="col-lg-8">
+                    <div class="col-lg">
                         <label for="btn_incluir" class="btn btn-primary btn-block cursor-pointer">Incluir</label>
                     </div>
                     <div class="col-lg-4 d-none">
