@@ -227,7 +227,6 @@ $(function () {
                 faixa = true;
             }
         });
-        console.log(faixa);      
 
         var selectTexto = $('.input-filtro-texto');
         var selectT = selectTexto.siblings('input');
