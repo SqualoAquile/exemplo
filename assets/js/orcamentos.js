@@ -104,60 +104,27 @@ $(function () {
                     $material
                         .removeClass('is-valid is-invalid')
                         .removeAttr('data-tabela data-custo data-preco data-unidade')
-                        .blur()
-                        .val('');
+                        .val('')
+                        .blur();
 
                     $materialComplementar
                         .removeClass('is-valid is-invalid')
                         .removeAttr('data-tabela data-custo data-preco data-unidade')
-                        .val('');
-
-                    // $unidade
-                    //     .removeClass('is-valid is-invalid')
-                    //     .val('');
-
-                    // $preco
-                    //     .removeClass('is-valid is-invalid')
-                    //     .val('');
-
-                    // $custo
-                    //     .removeClass('is-valid is-invalid')
-                    //     .attr('disabled', 'disabled')
-                    //     .val('');
-                    
-                    // $largura
-                    //     .removeClass('is-valid is-invalid')
-                    //     // .attr('disabled', 'disabled')
-                    //     .val('');
-                        
-                    // $comprimento
-                    //     .removeClass('is-valid is-invalid')
-                    //     // .attr('disabled', 'disabled')
-                    //     .val('');
-
-                    // $quantUsada
-                    //     .removeClass('is-valid is-invalid')
-                    //     .val('');
+                        .val('')
+                        .blur();
 
                     if (val == 'produtos') {
 
-                        $material.removeAttr('disabled');
                         $materialDropdown.html(htmlDropdown);
-
-                        // $materialComplementar.removeAttr('disabled');
                         $materialComplementarDropdown.html(htmlDropdown);
-
 
                     } else if (val == 'servicos') {
 
-                        $material.removeAttr('disabled');
                         $materialDropdown.html(htmlDropdown);
-
-                        $materialComplementar.attr('disabled', 'disabled');
+                        $materialComplementar.val('').attr('disabled', 'disabled');
 
                     } else {
 
-                        $material.removeAttr('disabled');
                         $materialDropdown.html(htmlDropdown);
 
                         // $materialComplementar.attr('disabled', 'disabled');
@@ -282,11 +249,6 @@ $(function () {
     $('#material_servico').on('change blur',function(){
         
         var $unidade = $('#unidade');
-        var $largura = $('#largura');
-        var $comprimento = $('#comprimento');
-        var $materialComplementar = $('#material_complementar');
-        var $tipoProdServ = $('[name="tipo_servico_produto"]');
-
         var $custo_tot = $('[name="custo_tot_subitem"]');
         var $preco_tot = $('[name="preco_tot_subitem"]');
 
@@ -294,26 +256,9 @@ $(function () {
             $unidade.val('').removeClass('is-valid is-invalid').blur();
             $custo_tot.val('').removeClass('is-valid is-invalid').blur();
             $preco_tot.val('').removeClass('is-valid is-invalid').blur();  
-            return;
         }
 
-        if($unidade.val() == 'ML' || $unidade.val() == 'M²' ){
-
-            $largura.removeAttr('disabled').removeClass('is-valid is-invalid');
-            $comprimento.removeAttr('disabled').removeClass('is-valid is-invalid');
-            
-        }else{
-
-            $largura.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
-            $comprimento.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
-        }
-
-        if( $tipoProdServ.val() == 'produtos' && $unidade.val() == 'ML' ){
-            $materialComplementar.removeAttr('disabled').removeClass('is-valid is-invalid');
-        }else{
-            $materialComplementar.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
-        } 
-    });
+    }).change().blur();
 
     $(document)
         .ready(function () {
@@ -399,7 +344,6 @@ $(function () {
 
         })
         .on('click', '[name="material_servico"] ~ .relacional-dropdown .relacional-dropdown-element', function () {
-            
             var $this = $(this),
                 $tipoProdServ = $('[name="tipo_servico_produto"]'),
                 $material = $('[name="material_servico"]'),
@@ -423,13 +367,45 @@ $(function () {
 
             $material.attr('data-tabela', data_tabela).attr('data-unidade', unidade).attr('data-preco', data_preco).attr('data-custo', data_custo);
 
-            // $largura.val('').removeClass('is-valid is-invalid');
-            
-            // $comprimento.val('').removeClass('is-valid is-invalid');
-            
-            // $materialComplementar.val('').removeClass('is-valid is-invalid');
+            if($unidade.val() == 'ML' || $unidade.val() == 'M²' ){
+    
+                $largura.removeAttr('disabled').removeClass('is-valid is-invalid');
+                $comprimento.removeAttr('disabled').removeClass('is-valid is-invalid');
+                
+            }else{
+    
+                $largura.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
+                $comprimento.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
+            }
+    
+            if( $tipoProdServ.val() == 'produtos' && ( $unidade.val() == 'ML' || $unidade.val() == 'M²' ) ){
+                $materialComplementar.removeAttr('disabled').removeClass('is-valid is-invalid');
+            }else{
+                $materialComplementar.val('').blur().attr('disabled','disabled').removeClass('is-valid is-invalid');
+            } 
 
-            calculaQuantidadeUsadaMaterial();   
+            if ($tipoProdServ.val().toLowerCase() == 'produtos') {
+
+                var $elementsMaterialComp = $materialComplementar.siblings('.relacional-dropdown').find('.relacional-dropdown-element');
+                
+                $filteredsElementsMaterialComp = $elementsMaterialComp.filter(function () {
+                    
+                    var currentUnidade = $(this).attr('data-unidade').toLowerCase(),
+                        thisUnidade = $this.attr('data-unidade').toLowerCase();
+
+                    if (currentUnidade == 'm²' || currentUnidade == 'ml') {
+                        if ($(this).text().toLowerCase() != $this.text().toLowerCase()) {
+                            return currentUnidade == thisUnidade;
+                        }
+                    }
+                });
+
+                $elementsMaterialComp.hide();
+                $filteredsElementsMaterialComp.show();
+                
+                $materialComplementar.blur();
+                calculaQuantidadeUsadaMaterial();
+            }
 
         })
         .on('change', '[name="pf_pj"]', function () {
