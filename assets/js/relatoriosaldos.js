@@ -75,7 +75,7 @@ $(function () {
         bancoInicial = 0,
         caixaFinal = 0,
         onlineFinal = 0,
-        cbancoFinal = 0,
+        bancoFinal = 0,
         resultado = 0,
         diferenca = 0,
         resultadoCaixa = 0,
@@ -85,18 +85,18 @@ $(function () {
         i = 0;
         rowData.each(function () {
 
-            totalInicial += rowData[i][indexColumns.ctotalInicial];
-            totalEntradas += rowData[i][indexColumns.ctotalEntradas];
-            totalSaidas += rowData[i][indexColumns.ctotalSaidas];
-            totalFinal += rowData[i][indexColumns.ctotalFinal];
-            caixaInicial += rowData[i][indexColumns.ccaixaInicial];
-            onlineInicial += rowData[i][indexColumns.conlineInicial];
-            bancoInicial += rowData[i][indexColumns.cbancoInicial];
-            caixaFinal += rowData[i][indexColumns.ccaixaFinal];
-            onlineFinal += rowData[i][indexColumns.conlineFinal];
-            bancoFinal += rowData[i][indexColumns.cbancoFinal];
-            resultado += rowData[i][indexColumns.cresultado];
-            diferenca += rowData[i][indexColumns.cdiferenca];
+            totalInicial += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.ctotalInicial].replace('R$','')));
+            totalEntradas += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.ctotalEntradas].replace('R$','')));
+            totalSaidas += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.ctotalSaidas].replace('R$','')));
+            totalFinal += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.ctotalFinal].replace('R$','')));
+            caixaInicial += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.ccaixaInicial].replace('R$','')));
+            onlineInicial += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.conlineInicial].replace('R$','')));
+            bancoInicial += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.cbancoInicial].replace('R$','')));
+            caixaFinal += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.ccaixaFinal].replace('R$','')));
+            onlineFinal += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.conlineFinal].replace('R$','')));
+            bancoFinal += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.cbancoFinal].replace('R$','')));
+            resultado += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.cresultado].replace('R$','')));
+            diferenca += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.cdiferenca].replace('R$','')));
             i++;
         });
     
@@ -121,28 +121,40 @@ $(function () {
         $('#resultadoCaixa').text(floatParaPadraoBrasileiro(resultadoCaixa));
         $('#resultadoOnline').text(floatParaPadraoBrasileiro(resultadoOnline));
 
-        if(resultado <= 0){
+        if(resultado < 0){
             $('#cardResultado').removeClass('bg-success text-white').addClass('bg-danger text-white');
         } else{
             $('#cardResultado').removeClass('bg-danger text-white').addClass('bg-success text-white');
         }
 
-        if(resultadoBanco <= 0){
+        if(resultadoBanco < 0){
             $('#cardResultadoBanco').removeClass('bg-success text-white').addClass('bg-danger text-white');
+        } else if(resultadoBanco ==0){
+            $('#cardResultadoBanco').removeClass('bg-danger bg-success text-white').addClass('bg-light text-dark');
         } else{
             $('#cardResultadoBanco').removeClass('bg-danger text-white').addClass('bg-success text-white');
         }
 
-        if(resultadoOnline <= 0){
+        if(resultadoOnline < 0){
             $('#cardResultadoOnline').removeClass('bg-success text-white').addClass('bg-danger text-white');
+        } else if(resultadoOnline ==0){
+            $('#cardResultadoOnline').removeClass('bg-danger bg-success text-white').addClass('bg-light text-dark');
         } else{
             $('#cardResultadoOnline').removeClass('bg-danger text-white').addClass('bg-success text-white');
         }
 
-        if(resultadoCaixa <= 0){
+        if(resultadoCaixa < 0){
             $('#cardResultadoCaixa').removeClass('bg-success text-white').addClass('bg-danger text-white');
+        } else if(resultadoCaixa ==0){
+            $('#cardResultadoCaixa').removeClass('bg-danger bg-success text-white').addClass('bg-light text-dark');
         } else{
             $('#cardResultadoCaixa').removeClass('bg-danger text-white').addClass('bg-success text-white');
+        }
+
+        if(diferenca == 0){
+            $('#diferenca').removeClass('text-warning');
+        }else{
+            $('#diferenca').addClass('text-warning');
         }
 
 
@@ -151,6 +163,7 @@ $(function () {
     $('#DataTables_Table_0_length').addClass('d-none');
     $('#DataTables_Table_0_wrapper').addClass('d-none');
     $('#graficos').addClass('d-none');
+    //esconder card de filtros e criar outro
 
     $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
         resumo();
@@ -170,6 +183,39 @@ $(function () {
     $('#card-body-filtros').on('change', function () {
         $('#collapseFluxocaixaResumo').collapse('hide');
         $('#DataTables_Table_0_wrapper').addClass('d-none');
+    });
+
+    $('#botaoRelatorio').on('click', function(){
+
+        var selectFaixa = $('.input-filtro-faixa');
+        var selectF = selectFaixa.siblings('input');
+        var faixa = false;
+       
+        selectF.each(function(){
+            if($(this).val()){
+                faixa = true;
+            }
+        });
+
+        var selectTexto = $('.input-filtro-texto');
+        var selectT = selectTexto.siblings('input');
+        var texto = false;
+
+        selectT.each(function(){
+            if($(this).val()){
+                texto = true;
+            }
+        });
+    
+        if(!faixa && !texto) {
+            alert("Aplique um filtro para emitir um relatório!");
+            event.stopPropagation();
+        }else{
+            resumo();
+            $('#DataTables_Table_0_wrapper').removeClass('d-none');
+            $('#collapseMeta').removeClass('show').addClass('hide');
+            $('#collapseGraficos2').removeClass('show').addClass('hide');
+        }
     });
 
 });
