@@ -481,7 +481,7 @@
                 </form>
                 <div class="row" style='order: 100;'>
                     <div class="col-lg">
-                        <label for="btn_incluir" class="btn btn-primary btn-block cursor-pointer">Incluir</label>
+                        <!-- <label for="btn_incluir" class="btn btn-primary btn-block cursor-pointer">Incluir</label> -->
                     </div>
                     <div class="col-lg-4 d-none">
                         <button id="btn_salvar_cliente" data-toggle="modal" data-target="#modalCadastrarCliente" class="btn btn-secondary btn-block">Cadastrar Cliente</button>
