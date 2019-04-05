@@ -148,47 +148,71 @@ $(function () {
         $('table#itensOrcamento tbody tr .btn').removeClass('disabled');
         var custoUnit,  precoUnit, quantAux, quantUsadaAux;
         var $par = $(this).closest('tr');
-            tdItem = $par.children("td:nth-child(2)");
-            tdSubItem = $par.children("td:nth-child(3)");
-            tdQuant = $par.children("td:nth-child(4)");
-            tdLargura = $par.children("td:nth-child(5)");
-            tdComprimento = $par.children("td:nth-child(6)");
-            tdQuantUsada = $par.children("td:nth-child(7)");
-            tdServicoProduto = $par.children("td:nth-child(8)");
-            tdMaterialServico = $par.children("td:nth-child(9)");
-            tdMaterialComplementar = $par.children("td:nth-child(10)");
-            tdUnidade = $par.children("td:nth-child(11)");
-            tdCusto = $par.children("td:nth-child(12)");
-            tdPreco = $par.children("td:nth-child(13)");
-            tdObservacao = $par.children("td:nth-child(14)"); 
-
-            quantUsadaAux = parseFloat( floatParaPadraoInternacional( tdQuantUsada.text() ) );
-            quantAux = parseFloat( floatParaPadraoInternacional( tdQuant.text() ) );
-           
-            custoUnit = parseFloat( parseFloat( floatParaPadraoInternacional( tdCusto.text() )) / quantUsadaAux ); 
-            custoUnit = floatParaPadraoBrasileiro( parseFloat( custoUnit / quantAux ).toFixed(2) ); 
+            tdItem = $par.children("td:nth-child(2)").text();
+            tdSubItem = $par.children("td:nth-child(3)").text()
+            tdQuant = $par.children("td:nth-child(4)").text();
+            tdLargura = $par.children("td:nth-child(5)").text();
+            tdComprimento = $par.children("td:nth-child(6)").text();
+            tdQuantUsada = $par.children("td:nth-child(7)").text();
+            tdServicoProduto = $par.children("td:nth-child(8)").text();
+            tdMaterialServico = $par.children("td:nth-child(9)").text();
+            tdMaterialComplementar = $par.children("td:nth-child(10)").text();
+            tdUnidade = $par.children("td:nth-child(11)").text();
+            tdCusto = $par.children("td:nth-child(12)").text();
+            tdPreco = $par.children("td:nth-child(13)").text();
+            tdObservacao = $par.children("td:nth-child(14)").text(); 
             
-            precoUnit = parseFloat( parseFloat( floatParaPadraoInternacional( tdPreco.text() )) / quantUsadaAux ); 
-            precoUnit = floatParaPadraoBrasileiro( parseFloat( precoUnit / quantAux ).toFixed(2) );    
+            if(tdUnidade == 'ML' || tdUnidade == 'M²'){
+                quantUsadaAux = parseFloat( floatParaPadraoInternacional( tdQuantUsada ) );
+                quantAux = parseFloat( floatParaPadraoInternacional( tdQuant ) );
+            
+                custoUnit = parseFloat( parseFloat( floatParaPadraoInternacional( tdCusto )) / quantUsadaAux ); 
+                custoUnit = floatParaPadraoBrasileiro( parseFloat( custoUnit / quantAux ).toFixed(2) ); 
+                
+                precoUnit = parseFloat( parseFloat( floatParaPadraoInternacional( tdPreco )) / quantUsadaAux ); 
+                precoUnit = floatParaPadraoBrasileiro( parseFloat( precoUnit / quantAux ).toFixed(2) );
+
+            }else{
+
+                quantAux = parseFloat( floatParaPadraoInternacional( tdQuant ) );
+            
+                custoUnit = parseFloat( parseFloat( floatParaPadraoInternacional( tdCusto )) / tdQuant ); 
+                custoUnit = floatParaPadraoBrasileiro( parseFloat( custoUnit ).toFixed(2) ); 
+                
+                precoUnit = parseFloat( parseFloat( floatParaPadraoInternacional( tdPreco )) / tdQuant ); 
+                precoUnit = floatParaPadraoBrasileiro( parseFloat( precoUnit ).toFixed(2) );
+            }
+                
 
         // Desabilita ele mesmo e os botões irmãos de editar e excluir da linha atual
-        $par.find('.btn').addClass('disabled');
+        // $par.find('.btn').addClass('disabled');
 
-        $('input[name=descricao_item]').val(tdItem.text()).attr('data-anterior', tdItem.text()).blur().change().focus();
-        $('input[name=descricao_subitem]').val(tdSubItem.text()).attr('data-anterior', tdSubItem.text()).blur().change();
-        console.log('tiposerv:  ',tdServicoProduto);
-        $('[name=tipo_servico_produto]').val(tdServicoProduto.text() ).attr('data-anterior', tdServicoProduto.text()).blur().change();
-        $('input[name=material_servico]').val(tdMaterialServico.text()).attr('data-anterior', tdMaterialServico.text()).blur().change();
-        $('input[name=material_complementar]').val(tdMaterialComplementar.text()).attr('data-anterior', tdMaterialComplementar.text()).blur().change();
-        $('input[name=unidade]').val(tdUnidade.text()).attr('data-anterior', tdUnidade.text()).blur().change();
+        $('input[name=descricao_item]').val(tdItem).attr('data-anterior', tdItem).focus();
+        $('input[name=descricao_subitem]').val(tdSubItem).attr('data-anterior', tdSubItem);
+        $('[name=tipo_servico_produto]').val(tdServicoProduto ).attr('data-anterior', tdServicoProduto);
 
-        $('input[name=custo_tot_subitem]').val(custoUnit).attr('data-anterior', custoUnit).blur().change();
-        $('input[name=preco_tot_subitem]').val(precoUnit).attr('data-anterior', precoUnit).blur().change();
-        $('input[name=quant]').val(tdQuant.text()).attr('data-anterior', tdQuant.text()).blur().change();
-        $('input[name=largura]').val(tdLargura.text()).attr('data-anterior', tdLargura.text()).blur().change();
-        $('input[name=comprimento]').val(tdComprimento.text()).attr('data-anterior', tdComprimento.text()).blur().change();
-        $('input[name=quant_usada]').val(tdQuantUsada.text()).attr('data-anterior', tdQuantUsada.text());
-        $('input[name=observacao_subitem]').val(tdObservacao.text()).attr('data-anterior', tdObservacao.text());
+        //$('input[name=material_servico]').click();
+        var $elFiltered = $('input[name=material_servico]').siblings('.relacional-dropdown').find(".relacional-dropdown-element").filter(function() {
+            return $(this).text().toLowerCase() == tdMaterialServico.toLowerCase();
+        });
+
+        console.log($elFiltered);
+
+        $elFiltered.trigger('click');
+
+        //$('input[name=material_servico]').siblings('.relacional-dropdown').find(".relacional-dropdown-element:contains("+ tdMaterialServico + ")").trigger('click');
+        //console.log('teste:  ', $('input[name=material_servico]').siblings('.relacional-dropdown').find('.relacional-dropdown-element:contains(' + tdMaterialServico + ')'), tdMaterialServico);
+        // $('input[name=material_servico]').val(tdMaterialServico).attr('data-anterior', tdMaterialServico);
+        $('input[name=material_complementar]').val(tdMaterialComplementar).attr('data-anterior', tdMaterialComplementar);
+        $('input[name=unidade]').val(tdUnidade).attr('data-anterior', tdUnidade);
+
+        $('input[name=custo_tot_subitem]').val(custoUnit).attr('data-anterior', custoUnit);
+        $('input[name=preco_tot_subitem]').val(precoUnit).attr('data-anterior', precoUnit);
+        $('input[name=quant]').val(tdQuant).attr('data-anterior', tdQuant);
+        $('input[name=largura]').val(tdLargura).attr('data-anterior', tdLargura);
+        $('input[name=comprimento]').val(tdComprimento).attr('data-anterior', tdComprimento);
+        $('input[name=quant_usada]').val(tdQuantUsada).attr('data-anterior', tdQuantUsada);
+        $('input[name=observacao_subitem]').val(tdObservacao).attr('data-anterior', tdObservacao);
 
         $('table#itensOrcamento thead tr[role=form]')
             .attr('data-current-id', $par.attr('data-id'))

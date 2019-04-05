@@ -1161,6 +1161,8 @@ $(function () {
             var $this = $(this),
                 $input = $this.parents('.relacional-dropdown-wrapper').find('.relacional-dropdown-input');
 
+            console.log('validacoes.js click aqui')
+
             $input
                 .val($this.text())
                 .change();
