@@ -20,7 +20,7 @@
 <?php $table = false ?>
 
 <section class="mb-5">
-    <form id="form-principal" method="POST" class="needs-validation" novalidate>
+    <form id="form-principal" method="POST" class="needs-validation" novalidate autocomplete="off">
         <div class="row">
             <?php foreach ($colunasOrcamentos as $key => $value): ?>
                     <?php if(isset($value["Comment"]) && array_key_exists("form", $value["Comment"]) && $value["Comment"]["form"] != "false") : ?>
@@ -194,7 +194,7 @@
                                             type="text" 
                                             class="dropdown-toggle form-control relacional-dropdown-input" 
                                             data-toggle="dropdown" 
-                                            autocomplete="<?php echo $value['Field'] ?>" 
+                                            autocomplete="new-password"
                                             aria-haspopup="true" 
                                             aria-expanded="false"
                                             maxlength="<?php echo $value["tamanhoMax"] ?>"
@@ -256,7 +256,7 @@
         </div>
         <div class="col-lg-7" id='direita'>
             <div class="card card-body">
-                <form method="DELETE" class="row" id='camposOrc' novalidate>
+                <form method="DELETE" class="row" id='camposOrc' novalidate autocomplete="off">
                     <?php foreach ($colunasItensOrcamentos as $key => $value): ?>
                         <?php if(isset($value["Comment"]) && array_key_exists("form", $value["Comment"]) && $value["Comment"]["form"] != "false") : ?>
                             <!-- INÍCIO DOS TESTES PARA VER QUAL O TIPO DE CAMPO -->
@@ -427,7 +427,7 @@
                                                 type="text" 
                                                 class="dropdown-toggle form-control relacional-dropdown-input" 
                                                 data-toggle="dropdown" 
-                                                autocomplete="<?php echo $value['Field'] ?>" 
+                                                autocomplete="new-password"
                                                 aria-haspopup="true" 
                                                 aria-expanded="false"
                                                 maxlength="<?php echo $value["tamanhoMax"] ?>"
