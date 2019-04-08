@@ -33,7 +33,7 @@ $(function () {
         dataType: 'json',
         success: function (data) {
 
-            var bocarolo, margem;
+            var bocarolo, margem, segop;
             if (data['tamanho_boca_rolo']) {
                 bocarolo = floatParaPadraoInternacional(data['tamanho_boca_rolo']);
                 $('#unidade').attr('data-bocarolo', bocarolo);
@@ -41,6 +41,10 @@ $(function () {
             if (data['margem_erro_material']) {
                 margem = floatParaPadraoInternacional(data['margem_erro_material']);
                 $('#unidade').attr('data-margemerro', margem);
+            }
+            if (data['taxa_seg_op']) {
+                segop = floatParaPadraoInternacional(data['taxa_seg_op']);
+                $('#preco_tot_subitem').attr('data-seg_op', segop);
             }
 
         }
@@ -221,27 +225,39 @@ $(function () {
         }
     });
 
-    $("#custo_tot_subitem, #preco_tot_subitem").on('change blur',function(){
-        
+    $("#preco_tot_subitem").on('blur',function(){
         var $custo = $("#custo_tot_subitem");
         var $preco = $("#preco_tot_subitem");
         var $material = $('#material_servico');
+        var tx_segop, precoaux;
+      
+        tx_segop = parseFloat( parseFloat( $("#preco_tot_subitem").attr('data-seg_op')) / parseFloat(100) );
 
-        if( $custo.val() != "" && $preco.val() == "" ){
-            
-            $preco.val(floatParaPadraoBrasileiro( $material.attr('data-preco') ) );
-        }
-        
-        if( $custo.val() == "" && $preco.val() != "" ){
-            // $material.val('').change().blur();
-        }
-        
-        if( $custo.val() != "" && $preco.val() != "" ){
-            if( parseFloat(floatParaPadraoInternacional( $custo.val())) >= parseFloat(floatParaPadraoInternacional( $preco.val())) ){
-                // alert('O preço do item deve ser maior do que o seu custo.');
-                $preco.val(floatParaPadraoBrasileiro( $material.attr('data-preco') ) );
+        if($("#preco_tot_subitem").attr('data-seg_op') != undefined){
+
+            if( $custo.val() != "" && $preco.val() == "" ){
+                
+                precoaux = parseFloat( parseFloat( $material.attr('data-preco') )  * parseFloat( parseFloat(1) + tx_segop ) );
+                $preco.val( floatParaPadraoBrasileiro( precoaux ) );
+                return;
             }
-        }
+
+            if( $custo.val() != "" && $preco.val() != "" ){
+                
+                if( parseFloat(floatParaPadraoInternacional( $custo.val())) >= parseFloat(floatParaPadraoInternacional( $preco.val())) ){
+                    precoaux = parseFloat( parseFloat( $material.attr('data-preco') )  * parseFloat( parseFloat(1) + tx_segop ) );
+                    $preco.val(floatParaPadraoBrasileiro( precoaux ) );
+                }else{
+                    precoaux = parseFloat( parseFloat( floatParaPadraoInternacional( $preco.val() ) )  * parseFloat( parseFloat(1) + tx_segop ) );
+                    $preco.val(floatParaPadraoBrasileiro( precoaux ) );
+                }
+            }
+
+        }else{
+            $custo.val('');
+            $preco.val('');
+
+        }    
         
         calculaMaterialCustoPreco();
     });
@@ -359,9 +375,9 @@ $(function () {
                 data_custo = $this.attr('data-custo'),
                 unidade = data_tabela != 'servicos' ? data_unidade : 'M²';
 
-            $preco.val(floatParaPadraoBrasileiro(data_preco)).blur();
-
             $custo.val(floatParaPadraoBrasileiro(data_custo)).blur();
+
+            $preco.val(floatParaPadraoBrasileiro(data_preco)).blur();
 
             $unidade.val(unidade).blur();
 
