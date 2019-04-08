@@ -55,7 +55,8 @@ const parametrosSemAcoes = [
     'Hipercard',
     'M²',
     'm²',
-    'ml'
+    'ml',
+    'ML'
 ];
 
 function Ajax(url, callback, send = {}) {
@@ -745,9 +746,7 @@ $(document)
                         <button class="salvar-doiscampos btn btn-primary btn-block text-truncate mt-2">Salvar</button>
                     </div>
                     <div class="col-lg-3">
-                        <button class="cancelar-doiscampos btn btn-light btn-block text-truncate mt-2" title="Cancelar">
-                            <i class="fas fa-times"></i>
-                        </button>
+                        <button class="cancelar-doiscampos btn btn-light btn-block text-truncate mt-2">Cancelar</button>
                     </div>
                 </div>
             `;

@@ -153,6 +153,33 @@ class Parametros extends model {
         return self::db()->errorInfo();
     }
 
+    public function editarDoisCampos($request, $id) {
+        
+        $this->table = $request["tabela"];
+        
+        if ($request["value1"] && $request["campo1"]) {
+            $value1 = trim($request["value1"]);
+            $value1 = addslashes($value1);
+            
+            $campo1 = trim($request["campo1"]);
+            $campo1 = addslashes($campo1);
+        }
+
+        if ($request["value2"] && $request["campo2"]) {
+            $value2 = trim($request["value2"]);
+            $value2 = addslashes($value2);
+            
+            $campo2 = trim($request["campo2"]);
+            $campo2 = addslashes($campo2);
+        }
+
+        $id = addslashes(trim($id));
+        $sql = "UPDATE " . $this->table . " SET " . $campo1 . " = '" . $value1 . "', " . $campo2 . " = '" . $value2 . "' WHERE id='" . $id . "'";
+             
+        self::db()->query($sql);
+        return self::db()->errorInfo();
+    }
+
     public function pegarFixos() {
 
         $this->table = "parametros";
