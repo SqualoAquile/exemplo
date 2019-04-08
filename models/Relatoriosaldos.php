@@ -1,5 +1,5 @@
 <?php
-class Relatoriocontrolesaldos extends model {
+class Relatoriosaldos extends model {
 
     protected $table = "controlesaldos";
     protected $permissoes;
@@ -143,5 +143,30 @@ class Relatoriocontrolesaldos extends model {
                 }
             }
         }
+    }
+
+    public function selectMeses(){
+
+        $retorno = [];
+
+        $sql = "SELECT mes_ref,mes_ano FROM `controlesaldos` WHERE situacao='ativo' group BY MONTH(mes_ano)";
+        $sql = self::db()->query($sql);
+
+        if($sql->rowCount()>0){
+            $i=0;
+            $sql = $sql->fetchAll(PDO::FETCH_ASSOC);
+            $retorno = $sql;
+        }else{
+            $retorno = false;
+        }
+
+        for ($i=0; $i < count($retorno); $i++) { 
+            $data = explode("-",$retorno[$i]["mes_ano"]);
+            $dataAux = $data[2] . "/" . $data[1] . "/" . $data[0];
+            $retorno[$i]["mes_ano"] = $dataAux;
+        }
+
+        return $retorno;
+
     }
 }

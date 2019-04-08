@@ -123,8 +123,8 @@
             [
                "text" => "Saldos",
                "icon" => "fas fa-dollar-sign",
-               "permissao" => "relatoriocontrolesaldos_ver",
-               "link" => "/relatoriocontrolesaldos"
+               "permissao" => "relatoriosaldos_ver",
+               "link" => "/relatoriosaldos"
             ],
             [
                "text" => "Orçamentos",

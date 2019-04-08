@@ -188,6 +188,9 @@ class Shared extends model {
         } else if ( $this->table == "relatorioorcamentos"){
             $this->table = "orcamentos";
         }
+        else if ( $this->table == "relatoriosaldos"){
+            $this->table = "controlesaldos";
+        }
         
         $sql = self::db()->query("SHOW FULL COLUMNS FROM " . $this->table);
         $result = $sql->fetchAll(PDO::FETCH_ASSOC);
@@ -554,6 +557,101 @@ class Shared extends model {
         };
         
         return Ssp::complex_graficosIntervaloDatas2($requisicao['columns'], $this->config, $this->table, "id", $columns, null, "situacao='ativo'", $requisicao['coluna'], $requisicao['intervalo']);
+    }
+
+    public function gerarGraficoSaldos($requisicao){
+        $index = 0;
+        foreach ($this->nomeDasColunas() as $key => $value) {
+            if(isset($value["Comment"]) && array_key_exists("ver", $value["Comment"]) && $value["Comment"]["ver"] != "false") {
+                if (array_key_exists("mascara_validacao", $value["Comment"]) && $value["Comment"]["mascara_validacao"] == "data") {
+                    $columns[] = [
+                        "db" => $value["Field"],
+                        "dt" => $index,
+                        "formatter" => function($d,$row) {
+                            if(empty(strtotime($d))){
+                                return '';
+                            }else{
+                                return date( 'd/m/Y', strtotime($d));
+                            }
+                        }
+                    ];    
+                } elseif (array_key_exists("mascara_validacao", $value["Comment"]) && $value["Comment"]["mascara_validacao"] == "monetario") {
+                    $columns[] = [
+                        "db" => $value["Field"],
+                        "dt" => $index,
+                        "formatter" => function($d,$row) {
+                            return "R$  " .number_format($d,2,",",".");
+                        }
+                    ];
+                } elseif (array_key_exists("mascara_validacao", $value["Comment"]) && $value["Comment"]["mascara_validacao"] == "porcentagem") {
+                    $columns[] = [
+                        "db" => $value["Field"],
+                        "dt" => $index,
+                        "formatter" => function($d,$row) {
+                            return number_format($d, 2, ",", ".") . "%";
+                        }
+                    ]; 
+                } elseif (array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "table") {
+                    
+                    $columns[] = [
+                        "db" => $value["Field"],
+                        "dt" => $index,
+                        "formatter" => function($d,$row) {
+                            $return_contatos = "";
+                            if (strlen($d)) {
+                                $format_contato = str_replace("][", "|", $d);
+                                $format_contato = str_replace(" *", ",", $format_contato);
+                                $format_contato = str_replace("[", "", $format_contato);
+                                $format_contato = str_replace("]", "", $format_contato);
+    
+                                $contatos = explode("|", $format_contato);
+    
+                                $first_contato = $contatos[0];
+                                $resto_contatos = array_slice($contatos, 1);
+                                if (count($contatos) > 1) {
+                                    // Coloca cada contato que ficará escondido, em volta de uma div
+                                    // Usaremos isso para depois filtrar a busca e deixar visível os contatos que o usuario esta filtrando
+                                    $resto_contatos = implode('', array_map(
+                                        function ($resto_contato) {
+                                            return sprintf("<div class='contatos-escondidos'>%s</div>", $resto_contato);
+                                        },
+                                        $resto_contatos
+                                    ));
+                                    $return_contatos = '
+                                        <div class="contatos-filtrados d-flex">
+                                            <button class="btn btn-sm btn-link text-info" type="button" data-toggle="collapse" data-target="#collapseContato' . $row["id"] . '" aria-expanded="false" aria-controls="collapseContato' . $row["id"] . '">
+                                                <i class="fas fa-plus-circle"></i>
+                                            </button>
+                                            <div>
+                                                <span>' . $first_contato . '</span>
+                                                <div class="collapse" id="collapseContato' . $row["id"] . '">
+                                                    ' . $resto_contatos . '
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ';
+                                } else {
+                                    $return_contatos = '<div class="ml-3 pl-3">' . $first_contato . '</div>';
+                                }
+                            }
+                            return $return_contatos;
+                        }
+                    ]; 
+                } else {
+                    $columns[] = [
+                        "db" => ucwords( $value["Field"] ),
+                        "dt" => $index,
+                        "formatter" => function($d,$row) {
+                            return ucwords($d);
+                        }
+                    ]; 
+                }
+                $index++;
+            }
+            
+        };
+        
+        return Ssp::complex_graficosSaldos($requisicao['columns'], $this->config, $this->table, "id", $columns, null, "situacao='ativo'", $requisicao['coluna'], $requisicao['intervalo']);
     }
 
     public function formataDadosParaBD($registro) {

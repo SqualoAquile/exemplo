@@ -515,6 +515,65 @@ class SSP {
 		return $data;
 	}
 
+	static function complex_graficosSaldos ( $request, $conn, $table, $primaryKey, $columns, $whereResult=null, $whereAll=null,  $coluna_alvo=null, $dt1 = null, $dt2 = null )
+	{
+		$bindings = array();
+		$db = self::db( $conn );
+		$localWhereResult = array();
+		$localWhereAll = array();
+		$whereAllSql = '';
+		$groupby = '';
+
+		// Build the SQL query string from the request
+		$limit = self::limit( $request, $columns );
+		$order = self::order( $request, $columns );
+		$where = self::filter( $request, $columns, $bindings );
+		$whereResult = self::_flatten( $whereResult );
+		$whereAll = self::_flatten( $whereAll );
+
+		if ( $whereResult ) {
+			$where = $where ?
+				$where .' AND '.$whereResult :
+				'WHERE '.$whereResult;
+		}
+
+		if ( $whereAll ) {
+			$where = $where ?
+				$where .' AND '.$whereAll :
+				'WHERE '.$whereAll;
+			$whereAllSql = 'WHERE '.$whereAll;
+		}
+
+		// Main query to actually get the data
+		
+		if ($dt1) {
+			$dt1Aux = explode("/",$dt1);
+			$dt1 = $dt1Aux[2]."-".$dt1Aux[1]."-".$dt1Aux[0];
+		}
+
+		if ($dt2) {
+			$dt2Aux = explode("/",$dt2);
+			$dt2 = $dt2Aux[2]."-".$dt2Aux[1]."-".$dt2Aux[0];
+		}
+				
+		$groupby = 'GROUP BY mes_ano';
+
+		$where1 = $where." AND mes_ano BETWEEN '$dt1' AND '$dt2' AND situacao='ativo' ";
+		$sql = self::sql_exec( $db, $bindings,
+			"SELECT mes_ano,entradas,saidas
+			FROM `$table`
+			$where1
+			$groupby
+			"
+		);		
+
+		$retorno = array();
+		$retorno[0] = $sql[0];
+		$retorno[1] = $sql[1];
+		$retorno[2] = $sql[3];
+		return $retorno; 
+		
+	}
 	private static function formater ( $type, $value )
 	{
 		$returnValue = "";

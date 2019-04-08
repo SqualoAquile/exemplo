@@ -360,6 +360,7 @@ $(function () {
 
         })
         .on('click', '[name="material_servico"] ~ .relacional-dropdown .relacional-dropdown-element', function () {
+            console.log('disparou on click material servico');
             var $this = $(this),
                 $tipoProdServ = $('[name="tipo_servico_produto"]'),
                 $material = $('[name="material_servico"]'),

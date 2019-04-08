@@ -215,7 +215,6 @@ $(function () {
         $('#DataTables_Table_0_wrapper').addClass('d-none');
     });
 
-
     $('#botaoRelatorio').on('click', function(){
 
         var selectFaixa = $('.input-filtro-faixa');
@@ -227,7 +226,6 @@ $(function () {
                 faixa = true;
             }
         });
-        console.log(faixa);      
 
         var selectTexto = $('.input-filtro-texto');
         var selectT = selectTexto.siblings('input');

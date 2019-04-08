@@ -81,30 +81,36 @@ $(function () {
         $('#totalOrcado').text(floatParaPadraoBrasileiro(totalOrcado));
 
 
+        dataTable.page.len(10).draw();
+        $('#DataTables_Table_0_length').removeClass('d-none');
+  
     };
 
-    $('#graficos').addClass('d-none');
     $('#DataTables_Table_0_length').addClass('d-none');
     $('#DataTables_Table_0_wrapper').addClass('d-none');
+    $('#graficos').addClass('d-none');
 
     $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
-        resumo();
         $('#DataTables_Table_0_wrapper').removeClass('d-none');
+        resumo();
       });
 
     $('#collapseFluxocaixaResumo').on('hide.bs.collapse', function () {
-        resumo();   
         $('#DataTables_Table_0_wrapper').addClass('d-none');
+        dataTable.page.len(-1).draw();
     });
-
 
 
     $('#limpar-filtro').on('click', function () {
         $('#collapseFluxocaixaResumo').collapse('hide');
         $('#DataTables_Table_0_wrapper').addClass('d-none');
-        
     });
 
+    $('#graficos').on('click', function () {
+        $('#collapseFiltros').collapse('hide');
+        $('#collapseFluxocaixaResumo').collapse('hide');
+        $('#DataTables_Table_0_wrapper').addClass('d-none');
+    });
 
     $('#card-body-filtros').on('change', function () {
         $('#collapseFluxocaixaResumo').collapse('hide');
@@ -112,5 +118,35 @@ $(function () {
     });
 
 
+    $('#botaoRelatorio').on('click', function(){
+
+        var selectFaixa = $('.input-filtro-faixa');
+        var selectF = selectFaixa.siblings('input');
+        var faixa = false;
+       
+        selectF.each(function(){
+            if($(this).val()){
+                faixa = true;
+            }
+        });
+
+        var selectTexto = $('.input-filtro-texto');
+        var selectT = selectTexto.siblings('input');
+        var texto = false;
+
+        selectT.each(function(){
+            if($(this).val()){
+                texto = true;
+            }
+        });
+    
+        if(!faixa && !texto) {
+            alert("Aplique um filtro para emitir um relatório!");
+            event.stopPropagation();
+        }else{
+            resumo();
+            $('#DataTables_Table_0_wrapper').removeClass('d-none');
+        }
+    });
       
 });
