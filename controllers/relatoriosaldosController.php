@@ -48,6 +48,7 @@ class relatoriosaldosController extends controller{
         $dados["colunas"] = $this->colunas;
         $dados["labelTabela"] = $this->shared->labelTabela();
         $dados["labelTabela"]["labelBrowser"] = "Relatório de Saldos";
+        $dados["selectMeses"] = $this->model->selectMeses();
 
         $this->loadTemplate("relatoriosaldos", $dados);
     }

@@ -81,7 +81,7 @@ require "_graficosNOVO.php";
                     </div>
                     <div class="col">
                         <h5 class="my-4 text-center">
-                        Previsão do Mes <span class="badge badge-primary badge-pill" data-id="total"></span>
+                        Previsão do Mês <span class="badge badge-primary badge-pill" data-id="total"></span>
                         </h5>
                     </div>
                 </div>

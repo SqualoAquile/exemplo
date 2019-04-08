@@ -383,6 +383,16 @@ class ajaxController extends controller{
     echo json_encode($dados);
   }
 
+  public function gerarGraficoSaldos(){
+    
+    if(isset($_POST) && !empty($_POST)){
+      $shared = new Shared($_POST['modulo']);
+      $dados = $shared->gerarGraficoSaldos($_POST);
+    }
+    
+    echo json_encode($dados);
+  }
+
   //////// ORÇAMENTOS
   public function getRelacionalDropdownOrcamentos() {
     if (isset($_POST) && !empty($_POST)) {
