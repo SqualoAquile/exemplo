@@ -2,6 +2,12 @@
 
 <script src="<?php echo BASE_URL?>/assets/js/relatorioorcamentos.js" type="text/javascript"></script>
 
+<style>
+.dataTable thead th:first-child, .dataTable tbody td:first-child {
+    display:none;
+}
+</style>
+
 <?php
 // Constroi o cabeçalho
 require "_header_browser_relatorios.php";

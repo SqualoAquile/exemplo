@@ -1,7 +1,11 @@
 <?php $modulo = str_replace("-form", "", basename(__FILE__, ".php")) ?>
 
 <script src="<?php echo BASE_URL?>/assets/js/relatoriosaldos.js" type="text/javascript"></script>
-
+<style>
+.dataTable thead th:first-child, .dataTable tbody td:first-child {
+    display:none;
+}
+</style>
 
 <?php
 // Constroi o cabeçalho
