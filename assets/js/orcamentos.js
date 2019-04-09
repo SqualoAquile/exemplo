@@ -287,8 +287,6 @@ $(function () {
                 dataType: 'json',
                 success: function (data) {
 
-                    console.log(data)
-
                     // JSON Response - Ordem Alfabética
                     data.sort(function (a, b) {
                         a = a.nome.toLowerCase();
@@ -347,6 +345,8 @@ $(function () {
                 .val($this.attr('data-comoconheceu'));
 
             if ($this.attr('data-observacao')) {
+
+                $('#collapseObsCliente').collapse('hide');
 
                 $esquerda
                     .find('.observacao_cliente_wrapper')
