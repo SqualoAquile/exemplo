@@ -336,7 +336,11 @@ $(function () {
                 data_preco = $this.attr('data-preco'),
                 data_custo = $this.attr('data-custo');
 
+            $this.siblings('.relacional-dropdown-element').removeClass('active');
+            $this.addClass('active');
+
             $materialComplementar
+                .attr('data-text', $this.text())
                 .attr('data-tabela', data_tabela)
                 .attr('data-unidade', data_unidade)
                 .attr('data-preco', data_preco)
@@ -344,7 +348,7 @@ $(function () {
 
         })
         .on('click', '[name="material_servico"] ~ .relacional-dropdown .relacional-dropdown-element', function () {
-            console.log('disparou on click material servico');
+
             var $this = $(this),
                 $tipoProdServ = $('[name="tipo_servico_produto"]'),
                 $material = $('[name="material_servico"]'),
@@ -359,6 +363,9 @@ $(function () {
                 data_preco = $this.attr('data-preco'),
                 data_custo = $this.attr('data-custo'),
                 unidade = data_tabela != 'servicos' ? data_unidade : 'M²';
+
+            $this.siblings('.relacional-dropdown-element').removeClass('active');
+            $this.addClass('active');
 
             $preco.val(floatParaPadraoBrasileiro(data_preco)).blur();
 
@@ -401,10 +408,18 @@ $(function () {
                     }
                 });
 
-                $elementsMaterialComp.hide();
-                $filteredsElementsMaterialComp.show();
+                $elementsMaterialComp
+                    .removeClass('filtered active')
+                    .addClass('d-none');
+
+                $filteredsElementsMaterialComp
+                    .addClass('filtered')
+                    .removeClass('d-none');
                 
-                $materialComplementar.blur();
+                $materialComplementar
+                    .val('')
+                    .removeAttr('data-preco data-custo data-tabela data-unidade');
+
                 calculaQuantidadeUsadaMaterial();
             }
 
@@ -460,6 +475,31 @@ $(function () {
                 }
 
             }
+        })
+        .on('keyup', '#material_complementar', function () {
+
+            var $this = $(this),
+                $dropdownMenu = $this.siblings('.relacional-dropdown'),
+                $nenhumResult = $dropdownMenu.find('.nenhum-result'),
+                $elementsNotActive = $dropdownMenu.find('.relacional-dropdown-element');
+                $elements = $dropdownMenu.find('.relacional-dropdown-element.filtered');
+
+            var $filtereds = $elements.filter(function () {
+                return $(this).text().toLowerCase().indexOf($this.val().toLowerCase()) != -1;
+            });
+
+            if (!$filtereds.length) {
+                $nenhumResult.removeClass('d-none');
+            } else {
+                $nenhumResult.addClass('d-none');
+            }
+
+            $elementsNotActive.addClass('d-none');
+            $filtereds.removeClass('d-none');
+
+        })
+        .on('focus', '#material_complementar', function () {
+            $(this).siblings('.relacional-dropdown').find('.relacional-dropdown-element:not(.filtered)').addClass('d-none');
         });
 
     $('#como_conheceu')
