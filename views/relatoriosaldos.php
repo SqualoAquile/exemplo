@@ -1,12 +1,15 @@
 <?php $modulo = str_replace("-form", "", basename(__FILE__, ".php")) ?>
 
 <script src="<?php echo BASE_URL?>/assets/js/relatoriosaldos.js" type="text/javascript"></script>
-
+<style>
+.dataTable thead th:first-child, .dataTable tbody td:first-child {
+    display:none;
+}
+</style>
 
 <?php
 // Constroi o cabeçalho
 require "_header_browser_relatorios.php";
-require "_graficosSaldos.php";
 ?>
 
 <div class="card my-4" id="cardFiltros">
@@ -39,8 +42,6 @@ require "_graficosSaldos.php";
                 </select>
             </div>
         </div>
-        <div id="erro"> </div>
-
     </div> 
 </div>
 
@@ -188,6 +189,7 @@ require "_graficosSaldos.php";
 
 </div>
 
+<?php require "_graficosSaldos.php"; ?>
 
 <?php require "_table_datatable.php" ?>
 

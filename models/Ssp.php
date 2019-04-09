@@ -515,8 +515,9 @@ class SSP {
 		return $data;
 	}
 
-	static function complex_graficosSaldos ( $request, $conn, $table, $primaryKey, $columns, $whereResult=null, $whereAll=null,  $coluna_alvo=null, $dt1 = null, $dt2 = null )
+	static function complex_graficosSaldos ( $request, $conn, $table, $primaryKey, $columns, $whereResult=null, $whereAll=null,  $coluna=null, $dt1 = null, $dt2 = null )
 	{
+
 		$bindings = array();
 		$db = self::db( $conn );
 		$localWhereResult = array();
@@ -558,22 +559,29 @@ class SSP {
 				
 		$groupby = 'GROUP BY mes_ano';
 
-		$where1 = $where." AND mes_ano BETWEEN '$dt1' AND '$dt2' AND situacao='ativo' ";
+		$where1 = "mes_ano BETWEEN '$dt1' AND '$dt2' AND situacao='ativo' ";
 		$sql = self::sql_exec( $db, $bindings,
-			"SELECT mes_ano,entradas,saidas
-			FROM `$table`
-			$where1
+			"SELECT mes_ref,entradas,saidas
+			FROM `controlesaldos`
+			WHERE $where1
 			$groupby
+			ORDER BY mes_ano
 			"
-		);		
-
+		);
+			
+		
 		$retorno = array();
-		$retorno[0] = $sql[0];
-		$retorno[1] = $sql[1];
-		$retorno[2] = $sql[3];
+		$i=0;
+		foreach ($sql as $key => $value) {
+			$retorno[$i][0] = $value[0];
+			$retorno[$i][1] = $value[1];
+			$retorno[$i][2] = $value[2];
+			$i++;
+		}	
 		return $retorno; 
 		
 	}
+
 	private static function formater ( $type, $value )
 	{
 		$returnValue = "";

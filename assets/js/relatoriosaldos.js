@@ -162,25 +162,25 @@ $(function () {
 
     $('#DataTables_Table_0_length').addClass('d-none');
     $('#DataTables_Table_0_wrapper').addClass('d-none');
-    //$('#graficos').addClass('d-none');
     $('#limpar-filtro').addClass('d-none');
     $('#cardFiltros').addClass('d-none');
+    // Fixo o filtro em "data de referência" e só passo os valores das datas
     $('#cardFiltros').find('.custom-select').val("1");
-    //esconder card de filtros e criar outro
+
 
     $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
         resumo();
         $('#DataTables_Table_0_wrapper').removeClass('d-none');
+        $('#collapseGraficos2').collapse('hide');
+
       });
 
     $('#collapseFluxocaixaResumo').on('hide.bs.collapse', function () {
         $('#DataTables_Table_0_wrapper').addClass('d-none');
     });
 
-    $('#limpar-filtro').on('click', function () {
+    $('#collapseGraficos2').on('show.bs.collapse', function () {
         $('#collapseFluxocaixaResumo').collapse('hide');
-        $('#DataTables_Table_0_wrapper').addClass('d-none');
-        
     });
 
     $('#card-body-filtros').on('change', function () {      
@@ -219,6 +219,7 @@ $(function () {
                 $min.val('').change();
 
                 dataTable.columns().search('').draw();
+                $('#collapseGraficos2').removeClass('show').addClass('hide');
 
                 return false;
             }
@@ -229,6 +230,7 @@ $(function () {
         resumo();
 
     });
+
 
     $('#botaoRelatorio').on('click', function(){
 
@@ -258,8 +260,37 @@ $(function () {
         }else{
             resumo();
             $('#DataTables_Table_0_wrapper').removeClass('d-none');
-            $('#collapseMeta').removeClass('show').addClass('hide');
-            $('#collapseGraficos2').removeClass('show').addClass('hide');
+        }
+    });
+
+    $('#graficos').on('click', function(){
+
+        var selectFaixa = $('.input-filtro-faixa');
+        var selectF = selectFaixa.siblings('input');
+        var faixa = false;
+       
+        selectF.each(function(){
+            if($(this).val()){
+                faixa = true;
+            }
+        });
+
+        var selectTexto = $('.input-filtro-texto');
+        var selectT = selectTexto.siblings('input');
+        var texto = false;
+
+        selectT.each(function(){
+            if($(this).val()){
+                texto = true;
+            }
+        });
+    
+        if(!faixa && !texto) {
+            alert("Aplique um filtro para gerar um gráfico!");
+            event.stopPropagation();
+        }else{
+            resumo();
+            $('#collapseGraficos2').collapse('show');
         }
     });
 
