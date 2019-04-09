@@ -257,7 +257,7 @@ $(function () {
             $custo.val('');
             $preco.val('');
 
-        }    
+        }
         
         calculaMaterialCustoPreco();
     });
@@ -287,6 +287,8 @@ $(function () {
                 dataType: 'json',
                 success: function (data) {
 
+                    console.log(data)
+
                     // JSON Response - Ordem Alfabética
                     data.sort(function (a, b) {
                         a = a.nome.toLowerCase();
@@ -305,6 +307,7 @@ $(function () {
                                 data-celular="` + element['celular'] + `"
                                 data-email="` + element['email'] + `"
                                 data-comoconheceu="` + element['comoconheceu'] + `"
+                                data-observacao="` + element['observacao'] + `"
                             >` + element['nome'] + `</div>
                         `;
                     });
@@ -342,6 +345,25 @@ $(function () {
             $esquerda
                 .find('[name=como_conheceu]')
                 .val($this.attr('data-comoconheceu'));
+
+            if ($this.attr('data-observacao')) {
+
+                $esquerda
+                    .find('.observacao_cliente_wrapper')
+                    .removeClass('d-none')
+    
+                $esquerda
+                    .find('#observacao_cliente[name=observacao]')
+                    .val($this.attr('data-observacao'));
+                
+            } else {
+
+                $esquerda
+                    .find('.observacao_cliente_wrapper')
+                    .addClass('d-none')
+
+            }
+
         })
         .on('click', '[name="material_complementar"] ~ .relacional-dropdown .relacional-dropdown-element', function () {
 
@@ -813,7 +835,5 @@ function calculaQuantidadeUsadaMaterial(){ // recebe os objetos (campos)
         $largura.val('').removeClass('is-valid is-invalid');
         $comprimento.val('').removeClass('is-valid is-invalid');
         $qtdUsada.val('');
-    }
-
-        
+    }   
 }

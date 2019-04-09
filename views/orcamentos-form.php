@@ -252,6 +252,12 @@
         <div class="col-lg-5" id='esquerda'>
             <div class="card card-body">
                 <div class="row"></div>
+                <div class="observacao_cliente_wrapper d-none">
+                    <button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapseObsCliente" aria-expanded="false" aria-controls="collapseObsCliente">Observações</button>
+                    <div class="collapse mt-3" id="collapseObsCliente">
+                        <textarea id="observacao_cliente" readonly name="observacao" class="form-control" placeholder="Observações do Cliente"></textarea>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-lg-7" id='direita'>
