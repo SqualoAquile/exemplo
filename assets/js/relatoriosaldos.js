@@ -128,27 +128,27 @@ $(function () {
         }
 
         if(resultadoBanco < 0){
-            $('#cardResultadoBanco').removeClass('bg-success text-white').addClass('bg-danger text-white');
+            $('#cardResultadoBanco').removeClass('bg-success bg-light text-dark').addClass('bg-danger text-white');
         } else if(resultadoBanco ==0){
             $('#cardResultadoBanco').removeClass('bg-danger bg-success text-white').addClass('bg-light text-dark');
         } else{
-            $('#cardResultadoBanco').removeClass('bg-danger text-white').addClass('bg-success text-white');
+            $('#cardResultadoBanco').removeClass('bg-danger bg-light text-dark').addClass('bg-success text-white');
         }
 
         if(resultadoOnline < 0){
-            $('#cardResultadoOnline').removeClass('bg-success text-white').addClass('bg-danger text-white');
+            $('#cardResultadoOnline').removeClass('bg-success bg-light text-dark').addClass('bg-danger text-white');
         } else if(resultadoOnline ==0){
             $('#cardResultadoOnline').removeClass('bg-danger bg-success text-white').addClass('bg-light text-dark');
         } else{
-            $('#cardResultadoOnline').removeClass('bg-danger text-white').addClass('bg-success text-white');
+            $('#cardResultadoOnline').removeClass('bg-danger bg-light text-dark').addClass('bg-success text-white');
         }
 
         if(resultadoCaixa < 0){
-            $('#cardResultadoCaixa').removeClass('bg-success text-white').addClass('bg-danger text-white');
+            $('#cardResultadoCaixa').removeClass('bg-success bg-light text-dark').addClass('bg-danger text-white');
         } else if(resultadoCaixa ==0){
             $('#cardResultadoCaixa').removeClass('bg-danger bg-success text-white').addClass('bg-light text-dark');
         } else{
-            $('#cardResultadoCaixa').removeClass('bg-danger text-white').addClass('bg-success text-white');
+            $('#cardResultadoCaixa').removeClass('bg-danger bg-light text-dark').addClass('bg-success text-white');
         }
 
         if(diferenca == 0){
@@ -162,7 +162,10 @@ $(function () {
 
     $('#DataTables_Table_0_length').addClass('d-none');
     $('#DataTables_Table_0_wrapper').addClass('d-none');
-    $('#graficos').addClass('d-none');
+    //$('#graficos').addClass('d-none');
+    $('#limpar-filtro').addClass('d-none');
+    $('#cardFiltros').addClass('d-none');
+    $('#cardFiltros').find('.custom-select').val("1");
     //esconder card de filtros e criar outro
 
     $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
@@ -180,9 +183,51 @@ $(function () {
         
     });
 
-    $('#card-body-filtros').on('change', function () {
+    $('#card-body-filtros').on('change', function () {      
         $('#collapseFluxocaixaResumo').collapse('hide');
         $('#DataTables_Table_0_wrapper').addClass('d-none');
+    });
+
+    $('#selectMesesMax, #selectMesesMin').on('change', function(){
+        
+        $min = $('#selectMesesMin');
+        min = $('#selectMesesMin').val();
+        if(min != null){
+            min = min.split('/').reverse().join('-');
+        }
+
+        $max = $('#selectMesesMax');
+        max = $('#selectMesesMax').val();
+        if (max != null) {
+            max = max.split('/').reverse().join('-');   
+        }
+
+        if (min && max) {
+                    
+            $max.removeClass('is-invalid');
+            $max[0].setCustomValidity('');
+            $max.siblings('.invalid-feedback').remove();
+
+            if (min > max) {
+
+                $max.addClass('is-invalid');
+
+                $max[0].setCustomValidity('invalid');
+                $max.after('<div class="invalid-feedback">O valor deste campo deve ser maior que o campo anterior.</div>');
+                
+                $max.val('').change();
+                $min.val('').change();
+
+                dataTable.columns().search('').draw();
+
+                return false;
+            }
+        }
+
+        $('.input-filtro-faixa').siblings('.max').val($('#selectMesesMax').val()).change();
+        $('.input-filtro-faixa').siblings('.min').val($('#selectMesesMin').val()).change();
+        resumo();
+
     });
 
     $('#botaoRelatorio').on('click', function(){

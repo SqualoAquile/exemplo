@@ -215,7 +215,6 @@ $(function () {
         $('#DataTables_Table_0_wrapper').addClass('d-none');
     });
 
-
     $('#botaoRelatorio').on('click', function(){
 
         var selectFaixa = $('.input-filtro-faixa');

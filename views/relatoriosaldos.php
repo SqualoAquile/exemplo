@@ -2,10 +2,47 @@
 
 <script src="<?php echo BASE_URL?>/assets/js/relatoriosaldos.js" type="text/javascript"></script>
 
+
 <?php
 // Constroi o cabeçalho
 require "_header_browser_relatorios.php";
+require "_graficosSaldos.php";
 ?>
+
+<div class="card my-4" id="cardFiltros">
+    <div class="card-header d-flex align-items-center">
+        <h5 class="m-0 h5" id="tituloHeader">
+        Selecionar Mês de Referência: </h5>
+    
+        <div class="col-2" id="min">
+            <div class="input-group">
+                <select class="custom-select input-filtro-faixa" id="selectMesesMin">
+                    <option selected disabled value="">de...</option>
+                    <?php for($j = 0; $j < count($selectMeses); $j++): ?>
+                        <option value="<?php echo $selectMeses[$j]["mes_ano"] ?>" >
+                            <?php echo $selectMeses[$j]["mes_ref"]?>
+                        </option>    
+                    <?php endfor ?>
+                </select>
+            </div>  
+        </div>
+
+        <div class="col-2" id="max">
+            <div class="input-group">
+                <select class="custom-select input-filtro-faixa" id="selectMesesMax">
+                    <option selected disabled value="">até...</option>
+                    <?php for($j = 0; $j < count($selectMeses); $j++): ?>
+                        <option value="<?php echo $selectMeses[$j]["mes_ano"] ?>" >
+                            <?php echo $selectMeses[$j]["mes_ref"]?>
+                        </option>    
+                    <?php endfor ?>
+                </select>
+            </div>
+        </div>
+        <div id="erro"> </div>
+
+    </div> 
+</div>
 
 <div class="collapse mb-5" id="collapseFluxocaixaResumo">
 
