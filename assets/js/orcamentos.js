@@ -494,7 +494,7 @@ $(function () {
 
             }
         })
-        .on('keyup', '#material_complementar', function () {
+        .on('input', '#material_complementar', function () {
 
             var $this = $(this),
                 $dropdownMenu = $this.siblings('.relacional-dropdown'),
@@ -517,7 +517,9 @@ $(function () {
 
         })
         .on('focus', '#material_complementar', function () {
-            $(this).siblings('.relacional-dropdown').find('.relacional-dropdown-element:not(.filtered)').addClass('d-none');
+            if ($('#material_servico').val()) {
+                $(this).siblings('.relacional-dropdown').find('.relacional-dropdown-element:not(.filtered)').addClass('d-none');
+            }
         });
 
     $('#como_conheceu')
