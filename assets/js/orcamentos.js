@@ -476,7 +476,9 @@ $(function () {
                 $elements.hide();
                 $filtereds.show();
 
-                $('[name="nome_cliente"], [name=faturado_para], [name=telefone], [name=celular], [name=email]')
+                $('.observacao_cliente_wrapper').addClass('d-none');
+
+                $('[name="nome_cliente"], [name=faturado_para], [name=telefone], [name=celular], [name=email], #observacao_cliente')
                     .removeClass('is-valid is-invalid')
                     .val('');
 
