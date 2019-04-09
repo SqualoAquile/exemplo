@@ -33,7 +33,7 @@ $(function () {
         dataType: 'json',
         success: function (data) {
 
-            var bocarolo, margem;
+            var bocarolo, margem, segop;
             if (data['tamanho_boca_rolo']) {
                 bocarolo = floatParaPadraoInternacional(data['tamanho_boca_rolo']);
                 $('#unidade').attr('data-bocarolo', bocarolo);
@@ -41,6 +41,10 @@ $(function () {
             if (data['margem_erro_material']) {
                 margem = floatParaPadraoInternacional(data['margem_erro_material']);
                 $('#unidade').attr('data-margemerro', margem);
+            }
+            if (data['taxa_seg_op']) {
+                segop = floatParaPadraoInternacional(data['taxa_seg_op']);
+                $('#preco_tot_subitem').attr('data-seg_op', segop);
             }
 
         }
@@ -221,27 +225,39 @@ $(function () {
         }
     });
 
-    $("#custo_tot_subitem, #preco_tot_subitem").on('change blur',function(){
-        
+    $("#preco_tot_subitem").on('blur',function(){
         var $custo = $("#custo_tot_subitem");
         var $preco = $("#preco_tot_subitem");
         var $material = $('#material_servico');
+        var tx_segop, precoaux;
+      
+        tx_segop = parseFloat( parseFloat( $("#preco_tot_subitem").attr('data-seg_op')) / parseFloat(100) );
 
-        if( $custo.val() != "" && $preco.val() == "" ){
-            
-            $preco.val(floatParaPadraoBrasileiro( $material.attr('data-preco') ) );
-        }
-        
-        if( $custo.val() == "" && $preco.val() != "" ){
-            // $material.val('').change().blur();
-        }
-        
-        if( $custo.val() != "" && $preco.val() != "" ){
-            if( parseFloat(floatParaPadraoInternacional( $custo.val())) >= parseFloat(floatParaPadraoInternacional( $preco.val())) ){
-                // alert('O preço do item deve ser maior do que o seu custo.');
-                $preco.val(floatParaPadraoBrasileiro( $material.attr('data-preco') ) );
+        if($("#preco_tot_subitem").attr('data-seg_op') != undefined){
+
+            if( $custo.val() != "" && $preco.val() == "" ){
+                
+                precoaux = parseFloat( parseFloat( $material.attr('data-preco') )  * parseFloat( parseFloat(1) + tx_segop ) );
+                $preco.val( floatParaPadraoBrasileiro( precoaux ) );
+                return;
             }
-        }
+
+            if( $custo.val() != "" && $preco.val() != "" ){
+                
+                if( parseFloat(floatParaPadraoInternacional( $custo.val())) >= parseFloat(floatParaPadraoInternacional( $preco.val())) ){
+                    precoaux = parseFloat( parseFloat( $material.attr('data-preco') )  * parseFloat( parseFloat(1) + tx_segop ) );
+                    $preco.val(floatParaPadraoBrasileiro( precoaux ) );
+                }else{
+                    precoaux = parseFloat( parseFloat( floatParaPadraoInternacional( $preco.val() ) )  * parseFloat( parseFloat(1) + tx_segop ) );
+                    $preco.val(floatParaPadraoBrasileiro( precoaux ) );
+                }
+            }
+
+        }else{
+            $custo.val('');
+            $preco.val('');
+
+        }    
         
         calculaMaterialCustoPreco();
     });
@@ -336,7 +352,11 @@ $(function () {
                 data_preco = $this.attr('data-preco'),
                 data_custo = $this.attr('data-custo');
 
+            $this.siblings('.relacional-dropdown-element').removeClass('active');
+            $this.addClass('active');
+
             $materialComplementar
+                .attr('data-text', $this.text())
                 .attr('data-tabela', data_tabela)
                 .attr('data-unidade', data_unidade)
                 .attr('data-preco', data_preco)
@@ -344,7 +364,7 @@ $(function () {
 
         })
         .on('click', '[name="material_servico"] ~ .relacional-dropdown .relacional-dropdown-element', function () {
-            console.log('disparou on click material servico');
+
             var $this = $(this),
                 $tipoProdServ = $('[name="tipo_servico_produto"]'),
                 $material = $('[name="material_servico"]'),
@@ -360,9 +380,14 @@ $(function () {
                 data_custo = $this.attr('data-custo'),
                 unidade = data_tabela != 'servicos' ? data_unidade : 'M²';
 
+            $this.siblings('.relacional-dropdown-element').removeClass('active');
+            $this.addClass('active');
+
             $preco.val(floatParaPadraoBrasileiro(data_preco)).blur();
 
             $custo.val(floatParaPadraoBrasileiro(data_custo)).blur();
+
+            $preco.val(floatParaPadraoBrasileiro(data_preco)).blur();
 
             $unidade.val(unidade).blur();
 
@@ -401,10 +426,18 @@ $(function () {
                     }
                 });
 
-                $elementsMaterialComp.hide();
-                $filteredsElementsMaterialComp.show();
+                $elementsMaterialComp
+                    .removeClass('filtered active')
+                    .addClass('d-none');
+
+                $filteredsElementsMaterialComp
+                    .addClass('filtered')
+                    .removeClass('d-none');
                 
-                $materialComplementar.blur();
+                $materialComplementar
+                    .val('')
+                    .removeAttr('data-preco data-custo data-tabela data-unidade');
+
                 calculaQuantidadeUsadaMaterial();
             }
 
@@ -459,6 +492,33 @@ $(function () {
 
                 }
 
+            }
+        })
+        .on('input', '#material_complementar', function () {
+
+            var $this = $(this),
+                $dropdownMenu = $this.siblings('.relacional-dropdown'),
+                $nenhumResult = $dropdownMenu.find('.nenhum-result'),
+                $elementsNotActive = $dropdownMenu.find('.relacional-dropdown-element');
+                $elements = $dropdownMenu.find('.relacional-dropdown-element.filtered');
+
+            var $filtereds = $elements.filter(function () {
+                return $(this).text().toLowerCase().indexOf($this.val().toLowerCase()) != -1;
+            });
+
+            if (!$filtereds.length) {
+                $nenhumResult.removeClass('d-none');
+            } else {
+                $nenhumResult.addClass('d-none');
+            }
+
+            $elementsNotActive.addClass('d-none');
+            $filtereds.removeClass('d-none');
+
+        })
+        .on('focus', '#material_complementar', function () {
+            if ($('#material_servico').val()) {
+                $(this).siblings('.relacional-dropdown').find('.relacional-dropdown-element:not(.filtered)').addClass('d-none');
             }
         });
 
