@@ -650,8 +650,8 @@ class Shared extends model {
             }
             
         };
-        
-        return Ssp::complex_graficosSaldos($requisicao['columns'], $this->config, $this->table, "id", $columns, null, "situacao='ativo'", $requisicao['coluna'], $requisicao['intervalo']);
+
+        return Ssp::complex_graficosSaldos($requisicao['columns'], $this->config, $this->table, "id", $columns, null, "situacao='ativo'", $requisicao['coluna'], $requisicao['dt1'],$requisicao['dt2'] );
     }
 
     public function formataDadosParaBD($registro) {

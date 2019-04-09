@@ -2,61 +2,51 @@ var charts = [];
 
 $(function () {
 
-    var $selectGrafTemporal = $('#selectGraficosTemporal'),
-        $selectGrafOpcoes = $('#selectGrafOpcoes'),
+    var $botaoGraficos = $('#graficos'),
+        
         dataTable = window.dataTable,
         modo = "agrupar", // agrupar (doughnut, bar, horizontalBar), temporal(line, bar, combo)
         id = "#chart-div2",
-        tipo = "bar",
         ctx = document.getElementById(id.substr(1)).getContext('2d');
 
     $('.dataTable') 
         .on('draw.dt', function() {
-            drawChart(id,tipo);
+            drawChart(id);
         });
+    
+    $('.input-filtro-faixa').on('change',function(){
+        drawChart(id);
+    });
 
-    $selectGrafTemporal
-        .on('change', function() {
-            drawChart(id,tipo);
-        });
 
-    $selectGrafOpcoes
-        .on('change', function() {
-            drawChart(id,tipo);
-        });
+    function drawChart(id) {
+        var coluna, titulo, dt1,dt2;
 
-    function drawChart(id, tipo) {
-        var coluna, titulo, intervalo = [];
+            coluna = "mes_ref";
+            dt1 = $('.input-filtro-faixa').siblings('.min').val();
+            dt2 = $('.input-filtro-faixa').siblings('.max').val();
+            titulo = 'Balanço de Saldos';
 
-            if (!$selectGrafTemporal.val() && !$selectGrafOpcoes.val() ) {
-
-                $selectGrafTemporal.val($selectGrafTemporal.find('option:not([disabled])').first().val()).change();
-                $selectGrafOpcoes.val($selectGrafOpcoes.find('option:not([disabled])').first().val()).change();
-            };
-
-            coluna = "mes_ano";
-            titulo = 'Saldo de ' + $selectGrafOpcoes.children("option:selected").text().trim() +' até hoje.';
-            intervalo = intervaloDatas($selectGrafOpcoes.val());
-            
             $.ajax({ 
-                url: baselink + '/ajax/gerarGraficoFiltroIntervaloDatas', 
+                url: baselink + '/ajax/gerarGraficoSaldos', 
                 type: 'POST', 
                 data: {
                     columns: dataTable.ajax.params(), 
-                    coluna: coluna,
-                    intervalo: intervalo,
+                    coluna: 'mes_ref',
+                    dt1: dt1,
+                    dt2: dt2,
                     modulo: currentModule
                 },
                 dataType: 'json', 
                 success: function (resultado) { 
-                    if (resultado){    
+                    if (resultado){
                         var eixoDatas = [], entradas = [], saidas = [], result = [], resultAcul = [];
 
-                        for (var i = 0; i < Object.keys(resultado[0]).length; i++) {
-                            eixoDatas[i] = Object.keys(resultado[0])[i];
-                            entradas[i] =  parseFloat(parseFloat(-1) * parseFloat(Object.values(resultado[1])[i]));
-                            saidas[i] = parseFloat(Object.values(resultado[2])[i]);
-                            result[i] = parseFloat(parseFloat(Object.values(resultado[1])[i]) - parseFloat(Object.values(resultado[0])[i]));
+                        for (var i = 0; i < resultado.length; i++) {
+                            eixoDatas[i] = resultado[i][0];
+                            entradas[i] =  parseFloat(parseFloat(resultado[i][1]));
+                            saidas[i] = parseFloat(parseFloat(-1) * resultado[i][2]);
+                            result[i] = parseFloat(parseFloat(entradas[i] - saidas[i]));
                             if(i == 0){
                                 resultAcul[i] = parseFloat(result[i]).toFixed(2);    
                             }else{
@@ -86,16 +76,16 @@ $(function () {
                                     borderWidth: 2
                                 }, {
                                     type: 'bar',
-                                    label: 'Despesas',
+                                    label: 'Saídas',
                                     backgroundColor: 'red',
-                                    data: despesas,
+                                    data: saidas,
                                     borderColor: 'white',
                                     borderWidth: 1
                                 }, {
                                     type: 'bar',
-                                    label: 'Receitas',
+                                    label: 'Entradas',
                                     backgroundColor: 'green',
-                                    data: receitas,
+                                    data: entradas,
                                     borderColor: 'white',
                                     borderWidth: 1
                                 }]
