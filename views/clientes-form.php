@@ -19,8 +19,21 @@
 
 <?php $table = false ?>
 
+<?php
+
+    //
+    // Configurações vindas da modal que está importando este arquivo
+    //
+    
+    $formId = "";
+    if (isset($formIdModal)) {
+        $formId = $formIdModal;
+    }
+
+?>
+
 <section class="mb-5">
-    <form id="form-principal" method="POST" class="needs-validation" autocomplete="off" novalidate>
+    <form id="form-principal<?php echo $formId ?>" method="POST" class="needs-validation" autocomplete="off" novalidate>
         <div class="row">
             <?php foreach ($colunas as $key => $value): ?>
                 <?php if(isset($value["Comment"]) && array_key_exists("form", $value["Comment"]) && $value["Comment"]["form"] != "false") : ?>
@@ -250,12 +263,12 @@
                 <?php endif ?>
             <?php endforeach ?>
         </div>
-        <button id="main-form" class="d-none"></button>
+        <button id="main-form<?php echo $formId ?>" class="d-none"></button>
     </form>
     <?php if($table) include "_contatos_form.php" ?>
     <div class="row">
         <div class="col-xl-2 col-lg-3">
-            <label for="main-form" class="btn btn-primary btn-block" tabindex="0">Salvar</label>
+            <label for="main-form<?php echo $formId ?>" class="btn btn-primary btn-block" tabindex="0">Salvar</label>
         </div>
         <?php if (isset($item)): ?>
         <div class="col-xl-2 col-lg-3">

@@ -3,6 +3,7 @@ class ajaxController extends controller{
 
   private $parametros;
   private $servicos;
+  private $clientes;
 
   public function __construct() {
 
@@ -10,6 +11,7 @@ class ajaxController extends controller{
 
     $this->parametros = new Parametros;
     $this->servicos = new Servicos;
+    $this->clientes = new Clientes;
 
     //verifica se está logado
     if($user->isLogged() == false){
@@ -217,32 +219,36 @@ class ajaxController extends controller{
 /////// CADASTRO DE CLIENTES
   public function ConfereNomeCliente(){
     $dados = array();
-    $cl = new Clientes();
     if(isset($_POST["q"]) && !empty($_POST["q"])){
         $nome = trim(addslashes($_POST["q"]));
-        $dados = $cl->buscaClientePeloNome($nome,$_SESSION["idEmpresaFuncionario"]);
+        $dados = $this->clientes->buscaClientePeloNome($nome,$_SESSION["idEmpresaFuncionario"]);
     }
     echo json_encode($dados);
   }
   
   public function ConfereEmailCliente(){
     $dados = array();
-    $cl = new Clientes();
     if(isset($_POST["q"]) && !empty($_POST["q"])){
         $nome = trim(addslashes($_POST["q"]));
-        $dados = $cl->buscaClientePeloEmail($nome,$_SESSION["idEmpresaFuncionario"]);
+        $dados = $this->clientes->buscaClientePeloEmail($nome,$_SESSION["idEmpresaFuncionario"]);
     }
     echo json_encode($dados);
   }
   
   public function ConfereCpfCliente(){
     $dados = array();
-    $cl = new Clientes();
     if(isset($_POST["q"]) && !empty($_POST["q"])){
         $nome = trim(addslashes($_POST["q"]));
-        $dados = $cl->buscaClientePeloCPF($nome,$_SESSION["idEmpresaFuncionario"]);
+        $dados = $this->clientes->buscaClientePeloCPF($nome,$_SESSION["idEmpresaFuncionario"]);
     }
     echo json_encode($dados);
+  }
+
+  public function adicionarCliente() {
+    if (isset($_POST) && !empty($_POST)) {
+      $this->clientes->adicionar($_POST);
+      echo json_encode($_SESSION["returnMessage"]);
+    }
   }
   
   /////// CADASTRO DE CLIENTES
