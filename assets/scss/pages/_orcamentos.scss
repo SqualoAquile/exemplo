@@ -1,0 +1,14 @@
+.tableFixHead {
+    min-height: 200px;
+    #itensOrcamento {
+        thead {
+            > tr {
+                th {
+                    &:first-child {
+                        z-index: 9;
+                    }
+                }
+            }
+        }
+    }
+}

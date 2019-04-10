@@ -93,3 +93,28 @@
         display: block;
     }
 }
+.tableFixHead {
+    overflow-y: auto;
+    th {
+        position: sticky;
+        top: 0;
+        border: 0!important;
+        background-color: $white;
+        &:before,
+        &:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            background: $gray-300;
+        }
+        &:after {
+            bottom: 0;
+            height: 2px;
+        }
+        &:before {
+            top: 0;
+            height: 1px;
+        }
+    }
+}

@@ -276,6 +276,21 @@ $(function () {
 
     }).change().blur();
 
+    $(window)
+        .on('load', () => {
+            
+            // Setar altura da tabela de itens do orcamento
+            let heightEsquerda = $('#esquerda > .card').outerHeight(),
+                heightDireita = $('#direita > .card').outerHeight(),
+                $tabelaItensOrcamento = $('#itensOrcamento').parent('.table-responsive'),
+                heightTabelaItensOrcamento = $tabelaItensOrcamento.outerHeight();
+
+            console.log(heightEsquerda, heightDireita, heightTabelaItensOrcamento);
+
+            // $tabelaItensOrcamento.height(heightDireita - heightEsquerda);
+
+        });
+
     $(document)
         .ready(function () {
             $.ajax({
