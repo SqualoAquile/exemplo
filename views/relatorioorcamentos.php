@@ -14,41 +14,24 @@ require "_header_browser_relatorios.php";
 ?>
 
 <div class="collapse mb-5" id="collapseFluxocaixaResumo">
-    <div class="card card-body">
-        <div class="row" id="somasResumo">
-            <div class="col-lg">
-                <div class="row d-none d-lg-flex">
-                    <div class="col">
-                        <h5 class="my-4 text-center">
-                        Quantidade de Orçamentos
-                        </h5>
-                    </div>
-                    <div class="col">
-                        <h5 class="my-4 text-center">
-                        Total Orçado
-                        </h5>
+    <div class="row" id="somasResumo">
+        <div class="col-lg">
+            <div class="row">
+
+                <div class="col-lg">
+                    <div class="card card-body py-1 text-black text-center my-3 py-3 shadow">
+                        <p class="m-0">Quantidade de Orçamentos</p>
+                        <h5 id="quantidadeOrcamentos"></h5>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-lg">
-                        <h5 class="my-4 text-center d-lg-none">
-                        Quantidade de Orçamentos 
-                        </h5>
-                        <div class="card card-body py-1 text-success text-center my-3">
-                            <h5 id="quantidadeOrcamentos"></h5>
-                        </div>
-                    </div>
-
-                    <div class="col-lg">
-                        <h5 class="my-4 text-center d-lg-none">
-                        Total Orçado
-                        </h5>
-                        <div class="card card-body py-1 text-success text-center my-3">
-                            <h5 id="totalOrcado"></h5>
-                        </div>
+                <div class="col-lg">
+                    <div class="card card-body py-1 text-success text-center my-3 py-3 shadow">
+                        <p class="m-0">Total Orçado</p>
+                        <h5 id="totalOrcado"></h5>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
