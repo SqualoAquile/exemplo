@@ -14,7 +14,7 @@
                 <th class="text-truncate">Quant. Usada Unit.</th>
                 <th class="text-truncate">Serviço/Produto</th>
                 <th class="text-truncate">Material/Serviço</th>
-                <th class="text-truncate">Material Complem.</th>
+                <th class="text-truncate">Mat. Alternativo</th>
                 <th class="text-truncate">Unidade</th>
                 <th class="text-truncate">Custo Total</th>
                 <th class="text-truncate">Preço Total</th>
