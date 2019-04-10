@@ -9,58 +9,46 @@ require "_graficosNOVO.php";
 ?>
 
 <div class="collapse mb-5 show" id="collapseMeta">
-    <h5 class="text-center my-1">Meta Mensal</h5>
-        <!-- <div class="card card-body"> -->
+    <h5 class="text-center my-1 mb-3">Acompanhamento da Meta</h5>
             <div class="col-lg">
             <div class="row">
 
-                    <div class="col-lg">
-                        <div class="card card-body h-100 text-dark text-center my-1 shadow justify-content-between ">
-                            <p class="card-title">Faturamento atual do mês</p>
-                            <p class="card-text h2"><?php echo $meta[1]?></p>
-                        </div>
+                <div class="col-lg">
+                    <div class="card card-body h-100 text-dark text-center my-1 shadow justify-content-between ">
+                        <p class="card-title">Faturamento atual do mês</p>
+                        <p class="card-text h2"><?php echo $meta[1]?></p>
                     </div>
-
-                    <div class="col-lg">
-                        <div class="card card-body h-100 text-success text-center my-1 shadow justify-content-between">
-                            <p class="card-title"> Meta Mensal</p>
-                            <p class="card-text h2"><?php echo $meta[0]?></p>
-                        </div>
-                    </div>
-
-                    <div class="col-lg">
-                        <div class="card card-body h-100 text-danger text-center my-1 shadow justify-content-between">
-                        <p class="card-title"> Diferença </p>
-                        <p class="card-text h2"><?php echo $meta[3]?></p>
-                        </div>
-                    </div>
-
-                    <div class="col-lg">
-                        <div class="card card-body h-100 text-center my-1 shadow justify-content-between">
-                            <p class="card-title"> Dias para o fim do mês </p>
-                            <p class="card-text h2"><?php echo $meta[4]?></p>
-                        </div>
-                    </div>
-
-                    <div class="col-lg">
-                        <div class="card card-body h-100 text-dark text-center my-1 shadow justify-content-between">
-                            <p class="card-title"> Faturamento médio para atingir a meta </p>
-                            <p class="card-text h2"><?php echo $meta[5]?>/dia</h5>
-                        </div>
-                    </div>
-                    
                 </div>
-            
-            <!-- <div class="progress my-1 " style="height: 30px;">
-                <div    class="progress-bar bg-info" role="progressbar" 
-                        style="width: <?php echo $meta[2]?>%;" 
-                        aria-valuenow="<?php echo $meta[2]?>" 
-                        aria-valuemin="0" aria-valuemax="100">
-                        <div class="h5"><?php echo $meta[2]?> %</div> 
-                        
+
+                <div class="col-lg">
+                    <div class="card card-body h-100 text-success text-center my-1 shadow justify-content-between">
+                        <p class="card-title"> Meta Mensal</p>
+                        <p class="card-text h2"><?php echo $meta[0]?></p>
+                    </div>
                 </div>
-            </div> -->
-        <!-- </div> -->
+
+                <div class="col-lg">
+                    <div class="card card-body h-100 text-danger text-center my-1 shadow justify-content-between">
+                    <p class="card-title"> Diferença </p>
+                    <p class="card-text h2"><?php echo $meta[3]?></p>
+                    </div>
+                </div>
+
+                <div class="col-lg">
+                    <div class="card card-body h-100 text-center my-1 shadow justify-content-between">
+                        <p class="card-title"> Dias para o fim do mês </p>
+                        <p class="card-text h2"><?php echo $meta[4]?></p>
+                    </div>
+                </div>
+
+                <div class="col-lg">
+                    <div class="card card-body h-100 text-dark text-center my-1 shadow justify-content-between">
+                        <p class="card-title"> Faturamento médio para atingir a meta </p>
+                        <p class="card-text h2"><?php echo $meta[5]?>/dia</h5>
+                    </div>
+                </div>
+                
+            </div>
     </div>
 </div>
 
