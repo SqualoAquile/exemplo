@@ -186,35 +186,23 @@ $(function () {
 
         // Desabilita ele mesmo e os botões irmãos de editar e excluir da linha atual
         // $par.find('.btn').addClass('disabled');
+        $('#camposOrc')[0].reset();
+        $('[name=tipo_servico_produto]').val().change();
 
         $('input[name=descricao_item]').val(tdItem).attr('data-anterior', tdItem);//.focus();
         $('input[name=descricao_subitem]').val(tdSubItem).attr('data-anterior', tdSubItem);
-        $('[name=tipo_servico_produto]').val(tdServicoProduto ).attr('data-anterior', tdServicoProduto).change();
-            // console.log('material:    ', tdMaterialServico);
-        //$('input[name=material_servico]').click();
+        $('[name=tipo_servico_produto]').val(tdServicoProduto).attr('data-anterior', tdServicoProduto);
+        
         var $selecionado;
-        var i = 1;
         $('input[name=material_servico]').siblings('.relacional-dropdown').find(".relacional-dropdown-element").each(function() {
-            // console.log('option: ',$(this).text().toLowerCase() );
-            // console.log('mat/serv: ',tdMaterialServico.toLowerCase() );
             if ($(this).text().toLowerCase() == tdMaterialServico.toLowerCase()){
-                // console.log('achei o selecionado; ', $(this));
-                //$selecionado = i;
-                  $(this).click();
-                // return $(this);    
+                $selecionado = $(this);  
+                $(this).click(); 
             }
-            i++;
-            
         });
-        // $('input[name=material_servico]').click();
-        // $('input[name=material_servico]').siblings('.relacional-dropdown').find(".relacional-dropdown-element:nth-child("+i+")").click()
-        // console.log($(this).text())
-        // console.log('selecionado:  ',$selecionado);
+    
+       // $('input[name=material_servico]').val(tdMaterialServico);
 
-        // $selecionado.trigger('click');
-
-        //$('input[name=material_servico]').siblings('.relacional-dropdown').find(".relacional-dropdown-element:contains("+ tdMaterialServico + ")").trigger('click');
-        //console.log('teste:  ', $('input[name=material_servico]').siblings('.relacional-dropdown').find('.relacional-dropdown-element:contains(' + tdMaterialServico + ')'), tdMaterialServico);
         // $('input[name=material_servico]').val(tdMaterialServico).attr('data-anterior', tdMaterialServico);
         // $('input[name=material_complementar]').val(tdMaterialComplementar).attr('data-anterior', tdMaterialComplementar);
         // $('input[name=unidade]').val(tdUnidade).attr('data-anterior', tdUnidade);
