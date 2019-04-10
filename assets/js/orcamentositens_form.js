@@ -187,39 +187,52 @@ $(function () {
         // Desabilita ele mesmo e os botões irmãos de editar e excluir da linha atual
         // $par.find('.btn').addClass('disabled');
 
-        $('input[name=descricao_item]').val(tdItem).attr('data-anterior', tdItem).focus();
+        $('input[name=descricao_item]').val(tdItem).attr('data-anterior', tdItem);//.focus();
         $('input[name=descricao_subitem]').val(tdSubItem).attr('data-anterior', tdSubItem);
-        $('[name=tipo_servico_produto]').val(tdServicoProduto ).attr('data-anterior', tdServicoProduto);
-
+        $('[name=tipo_servico_produto]').val(tdServicoProduto ).attr('data-anterior', tdServicoProduto).change();
+            // console.log('material:    ', tdMaterialServico);
         //$('input[name=material_servico]').click();
-        var $elFiltered = $('input[name=material_servico]').siblings('.relacional-dropdown').find(".relacional-dropdown-element").filter(function() {
-            return $(this).text().toLowerCase() == tdMaterialServico.toLowerCase();
+        var $selecionado;
+        var i = 1;
+        $('input[name=material_servico]').siblings('.relacional-dropdown').find(".relacional-dropdown-element").each(function() {
+            // console.log('option: ',$(this).text().toLowerCase() );
+            // console.log('mat/serv: ',tdMaterialServico.toLowerCase() );
+            if ($(this).text().toLowerCase() == tdMaterialServico.toLowerCase()){
+                // console.log('achei o selecionado; ', $(this));
+                //$selecionado = i;
+                  $(this).click();
+                // return $(this);    
+            }
+            i++;
+            
         });
+        // $('input[name=material_servico]').click();
+        // $('input[name=material_servico]').siblings('.relacional-dropdown').find(".relacional-dropdown-element:nth-child("+i+")").click()
+        // console.log($(this).text())
+        // console.log('selecionado:  ',$selecionado);
 
-        console.log($elFiltered);
-
-        $elFiltered.trigger('click');
+        // $selecionado.trigger('click');
 
         //$('input[name=material_servico]').siblings('.relacional-dropdown').find(".relacional-dropdown-element:contains("+ tdMaterialServico + ")").trigger('click');
         //console.log('teste:  ', $('input[name=material_servico]').siblings('.relacional-dropdown').find('.relacional-dropdown-element:contains(' + tdMaterialServico + ')'), tdMaterialServico);
         // $('input[name=material_servico]').val(tdMaterialServico).attr('data-anterior', tdMaterialServico);
-        $('input[name=material_complementar]').val(tdMaterialComplementar).attr('data-anterior', tdMaterialComplementar);
-        $('input[name=unidade]').val(tdUnidade).attr('data-anterior', tdUnidade);
+        // $('input[name=material_complementar]').val(tdMaterialComplementar).attr('data-anterior', tdMaterialComplementar);
+        // $('input[name=unidade]').val(tdUnidade).attr('data-anterior', tdUnidade);
 
-        $('input[name=custo_tot_subitem]').val(custoUnit).attr('data-anterior', custoUnit);
-        $('input[name=preco_tot_subitem]').val(precoUnit).attr('data-anterior', precoUnit);
-        $('input[name=quant]').val(tdQuant).attr('data-anterior', tdQuant);
-        $('input[name=largura]').val(tdLargura).attr('data-anterior', tdLargura);
-        $('input[name=comprimento]').val(tdComprimento).attr('data-anterior', tdComprimento);
-        $('input[name=quant_usada]').val(tdQuantUsada).attr('data-anterior', tdQuantUsada);
-        $('input[name=observacao_subitem]').val(tdObservacao).attr('data-anterior', tdObservacao);
+        // $('input[name=custo_tot_subitem]').val(custoUnit).attr('data-anterior', custoUnit);
+        // $('input[name=preco_tot_subitem]').val(precoUnit).attr('data-anterior', precoUnit);
+        // $('input[name=quant]').val(tdQuant).attr('data-anterior', tdQuant);
+        // $('input[name=largura]').val(tdLargura).attr('data-anterior', tdLargura);
+        // $('input[name=comprimento]').val(tdComprimento).attr('data-anterior', tdComprimento);
+        // $('input[name=quant_usada]').val(tdQuantUsada).attr('data-anterior', tdQuantUsada);
+        // $('input[name=observacao_subitem]').val(tdObservacao).attr('data-anterior', tdObservacao);
 
-        $('table#itensOrcamento thead tr[role=form]')
-            .attr('data-current-id', $par.attr('data-id'))
-            .find('.is-valid, .is-invalid')
-            .removeClass('is-valid is-invalid');
+        // $('table#itensOrcamento thead tr[role=form]')
+        //     .attr('data-current-id', $par.attr('data-id'))
+        //     .find('.is-valid, .is-invalid')
+        //     .removeClass('is-valid is-invalid');
         
-        calculaSubtotalCustotal();    
+        //calculaSubtotalCustotal();    
     };
 
     // Ao dar submit neste form, chama essa funcão que pega os dados do formula e Popula a tabela

@@ -257,7 +257,7 @@ $(function () {
             $custo.val('');
             $preco.val('');
 
-        }    
+        }
         
         calculaMaterialCustoPreco();
     });
@@ -305,6 +305,7 @@ $(function () {
                                 data-celular="` + element['celular'] + `"
                                 data-email="` + element['email'] + `"
                                 data-comoconheceu="` + element['comoconheceu'] + `"
+                                data-observacao="` + element['observacao'] + `"
                             >` + element['nome'] + `</div>
                         `;
                     });
@@ -342,6 +343,27 @@ $(function () {
             $esquerda
                 .find('[name=como_conheceu]')
                 .val($this.attr('data-comoconheceu'));
+
+            if ($this.attr('data-observacao')) {
+
+                $('#collapseObsCliente').collapse('hide');
+
+                $esquerda
+                    .find('.observacao_cliente_wrapper')
+                    .removeClass('d-none')
+    
+                $esquerda
+                    .find('#observacao_cliente[name=observacao]')
+                    .val($this.attr('data-observacao'));
+                
+            } else {
+
+                $esquerda
+                    .find('.observacao_cliente_wrapper')
+                    .addClass('d-none')
+
+            }
+
         })
         .on('click', '[name="material_complementar"] ~ .relacional-dropdown .relacional-dropdown-element', function () {
 
@@ -364,7 +386,7 @@ $(function () {
 
         })
         .on('click', '[name="material_servico"] ~ .relacional-dropdown .relacional-dropdown-element', function () {
-
+            console.log('disparou click material servico');
             var $this = $(this),
                 $tipoProdServ = $('[name="tipo_servico_produto"]'),
                 $material = $('[name="material_servico"]'),
@@ -454,7 +476,9 @@ $(function () {
                 $elements.hide();
                 $filtereds.show();
 
-                $('[name="nome_cliente"], [name=faturado_para], [name=telefone], [name=celular], [name=email]')
+                $('.observacao_cliente_wrapper').addClass('d-none');
+
+                $('[name="nome_cliente"], [name=faturado_para], [name=telefone], [name=celular], [name=email], #observacao_cliente')
                     .removeClass('is-valid is-invalid')
                     .val('');
 
@@ -605,7 +629,75 @@ $(function () {
 
             }
 
+        })
+        .on('submit', '#form-principalModalOrcamentos', (event) => {
+
+            event.preventDefault();
+
+            let $form = $('#form-principalModalOrcamentos');
+
+            if ($form[0].checkValidity()) {
+                
+                $.ajax({
+                    url: baselink + '/ajax/adicionarCliente',
+                    type: 'POST',
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    success: (data) => {
+
+                        $form
+                            .removeClass('was-validated')
+                            .trigger('reset');
+
+                        $form
+                            .find('.is-valid, .is-invalid')
+                            .removeClass('is-valid is-invalid');
+
+                        $('#modalCadastrarCliente').modal('hide');
+
+                        Toast({message: data.mensagem, class: data.class});
+
+                    }
+                });
+
+            }
+
         });
+
+    $('#modalCadastrarCliente').on('show.bs.modal', function (e) {
+        let $formClienteModal = $('#form-principalModalOrcamentos'),
+            $formClienteEsquerda = $('#esquerda');
+
+        $formClienteModal
+            .find('#' + $formClienteEsquerda.find('[name=pf_pj]:checked').attr('id'))
+            .prop('checked', true)
+            .change();
+
+        // Nome
+        $formClienteModal
+            .find('[name=nome]')
+            .val($formClienteEsquerda.find('[name=nome_cliente]').val());
+
+        // Telefone
+        $formClienteModal
+            .find('[name=telefone]')
+            .val($formClienteEsquerda.find('[name=telefone]').val());
+
+        // Celular
+        $formClienteModal
+            .find('[name=celular]')
+            .val($formClienteEsquerda.find('[name=celular]').val());
+
+        // Email
+        $formClienteModal
+            .find('[name=email]')
+            .val($formClienteEsquerda.find('[name=email]').val());
+
+        // Como Conheceu
+        $formClienteModal
+            .find('[name=comoconheceu]')
+            .val($formClienteEsquerda.find('[name=como_conheceu]').val());
+    });
 
 });
 
@@ -813,7 +905,5 @@ function calculaQuantidadeUsadaMaterial(){ // recebe os objetos (campos)
         $largura.val('').removeClass('is-valid is-invalid');
         $comprimento.val('').removeClass('is-valid is-invalid');
         $qtdUsada.val('');
-    }
-
-        
+    }   
 }
