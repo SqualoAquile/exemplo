@@ -483,7 +483,9 @@
                             <?php endif ?>
                         <?php endif ?>
                     <?php endforeach ?>
-                    <button id="btn_incluir" class="btn btn-primary btn-block" style="order: 14;">Incluir</button>
+                    <div class="col-lg" style="order: 14;">
+                        <button id="btn_incluir" class="btn btn-primary btn-block">Incluir</button>
+                    </div>
                 </form>
                 <div class="row" style='order: 100;'>
                     <div class="col-lg-4 d-none">
