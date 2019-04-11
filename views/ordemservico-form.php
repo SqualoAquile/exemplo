@@ -255,7 +255,7 @@
             <label for="main-form" class="btn btn-primary btn-block" tabindex="0">Salvar</label>
         </div>
         <div class="col-lg-4">
-            <button id="btn_lancamentoVenda" data-toggle="modal" data-target="#modalLancamentoVenda" class="btn btn-secondary btn-block">Cadastrar Cliente</button>
+            <button id="btn_lancamentoVenda" data-toggle="modal" data-target="#modalLancamentoVenda" class="btn btn-secondary btn-block">Finalizar Ordem de Serviço</button>
         </div>
         
         <?php if (isset($item)): ?>

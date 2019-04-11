@@ -1,15 +1,78 @@
 $(function () {
-
+    
     //inicializa os inputs da página - parte do orçamento
-    // $('#data_aprovacao').attr('disabled', 'disabled');
-    // $('#titulo_orcamento').attr('disabled', 'disabled');
-    // $('#nome_razao_social').attr('disabled', 'disabled');
-    // $('#subtotal').attr('disabled', 'disabled');
-    // $('#valor_final').attr('disabled', 'disabled');
-    // $('#data_revisao_1').attr('disabled', 'disabled');
-    // $('#data_revisao_2').attr('disabled', 'disabled');
-    // $('#data_revisao_3').attr('disabled', 'disabled');
-    // $('#status').attr('disabled', 'disabled');
+    $('#data_aprovacao').attr('disabled', 'disabled');
+    $('#titulo_orcamento').attr('disabled', 'disabled');
+    $('#nome_razao_social').attr('disabled', 'disabled');
+    $('#subtotal').attr('disabled', 'disabled');
+    $('#valor_final').attr('disabled', 'disabled');
+    $('#status').attr('disabled', 'disabled');
+    $('#id').attr('disabled', 'disabled').parent().parent().hide();
+    $('#id_orcamento').attr('disabled', 'disabled').parent().parent().hide();
+
+    // inicialização dos campos status EM PRODUÇÃO
+    if($('#status').val() == 'Em Produção'){ 
+
+        $('#data_revisao_1').val('').attr('disabled', 'disabled').parent().parent().hide();
+        $('#data_revisao_2').val('').attr('disabled', 'disabled').parent().parent().hide();
+        $('#data_revisao_3').val('').attr('disabled', 'disabled').parent().parent().hide();
+
+        $('label.btn.btn-primary').parent().hide();
+        $('button.btn.btn-dark').parent().hide();
+        $('button#btn_lancamentoVenda').parent().show();
+
+    // inicialização dos campos status FINALIZADA    
+    }else if($('#status').val() == 'Finalizada'){
+
+        $('input, select,  textarea').attr('disabled','disabled');
+
+        if( $('#data_revisao_1').val() == '00/00/0000'){
+            $('#data_revisao_1').val(dataAtual()).datepicker('update').removeAttr('disabled').parent().parent().show();
+            $('#data_revisao_2').val('').attr('disabled', 'disabled').parent().parent().hide();
+            $('#data_revisao_3').val('').attr('disabled', 'disabled').parent().parent().hide();
+
+            $('label.btn.btn-primary').parent().show();
+
+        }else if ( $('#data_revisao_1').val() != '00/00/0000' && $('#data_revisao_2').val() == '00/00/0000' ){
+            $('#data_revisao_1').attr('disabled', 'disabled').parent().parent().hide();
+            $('#data_revisao_2').val(dataAtual()).datepicker('update').removeAttr('disabled').parent().parent().show();
+            $('#data_revisao_3').val('').attr('disabled', 'disabled').parent().parent().hide();
+
+            $('label.btn.btn-primary').parent().show();
+
+        }else if ( $('#data_revisao_1').val() != '00/00/0000' && $('#data_revisao_2').val() != '00/00/0000' && $('#data_revisao_3').val() == '00/00/0000' ){
+            $('#data_revisao_1').attr('disabled', 'disabled').parent().parent().hide();
+            $('#data_revisao_2').attr('disabled', 'disabled').parent().parent().hide();
+            $('#data_revisao_3').val(dataAtual()).datepicker('update').removeAttr('disabled').parent().parent().show();
+
+            $('label.btn.btn-primary').parent().show();
+        }else{
+
+            $('#data_revisao_1').attr('disabled', 'disabled').parent().parent().show();
+            $('#data_revisao_2').attr('disabled', 'disabled').parent().parent().show();
+            $('#data_revisao_3').attr('disabled', 'disabled').parent().parent().show();
+
+            $('label.btn.btn-primary').parent().hide();
+        }
+        
+
+        
+        $('button.btn.btn-dark').parent().show();
+        $('button#btn_lancamentoVenda').parent().hide();
+    
+    // inicialização dos campos status CANCELADO        
+    }else{
+
+        $('input, select,  textarea').attr('disabled','disabled');
+
+        $('#data_revisao_1').val('').attr('disabled', 'disabled').parent().parent().hide();
+        $('#data_revisao_2').val('').attr('disabled', 'disabled').parent().parent().hide();
+        $('#data_revisao_3').val('').attr('disabled', 'disabled').parent().parent().hide();
+
+        $('label.btn.btn-primary').parent().hide();
+        $('button.btn.btn-dark').parent().hide();
+        $('button#btn_lancamentoVenda').parent().hide();
+    }
 
     $('#data_emissao').val(dataAtual()).datepicker('update');
 
@@ -118,6 +181,9 @@ $(function () {
         let $formLancaFluxoModal = $('#modalLancamentoVenda'),
             $formOS = $('#form-principal');
         
+        $formLancaFluxoModal.find('h1').text('Fechamento da Venda');
+        $formLancaFluxoModal.find('div#btn_limparCampos').hide();
+        $formLancaFluxoModal.find('button.btn.btn-dark').parent().parent().hide();
         //Checkbox de Receita
         $formLancaFluxoModal
             .find('#Receita')
@@ -137,17 +203,32 @@ $(function () {
             .val($formOS.find('[name=id]').val())
             .attr('disabled','disabled');
             
-        console.log($formOS.find('[name=nro_nf]').val());
         // Nro NF
-        $formLancaFluxoModal
+        if($formLancaFluxoModal.find('[name=nro_nf]').val() != '' ){
+            $formLancaFluxoModal
             .find('[name=nro_nf]')
             .attr('disabled','disabled')
             .val($formOS.find('[name=nro_nf]').val());
-            
+        }else{
+            $formLancaFluxoModal
+            .find('[name=nro_nf]')
+            .removeAttr('disabled')
+            .val('');
+        }
+       
         // Data Emissao NF
-        $formLancaFluxoModal
-        .find('[name=data_emissao_nf]')
-        .val('');
+        if($formLancaFluxoModal.find('[name=data_emissao_nf]').val() != '' ){
+            $formLancaFluxoModal
+            .find('[name=data_emissao_nf]')
+            .attr('disabled','disabled')
+            .val($formOS.find('[name=data_emissao_nf]').val())
+            .datepicker('update');
+        }else{
+            $formLancaFluxoModal
+            .find('[name=data_emissao_nf]')
+            .removeAttr('disabled')
+            .val('');
+        }
 
         // Conta Analítica
         $formLancaFluxoModal
@@ -160,6 +241,12 @@ $(function () {
             .find('[name=detalhe]')
             .attr('disabled','disabled')
             .val($formOS.find('[name=titulo_orcamento]').val());
+
+        // Vendedor
+        $formLancaFluxoModal
+            .find('[name=quem_lancou]')
+            .attr('disabled','disabled')
+            .val($formOS.find('[name=vendedor]').val());
 
         // Favorecido
         $formLancaFluxoModal
