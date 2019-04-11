@@ -21,6 +21,7 @@
                 <th>Observação</th>
             </tr>
         </thead>
+        <tbody></tbody>
         <!-- <tbody>
             <tr role="row" class="odd">
                 <td class="sorting_1">

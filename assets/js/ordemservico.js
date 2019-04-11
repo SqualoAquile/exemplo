@@ -1,14 +1,15 @@
 $(function () {
 
     //inicializa os inputs da página - parte do orçamento
-    $('#data_aprovacao').attr('disabled', 'disabled');
-    $('#titulo_orcamento').attr('disabled', 'disabled');
-    $('#nome_razao_social').attr('disabled', 'disabled');
-    $('#subtotal').attr('disabled', 'disabled');
-    $('#data_revisao_1').attr('disabled', 'disabled');
-    $('#data_revisao_2').attr('disabled', 'disabled');
-    $('#data_revisao_3').attr('disabled', 'disabled');
-    $('#status').attr('disabled', 'disabled');
+    // $('#data_aprovacao').attr('disabled', 'disabled');
+    // $('#titulo_orcamento').attr('disabled', 'disabled');
+    // $('#nome_razao_social').attr('disabled', 'disabled');
+    // $('#subtotal').attr('disabled', 'disabled');
+    // $('#valor_final').attr('disabled', 'disabled');
+    // $('#data_revisao_1').attr('disabled', 'disabled');
+    // $('#data_revisao_2').attr('disabled', 'disabled');
+    // $('#data_revisao_3').attr('disabled', 'disabled');
+    // $('#status').attr('disabled', 'disabled');
 
     $('#data_emissao').val(dataAtual()).datepicker('update');
 
@@ -111,80 +112,113 @@ $(function () {
         calculaMaterialCustoPreco();
     });
         
- 
+    $('#modalLancamentoVenda').on('show.bs.modal', function (e) {
+        console.log('disparou show modal');
+
+        let $formLancaFluxoModal = $('#modalLancamentoVenda'),
+            $formOS = $('#form-principal');
+        
+        //Checkbox de Receita
+        $formLancaFluxoModal
+            .find('#Receita')
+            .prop('checked', true)
+            .attr('disabled','disabled')
+            .change();
+        
+        //Checkbox de Receita
+        $formLancaFluxoModal
+            .find('#Despesa')
+            .prop('checked', false)
+            .attr('disabled','disabled');
+
+        // Nro Pedido
+        $formLancaFluxoModal
+            .find('[name=nro_pedido]')
+            .val($formOS.find('[name=id]').val())
+            .attr('disabled','disabled');
+            
+        console.log($formOS.find('[name=nro_nf]').val());
+        // Nro NF
+        $formLancaFluxoModal
+            .find('[name=nro_nf]')
+            .attr('disabled','disabled')
+            .val($formOS.find('[name=nro_nf]').val());
+            
+        // Data Emissao NF
+        $formLancaFluxoModal
+        .find('[name=data_emissao_nf]')
+        .val('');
+
+        // Conta Analítica
+        $formLancaFluxoModal
+            .find('[name=conta_analitica]')
+            .attr('disabled','disabled')
+            .val('Venda');
+
+        // Detalhe
+        $formLancaFluxoModal
+            .find('[name=detalhe]')
+            .attr('disabled','disabled')
+            .val($formOS.find('[name=titulo_orcamento]').val());
+
+        // Favorecido
+        $formLancaFluxoModal
+            .find('[name=favorecido]')
+            .attr('disabled','disabled')
+            .val($formOS.find('[name=nome_razao_social]').val());
+
+        // Data Operacao
+        $formLancaFluxoModal
+            .find('[name=data_operacao]')
+            .val($formOS.find('[name=data_fim]').val())
+            .datepicker('update');
+        
+        // Valor Total
+        $formLancaFluxoModal
+            .find('[name=valor_total]')
+            .attr('disabled','disabled')
+            .val($formOS.find('[name=valor_final]').val());
+
+    });
 });
 
-//     $(document)
-//         .on('submit', '#form-principalModalOrcamentos', (event) => {
+    $(document)
+        .on('submit', '#form-principalModalFluxoCaixa', (event) => {
 
-//             event.preventDefault();
+            event.preventDefault();
 
-//             let $form = $('#form-principalModalOrcamentos');
+            let $form = $('#form-principalModalFluxoCaixa');
 
-//             if ($form[0].checkValidity()) {
+            if ($form[0].checkValidity()) {
                 
-//                 $.ajax({
-//                     url: baselink + '/ajax/adicionarCliente',
-//                     type: 'POST',
-//                     data: $form.serialize(),
-//                     dataType: 'json',
-//                     success: (data) => {
+                $.ajax({
+                    url: baselink + '/ajax/adicionarCliente',
+                    type: 'POST',
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    success: (data) => {
 
-//                         $form
-//                             .removeClass('was-validated')
-//                             .trigger('reset');
+                        $form
+                            .removeClass('was-validated')
+                            .trigger('reset');
 
-//                         $form
-//                             .find('.is-valid, .is-invalid')
-//                             .removeClass('is-valid is-invalid');
+                        $form
+                            .find('.is-valid, .is-invalid')
+                            .removeClass('is-valid is-invalid');
 
-//                         $('#modalCadastrarCliente').modal('hide');
+                        $('#modalLancamentoVenda').modal('hide');
 
-//                         Toast({message: data.mensagem, class: data.class});
+                        Toast({message: data.mensagem, class: data.class});
 
-//                     }
-//                 });
+                    }
+                });
 
-//             }
+            }
 
-//         });
-
-//     $('#modalCadastrarCliente').on('show.bs.modal', function (e) {
-//         let $formClienteModal = $('#form-principalModalOrcamentos'),
-//             $formClienteEsquerda = $('#esquerda');
-
-//         $formClienteModal
-//             .find('#' + $formClienteEsquerda.find('[name=pf_pj]:checked').attr('id'))
-//             .prop('checked', true)
-//             .change();
-
-//         // Nome
-//         $formClienteModal
-//             .find('[name=nome]')
-//             .val($formClienteEsquerda.find('[name=nome_cliente]').val());
-
-//         // Telefone
-//         $formClienteModal
-//             .find('[name=telefone]')
-//             .val($formClienteEsquerda.find('[name=telefone]').val());
-
-//         // Celular
-//         $formClienteModal
-//             .find('[name=celular]')
-//             .val($formClienteEsquerda.find('[name=celular]').val());
-
-//         // Email
-//         $formClienteModal
-//             .find('[name=email]')
-//             .val($formClienteEsquerda.find('[name=email]').val());
-
-//         // Como Conheceu
-//         $formClienteModal
-//             .find('[name=comoconheceu]')
-//             .val($formClienteEsquerda.find('[name=como_conheceu]').val());
-//     });
-
-// });
+        });
+    
+     
+    
 
 function dataAtual() {
     var dt, dia, mes, ano, dtretorno;

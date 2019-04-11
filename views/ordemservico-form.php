@@ -254,11 +254,40 @@
         <div class="col-xl-2 col-lg-3">
             <label for="main-form" class="btn btn-primary btn-block" tabindex="0">Salvar</label>
         </div>
+        <div class="col-lg-4">
+            <button id="btn_lancamentoVenda" data-toggle="modal" data-target="#modalLancamentoVenda" class="btn btn-secondary btn-block">Cadastrar Cliente</button>
+        </div>
+        
         <?php if (isset($item)): ?>
         <div class="col-xl-2 col-lg-3">
             <button class="btn btn-dark btn-block" type="button" data-toggle="collapse" data-target="#historico" aria-expanded="false" aria-controls="historico">Histórico de Alterações</button>
         </div>
         <?php endif ?>
+        
     </div>
     <?php include "_historico.php" ?>
 </section>
+<!-- Modal -->
+<div class="modal fade modais-require" id="modalLancamentoVenda" tabindex="-1" role="dialog" aria-labelledby="modalLancamentoVendaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-0 position-absolute w-100">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <?php
+                    $shared = new Shared('fluxocaixa');
+                    $colunas = $shared->nomeDasColunas();
+                    $labelTabela = $shared->labelTabela();
+
+                    // Configurações para o submit do form
+                    $formIdModal = "ModalFluxoCaixa";
+
+                    require "fluxocaixa-form.php";
+                ?>
+            </div>
+        </div>
+    </div>
+</div>

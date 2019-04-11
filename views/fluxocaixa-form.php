@@ -25,9 +25,21 @@
 </header>
 
 <?php $table = false ?>
+<?php
+
+    //
+    // Configurações vindas da modal que está importando este arquivo
+    //
+    
+    $formId = "";
+    if (isset($formIdModal)) {
+        $formId = $formIdModal;
+    }
+
+?>
 
 <section class="mb-5">
-    <form id="form-principal" method="DELETE" class="needs-validation" autocomplete="off" novalidate>
+    <form id="form-principal<?php echo $formId ?>" method="DELETE" class="needs-validation" autocomplete="off" novalidate>
         <div class="row">
             <?php foreach ($colunas as $key => $value): ?>
                 <?php if(isset($value["Comment"]) && array_key_exists("form", $value["Comment"]) && $value["Comment"]["form"] != "false") : ?>
@@ -346,11 +358,11 @@
                     </tbody>                                            
             
             </table>
-            <button type="submit" id='btn_salvar' class='d-none'></button>
+            <button type="submit" id='btn_salvar<?php echo $formId ?>' class='d-none'></button>
         </form>
     </div>
     <div class="row flex-row-reverse bd-highlight" id='lbl_btn_salvar'>
-        <div class='col-lg-3'><label  for='btn_salvar' class='btn btn-primary btn-lg btn-block'>Salvar</label></div>                                               
+        <div class='col-lg-3'><label  for='btn_salvar<?php echo $formId ?>' class='btn btn-primary btn-lg btn-block'>Salvar</label></div>                                               
     </div>    
     <div class="row">
         <?php if (isset($item)): ?>
