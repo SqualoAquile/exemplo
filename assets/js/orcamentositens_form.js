@@ -23,30 +23,33 @@ $(function () {
 
         event.preventDefault();
 
-        var $form = $(this)[0],
+        var $form = $(this),
             $fields = $($form).find('.form-control');
 
         // Desfocar os campos para validar
-        $fields.trigger('blur');
+        // $fields.trigger('blur');
 
-        if ($form.checkValidity() && !$($form).find('.is-invalid').length) {
+        if ($form[0].checkValidity() && !$form.find('.is-invalid').length) {
 
             Save();
 
             // Limpar formulario
-            // $form.reset();
-            $($form).removeClass('was-validated');
+            $form.trigger('reset');
+            $form.removeClass('was-validated');
             
             $fields
                 .removeClass('is-valid is-invalid')
                 .removeAttr('data-anterior');
 
-            $fields.first().focus();
+            $('[name=tipo_servico_produto]').trigger('change');
+
+            // $fields.first().focus();
         } else {
+
             $($form).addClass('was-validated');
 
             // Da foco no primeiro campo com erro
-            $($form).find('.is-invalid, :invalid').first().focus();
+            // $($form).find('.is-invalid, :invalid').first().focus();
         }
     });
 
@@ -189,50 +192,48 @@ $(function () {
 
         $('input[name=descricao_item]').val(tdItem).attr('data-anterior', tdItem);//.focus();
         $('input[name=descricao_subitem]').val(tdSubItem).attr('data-anterior', tdSubItem);
-        $('[name=tipo_servico_produto]').val(tdServicoProduto ).attr('data-anterior', tdServicoProduto).change();
-            // console.log('material:    ', tdMaterialServico);
-        //$('input[name=material_servico]').click();
-        var $selecionado;
-        var i = 1;
-        $('input[name=material_servico]').siblings('.relacional-dropdown').find(".relacional-dropdown-element").each(function() {
-            // console.log('option: ',$(this).text().toLowerCase() );
-            // console.log('mat/serv: ',tdMaterialServico.toLowerCase() );
-            if ($(this).text().toLowerCase() == tdMaterialServico.toLowerCase()){
-                // console.log('achei o selecionado; ', $(this));
-                //$selecionado = i;
-                  $(this).click();
-                // return $(this);    
-            }
-            i++;
+        $('[name=tipo_servico_produto]').val(tdServicoProduto ).attr('data-anterior', tdServicoProduto);
+        $('input[name=material_servico]').val(tdMaterialServico).attr('data-anterior', tdMaterialServico);
+        $('input[name=material_complementar]').val(tdMaterialComplementar).attr('data-anterior', tdMaterialComplementar);
+        console.log()
+        //.click();
+        // var $selecionado;
+        // var i = 1;
+        // $('input[name=material_servico]').siblings('.relacional-dropdown').find(".relacional-dropdown-element").each(function() {
+        //     if ($(this).text().toLowerCase() == tdMaterialServico.toLowerCase()){
+        //         //$selecionado = i;
+        //           $(this).click();
+        //         // return $(this);    
+        //     }
+        //     i++;
             
-        });
+        // });
         // $('input[name=material_servico]').click();
         // $('input[name=material_servico]').siblings('.relacional-dropdown').find(".relacional-dropdown-element:nth-child("+i+")").click()
-        // console.log($(this).text())
-        // console.log('selecionado:  ',$selecionado);
 
         // $selecionado.trigger('click');
 
         //$('input[name=material_servico]').siblings('.relacional-dropdown').find(".relacional-dropdown-element:contains("+ tdMaterialServico + ")").trigger('click');
-        //console.log('teste:  ', $('input[name=material_servico]').siblings('.relacional-dropdown').find('.relacional-dropdown-element:contains(' + tdMaterialServico + ')'), tdMaterialServico);
         // $('input[name=material_servico]').val(tdMaterialServico).attr('data-anterior', tdMaterialServico);
         // $('input[name=material_complementar]').val(tdMaterialComplementar).attr('data-anterior', tdMaterialComplementar);
-        // $('input[name=unidade]').val(tdUnidade).attr('data-anterior', tdUnidade);
+        $('input[name=unidade]').val(tdUnidade).attr('data-anterior', tdUnidade);
 
-        // $('input[name=custo_tot_subitem]').val(custoUnit).attr('data-anterior', custoUnit);
-        // $('input[name=preco_tot_subitem]').val(precoUnit).attr('data-anterior', precoUnit);
-        // $('input[name=quant]').val(tdQuant).attr('data-anterior', tdQuant);
-        // $('input[name=largura]').val(tdLargura).attr('data-anterior', tdLargura);
-        // $('input[name=comprimento]').val(tdComprimento).attr('data-anterior', tdComprimento);
-        // $('input[name=quant_usada]').val(tdQuantUsada).attr('data-anterior', tdQuantUsada);
-        // $('input[name=observacao_subitem]').val(tdObservacao).attr('data-anterior', tdObservacao);
+        $('input[name=custo_tot_subitem]').val(custoUnit).attr('data-anterior', custoUnit);
+        $('input[name=preco_tot_subitem]').val(precoUnit).attr('data-anterior', precoUnit);
+        $('input[name=quant]').val(tdQuant).attr('data-anterior', tdQuant);
+        $('input[name=largura]').val(tdLargura).attr('data-anterior', tdLargura);
+        $('input[name=comprimento]').val(tdComprimento).attr('data-anterior', tdComprimento);
+        $('input[name=quant_usada]').val(tdQuantUsada).attr('data-anterior', tdQuantUsada);
+        $('input[name=observacao_subitem]').val(tdObservacao).attr('data-anterior', tdObservacao);
 
         // $('table#itensOrcamento thead tr[role=form]')
         //     .attr('data-current-id', $par.attr('data-id'))
         //     .find('.is-valid, .is-invalid')
         //     .removeClass('is-valid is-invalid');
+
+        $('[name=tipo_servico_produto]').trigger('change');
         
-        //calculaSubtotalCustotal();    
+        calculaSubtotalCustotal();    
     };
 
     // Ao dar submit neste form, chama essa funcão que pega os dados do formula e Popula a tabela

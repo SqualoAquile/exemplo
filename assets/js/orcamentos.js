@@ -1,8 +1,7 @@
 $(function () {
-    // linha de comentário teste pro push do git
+
     // variável global que vai ser usada para guardar o valor do total de material e valor total do subitem do orçamento
     var valorTotalSubitem, custoTotalSubitem, quantTotalMaterial;
-
 
     //coloca os inputs dentros das div certas pra acertar o layout da página
     $('#form-principal').children('.row').children('[class^="col-xl"]:nth-child(-n+17)').appendTo('#esquerda .row');
@@ -19,7 +18,6 @@ $(function () {
     $('#data_retorno').val(proximoDiaUtil(dataAtual(), 3)).datepicker('update');
 
     // inicializa os inputs da pagina - parte de itens do orçamento
-    // $('#material_complementar').attr('disabled','disabled');
     $('#quant_usada').attr('disabled', 'disabled');
     $('#custo_tot_subitem').attr('disabled', 'disabled');
 
@@ -50,16 +48,22 @@ $(function () {
         }
     });
 
-    // $('#largura').attr('disabled','disabled');
-    // $('#comprimento').attr('disabled','disabled');
-
+    //
+    //
+    // SELECT tipo_servico_produto
+    //
+    //
+    //
 
     // coloca as opções de produtos/serviços 
+    let htmlTipoServicoProduto = `
+        <option value="produtos" selected>Produtos</option>
+        <option value="servicos">Serviços</option>
+        <option value="servicoscomplementares">Serviços Complementares</option>
+    `;
+
     $('#tipo_servico_produto')
-        .empty()
-        .append('<option value="produtos" selected>Produtos</option>')
-        .append('<option value="servicos">Serviços</option>')
-        .append('<option value="servicoscomplementares">Serviços Complementares</option>')
+        .append(htmlTipoServicoProduto)
         .on('change', function () {
 
             var $this = $(this),
@@ -105,6 +109,8 @@ $(function () {
                         `;
                     });
 
+                    console.log('change aqui')
+
                     $material
                         .removeClass('is-valid is-invalid')
                         .removeAttr('data-tabela data-custo data-preco data-unidade')
@@ -138,12 +144,26 @@ $(function () {
 
         });
 
+    //
+    //
+    // INPUT data_emissao
+    //
+    //
+    //
+
     $('#data_emissao').on('change blur', function () {
         if ($('#data_emissao').val() != '') {
             $('#data_validade').val(proximoDiaUtil($('#data_emissao').val(), 15)).datepicker('update').blur();
             $('#data_retorno').val(proximoDiaUtil($('#data_emissao').val(), 3)).datepicker('update').blur();
         }
     });
+
+    //
+    //
+    // INPUT data_validade
+    //
+    //
+    //
 
     $('#data_validade').on('change blur', function () {
         if ($('#data_validade').val() != '') {
@@ -170,6 +190,13 @@ $(function () {
         }
     });
 
+    //
+    //
+    // INPUT data_retorno
+    //
+    //
+    //
+
     $('#data_retorno').on('change blur', function () {
         if ($('#data_retorno').val() != '') {
             if ($('#data_emissao').val() != '') {
@@ -191,26 +218,64 @@ $(function () {
         }
     });
 
+    //
+    //
+    // INPUT unidade
+    //
+    //
+    //
+
     $('#unidade').on('change blur', function(){
         
         calculaQuantidadeUsadaMaterial();
         calculaMaterialCustoPreco()
     });
+
+    //
+    //
+    // INPUT quant
+    //
+    //
+    //
+
     $('#quant').on('change blur', function(){
         
         calculaQuantidadeUsadaMaterial();
         calculaMaterialCustoPreco()
     });
+
+    //
+    //
+    // INPUT largura
+    //
+    //
+    //
+
     $('#largura').on('change blur', function(){
         
         calculaQuantidadeUsadaMaterial();
         calculaMaterialCustoPreco()
     });
+
+    //
+    //
+    // INPUT comprimento
+    //
+    //
+    //
+
     $('#comprimento').on('change blur', function(){
         
         calculaQuantidadeUsadaMaterial();
         calculaMaterialCustoPreco()
     });
+
+    //
+    //
+    // INPUT material_complementar
+    //
+    //
+    //
 
     $('#material_complementar').on('change blur', function(){
         
@@ -225,7 +290,15 @@ $(function () {
         }
     });
 
-    $("#preco_tot_subitem").on('blur',function(){
+    //
+    //
+    // INPUT preco_tot_subitem
+    //
+    //
+    //
+
+    $("#preco_tot_subitem").on('setar',function(){
+
         var $custo = $("#custo_tot_subitem");
         var $preco = $("#preco_tot_subitem");
         var $material = $('#material_servico');
@@ -254,13 +327,23 @@ $(function () {
             }
 
         }else{
-            $custo.val('');
-            $preco.val('');
+
+            // Revisar aqui impacto que isso gera
+            // $custo.val('');
+            // $preco.val('');
 
         }
         
         calculaMaterialCustoPreco();
     });
+
+
+    //
+    //
+    // INPUT material_servico
+    //
+    //
+    //
         
     $('#material_servico').on('change blur',function(){
         
@@ -275,6 +358,9 @@ $(function () {
         }
 
     }).change().blur();
+
+
+    ////////////////////////// COMENTADO BEM ATÉ AQUI ////////////////////////////////
 
     $(document)
         .ready(function () {
@@ -386,7 +472,7 @@ $(function () {
 
         })
         .on('click', '[name="material_servico"] ~ .relacional-dropdown .relacional-dropdown-element', function () {
-            console.log('disparou click material servico');
+
             var $this = $(this),
                 $tipoProdServ = $('[name="tipo_servico_produto"]'),
                 $material = $('[name="material_servico"]'),
@@ -409,7 +495,7 @@ $(function () {
 
             $custo.val(floatParaPadraoBrasileiro(data_custo)).blur();
 
-            $preco.val(floatParaPadraoBrasileiro(data_preco)).blur();
+            $preco.val(floatParaPadraoBrasileiro(data_preco)).trigger('setar');
 
             $unidade.val(unidade).blur();
 
