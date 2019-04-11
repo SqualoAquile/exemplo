@@ -27,6 +27,8 @@ class Orcamentos extends model {
     }
 
     public function adicionar($request) {
+
+        var_dump($request);exit;
         
         $ipcliente = $this->permissoes->pegaIPcliente();
         $request["alteracoes"] = ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";

@@ -71,7 +71,6 @@ class orcamentosController extends controller{
             $itm = new Shared('orcamentositens');
             $dados["colunasItensOrcamentos"] = $itm->nomeDasColunas();
             
-            // print_r($dados["colunasItensOrcamentos"]); exit;
             $this->loadTemplate($this->table . "-form", $dados);
         }
     }
