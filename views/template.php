@@ -103,8 +103,8 @@
             [
                "text" => "Ordens de Serviço",
                "icon" => "fas fa-file-signature",
-               "permissao" => "ordensservico_ver",
-               "link" => "/ordensservico"
+               "permissao" => "ordemservico_ver",
+               "link" => "/ordemservico"
             ]
          ]
       ],

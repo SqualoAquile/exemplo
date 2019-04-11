@@ -829,6 +829,10 @@ $(function () {
     }
 
     function proximoDiaUtil(dataInicio, distdias){
+        
+        if(dataInicio == undefined || dataInicio == ''){
+            return 
+        }
 
         if (distdias != 0) {
             var dtaux = dataInicio.split("/");
