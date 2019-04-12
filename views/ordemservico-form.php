@@ -249,7 +249,6 @@
         </div>
         <button id="main-form" class="d-none"></button>
     </form>
-    <?php if($table) include "_contatos_form.php" ?>
     <div class="row">
         <div class="col-xl-2 col-lg-3">
             <label for="main-form" class="btn btn-primary btn-block" tabindex="0">Salvar</label>

@@ -489,5 +489,20 @@ class ajaxController extends controller{
       }
     }
   }
+
+
+  //
+  // ORDENS DE SERVICO
+  //
+  public function buscaDespesasId() {
+    $dados = array();
+    $fc = new Fluxocaixa();
+    if(isset($_POST) && !empty($_POST)){
+        $dados = $fc->buscaDespId($_POST['idProcurado']);
+    }
+    echo json_encode($dados);
+  }
+
+
 }   
 ?>
