@@ -18,7 +18,7 @@ $(function() {
         .addClass("d-none");
 
     $("#status")
-      .attr("disabled", "disabled");
+      .attr("readonly", "readonly");
 
     $("#titulo_orcamento")
       .attr("placeholder", "Nome - Trabalho...");
@@ -789,15 +789,6 @@ $(function() {
           }
         });
       }
-    })
-    .on('submit', '#form-principal', () => {
-
-      $('#camposOrc .form-control')[0].setCustomValidity('');
-
-      $('#camposOrc .form-control')
-        .removeAttr('required')
-        .attr('data-required', true);
-
     });
 
   $("#modalCadastrarCliente").on("show.bs.modal", function(e) {

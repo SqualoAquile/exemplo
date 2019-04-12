@@ -12,30 +12,3 @@
         }
     }
 }
-#form-principal {
-    &.was-validated {
-        #direita {
-            #camposOrc {
-                .form-control {
-                    &:invalid,
-                    &:valid {
-                        background-image: none;
-                        @extend .border;
-                    }
-                }
-            }
-        }
-    }
-    #direita {
-        #camposOrc {
-            &.was-validated-orcamentos {
-                .form-control {
-                    &:invalid,
-                    &:valid {
-                        background-image: inherit;
-                    }
-                }
-            }
-        }
-    }
-}

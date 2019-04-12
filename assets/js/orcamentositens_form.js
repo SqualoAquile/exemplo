@@ -18,22 +18,28 @@ $(function() {
     Popula(contato);
   });
 
-  $("#camposOrc #btn_incluir").click(function(event) {
+  $('#camposOrc').submit(function (event) {
 
-    $('#camposOrc').addClass('was-validated-orcamentos')
+    event.preventDefault();
 
     var $form = $(this),
-      $fields = $($form).find(".form-control");
+      $fields = $($form).find('.form-control');
 
-    if ($form[0].checkValidity() && !$form.find(".is-invalid").length) {
+    if ($form[0].checkValidity() && !$form.find('.is-invalid').length) {
+
       Save();
 
-      $form.removeClass("was-validated");
+      // Limpar formulario
+      $form.removeClass('was-validated');
 
-      $fields.removeClass("is-valid is-invalid").removeAttr("data-anterior");
+      $fields
+        .removeClass('is-valid is-invalid')
+        .removeAttr('data-anterior');
+        
     } else {
-      $($form).addClass("was-validated");
+      $($form).addClass('was-validated');
     }
+
   });
 
   // Retorna um array de contatos puxados do campo hidden com o atributo nome igual a contatos
