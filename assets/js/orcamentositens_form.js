@@ -149,24 +149,26 @@ $(function() {
   // no form dos contatos
   function Edit() {
 
-    let $par = $(this).closest("tr"),
-        tdItem = $par.children("td:nth-child(2)").text(),
-        tdSubItem = $par.children("td:nth-child(3)").text(),
-        tdQuant = $par.children("td:nth-child(4)").text(),
-        tdLargura = $par.children("td:nth-child(5)").text(),
-        tdComprimento = $par.children("td:nth-child(6)").text(),
-        tdQuantUsada = $par.children("td:nth-child(7)").text(),
-        tdServicoProduto = $par.children("td:nth-child(8)").text(),
-        tdMaterialServico = $par.children("td:nth-child(9)").text(),
-        tdTipoMaterial = $par.children("td:nth-child(10)").text(),
-        tdUnidade = $par.children("td:nth-child(11)").text(),
-        tdCusto = $par.children("td:nth-child(12)").text(),
-        tdPreco = $par.children("td:nth-child(13)").text(),
-        tdObservacao = $par.children("td:nth-child(14)").text(),
-        custoUnit = 0,
-        precoUnit = 0,
-        quantAux = 0,
-        quantUsadaAux = 0;
+    let $tipoServicoProduto = $("[name=tipo_servico_produto]"),
+      $par = $(this).closest("tr"),
+      $tbody = $par.parent('tbody'),
+      tdItem = $par.children("td:nth-child(2)").text(),
+      tdSubItem = $par.children("td:nth-child(3)").text(),
+      tdQuant = $par.children("td:nth-child(4)").text(),
+      tdLargura = $par.children("td:nth-child(5)").text(),
+      tdComprimento = $par.children("td:nth-child(6)").text(),
+      tdQuantUsada = $par.children("td:nth-child(7)").text(),
+      tdServicoProduto = $par.children("td:nth-child(8)").text(),
+      tdMaterialServico = $par.children("td:nth-child(9)").text(),
+      tdTipoMaterial = $par.children("td:nth-child(10)").text(),
+      tdUnidade = $par.children("td:nth-child(11)").text(),
+      tdCusto = $par.children("td:nth-child(12)").text(),
+      tdPreco = $par.children("td:nth-child(13)").text(),
+      tdObservacao = $par.children("td:nth-child(14)").text(),
+      custoUnit = 0,
+      precoUnit = 0,
+      quantAux = 0,
+      quantUsadaAux = 0;
 
     if (tdUnidade == "ML" || tdUnidade == "M²") {
         
@@ -207,10 +209,14 @@ $(function() {
     }
 
     // Desabilita ele mesmo e os botões irmãos de editar e excluir da linha atual
+    $tbody
+      .find('tr.disabled,.btn.disabled')
+        .removeClass('disabled');
+
     $par
-        .addClass("disabled")
-        .find(".btn")
-            .addClass("disabled");
+      .addClass("disabled")
+      .find(".btn")
+        .addClass("disabled");
 
     $("input[name=descricao_item]")
       .val(tdItem)
@@ -220,16 +226,18 @@ $(function() {
       .val(tdSubItem)
       .attr("data-anterior", tdSubItem);
 
-    $("[name=tipo_servico_produto]")
+    $tipoServicoProduto
       .val(tdServicoProduto)
       .attr("data-anterior", tdServicoProduto);
+
+    changeTipoServicoProduto(tdMaterialServico);
 
     $("input[name=material_servico]")
       .val(tdMaterialServico)
       .attr("data-anterior", tdMaterialServico);
 
-    $("input[name=tipo_material]")
-      .val(tdTipoMaterial)
+    $("input[name=tipo_material][value=" + tdTipoMaterial + "]")
+      .prop('checked', true)
       .attr("data-anterior", tdTipoMaterial);
 
     $("input[name=unidade]")
@@ -265,39 +273,48 @@ $(function() {
       .attr("data-anterior", tdObservacao);
 
     $("#itensOrcamento")
-        .attr("data-current-id", $par.attr("data-id"));
+      .attr("data-current-id", $par.attr("data-id"));
 
     $('#btn_incluir')
-        .text('Salvar');
+      .text('Salvar');
 
     calculaSubtotalCustotal();
+    toggleTipoMaterial(tdUnidade);
 
   }
 
   // Ao dar submit neste form, chama essa funcão que pega os dados do formula e Popula a tabela
   function Save() {
 
+    let tipo_material_servico = $("[name=tipo_servico_produto]").val(),
+      unidade = $("[name=unidade]").val(),
+      tipo_material = $("[name=tipo_material]:checked").val();
+
+    if ((tipo_material_servico && tipo_material_servico.toLowerCase() != 'produtos') || (unidade && unidade.toLowerCase() != 'ml')) {
+      tipo_material = '';
+    }
+
     Popula([
-        $("[name=descricao_item]").val(),
-        $("[name=descricao_subitem]").val(),
-        $("[name=quant]").val(),
-        $("[name=largura]").val(),
-        $("[name=comprimento]").val(),
-        $("[name=quant_usada]").val(),
-        $("[name=tipo_servico_produto]").val(),
-        $("[name=material_servico]").val(),
-        $("[name=tipo_material]:checked").val(),
-        $("[name=unidade]").val(),
-        $("[name=custo_tot_subitem]").attr("data-totalsubitem"),
-        $("[name=preco_tot_subitem]").attr("data-totalsubitem"),
-        $("[name=observacao_subitem]").val()
+      $("[name=descricao_item]").val(),
+      $("[name=descricao_subitem]").val(),
+      $("[name=quant]").val(),
+      $("[name=largura]").val(),
+      $("[name=comprimento]").val(),
+      $("[name=quant_usada]").val(),
+      tipo_material_servico,
+      $("[name=material_servico]").val(),
+      tipo_material,
+      unidade,
+      $("[name=custo_tot_subitem]").attr("data-totalsubitem"),
+      $("[name=preco_tot_subitem]").attr("data-totalsubitem"),
+      $("[name=observacao_subitem]").val()
     ]);
 
     SetInput();
     calculaSubtotalCustotal();
 
     $('#btn_incluir')
-        .text('Incluir');
+      .text('Incluir');
 
   }
 

@@ -32,6 +32,7 @@ class Orcamentos extends model {
         $request["alteracoes"] = ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
         
         $request["situacao"] = "ativo";
+        $request["status"] = "em espera";
 
         //
         // Inserção de Itens
@@ -61,6 +62,13 @@ class Orcamentos extends model {
 
             $explodedItem = explode(",", $item);
 
+            $tipoProdutoServico = $explodedItem[2];
+            $tipoMaterial = $explodedItem[4];
+
+            if ($tipoProdutoServico != "produtos") {
+                $tipoMaterial = "";
+            }
+
             $sqlItens = "INSERT INTO orcamentositens 
             (
                 descricao_item, 
@@ -82,9 +90,9 @@ class Orcamentos extends model {
             VALUES (
                 '" . $explodedItem[0] . "',
                 '" . $explodedItem[1] . "',
-                '" . $explodedItem[2] . "',
+                '" . $tipoProdutoServico . "',
                 '" . $explodedItem[3] . "',
-                '" . $explodedItem[4] . "',
+                '" . $tipoMaterial . "',
                 '" . $explodedItem[5] . "',
                 '" . $explodedItem[6] . "',
                 '" . $explodedItem[7] . "',
@@ -96,8 +104,6 @@ class Orcamentos extends model {
                 '" . $id_orcamento . "',
                 'ativo'
             )";
-
-            // print_r($sqlItens);exit;
 
             self::db()->query($sqlItens);
 
@@ -191,10 +197,13 @@ class Orcamentos extends model {
 
                 $sqlA = "UPDATE ". $this->table ." SET alteracoes = '$palter', situacao = 'excluido' WHERE id = '$id' ";
                 self::db()->query($sqlA);
+                $erroA = self::db()->errorInfo();
 
-                $erro = self::db()->errorInfo();
+                $sqlB = "UPDATE orcamentositens SET situacao = 'excluido' WHERE id_orcamento = '$id' ";
+                self::db()->query($sqlB);
+                $erroB = self::db()->errorInfo();
 
-                if (empty($erro[2])){
+                if (empty($erroA[2]) && empty($erroB[2])){
 
                     $_SESSION["returnMessage"] = [
                         "mensagem" => "Registro deletado com sucesso!",
