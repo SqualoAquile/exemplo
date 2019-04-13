@@ -33,6 +33,17 @@ class Orcamentos extends model {
         
         $request["situacao"] = "ativo";
 
+        //
+        // Inserção de Itens
+        //
+
+        $format_itens = str_replace("][", "|", $request["itens"]);
+        $format_itens = str_replace(" *", ",", $format_itens);
+        $format_itens = str_replace("[", "", $format_itens);
+        $format_itens = str_replace("]", "", $format_itens);
+
+        $itens = explode("|", $format_itens);
+
         $keys = implode(",", array_keys($request));
 
         $values = "'" . implode("','", array_values($this->shared->formataDadosParaBD($request))) . "'";
@@ -43,7 +54,61 @@ class Orcamentos extends model {
 
         $erro = self::db()->errorInfo();
 
-        if (empty($erro[2])){
+        $id_orcamento = self::db()->lastInsertId();
+        $erroItensBoolean = false;
+
+        foreach ($itens as $keyItem => $item) {
+
+            $explodedItem = explode(",", $item);
+
+            $sqlItens = "INSERT INTO orcamentositens 
+            (
+                descricao_item, 
+                descricao_subitem, 
+                tipo_servico_produto, 
+                material_servico, 
+                tipo_material, 
+                unidade, 
+                custo_tot_subitem, 
+                preco_tot_subitem, 
+                quant, 
+                largura, 
+                comprimento, 
+                quant_usada, 
+                observacao_subitem, 
+                id_orcamento, 
+                situacao
+            ) 
+            VALUES (
+                '" . $explodedItem[0] . "',
+                '" . $explodedItem[1] . "',
+                '" . $explodedItem[2] . "',
+                '" . $explodedItem[3] . "',
+                '" . $explodedItem[4] . "',
+                '" . $explodedItem[5] . "',
+                '" . $explodedItem[6] . "',
+                '" . $explodedItem[7] . "',
+                '" . $explodedItem[8] . "',
+                '" . $explodedItem[9] . "',
+                '" . $explodedItem[10] . "',
+                '" . $explodedItem[11] . "',
+                '" . $explodedItem[12] . "',
+                '" . $id_orcamento . "',
+                'ativo'
+            )";
+
+            // print_r($sqlItens);exit;
+
+            self::db()->query($sqlItens);
+
+            $erroItens = self::db()->errorInfo();
+
+            if (!empty($erroItens[2])){
+                $erroItensBoolean = true;
+            }
+        }
+
+        if (empty($erro[2]) && !$erroItensBoolean){
 
             $_SESSION["returnMessage"] = [
                 "mensagem" => "Registro inserido com sucesso!",

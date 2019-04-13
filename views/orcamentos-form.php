@@ -264,8 +264,8 @@
         </div>
     </div>
     <form id="form-principal" method="POST" class="needs-validation" novalidate autocomplete="off">
-        <div class="col-lg-5" id="esquerda">
-            <div class="card card-body">
+        <div class="col-lg-5">
+            <div id="esquerda" class="card card-body">
                 <div class="row">
                     <?php foreach ($colunasOrcamentosEsquerda as $key => $value): ?>
                         <?php if(isset($value["Comment"]) && array_key_exists("form", $value["Comment"]) && $value["Comment"]["form"] != "false") : ?>
@@ -537,8 +537,7 @@
                                         <?php echo $value["Null"] == "NO" ? "required" : "" ?>
                                     />
                                 <?php else: ?>
-                                    <div    class="col-xl-<?php echo isset($value["Comment"]["column"]) ? $value["Comment"]["column"] : "12" ?>" 
-                                            style="order:<?php echo isset($value["Comment"]["ordem_form"]) ? $value["Comment"]["ordem_form"] : 100 ?>;">
+                                    <div class="col-lg" style="order:<?php echo isset($value["Comment"]["ordem_form"]) ? $value["Comment"]["ordem_form"] : 100 ?>;">
                                         <div class="form-group">
 
                                             <!-- Label Geral -->

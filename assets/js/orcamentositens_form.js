@@ -106,21 +106,27 @@ $(function() {
     $("#itensOrcamento tbody tr").each(function() {
 
         let par = $(this).closest("tr"),
-            tdItem = par.children("td:nth-child(1)"),
-            tdSubItem = par.children("td:nth-child(2)"),
-            tdServicoProduto = par.children("td:nth-child(3)"),
-            tdMaterialServico = par.children("td:nth-child(4)"),
-            tdMaterialComplementar = par.children("td:nth-child(5)"),
-            tdUnidade = par.children("td:nth-child(6)"),
-            tdCusto = par.children("td:nth-child(7)"),
-            tdPreco = par.children("td:nth-child(8)"),
-            tdQuant = par.children("td:nth-child(9)"),
-            tdLargura = par.children("td:nth-child(10)"),
-            tdComprimento = par.children("td:nth-child(11)"),
-            tdQuantUsada = par.children("td:nth-child(12)"),
-            tdObservacao = par.children("td:nth-child(13)");
+            tdItem = par.children("td:nth-child(2)"),
+            tdSubItem = par.children("td:nth-child(3)"),
+            tdQuant = par.children("td:nth-child(4)"),
+            tdLargura = par.children("td:nth-child(5)"),
+            tdComprimento = par.children("td:nth-child(6)"),
+            tdQuantUsada = par.children("td:nth-child(7)"),
+            tdServicoProduto = par.children("td:nth-child(8)"),
+            tdMaterialServico = par.children("td:nth-child(9)"),
+            tdTipoMaterial = par.children("td:nth-child(10)"),
+            tdUnidade = par.children("td:nth-child(11)"),
+            tdCusto = par.children("td:nth-child(12)"),
+            tdPreco = par.children("td:nth-child(13)"),
+            tdObservacao = par.children("td:nth-child(14)"),
+            quantidade = floatParaPadraoInternacional(tdQuant.text()),
+            comprimento = floatParaPadraoInternacional(tdComprimento.text()),
+            largura = floatParaPadraoInternacional(tdLargura.text()),
+            custo = floatParaPadraoInternacional(tdCusto.text()),
+            preco = floatParaPadraoInternacional(tdPreco.text()),
+            quantidadeUsada = floatParaPadraoInternacional(tdQuantUsada.text());
 
-            content += "[" + tdItem.text() + " * " + tdSubItem.text() + " * " + tdServicoProduto.text() + " * " + tdMaterialServico.text() + " * " + tdMaterialComplementar.text() + " * " + tdUnidade.text() + " * " + tdCusto.text() + " * " + tdPreco.text() + " * " + tdQuant.text() + " * " + tdLargura.text() + " * " + tdComprimento.text() + " * " + tdQuantUsada.text() + " * " + tdObservacao.text() + "]";
+            content += "[" + tdItem.text() + " * " + tdSubItem.text() + " * " + tdServicoProduto.text() + " * " + tdMaterialServico.text() + " * " + tdTipoMaterial.text() + " * " + tdUnidade.text() + " * " + custo + " * " + preco + " * " + quantidade + " * " + largura + " * " + comprimento + " * " + quantidadeUsada + " * " + tdObservacao.text() + "]";
 
     });
 
@@ -152,7 +158,7 @@ $(function() {
         tdQuantUsada = $par.children("td:nth-child(7)").text(),
         tdServicoProduto = $par.children("td:nth-child(8)").text(),
         tdMaterialServico = $par.children("td:nth-child(9)").text(),
-        tdMaterialComplementar = $par.children("td:nth-child(10)").text(),
+        tdTipoMaterial = $par.children("td:nth-child(10)").text(),
         tdUnidade = $par.children("td:nth-child(11)").text(),
         tdCusto = $par.children("td:nth-child(12)").text(),
         tdPreco = $par.children("td:nth-child(13)").text(),
@@ -222,9 +228,9 @@ $(function() {
       .val(tdMaterialServico)
       .attr("data-anterior", tdMaterialServico);
 
-    $("input[name=material_complementar]")
-      .val(tdMaterialComplementar)
-      .attr("data-anterior", tdMaterialComplementar);
+    $("input[name=tipo_material]")
+      .val(tdTipoMaterial)
+      .attr("data-anterior", tdTipoMaterial);
 
     $("input[name=unidade]")
       .val(tdUnidade)
@@ -280,7 +286,7 @@ $(function() {
         $("[name=quant_usada]").val(),
         $("[name=tipo_servico_produto]").val(),
         $("[name=material_servico]").val(),
-        $("[name=material_complementar]").val(),
+        $("[name=tipo_material]:checked").val(),
         $("[name=unidade]").val(),
         $("[name=custo_tot_subitem]").attr("data-totalsubitem"),
         $("[name=preco_tot_subitem]").attr("data-totalsubitem"),

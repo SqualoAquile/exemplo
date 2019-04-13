@@ -3,18 +3,10 @@ $(function() {
   // variável global que vai ser usada para guardar o valor do total de material e valor total do subitem do orçamento
   let valorTotalSubitem, custoTotalSubitem, quantTotalMaterial;
 
-  //coloca os inputs dentros das div certas pra acertar o layout da página
-    // $("#colunasOrcamentos")
-    //   .children('[class^="col-xl"]:nth-child(-n+17)')
-    //     .appendTo("#esquerda #content-esquerda");
-
-    // $("#colunasOrcamentos")
-    //   .children('[class^="col-xl"]:nth-child(n+2):nth-child(-n+10)')
-    //     .appendTo("#embaixo #content-embaixo");
-
     //inicializa os inputs da página - parte do orçamento
     $("#motivo_desistencia")
-      .parents('[class^=col-]')
+      .parent()
+      .parent('[class^=col-]')
         .addClass("d-none");
 
     $("#status")
@@ -34,6 +26,23 @@ $(function() {
   $("#data_retorno")
     .val(proximoDiaUtil(dataAtual(), 3))
     .datepicker("update");
+
+  let $materialComplementarBody =  $('#tipo_material').parent('.form-group');
+
+  $materialComplementarBody.find('#tipo_material').remove();
+
+  $materialComplementarBody.append(`
+    <div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="tipo_material" id="tipo_material1" value="principal" checked>
+        <label class="form-check-label" for="tipo_material1">Principal</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="tipo_material" id="tipo_material2" value="alternativo">
+        <label class="form-check-label" for="tipo_material2">Alternativo</label>
+      </div>
+    </div>
+  `);
 
   // inicializa os inputs da pagina - parte de itens do orçamento
   $("#quant_usada")
@@ -88,7 +97,6 @@ $(function() {
     .on("change", function() {
       var $this = $(this),
         $material = $("[name=material_servico]"),
-        $materialComplementar = $("[name=material_complementar]"),
         val = $this.val();
 
       $.ajax({
@@ -107,9 +115,6 @@ $(function() {
           });
 
           var $materialDropdown = $material
-              .siblings(".dropdown-menu")
-              .find(".dropdown-menu-wrapper"),
-            $materialComplementarDropdown = $materialComplementar
               .siblings(".dropdown-menu")
               .find(".dropdown-menu-wrapper"),
             htmlDropdown = "";
@@ -132,18 +137,10 @@ $(function() {
             .val("")
             .blur();
 
-          $materialComplementar
-            .removeClass("is-valid is-invalid")
-            .removeAttr("data-tabela data-custo data-preco data-unidade")
-            .val("")
-            .blur();
-
           if (val == "produtos") {
             $materialDropdown.html(htmlDropdown);
-            $materialComplementarDropdown.html(htmlDropdown);
           } else if (val == "servicos") {
             $materialDropdown.html(htmlDropdown);
-            $materialComplementar.val("").attr("disabled", "disabled");
           } else {
             $materialDropdown.html(htmlDropdown);
           }
@@ -281,27 +278,6 @@ $(function() {
   $("#comprimento").on("change blur", function() {
     calculaQuantidadeUsadaMaterial();
     calculaMaterialCustoPreco();
-  });
-
-  //
-  //
-  // INPUT material_complementar
-  //
-  //
-  //
-
-  $("#material_complementar").on("change blur", function() {
-    $material = $("#material_servico");
-    $materialComplementar = $("#material_complementar");
-
-    if (
-      $material.val().toLowerCase() == $materialComplementar.val().toLowerCase()
-    ) {
-      $materialComplementar.val("");
-      $materialComplementar.removeClass("is-valid is-invalid");
-      $materialComplementar.attr("data-preco", "");
-      $materialComplementar.attr("data-custo", "");
-    }
   });
 
   //
@@ -478,39 +454,15 @@ $(function() {
     })
     .on(
       "click",
-      '[name="material_complementar"] ~ .relacional-dropdown .relacional-dropdown-element',
-      function() {
-        var $this = $(this),
-          $materialComplementar = $('[name="material_complementar"]'),
-          data_tabela = $this.attr("data-tabela"),
-          data_unidade = $this.attr("data-unidade"),
-          data_preco = $this.attr("data-preco"),
-          data_custo = $this.attr("data-custo");
-
-        $this.siblings(".relacional-dropdown-element").removeClass("active");
-        $this.addClass("active");
-
-        $materialComplementar
-          .attr("data-text", $this.text())
-          .attr("data-tabela", data_tabela)
-          .attr("data-unidade", data_unidade)
-          .attr("data-preco", data_preco)
-          .attr("data-custo", data_custo);
-      }
-    )
-    .on(
-      "click",
       '[name="material_servico"] ~ .relacional-dropdown .relacional-dropdown-element',
       function() {
         var $this = $(this),
-          $tipoProdServ = $('[name="tipo_servico_produto"]'),
           $material = $('[name="material_servico"]'),
           $unidade = $('[name="unidade"]'),
           $custo = $('[name="custo_tot_subitem"]'),
           $preco = $('[name="preco_tot_subitem"]'),
           $largura = $('[name="largura"]'),
           $comprimento = $('[name="comprimento"]'),
-          $materialComplementar = $('[name="material_complementar"]'),
           data_tabela = $this.attr("data-tabela"),
           data_unidade = $this.attr("data-unidade"),
           data_preco = $this.attr("data-preco"),
@@ -535,75 +487,29 @@ $(function() {
           .attr("data-custo", data_custo);
 
         if ($unidade.val() == "ML" || $unidade.val() == "M²") {
-          $largura.removeAttr("disabled").removeClass("is-valid is-invalid");
+          
+          $largura
+            .removeAttr("disabled")
+            .removeClass("is-valid is-invalid");
+
           $comprimento
             .removeAttr("disabled")
             .removeClass("is-valid is-invalid");
+
         } else {
+          
           $largura
             .val("")
             .blur()
             .attr("disabled", "disabled")
             .removeClass("is-valid is-invalid");
+
           $comprimento
             .val("")
             .blur()
             .attr("disabled", "disabled")
             .removeClass("is-valid is-invalid");
-        }
 
-        if (
-          $tipoProdServ.val() == "produtos" &&
-          ($unidade.val() == "ML" || $unidade.val() == "M²")
-        ) {
-          $materialComplementar
-            .removeAttr("disabled")
-            .removeClass("is-valid is-invalid");
-        } else {
-          $materialComplementar
-            .val("")
-            .blur()
-            .attr("disabled", "disabled")
-            .removeClass("is-valid is-invalid");
-        }
-
-        if ($tipoProdServ.val().toLowerCase() == "produtos") {
-          var $elementsMaterialComp = $materialComplementar
-            .siblings(".relacional-dropdown")
-            .find(".relacional-dropdown-element");
-
-          $filteredsElementsMaterialComp = $elementsMaterialComp.filter(
-            function() {
-              var currentUnidade = $(this)
-                  .attr("data-unidade")
-                  .toLowerCase(),
-                thisUnidade = $this.attr("data-unidade").toLowerCase();
-
-              if (currentUnidade == "m²" || currentUnidade == "ml") {
-                if (
-                  $(this)
-                    .text()
-                    .toLowerCase() != $this.text().toLowerCase()
-                ) {
-                  return currentUnidade == thisUnidade;
-                }
-              }
-            }
-          );
-
-          $elementsMaterialComp
-            .removeClass("filtered active")
-            .addClass("d-none");
-
-          $filteredsElementsMaterialComp
-            .addClass("filtered")
-            .removeClass("d-none");
-
-          $materialComplementar
-            .val("")
-            .removeAttr("data-preco data-custo data-tabela data-unidade");
-
-          calculaQuantidadeUsadaMaterial();
         }
       }
     )
@@ -657,39 +563,6 @@ $(function() {
             .find("> i")
             .addClass("d-none");
         }
-      }
-    })
-    .on("input", "#material_complementar", function() {
-      var $this = $(this),
-        $dropdownMenu = $this.siblings(".relacional-dropdown"),
-        $nenhumResult = $dropdownMenu.find(".nenhum-result"),
-        $elementsNotActive = $dropdownMenu.find(".relacional-dropdown-element");
-      $elements = $dropdownMenu.find(".relacional-dropdown-element.filtered");
-
-      var $filtereds = $elements.filter(function() {
-        return (
-          $(this)
-            .text()
-            .toLowerCase()
-            .indexOf($this.val().toLowerCase()) != -1
-        );
-      });
-
-      if (!$filtereds.length) {
-        $nenhumResult.removeClass("d-none");
-      } else {
-        $nenhumResult.addClass("d-none");
-      }
-
-      $elementsNotActive.addClass("d-none");
-      $filtereds.removeClass("d-none");
-    })
-    .on("focus", "#material_complementar", function() {
-      if ($("#material_servico").val()) {
-        $(this)
-          .siblings(".relacional-dropdown")
-          .find(".relacional-dropdown-element:not(.filtered)")
-          .addClass("d-none");
       }
     });
 
