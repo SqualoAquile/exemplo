@@ -251,15 +251,15 @@
     </form>
     <div class="row">
         <div class="col-xl-2 col-lg-3">
-            <label for="main-form" class="btn btn-primary btn-block" tabindex="0">Salvar</label>
+            <label for="main-form" id="btn_salvarOS" class="btn btn-primary btn-block" tabindex="0">Salvar</label>
         </div>
         <div class="col-lg-4">
-            <button id="btn_lancamentoVenda" data-toggle="modal" data-target="#modalLancamentoVenda" class="btn btn-secondary btn-block">Finalizar Ordem de Serviço</button>
+            <div id="btn_lancamentoVenda"  class="btn btn-secondary btn-block">Finalizar Ordem de Serviço</div>
         </div>
         
         <?php if (isset($item)): ?>
         <div class="col-xl-2 col-lg-3">
-            <button class="btn btn-dark btn-block" type="button" data-toggle="collapse" data-target="#historico" aria-expanded="false" aria-controls="historico">Histórico de Alterações</button>
+            <button class="btn btn-dark btn-block" id="btn_historicoOS" type="button" data-toggle="collapse" data-target="#historico" aria-expanded="false" aria-controls="historico">Histórico de Alterações</button>
         </div>
         <?php endif ?>
         
@@ -283,9 +283,11 @@
 
                     // Configurações para o submit do form
                     $formIdModal = "ModalFluxoCaixa";
-
                     require "fluxocaixa-form.php";
                 ?>
+                <div class="alert alert-danger" role="alert" id="alertaValorIgual">
+                    O Valor Final da O.S. deve ser igual ao valor da Receita Total
+                </div>
             </div>
         </div>
     </div>
