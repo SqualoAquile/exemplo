@@ -104,5 +104,31 @@ class orcamentosController extends controller{
             $this->loadTemplate($this->table . "-form", $dados); 
         }
     }
+
+    public function imprimir($id) {
+
+        // if(in_array($this->table . "_edt", $_SESSION["permissoesUsuario"]) == false || empty($id) || !isset($id)){
+        //     header("Location: " . BASE_URL . "/" . $this->table); 
+        // }
+
+        // if($this->shared->idAtivo($id) == false){
+        //     header("Location: " . BASE_URL . "/" . $this->table); 
+        // }
+
+        $dados['infoUser'] = $_SESSION;
+               
+        $itm = new Shared('orcamentositens');
+
+        // relacionar os dados que vem do banco aqui e alterar estrutura se necessário
+        
+        $dados["item"] = $this->model->infoItem($id); 
+        $dados["viewInfo"] = ["title" => "Editar"];
+        $dados["labelTabela"] = $this->shared->labelTabela();
+        $dados["colunasOrcamentos"] = $this->colunas;
+        $dados["colunasItensOrcamentos"] = $itm->nomeDasColunas();
+
+        $this->loadTemplate($this->table . "-imp",$dados); 
+        
+    }
 }   
 ?>

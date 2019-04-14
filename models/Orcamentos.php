@@ -145,6 +145,19 @@ class Orcamentos extends model {
         }
     }
 
+    public function imprimir($id, $request) {
+
+        if(!empty($id)){
+
+            $id = addslashes(trim($id));
+
+            $ipcliente = $this->permissoes->pegaIPcliente();
+
+            // SQL para buscar os dados do orçamento e dos itens no banco
+            
+        }
+    }
+
     public function getRelacionalDropdown($request) {
 
         if ($request["tabela"]) {
