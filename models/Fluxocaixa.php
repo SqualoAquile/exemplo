@@ -277,4 +277,27 @@ class Fluxocaixa extends model {
         }
         return $array;
     }
+
+    public function buscaDespId($idProcurado){
+        
+        $array = array();
+        if(!empty($idProcurado) && isset($idProcurado)){
+            
+            $idProcurado = addslashes(trim($idProcurado));
+
+            $sql1 = "SELECT SUM(valor_total) as despesatotal FROM fluxocaixa WHERE despesa_receita = 'Despesa' AND nro_pedido = '$idProcurado'";
+            $sql1 = self::db()->query($sql1);
+
+            if($sql1->rowCount() > 0){  
+                $sql1 = $sql1->fetch();
+                $despesa = floatval($sql1['despesatotal']);
+            }else{
+                $despesa = floatval(0);
+            }    
+
+            $array['DespesaId'] = $despesa;
+
+        }
+        return $array;
+    }
 }

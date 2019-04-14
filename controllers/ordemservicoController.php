@@ -1,8 +1,8 @@
 <?php
-class orcamentosController extends controller{
+class ordemservicoController extends controller{
 
     // Protected - estas variaveis só podem ser usadas nesse arquivo
-    protected $table = "orcamentos";
+    protected $table = "ordemservico";
     protected $colunas;
     
     protected $model;
@@ -62,15 +62,10 @@ class orcamentosController extends controller{
         if(isset($_POST) && !empty($_POST)){ 
             $this->model->adicionar($_POST);
             header("Location: " . BASE_URL . "/" . $this->table);
-
         }else{ 
-            $dados["colunasOrcamentos"] = $this->colunas;
+            $dados["colunas"] = $this->colunas;
             $dados["viewInfo"] = ["title" => "Adicionar"];
             $dados["labelTabela"] = $this->shared->labelTabela();
-
-            $itm = new Shared('orcamentositens');
-            $dados["colunasItensOrcamentos"] = $itm->nomeDasColunas();
-            
             $this->loadTemplate($this->table . "-form", $dados);
         }
     }
@@ -91,43 +86,12 @@ class orcamentosController extends controller{
             $this->model->editar($id, $_POST);
             header("Location: " . BASE_URL . "/" . $this->table); 
         }else{
-
-            $itm = new Shared('orcamentositens');
-            
             $dados["item"] = $this->model->infoItem($id); 
+            $dados["colunas"] = $this->colunas;
             $dados["viewInfo"] = ["title" => "Editar"];
             $dados["labelTabela"] = $this->shared->labelTabela();
-            $dados["colunasOrcamentos"] = $this->colunas;
-            $dados["colunasItensOrcamentos"] = $itm->nomeDasColunas();
-
             $this->loadTemplate($this->table . "-form", $dados); 
         }
-    }
-
-    public function imprimir($id) {
-
-        // if(in_array($this->table . "_edt", $_SESSION["permissoesUsuario"]) == false || empty($id) || !isset($id)){
-        //     header("Location: " . BASE_URL . "/" . $this->table); 
-        // }
-
-        // if($this->shared->idAtivo($id) == false){
-        //     header("Location: " . BASE_URL . "/" . $this->table); 
-        // }
-
-        $dados['infoUser'] = $_SESSION;
-               
-        $itm = new Shared('orcamentositens');
-
-        // relacionar os dados que vem do banco aqui e alterar estrutura se necessário
-        
-        $dados["item"] = $this->model->infoItem($id); 
-        $dados["viewInfo"] = ["title" => "Editar"];
-        $dados["labelTabela"] = $this->shared->labelTabela();
-        $dados["colunasOrcamentos"] = $this->colunas;
-        $dados["colunasItensOrcamentos"] = $itm->nomeDasColunas();
-
-        $this->loadTemplate($this->table . "-imp",$dados); 
-        
     }
 }   
 ?>

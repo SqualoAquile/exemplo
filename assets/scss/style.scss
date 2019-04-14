@@ -11,20 +11,23 @@ $hamburger-layer-color: $primary;
 
 @import "node_modules/hamburgers/_sass/hamburgers/hamburgers";
 
-@import "nav";
-@import "sidebar";
-@import "datatable";
-@import "tables";
-@import "historico";
-@import "form";
-@import "toast";
-@import "modal";
+// Shared
+@import "shared/nav";
+@import "shared/sidebar";
+@import "shared/datatable";
+@import "shared/tables";
+@import "shared/historico";
+@import "shared/form";
+@import "shared/toast";
+@import "shared/modal";
 
-@import "parametros";
-@import "permissoes";
-@import "administradoras";
-@import "header_browser_filtros";
-@import "relatorio_fluxo_caixa";
+// Pages
+@import "pages/parametros";
+@import "pages/permissoes";
+@import "pages/administradoras";
+@import "pages/header_browser_filtros";
+@import "pages/relatorio_fluxo_caixa";
+@import "pages/orcamentos";
 
 body {
     padding-top: $navbar-height;

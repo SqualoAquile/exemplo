@@ -1,7 +1,7 @@
 <?php
-class Orcamentos extends model {
+class Ordemservico extends model {
 
-    protected $table = "orcamentos";
+    protected $table = "ordemservico";
     protected $permissoes;
     protected $shared;
 
@@ -32,18 +32,6 @@ class Orcamentos extends model {
         $request["alteracoes"] = ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
         
         $request["situacao"] = "ativo";
-        $request["status"] = "em espera";
-
-        //
-        // Inserção de Itens
-        //
-
-        $format_itens = str_replace("][", "|", $request["itens"]);
-        $format_itens = str_replace(" *", ",", $format_itens);
-        $format_itens = str_replace("[", "", $format_itens);
-        $format_itens = str_replace("]", "", $format_itens);
-
-        $itens = explode("|", $format_itens);
 
         $keys = implode(",", array_keys($request));
 
@@ -55,66 +43,7 @@ class Orcamentos extends model {
 
         $erro = self::db()->errorInfo();
 
-        $id_orcamento = self::db()->lastInsertId();
-        $erroItensBoolean = false;
-
-        foreach ($itens as $keyItem => $item) {
-
-            $explodedItem = explode(",", $item);
-
-            $tipoProdutoServico = $explodedItem[2];
-            $tipoMaterial = $explodedItem[4];
-
-            if ($tipoProdutoServico != "produtos") {
-                $tipoMaterial = "";
-            }
-
-            $sqlItens = "INSERT INTO orcamentositens 
-            (
-                descricao_item, 
-                descricao_subitem, 
-                tipo_servico_produto, 
-                material_servico, 
-                tipo_material, 
-                unidade, 
-                custo_tot_subitem, 
-                preco_tot_subitem, 
-                quant, 
-                largura, 
-                comprimento, 
-                quant_usada, 
-                observacao_subitem, 
-                id_orcamento, 
-                situacao
-            ) 
-            VALUES (
-                '" . $explodedItem[0] . "',
-                '" . $explodedItem[1] . "',
-                '" . $tipoProdutoServico . "',
-                '" . $explodedItem[3] . "',
-                '" . $tipoMaterial . "',
-                '" . $explodedItem[5] . "',
-                '" . $explodedItem[6] . "',
-                '" . $explodedItem[7] . "',
-                '" . $explodedItem[8] . "',
-                '" . $explodedItem[9] . "',
-                '" . $explodedItem[10] . "',
-                '" . $explodedItem[11] . "',
-                '" . $explodedItem[12] . "',
-                '" . $id_orcamento . "',
-                'ativo'
-            )";
-
-            self::db()->query($sqlItens);
-
-            $erroItens = self::db()->errorInfo();
-
-            if (!empty($erroItens[2])){
-                $erroItensBoolean = true;
-            }
-        }
-
-        if (empty($erro[2]) && !$erroItensBoolean){
+        if (empty($erro[2])){
 
             $_SESSION["returnMessage"] = [
                 "mensagem" => "Registro inserido com sucesso!",
@@ -197,13 +126,10 @@ class Orcamentos extends model {
 
                 $sqlA = "UPDATE ". $this->table ." SET alteracoes = '$palter', situacao = 'excluido' WHERE id = '$id' ";
                 self::db()->query($sqlA);
-                $erroA = self::db()->errorInfo();
 
-                $sqlB = "UPDATE orcamentositens SET situacao = 'excluido' WHERE id_orcamento = '$id' ";
-                self::db()->query($sqlB);
-                $erroB = self::db()->errorInfo();
+                $erro = self::db()->errorInfo();
 
-                if (empty($erroA[2]) && empty($erroB[2])){
+                if (empty($erro[2])){
 
                     $_SESSION["returnMessage"] = [
                         "mensagem" => "Registro deletado com sucesso!",
@@ -217,32 +143,5 @@ class Orcamentos extends model {
                 }
             }
         }
-    }
-
-    public function imprimir($id, $request) {
-
-        if(!empty($id)){
-
-            $id = addslashes(trim($id));
-
-            $ipcliente = $this->permissoes->pegaIPcliente();
-
-            // SQL para buscar os dados do orçamento e dos itens no banco
-            
-        }
-    }
-
-    public function getRelacionalDropdown($request) {
-
-        if ($request["tabela"]) {
-            $tabela = trim($request["tabela"]);
-            $tabela = addslashes($tabela);
-        }
-
-        $sql = "SELECT * FROM " . $tabela . " WHERE situacao = 'ativo'";
-
-        $sql = self::db()->query($sql);
-        
-        return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
 }
