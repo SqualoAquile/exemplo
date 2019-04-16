@@ -42,51 +42,50 @@ $(function () {
     }else if($('#status').val() == 'Finalizada'){
 
         $('input, select,  textarea').attr('disabled','disabled');
-
+        
+        $('#btn_historicoOS').parent().show();
+        $('#btn_lancamentoVenda').parent().hide();
+        
         if( $('#data_revisao_1').val() == '00/00/0000'){
+            $('#btn_salvarOS').parent().show();
+
             $('#data_revisao_1').val(dataAtual()).datepicker('update').removeAttr('disabled').parent().parent().show();
             $('#data_revisao_2').val('').attr('disabled', 'disabled').parent().parent().hide();
             $('#data_revisao_3').val('').attr('disabled', 'disabled').parent().parent().hide();
-
-            $('label.btn.btn-primary').parent().show();
-
+            
         }else if ( $('#data_revisao_1').val() != '00/00/0000' && $('#data_revisao_2').val() == '00/00/0000' ){
+            $('#btn_salvarOS').parent().show();
+
             $('#data_revisao_1').attr('disabled', 'disabled').parent().parent().hide();
             $('#data_revisao_2').val(dataAtual()).datepicker('update').removeAttr('disabled').parent().parent().show();
             $('#data_revisao_3').val('').attr('disabled', 'disabled').parent().parent().hide();
 
-            $('label.btn.btn-primary').parent().show();
-
         }else if ( $('#data_revisao_1').val() != '00/00/0000' && $('#data_revisao_2').val() != '00/00/0000' && $('#data_revisao_3').val() == '00/00/0000' ){
+            $('#btn_salvarOS').parent().show();
+
             $('#data_revisao_1').attr('disabled', 'disabled').parent().parent().hide();
             $('#data_revisao_2').attr('disabled', 'disabled').parent().parent().hide();
             $('#data_revisao_3').val(dataAtual()).datepicker('update').removeAttr('disabled').parent().parent().show();
 
-            $('label.btn.btn-primary').parent().show();
         }else{
+            $('#btn_salvarOS').parent().hide();
 
             $('#data_revisao_1').attr('disabled', 'disabled').parent().parent().show();
             $('#data_revisao_2').attr('disabled', 'disabled').parent().parent().show();
             $('#data_revisao_3').attr('disabled', 'disabled').parent().parent().show();
-
-            $('label.btn.btn-primary').parent().hide();
         }
-        
-        $('button.btn.btn-dark').parent().show();
-        $('button#btn_lancamentoVenda').parent().hide();
     
     // inicialização dos campos status CANCELADO        
     }else{
 
         $('input, select,  textarea').attr('disabled','disabled');
+        $('#btn_salvarOS').parent().hide();
+        $('#btn_historicoOS').parent().show();
+        $('#btn_lancamentoVenda').parent().hide();
 
         $('#data_revisao_1').val('').attr('disabled', 'disabled').parent().parent().hide();
         $('#data_revisao_2').val('').attr('disabled', 'disabled').parent().parent().hide();
         $('#data_revisao_3').val('').attr('disabled', 'disabled').parent().parent().hide();
-
-        $('label.btn.btn-primary').parent().hide();
-        $('button.btn.btn-dark').parent().hide();
-        $('button#btn_lancamentoVenda').parent().hide();
     }
 
     $.ajax({
@@ -134,7 +133,7 @@ $(function () {
                 dtFim = dtFim.split('/');
                 dtFim = parseInt(dtFim[2] + dtFim[1] + dtFim[0]);
 
-                if (dtInicio < dtFim) {
+                if (dtFim < dtInicio) {
                     alert('A data de início não pode ser maior do que a data de finalização.');
                     $('#data_inicio').val( $('#data_aprovacao').val() ).datepicker('update');
                     $('#data_fim').val('').focus();
@@ -180,7 +179,7 @@ $(function () {
 
                 if (dtRev1 < dtFim) {
                     alert('A data da primeira revisão deve ser maior do que a data de finalização.');
-                    $('#data_revisao_1').val( dataAtual() ).datepicker('update');
+                    $('#data_revisao_1').val('').datepicker('update');
                     $('#data_revisao_1').focus();
                 }
             }
@@ -201,7 +200,7 @@ $(function () {
 
                 if (dtRev2 < dtRev1) {
                     alert('A data da segunda revisão deve ser maior do que a data da primeira revisão.');
-                    $('#data_revisao_2').val( dataAtual() ).datepicker('update');
+                    $('#data_revisao_2').val('').datepicker('update');
                     $('#data_revisao_2').focus();
                 }
             }
@@ -222,7 +221,7 @@ $(function () {
 
                 if (dtRev3 < dtRev2) {
                     alert('A data da terceira revisão deve ser maior do que a data da segunda revisão.');
-                    $('#data_revisao_3').val( dataAtual() ).datepicker('update');
+                    $('#data_revisao_3').val('').datepicker('update');
                     $('#data_revisao_3').focus();
                 }
             }
@@ -283,21 +282,25 @@ $(function () {
         }
     });
 
+    // busca as despesas do ID da OS pra completar o custo
     if( $('#custo_total').attr('data-anterior') != ''){ //significa que o formulário está sendo editado
         
         var $idOS = $("#id");
+        var $idOrc = $("#id_orcamento");
         var $custo = $("#custo_total");
         var $desconPorcentagem = $("#desconto_porcent");
         
          // preenche os valores dos campos que são necessários
-         var idProcurado;
-         idProcurado = $idOS.val();
+         var idOrdemServico, idOrcamento;
+         idOrdemServico = $idOS.val();
+         idOrcamento = $idOrc.val();
 
          $.ajax({
              url: baselink + '/ajax/buscaDespesasId',
              type: 'POST',
              data: {
-                 idProcurado: idProcurado
+                idOrdemServico: idOrdemServico,
+                idOrcamento: idOrcamento
              },
              dataType: 'json',
              success: function (dado) {
@@ -357,8 +360,115 @@ $(function () {
             return;
         }
 
-        $('#modalLancamentoVenda').modal('show');
+        var $alteracoes = $('[name=alteracoes]');
 
+        if ($alteracoes.val() != '') { // Editar
+
+            // Faz um foreach em todos os campos do formulário para ver os valores atuais e os valores anteiores
+            var campos_alterados = '';
+            $('#form-principal').find('input[type=text], input[type=hidden]:not([name=alteracoes]), input[type=radio]:checked, textarea, select').each(function (index, el) {
+
+                var valorAtual = $(el).val(),
+                    dataAnterior = $(el).attr('data-anterior'),
+                    text_label = $(el).siblings('label').find('span').text();
+
+                valorAtual = String(valorAtual).trim().toUpperCase();
+                dataAnterior = String(dataAnterior).trim().toUpperCase();
+
+                if (dataAnterior != valorAtual) {
+                        campos_alterados += '{' + text_label.toUpperCase() + ' de (' + $(el).attr('data-anterior') + ') para (' + $(el).val() + ')}';
+
+                }
+            });
+
+            if (campos_alterados != '') {
+
+                $alteracoes.val($alteracoes.val() + '##' + campos_alterados);
+
+                $('#modalLancamentoVenda').modal('show');
+
+            } else {
+                // Se o usuario entrou para editar e submitou sem alterar nada
+                alert("Nenhuma alteração foi feita!");
+                return;
+            }
+        } else { // Adicionar
+            return;
+        }
+
+        
+
+    });
+
+    //FINALIZAÇÃO DA OS
+    $(document).on("submit", "#form_lancamento", event => {
+      event.preventDefault();
+
+      let   $form = $("#form_lancamento")
+            $formOS = $('#form-principal');
+
+      if ( $('table.table.table-striped.table-hover tbody').length > 0 ) {
+
+        //lança no fluxo de caixa os itens de venda e despesa financeira
+        $.ajax({
+          url: baselink + "/ajax/adicionarLancamento",
+          type: "POST",
+          data: $form.serialize(),
+          dataType: "json",
+          success: data => {
+            // deu certo o lançamento no fluxo de caixa da receita da O.S.   
+            if(data == true){
+                
+                $formOS.find('#status').val('Finalizada');
+                $formOS.find('input').removeAttr('disabled');
+
+                // finaliza o Ordem de Serviço no banco
+                $.ajax({
+                    url: baselink + "/ajax/finalizarOS",
+                    type: "POST",
+                    data: $formOS.serialize(),
+                    dataType: "json",
+                    success: data => {
+                        
+                        if(data == true){
+                            // deu certo a finalização da ordem de serviço
+                            // vai ser redirecionado pro browser, não precisa fazer nada
+                        }else{
+                            // deu errado a finalização da ordem de serviço
+                            // apagar os lançamentos feitos no caixa
+                            var $idOS = $("#id");
+                            var $titOrc = $('#titulo_orcamento');
+                            var idOrdemServico, tituloOrcamento;
+                            idOrdemServico = $idOS.val();
+                            tituloOrcamento = $titOrc.val();
+                            
+                            $.ajax({
+                                url: baselink + '/ajax/excluiRegistroFluxoCaixa',
+                                type: 'POST',
+                                data: {
+                                idOrdemServico: idOrdemServico,
+                                tituloOrcamento: tituloOrcamento
+                                },
+                                dataType: 'json',
+                                success: function () {
+                                
+                                }
+                            });                        
+                        }      
+                     
+                    }
+                  });
+
+                  $("#modalLancamentoVenda").modal("hide");
+                  window.location.href = baselink+"/ordemservico";
+                
+            }else{
+                return;
+
+            }      
+          }
+        });
+      }
     });
 
     $('#modalLancamentoVenda').on('show.bs.modal', function (e) {
@@ -385,14 +495,19 @@ $(function () {
         $('#alertaValorIgual').hide();
 
         $('table.table.table-striped.table-hover tbody').on('DOMSubtreeModified', function(){
-            console.log('disparou o DOMSubtreeModified');
             if( receitaOK() == true ){
                 $('label.btn.btn-primary.btn-lg.btn-block').show();
                 $('#alertaValorIgual').hide();
                 
             }else{
                 $('label.btn.btn-primary.btn-lg.btn-block').hide();
-                $('#alertaValorIgual').show();
+                
+                if( $('table.table.table-striped.table-hover tbody').length > 0  ){
+                    $('#alertaValorIgual').show();
+                }else{
+                    $('#alertaValorIgual').hide();
+                }
+                
             }
             
         });
@@ -481,46 +596,26 @@ $(function () {
             .val($formOS.find('[name=valor_final]').val());        
         
     });
+
+    $('#modalLancamentoVenda').on('hide.bs.modal', function (e) {
+
+        var $alteracoes = $('[name=alteracoes]');
+        $alteracoes.val( $alteracoes.attr('data-anterior'));
+
+    });
     
+    // SALVAR AS EDIÇÕES DA OS
+    $('#form-principal').on('submit', function(e){
+        if($(this)[0].checkValidity() == true && confirm('Tem certeza?')) {
+            $(this).find('input, select, textarea').removeAttr('disabled');
+        }else{
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }    
+    });
+
 });
-
-    $(document)
-        .on('submit', '#form-principalModalFluxoCaixa', (event) => {
-
-            event.preventDefault();
-
-            let $form = $('#form-principalModalFluxoCaixa');
-
-            if ($form[0].checkValidity()) {
-                
-                $.ajax({
-                    url: baselink + '/ajax/adicionarCliente',
-                    type: 'POST',
-                    data: $form.serialize(),
-                    dataType: 'json',
-                    success: (data) => {
-
-                        $form
-                            .removeClass('was-validated')
-                            .trigger('reset');
-
-                        $form
-                            .find('.is-valid, .is-invalid')
-                            .removeClass('is-valid is-invalid');
-
-                        $('#modalLancamentoVenda').modal('hide');
-
-                        Toast({message: data.mensagem, class: data.class});
-
-                    }
-                });
-
-            }
-
-        });
-    
-     
-    
 
 function dataAtual() {
     var dt, dia, mes, ano, dtretorno;
@@ -652,7 +747,6 @@ function receitaOK() {
             resposta  = false;
         }
 
-        console.log('resposta receitaOK:  ', resposta);
         return resposta;
     } 
 }

@@ -278,26 +278,129 @@ class Fluxocaixa extends model {
         return $array;
     }
 
-    public function buscaDespId($idProcurado){
+    public function buscaDespId($request){
         
         $array = array();
-        if(!empty($idProcurado) && isset($idProcurado)){
+        if(!empty($request) && isset($request)){
             
-            $idProcurado = addslashes(trim($idProcurado));
+            $idOrdemServico = addslashes(trim($request['idOrdemServico']));
+            $idOrcamento = addslashes(trim($request['idOrcamento']));
 
-            $sql1 = "SELECT SUM(valor_total) as despesatotal FROM fluxocaixa WHERE despesa_receita = 'Despesa' AND nro_pedido = '$idProcurado'";
+            // busca as despesas relacionadas a O.S. lançadas no fluxo de caixa
+            $sql1 = "SELECT SUM(valor_total) as despesatotal FROM fluxocaixa WHERE despesa_receita = 'Despesa' AND situacao = 'ativo' AND nro_pedido = '$idOrdemServico'";
             $sql1 = self::db()->query($sql1);
 
             if($sql1->rowCount() > 0){  
                 $sql1 = $sql1->fetch();
-                $despesa = floatval($sql1['despesatotal']);
+                $despesaIdFluxoCaixa = floatval($sql1['despesatotal']);
             }else{
-                $despesa = floatval(0);
+                $despesaIdFluxoCaixa = floatval(0);
+            }
+            
+            // echo '  despesaCaixa: '.$despesaIdFluxoCaixa; 
+            // busca o custo total do orçamento
+            $sql2 = "SELECT custo_total FROM orcamentos WHERE situacao = 'ativo' AND id = '$idOrcamento'";
+            $sql2 = self::db()->query($sql2);
+
+            if($sql2->rowCount() > 0){  
+                $sql2 = $sql2->fetch();
+                $custoTotalOrcamento = floatval($sql2['custo_total']);
+            }else{
+                $custoTotalOrcamento = floatval(0);
             }    
 
-            $array['DespesaId'] = $despesa;
+            // echo '  custo orçamento: '.$custoTotalOrcamento; 
+            // busca o custo total da O.S. para saber se as despesa já foram incrementadas
+            $sql3 = "SELECT custo_total FROM ordemservico WHERE situacao = 'ativo' AND id = '$idOrdemServico'";
+            $sql3 = self::db()->query($sql3);
 
+            if($sql3->rowCount() > 0){  
+                $sql3 = $sql3->fetch();
+                $custoTotalOS = floatval($sql3['custo_total']);
+            }else{
+                $custoTotalOS = floatval(0);
+            }    
+            
+            // echo '  custo os: '.$custoTotalOS;
+
+            if( $custoTotalOrcamento == $custoTotalOS ){
+                // se o custo da OS tá igual ao custo do orçamento, verifica se a despesa é diferente de 0, e retorna ela pro ajax pra ser somada na view da OS
+                if( $despesaIdFluxoCaixa > floatval(0) ){
+                    // cusutos iguais e despesa maior que zero
+                    $array['DespesaId'] = $despesaIdFluxoCaixa;
+
+                }else{
+                    // custos iguais e despsa menor ou igual a zero
+                    $array['DespesaId'] = floatval(0);
+                }
+
+            }else{
+                // se os custos são diferentes, verificar se a diferença é igual a despesa vinda do fluxo de caixa, se sim não precisa enviar despesa, se não for, mandar a diferença de despesas
+                $diferencaCustos = abs( round( round($custoTotalOS , 2) - round( $custoTotalOrcamento, 2) , 2) );
+                // echo '  diferença entre os custos:  '.$diferencaCustos; 
+                if( $diferencaCustos > floatval(0) ){
+                    
+                    $difCustoDespesa = round( abs( round( $despesaIdFluxoCaixa, 2) - $diferencaCustos ) , 2); 
+                    
+                    // echo '  diferença entre os custos e despesa:  '.$difCustoDespesa;
+
+                    if( $difCustoDespesa > floatval(0) ){
+                        //diferença de custos maior que zero e a diferença de despesasFluxo e diferença entre os custos é maior do que zero, significa que o custo já foi incrementado antes e foi lançado algum custo novo no fluxo de caixa referente a OS
+                        $array['DespesaId'] = $difCustoDespesa;
+
+                    }else{
+                        //diferença de custos maior que zero e a diferença de despesasFluxo e diferença entre os custos é maior do que zero, significa que o custo já foi incrementado antes e não precisa ser atualizado
+                        $array['DespesaId'] = floatval(0);
+                    }
+                    
+
+                }else{
+                    //diferença de custos menor ou igual a zero, significa que o custo não foi incrementado antes e não precisa ser atualizado
+                    $array['DespesaId'] = floatval(0);
+                }
+            }
         }
+
+        // echo '  despesa id retornada:  '.$array['DespesaId']; exit;
+        return $array;
+    }
+
+    public function excluiRegistroFluxo($request){
+        
+        $array = array();
+        if(!empty($request) && isset($request)){
+            // print_r($request); exit;
+            $idOrdemServico = addslashes(trim($request['idOrdemServico']));
+            $tituloOrcamento = addslashes(trim($request['tituloOrcamento']));
+
+            // busca as despesas relacionadas a O.S. lançadas no fluxo de caixa
+            $sql1 = "DELETE FROM fluxocaixa WHERE detalhe LIKE '%$tituloOrcamento%' AND despesa_receita = 'Receita' AND conta_analitica = 'Venda' AND nro_pedido = '$idOrdemServico' AND situacao = 'ativo'";
+            
+            $sql1 = self::db()->query($sql1);
+            
+            $erro = self::db()->errorInfo();
+            if (empty($erro[2])){
+
+                $array['exclusaoReceita'] = true;
+
+            } else {
+                $array['exclusaoReceita'] = false;
+            }
+
+            // busca as despesas relacionadas a O.S. lançadas no fluxo de caixa
+            $sql2 = "DELETE FROM fluxocaixa WHERE detalhe LIKE '%$tituloOrcamento%' AND despesa_receita = 'Despesa' AND conta_analitica = 'Despesa Financeira' AND nro_pedido = '$idOrdemServico' AND situacao = 'ativo'";
+            
+            $sql2 = self::db()->query($sql2);
+            
+            $erro = self::db()->errorInfo();
+            if (empty($erro[2])){
+
+                $array['exclusaoDespesa'] = true;
+
+            } else {
+                $array['exclusaoDespesa'] = false;
+            }
+        }        
         return $array;
     }
 }
