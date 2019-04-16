@@ -3,20 +3,18 @@ $(function() {
     lastInsertId = 0,
     botoes = `
             <td class="text-truncate">
-                <a href="javascript:void(0)" class="editar-contato btn btn-sm btn-primary">
+                <a href="javascript:void(0)" class="editar-item btn btn-sm btn-primary">
                     <i class="fas fa-edit"></i>
                 </a>
-                <a href="javascript:void(0)" class="excluir-contato btn btn-sm btn-danger">
+                <a href="javascript:void(0)" class="excluir-item btn btn-sm btn-danger">
                     <i class="fas fa-trash-alt"></i>
                 </a>
             </td>
         `;
 
   // [Editar] Esse trecho de código abaixo serve para quando a pagina for carregada
-  // Ler o campo hidden e montar a tabela com os contatos daquele registro
-  Contatos().forEach(function(contato) {
-    Popula(contato);
-  });
+  // Ler o campo hidden e montar a tabela com os itens daquele registro
+  Itens().forEach((item) => Popula(item));
 
   $('#camposOrc').submit(function (event) {
 
@@ -42,23 +40,35 @@ $(function() {
 
   });
 
-  // Retorna um array de contatos puxados do campo hidden com o atributo nome igual a contatos
-  function Contatos() {
-    var returnContatos = [];
+  // Retorna um array de itens puxados do campo hidden com o atributo nome igual a itens
+  function Itens() {
+    let returnItens = [];
     if ($("[name=itens]") && $("[name=itens]").val().length) {
-      var contatos = $("[name=itens]")
+      let itens = $("[name=itens]")
         .val()
         .split("[");
-      for (var i = 0; i < contatos.length; i++) {
-        var contato = contatos[i];
-        if (contato.length) {
-          contato = contato.replace("]", "");
-          var dadosContato = contato.split(" * ");
-          returnContatos.push(dadosContato);
+
+      for (let i = 0; i < itens.length; i++) {
+        let item = itens[i];
+        if (item.length) {
+          item = item.replace("]", "");
+          let dadosItem = item.split(" * ");
+
+          // Trecho de código para transformar para padrão Brasileiro novamente
+          // Essa função é chamada só quando um orçamento estiver sendo editado
+          let transformDadosItem = dadosItem.map(dadoItem => {
+            let dadoItemAux = dadoItem;
+            if (!isNaN(dadoItemAux) && dadoItemAux.toString().indexOf('.') != -1) {
+              dadoItemAux = floatParaPadraoBrasileiro(dadoItemAux);
+            }
+            return dadoItemAux;
+          });
+
+          returnItens.push(transformDadosItem);
         }
       }
     }
-    return returnContatos;
+    return returnItens;
   }
 
   // Escreve o html na tabela
@@ -68,7 +78,7 @@ $(function() {
     var currentId = $tableItensOrcamento.attr("data-current-id"),
       tds = "";
 
-    // Coloca a tag html TD em volta de cada valor vindo do form de contatos
+    // Coloca a tag html TD em volta de cada valor vindo do form de itens
     values.forEach(
       value => (tds += `<td class="text-truncate">` + value + `</td>`)
     );
@@ -76,29 +86,29 @@ $(function() {
     if (!currentId) {
       // Se for undefined então o item está sendo criado
 
-      // Auto incrementa os ID's dos contatos
+      // Auto incrementa os ID's dos itens
       lastInsertId += 1;
 
       $("#itensOrcamento tbody").prepend(
         '<tr data-id="' + lastInsertId + '">' + botoes + tds + "</tr>"
       );
     } else {
-      // Caso tenha algum valor é por que o contato está sendo editado
+      // Caso tenha algum valor é por que o item está sendo editado
 
       $('#itensOrcamento tbody tr[data-id="' + currentId + '"]').html(
         botoes + tds
       );
 
-      // Seta o data id como undefined para novos contatos poderem ser cadastrados
+      // Seta o data id como undefined para novos itens poderem ser cadastrados
       $tableItensOrcamento.removeAttr("data-current-id");
     }
 
-    $(".editar-contato").bind("click", Edit);
-    $(".excluir-contato").bind("click", Delete);
+    $(".editar-item").bind("click", Edit);
+    $(".excluir-item").bind("click", Delete);
     calculaSubtotalCustotal();
   }
 
-  // Pega as linhas da tabela auxiliar e manipula o hidden de contatos
+  // Pega as linhas da tabela auxiliar e manipula o hidden de itens
   function SetInput() {
 
     let content = "";
@@ -106,27 +116,40 @@ $(function() {
     $("#itensOrcamento tbody tr").each(function() {
 
         let par = $(this).closest("tr"),
-            tdItem = par.children("td:nth-child(2)"),
-            tdSubItem = par.children("td:nth-child(3)"),
-            tdQuant = par.children("td:nth-child(4)"),
-            tdLargura = par.children("td:nth-child(5)"),
-            tdComprimento = par.children("td:nth-child(6)"),
-            tdQuantUsada = par.children("td:nth-child(7)"),
-            tdServicoProduto = par.children("td:nth-child(8)"),
-            tdMaterialServico = par.children("td:nth-child(9)"),
-            tdTipoMaterial = par.children("td:nth-child(10)"),
-            tdUnidade = par.children("td:nth-child(11)"),
-            tdCusto = par.children("td:nth-child(12)"),
-            tdPreco = par.children("td:nth-child(13)"),
-            tdObservacao = par.children("td:nth-child(14)"),
-            quantidade = floatParaPadraoInternacional(tdQuant.text()),
-            comprimento = floatParaPadraoInternacional(tdComprimento.text()),
-            largura = floatParaPadraoInternacional(tdLargura.text()),
-            custo = floatParaPadraoInternacional(tdCusto.text()),
-            preco = floatParaPadraoInternacional(tdPreco.text()),
-            quantidadeUsada = floatParaPadraoInternacional(tdQuantUsada.text());
+          tdItem = par.children("td:nth-child(2)"),
+          tdSubItem = par.children("td:nth-child(3)"),
+          tdQuant = par.children("td:nth-child(4)"),
+          tdLargura = par.children("td:nth-child(5)"),
+          tdComprimento = par.children("td:nth-child(6)"),
+          tdQuantUsada = par.children("td:nth-child(7)"),
+          tdServicoProduto = par.children("td:nth-child(8)"),
+          tdMaterialServico = par.children("td:nth-child(9)"),
+          tdTipoMaterial = par.children("td:nth-child(10)"),
+          tdUnidade = par.children("td:nth-child(11)"),
+          tdCusto = par.children("td:nth-child(12)"),
+          tdPreco = par.children("td:nth-child(13)"),
+          tdObservacao = par.children("td:nth-child(14)"),
+          quantidade = floatParaPadraoInternacional(tdQuant.text()),
+          comprimento = floatParaPadraoInternacional(tdComprimento.text()),
+          largura = floatParaPadraoInternacional(tdLargura.text()),
+          custo = floatParaPadraoInternacional(tdCusto.text()),
+          preco = floatParaPadraoInternacional(tdPreco.text()),
+          quantidadeUsada = floatParaPadraoInternacional(tdQuantUsada.text());
 
-            content += "[" + tdItem.text() + " * " + tdSubItem.text() + " * " + tdServicoProduto.text() + " * " + tdMaterialServico.text() + " * " + tdTipoMaterial.text() + " * " + tdUnidade.text() + " * " + custo + " * " + preco + " * " + quantidade + " * " + largura + " * " + comprimento + " * " + quantidadeUsada + " * " + tdObservacao.text() + "]";
+        content += "[" + 
+          tdItem.text() + " * " + 
+          tdSubItem.text() + " * " + 
+          quantidade + " * " + 
+          largura + " * " + 
+          comprimento + " * " + 
+          quantidadeUsada + " * " + 
+          tdServicoProduto.text() + " * " + 
+          tdMaterialServico.text() + " * " + 
+          tdTipoMaterial.text() + " * " + 
+          tdUnidade.text() + " * " + 
+          custo + " * " + 
+          preco + " * " + 
+          tdObservacao.text() + "]";
 
     });
 
@@ -137,7 +160,7 @@ $(function() {
 
   }
 
-  // Delete contato da tabela e do hidden
+  // Delete item da tabela e do hidden
   function Delete() {
     var par = $(this).closest("tr");
     par.remove();
@@ -145,8 +168,8 @@ $(function() {
     calculaSubtotalCustotal();
   }
 
-  // Seta no form o contato clicado para editar, desabilita os botoes de acões deste contato e seta o id desse contato
-  // no form dos contatos
+  // Seta no form o item clicado para editar, desabilita os botoes de acões deste item e seta o id desse item
+  // no form dos itens
   function Edit() {
 
     let $tipoServicoProduto = $("[name=tipo_servico_produto]"),
@@ -236,9 +259,13 @@ $(function() {
       .val(tdMaterialServico)
       .attr("data-anterior", tdMaterialServico);
 
-    $("input[name=tipo_material][value=" + tdTipoMaterial + "]")
-      .prop('checked', true)
-      .attr("data-anterior", tdTipoMaterial);
+    if (tdTipoMaterial) {
+      
+      $("input[name=tipo_material][value=" + tdTipoMaterial + "]")
+        .prop('checked', true)
+        .attr("data-anterior", tdTipoMaterial);
+
+    }
 
     $("input[name=unidade]")
       .val(tdUnidade)
