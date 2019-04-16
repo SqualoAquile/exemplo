@@ -24,8 +24,8 @@
 </header>
 
 <section class="mb-5">
-    <div class="col-lg-7 float-right" id="direita">
-        <div class="card card-body">
+    <div class="col-lg-7 pr-lg-0 pl-lg-3 px-0 float-lg-right">
+        <div id="direita" class="card card-body my-4 my-lg-0">
             <form method="DELETE" class="row" id="camposOrc" novalidate autocomplete="off">
                 <?php foreach ($colunasItensOrcamentos as $key => $value): ?>
                     <?php if(isset($value["Comment"]) && array_key_exists("form", $value["Comment"]) && $value["Comment"]["form"] != "false") : ?>
@@ -41,7 +41,6 @@
                             <input 
                                 type="hidden" 
                                 name="<?php echo $value["Field"] ?>" 
-                                value="<?php echo isset($item) && !empty($item) ? $item[$value["Field"]] : "" ?>"
                                 data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
                                 data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                 <?php echo $value["Null"] == "NO" ? "required" : "" ?>
@@ -53,7 +52,6 @@
                             <input 
                                 type="hidden" 
                                 name="<?php echo lcfirst($value["Field"]) ?>" 
-                                value="<?php echo isset($item) && !empty($item) ? $item[$value["Field"]] : "" ?>"
                                 data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
                                 data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                 <?php echo $value["Null"] == "NO" ? "required" : "" ?>
@@ -120,7 +118,6 @@
                                                             type="checkbox" 
                                                             class="form-check-input" 
                                                             tabindex="<?php echo isset($value["Comment"]["ordem_form"]) ? $value["Comment"]["ordem_form"] : "" ?>"
-                                                            value="<?php echo $value["Comment"]['info_relacional']['resultado'][$j];?>"
                                                             data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>" 
                                                             <?php
                                                             if(isset($item)){
@@ -136,7 +133,6 @@
                                                 <input 
                                                     type="hidden" 
                                                     name="<?php echo lcfirst($value["Field"]) ?>" 
-                                                    value="<?php echo isset($item) && !empty($item) ? $item[$value["Field"]] : "" ?>"
                                                     data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
                                                     data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                                     <?php echo $value["Null"] == "NO" ? "required" : "" ?>
@@ -154,7 +150,7 @@
                                             id="<?php echo lcfirst($value['Field']);?>"
                                             data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                             <?php echo $value['Null'] == "NO" ? "required" : "" ?>
-                                        ><?php echo isset($item) && !empty($item) ? $item[$value["Field"]] : "" ?></textarea>
+                                        ></textarea>
 
                                     <!-- CAMPOS DO TIPO RADIO -->
                                     <?php elseif(array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "radio"): ?>
@@ -165,7 +161,6 @@
                                                     <input 
                                                         type="radio" 
                                                         id="<?php echo $valueRadio ?>" 
-                                                        value="<?php echo $valueRadio ?>" 
                                                         name="<?php echo $value["Field"] ?>" 
                                                         tabindex="<?php echo isset($value["Comment"]["ordem_form"]) ? $value["Comment"]["ordem_form"] : "" ?>"
                                                         data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
@@ -201,7 +196,6 @@
                                             aria-haspopup="true" 
                                             aria-expanded="false"
                                             maxlength="<?php echo $value["tamanhoMax"] ?>"
-                                            value="<?php echo isset($item) && !empty($item) ? $item[$value["Field"]] : "" ?>"
                                             data-tabela="<?php echo $value["Comment"]["info_relacional"]["tabela"] ?>" 
                                             data-campo="<?php echo $value["Comment"]["info_relacional"]["campo"] ?>" 
                                             data-pode_nao_cadastrado="<?php echo array_key_exists("pode_nao_cadastrado", $value["Comment"]["info_relacional"]) ? $value["Comment"]["info_relacional"]["pode_nao_cadastrado"] : "false" ?>" 
@@ -228,7 +222,6 @@
                                             type="text" 
                                             class="form-control" 
                                             name="<?php echo lcfirst($value["Field"]) ?>" 
-                                            value="<?php echo isset($item) && !empty($item) ? $item[$value["Field"]] : "" ?>"
                                             data-unico="<?php echo array_key_exists("unico", $value["Comment"]) && $value["Comment"]["unico"]  == true ? "unico" : "" ?>"
                                             data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
                                             id="<?php echo $value['Field'] ?>"
@@ -264,8 +257,8 @@
         </div>
     </div>
     <form id="form-principal" method="POST" class="needs-validation" novalidate autocomplete="off">
-        <div class="col-lg-5">
-            <div id="esquerda" class="card card-body">
+        <div class="col-lg-5 pl-lg-0 pr-lg-3 px-0">
+            <div id="esquerda" class="card card-body my-4 my-lg-0">
                 <div class="row">
                     <?php foreach ($colunasOrcamentosEsquerda as $key => $value): ?>
                         <?php if(isset($value["Comment"]) && array_key_exists("form", $value["Comment"]) && $value["Comment"]["form"] != "false") : ?>
@@ -494,7 +487,7 @@
                 <div class="observacao_cliente_wrapper d-none">
                     <button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapseObsCliente" aria-expanded="false" aria-controls="collapseObsCliente">Observações</button>
                     <div class="collapse mt-3" id="collapseObsCliente">
-                        <textarea id="observacao_cliente" readonly name="observacao" class="form-control" placeholder="Observações do Cliente"></textarea>
+                        <textarea id="observacao_cliente" readonly name="observacao" data-anterior="" class="form-control" placeholder="Observações do Cliente"></textarea>
                     </div>
                 </div>
             </div>

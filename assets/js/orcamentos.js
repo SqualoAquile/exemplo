@@ -114,8 +114,14 @@ $(function() {
   $('#tipo_servico_produto')
     .append(htmlTipoServicoProduto)
     .on('change', function() {
+
       changeTipoServicoProduto();
       toggleTipoMaterial();
+
+      $('#unidade, #custo_tot_subitem, #preco_tot_subitem')
+        .removeClass('is-valid is-invalid')
+        .val('');
+
     });
 
   //
@@ -295,10 +301,6 @@ $(function() {
           $preco.val(floatParaPadraoBrasileiro(precoaux));
         }
       }
-    } else {
-      // Revisar aqui impacto que isso gera
-      // $custo.val('');
-      // $preco.val('');
     }
 
     calculaMaterialCustoPreco();
@@ -346,6 +348,7 @@ $(function() {
 
   $(document)
     .ready(function() {
+      let $pfPj = $('[name="pf_pj"]');
       $.ajax({
         url: baselink + "/ajax/getRelacionalDropdownOrcamentos",
         type: "POST",
@@ -382,7 +385,9 @@ $(function() {
             "#esquerda .relacional-dropdown-wrapper .dropdown-menu .dropdown-menu-wrapper"
           ).html(htmlDropdown);
 
-          $('[name="pf_pj"]').change();
+          if (!$pfPj.attr('data-anterior')) {
+            $pfPj.change();
+          }
           $('[name="tipo_servico_produto"]').change();
         }
       });
@@ -560,7 +565,7 @@ $(function() {
           $this.val().toLocaleLowerCase() == "contato" ||
           $this.val().startsWith("Contato - ")
         ) {
-          $this.parents("[class^=col]").not("#esquerda").after(`
+          $this.parent('.form-group').parent("[class^=col]").after(`
                             <div class="column-quem-indicou col-xl-12" style="order:12;">
                                 <div class="form-group">
                                     <label class="font-weight-bold" for="quem_indicou">
@@ -916,18 +921,6 @@ function calculaQuantidadeUsadaMaterial() {
       $qtdUsada.val('');
 
     }
-  } else {
-
-    $largura
-        .val('')
-        .removeClass('is-valid is-invalid');
-
-    $comprimento
-        .val('')
-        .removeClass('is-valid is-invalid');
-
-    $qtdUsada.val('');
-
   }
 }
 
@@ -944,12 +937,16 @@ function toggleTipoMaterial(unidade) {
   $colTipoProdutoServico.removeClass('col-xl-4').addClass('col-xl-6');
   $colTipoServico.removeClass('col-xl-4').addClass('col-xl-6');
 
-  if (unidade && unidade.toLowerCase() == 'ml') {
-
-    $colTipoMaterial.removeClass('d-none');
-    $colTipoProdutoServico.removeClass('col-xl-6').addClass('col-xl-4');
-    $colTipoServico.removeClass('col-xl-6').addClass('col-xl-4');
+  if ($tipoProdutoServico.val() && $tipoProdutoServico.val().toLowerCase() == 'produtos') {
     
+    if (unidade && unidade.toLowerCase() == 'ml') {
+  
+      $colTipoMaterial.removeClass('d-none');
+      $colTipoProdutoServico.removeClass('col-xl-6').addClass('col-xl-4');
+      $colTipoServico.removeClass('col-xl-6').addClass('col-xl-4');
+      
+    }
+
   }
 
 }
@@ -994,8 +991,7 @@ function changeTipoServicoProduto(setValueSuccess) {
       $material
         .removeClass('is-valid is-invalid')
         .removeAttr('data-tabela data-custo data-preco data-unidade')
-        .val(setValueSuccess ? setValueSuccess : '')
-        .blur();
+        .val(setValueSuccess ? setValueSuccess : '');
 
       if (val == 'produtos') {
         $materialDropdown.html(htmlDropdown);
@@ -1016,6 +1012,7 @@ function changeTipoServicoProduto(setValueSuccess) {
           .addClass('active');
 
       }
+
     }
   });
 

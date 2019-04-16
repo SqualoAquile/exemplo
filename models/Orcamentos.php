@@ -34,6 +34,10 @@ class Orcamentos extends model {
         $request["situacao"] = "ativo";
         $request["status"] = "em espera";
 
+        if (isset($request['quem_indicou'])) {
+            unset($request['quem_indicou']);
+        }
+
         //
         // Inserção de Itens
         //
@@ -62,8 +66,8 @@ class Orcamentos extends model {
 
             $explodedItem = explode(",", $item);
 
-            $tipoProdutoServico = $explodedItem[2];
-            $tipoMaterial = $explodedItem[4];
+            $tipoProdutoServico = $explodedItem[6];
+            $tipoMaterial = $explodedItem[8];
 
             if ($tipoProdutoServico != "produtos") {
                 $tipoMaterial = "";
@@ -73,16 +77,16 @@ class Orcamentos extends model {
             (
                 descricao_item, 
                 descricao_subitem, 
+                quant, 
+                largura, 
+                comprimento, 
+                quant_usada, 
                 tipo_servico_produto, 
                 material_servico, 
                 tipo_material, 
                 unidade, 
                 custo_tot_subitem, 
                 preco_tot_subitem, 
-                quant, 
-                largura, 
-                comprimento, 
-                quant_usada, 
                 observacao_subitem, 
                 id_orcamento, 
                 situacao
@@ -90,13 +94,13 @@ class Orcamentos extends model {
             VALUES (
                 '" . $explodedItem[0] . "',
                 '" . $explodedItem[1] . "',
-                '" . $tipoProdutoServico . "',
+                '" . $explodedItem[2] . "',
                 '" . $explodedItem[3] . "',
-                '" . $tipoMaterial . "',
+                '" . $explodedItem[4] . "',
                 '" . $explodedItem[5] . "',
-                '" . $explodedItem[6] . "',
+                '" . $tipoProdutoServico . "',
                 '" . $explodedItem[7] . "',
-                '" . $explodedItem[8] . "',
+                '" . $tipoMaterial . "',
                 '" . $explodedItem[9] . "',
                 '" . $explodedItem[10] . "',
                 '" . $explodedItem[11] . "',
