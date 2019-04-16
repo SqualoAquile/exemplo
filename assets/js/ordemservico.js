@@ -34,9 +34,9 @@ $(function () {
         $('#data_revisao_2').val('').attr('disabled', 'disabled').parent().parent().hide();
         $('#data_revisao_3').val('').attr('disabled', 'disabled').parent().parent().hide();
 
-        $('label.btn.btn-primary').parent().show();
-        $('button.btn.btn-dark').parent().show();
-        $('button#btn_lancamentoVenda').parent().show();
+        $('#btn_salvarOS').parent().hide();
+        $('#btn_historicoOS').parent().hide();
+        $('#btn_lancamentoVenda').parent().show();
 
     // inicialização dos campos status FINALIZADA    
     }else if($('#status').val() == 'Finalizada'){
@@ -71,8 +71,6 @@ $(function () {
 
             $('label.btn.btn-primary').parent().hide();
         }
-        
-
         
         $('button.btn.btn-dark').parent().show();
         $('button#btn_lancamentoVenda').parent().hide();
@@ -150,7 +148,6 @@ $(function () {
     $('#data_fim').on('change blur', function () {
         if ($('#data_fim').val() != '') {
             if ($('#data_inicio').val() != '') {
-                console.log('dt inicio:   ', $('#data_inicio').val());
                 var dtInicio, dtFim;
                 dtInicio = $('#data_inicio').val();
                 dtInicio = dtInicio.split('/');
@@ -169,6 +166,69 @@ $(function () {
         }
     });
 
+    $('#data_revisao_1').on('change blur', function () {
+        if ($('#data_fim').val() != '') {
+            if ($('#data_revisao_1').val() != '') {
+                var dtRev1, dtFim;
+                dtFim = $('#data_fim').val();
+                dtFim = dtFim.split('/');
+                dtFim = parseInt(dtFim[2] + dtFim[1] + dtFim[0]);
+
+                dtRev1 = $('#data_revisao_1').val();
+                dtRev1 = dtRev1.split('/');
+                dtRev1 = parseInt(dtRev1[2] + dtRev1[1] + dtRev1[0]);
+
+                if (dtRev1 < dtFim) {
+                    alert('A data da primeira revisão deve ser maior do que a data de finalização.');
+                    $('#data_revisao_1').val( dataAtual() ).datepicker('update');
+                    $('#data_revisao_1').focus();
+                }
+            }
+        }
+    });
+
+    $('#data_revisao_2').on('change blur', function () {
+        if ($('#data_revisao_1').val() != '') {
+            if ($('#data_revisao_2').val() != '') {
+                var dtRev1, dtRev2;
+                dtRev1 = $('#data_revisao_1').val();
+                dtRev1 = dtRev1.split('/');
+                dtRev1 = parseInt(dtRev1[2] + dtRev1[1] + dtRev1[0]);
+
+                dtRev2 = $('#data_revisao_2').val();
+                dtRev2 = dtRev2.split('/');
+                dtRev2 = parseInt(dtRev2[2] + dtRev2[1] + dtRev2[0]);
+
+                if (dtRev2 < dtRev1) {
+                    alert('A data da segunda revisão deve ser maior do que a data da primeira revisão.');
+                    $('#data_revisao_2').val( dataAtual() ).datepicker('update');
+                    $('#data_revisao_2').focus();
+                }
+            }
+        }
+    });
+
+    $('#data_revisao_3').on('change blur', function () {
+        if ($('#data_revisao_2').val() != '') {
+            if ($('#data_revisao_3').val() != '') {
+                var dtRev2, dtRev3;
+                dtRev2 = $('#data_revisao_2').val();
+                dtRev2 = dtRev2.split('/');
+                dtRev2 = parseInt(dtRev2[2] + dtRev2[1] + dtRev2[0]);
+
+                dtRev3 = $('#data_revisao_3').val();
+                dtRev3 = dtRev3.split('/');
+                dtRev3 = parseInt(dtRev3[2] + dtRev3[1] + dtRev3[0]);
+
+                if (dtRev3 < dtRev2) {
+                    alert('A data da terceira revisão deve ser maior do que a data da segunda revisão.');
+                    $('#data_revisao_3').val( dataAtual() ).datepicker('update');
+                    $('#data_revisao_3').focus();
+                }
+            }
+        }
+    });
+
 
     $("#desconto_porcent").on('change blur',function(){
         var $custo = $("#custo_total");
@@ -180,6 +240,10 @@ $(function () {
         var desc_max, precoaux, custoaux, descaux;
       
         desc_max = parseFloat( $desconPorcentagem.attr('data-desconto_maximo'));
+
+        if($desconPorcentagem.val() == ''){
+            $desconPorcentagem.val('0,00%').blur();
+        }
 
         if( desc_max != undefined && desc_max != '' ){
             
@@ -250,7 +314,8 @@ $(function () {
                         
                         $desconPorcentagem.blur();
 
-                        alert('Existe alteração no valor do Custo Total. \nAperte no botão [Salvar] para registrá-las');
+                        alert(  `Existe alteração no valor do Custo Total.
+                               \nEla será salva quando a Ordem de Serviço for finalizada.`);
                         
                     }
                  }
@@ -265,15 +330,73 @@ $(function () {
     //////////////                                                            /////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
+    $('#btn_lancamentoVenda').click(function(){
+        if( $('#vendedor').val() == '' ){
+            alert('Preencha todos os campos obrigatórios (*).');
+            $('#vendedor').focus();
+            return;
+        } if( $('#tec_responsavel').val() == '' ){
+            alert('Preencha todos os campos obrigatórios (*).');
+            $('#tec_responsavel').focus();
+            return;
+        } if( $('#data_inicio').val() == '' ){
+            alert('Preencha todos os campos obrigatórios (*).');
+            $('#data_inicio').focus();
+            return;
+        } if( $('#data_fim').val() == '' ){
+            alert('Preencha todos os campos obrigatórios (*).');
+            $('#data_fim').focus();
+            return;
+        } if( $('#desconto_porcent').val() == '' ){
+            alert('Preencha todos os campos obrigatórios (*).');
+            $('#desconto_porcent').focus();
+            return;
+        }if( $('#valor_final').val() == '' ){
+            alert('Preencha todos os campos obrigatórios (*).');
+            $('#valor_final').focus();
+            return;
+        }
+
+        $('#modalLancamentoVenda').modal('show');
+
+    });
+
     $('#modalLancamentoVenda').on('show.bs.modal', function (e) {
-        console.log('disparou show modal');
 
         let $formLancaFluxoModal = $('#modalLancamentoVenda'),
             $formOS = $('#form-principal');
         
-        $formLancaFluxoModal.find('h1').text('Fechamento da Venda');
+        $formLancaFluxoModal.find('h1').text('Finalização da Ordem de Serviço');
+        $('#valorOSdiv').remove();
+        $formLancaFluxoModal.find('#btn_incluir').parent().parent()
+        .after(`<div id="valorOSdiv" class="col-lg-4 offset-lg-5" style="order:18;">
+                    <div class="card card-body py-2 text-success text-center mb-3">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <span class="mr-3">Valor Final da O.S. </span>
+                            <h3 class="m-0" id="valor_os">`+$formOS.find('[name=valor_final]').val()+`</h3>
+                        </div>
+                    </div>
+                </div>`);
+        
         $formLancaFluxoModal.find('div#btn_limparCampos').hide();
         $formLancaFluxoModal.find('button.btn.btn-dark').parent().parent().hide();
+        
+        $('label.btn.btn-primary.btn-lg.btn-block').hide();
+        $('#alertaValorIgual').hide();
+
+        $('table.table.table-striped.table-hover tbody').on('DOMSubtreeModified', function(){
+            console.log('disparou o DOMSubtreeModified');
+            if( receitaOK() == true ){
+                $('label.btn.btn-primary.btn-lg.btn-block').show();
+                $('#alertaValorIgual').hide();
+                
+            }else{
+                $('label.btn.btn-primary.btn-lg.btn-block').hide();
+                $('#alertaValorIgual').show();
+            }
+            
+        });
+        
         //Checkbox de Receita
         $formLancaFluxoModal
             .find('#Receita')
@@ -294,7 +417,7 @@ $(function () {
             .attr('disabled','disabled');
             
         // Nro NF
-        if($formLancaFluxoModal.find('[name=nro_nf]').val() != '' ){
+        if($formOS.find('[name=nro_nf]').val() != '' ){
             $formLancaFluxoModal
             .find('[name=nro_nf]')
             .attr('disabled','disabled')
@@ -305,9 +428,9 @@ $(function () {
             .removeAttr('disabled')
             .val('');
         }
-       
+    
         // Data Emissao NF
-        if($formLancaFluxoModal.find('[name=data_emissao_nf]').val() != '' ){
+        if($formOS.find('[name=data_emissao_nf]').val() != '' ){
             $formLancaFluxoModal
             .find('[name=data_emissao_nf]')
             .attr('disabled','disabled')
@@ -317,7 +440,8 @@ $(function () {
             $formLancaFluxoModal
             .find('[name=data_emissao_nf]')
             .removeAttr('disabled')
-            .val('');
+            .val('')
+            .datepicker('update');
         }
 
         // Conta Analítica
@@ -353,11 +477,11 @@ $(function () {
         // Valor Total
         $formLancaFluxoModal
             .find('[name=valor_total]')
-            .attr('disabled','disabled')
-            .val($formOS.find('[name=valor_final]').val());
-
+            // .attr('disabled','disabled')
+            .val($formOS.find('[name=valor_final]').val());        
+        
     });
-
+    
 });
 
     $(document)
@@ -492,4 +616,43 @@ function number_format(numero, decimal, decimal_separador, milhar_separador) {
         s[1] += new Array(prec - s[1].length + 1).join('0');
     }
     return s.join(dec);
+}
+
+function receitaOK() {
+    var resposta = false;
+    var valor_os = $('#valor_os').text();
+        valor_os = parseFloat( floatParaPadraoInternacional( valor_os ) );
+
+    if ( $('table.table.table-striped.table-hover tbody tr').length > 0 ) {
+        var receita = 0;
+        var recaux = 0;
+        var mov = "";
+
+        $("table.table.table-striped.table-hover tbody tr").each(function () {
+            mov = "";
+            recaux = 0;
+            mov = $(this).closest('tr').children('td:eq(1)').children('input:eq(0)').attr('value');
+            
+            if (mov == "Receita") {
+               
+                recaux = $(this).closest('tr').children('td:eq(5)').children('input:eq(0)').val();
+                recaux = floatParaPadraoInternacional(recaux);
+                recaux = parseFloat(recaux);
+                receita = parseFloat( parseFloat( receita ) + parseFloat( recaux )) ;
+
+            }
+
+        });
+
+        receita = parseFloat( parseFloat(receita).toFixed(2) );
+
+        if( parseFloat( receita ) == parseFloat( valor_os) ){
+            resposta = true;
+        }else{
+            resposta  = false;
+        }
+
+        console.log('resposta receitaOK:  ', resposta);
+        return resposta;
+    } 
 }
