@@ -24,8 +24,8 @@
 </header>
 
 <section class="mb-5">
-    <div class="col-lg-7 float-right" id="direita">
-        <div class="card card-body">
+    <div class="col-lg-7 pr-lg-0 pl-lg-3 px-0 float-right">
+        <div id="direita" class="card card-body my-4 my-lg-0">
             <form method="DELETE" class="row" id="camposOrc" novalidate autocomplete="off">
                 <?php foreach ($colunasItensOrcamentos as $key => $value): ?>
                     <?php if(isset($value["Comment"]) && array_key_exists("form", $value["Comment"]) && $value["Comment"]["form"] != "false") : ?>
@@ -264,8 +264,8 @@
         </div>
     </div>
     <form id="form-principal" method="POST" class="needs-validation" novalidate autocomplete="off">
-        <div class="col-lg-5">
-            <div id="esquerda" class="card card-body">
+        <div class="col-lg-5 pl-lg-0 pr-lg-3 px-0">
+            <div id="esquerda" class="card card-body my-4 my-lg-0">
                 <div class="row">
                     <?php foreach ($colunasOrcamentosEsquerda as $key => $value): ?>
                         <?php if(isset($value["Comment"]) && array_key_exists("form", $value["Comment"]) && $value["Comment"]["form"] != "false") : ?>
