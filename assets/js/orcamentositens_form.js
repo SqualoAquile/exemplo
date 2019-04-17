@@ -1,20 +1,20 @@
 $(function() {
-  var $tableItensOrcamento = $("#itensOrcamento"),
+  var $tableItensOrcamento = $('#itensOrcamento'),
     lastInsertId = 0,
     botoes = `
-            <td class="text-truncate">
-                <a href="javascript:void(0)" class="editar-item btn btn-sm btn-primary">
-                    <i class="fas fa-edit"></i>
-                </a>
-                <a href="javascript:void(0)" class="excluir-item btn btn-sm btn-danger">
-                    <i class="fas fa-trash-alt"></i>
-                </a>
-            </td>
-        `;
+      <td class="text-truncate">
+        <a href="javascript:void(0)" class="editar-item btn btn-sm btn-primary">
+          <i class="fas fa-edit"></i>
+        </a>
+        <a href="javascript:void(0)" class="excluir-item btn btn-sm btn-danger">
+          <i class="fas fa-trash-alt"></i>
+        </a>
+      </td>
+    `;
 
   // [Editar] Esse trecho de código abaixo serve para quando a pagina for carregada
   // Ler o campo hidden e montar a tabela com os itens daquele registro
-  Itens().forEach((item) => Popula(item));
+  Itens().forEach(item => Popula(item));
 
   $('#camposOrc').submit(function (event) {
 
@@ -25,14 +25,49 @@ $(function() {
 
     if ($form[0].checkValidity() && !$form.find('.is-invalid').length) {
 
-      Save();
+      let $descricaoSubItemForm = $form.find('#descricao_subitem'),
+        $materialServicoForm = $form.find('#material_servico');
 
-      // Limpar formulario
-      $form.removeClass('was-validated');
+      let $elsFiltereds = $('#itensOrcamento tbody tr').filter(function() {
+        
+        let subItemFilter = $(this).find('td:eq(2)'),
+          materialServicoFilter = $(this).find('td:eq(8)');
 
-      $fields
-        .removeClass('is-valid is-invalid')
-        .removeAttr('data-anterior');
+        if (subItemFilter && subItemFilter.text() && $descricaoSubItemForm && $descricaoSubItemForm.val()) {
+          if (subItemFilter.text().toLowerCase() == $descricaoSubItemForm.val().toLowerCase()) {
+            if (materialServicoFilter && materialServicoFilter.text() && $materialServicoForm && $materialServicoForm.val()) {
+              if (materialServicoFilter.text().toLowerCase() == $materialServicoForm.val().toLowerCase()) {
+                return this;
+              }
+            }
+          }
+        }
+      });
+
+      $('.tipo-material-repetido').remove();
+
+      if (!$elsFiltereds.length || $('#itensOrcamento').attr('data-current-id')) {
+        
+        Save();
+  
+        // Limpar formulario
+        $form.removeClass('was-validated');
+  
+        $fields
+          .removeClass('is-valid is-invalid')
+          .removeAttr('data-anterior');
+
+      } else {
+        $('#btn_incluir')
+          .after(`
+            <div class="alert alert-danger alert-dismissible fade show tipo-material-repetido mt-3" role="alert">
+              Este produto já foi adicionado para este sub item.
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          `);
+      }
         
     } else {
       $($form).addClass('was-validated');

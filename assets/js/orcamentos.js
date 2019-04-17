@@ -680,6 +680,43 @@ $(function() {
       .val($formClienteEsquerda.find("[name=como_conheceu]").val());
   });
 
+  $('#itensOrcamento').on('DOMNodeInserted DOMNodeRemoved', function() {
+    valorTotal();
+  });
+
+  $('#nome_cliente').on('blur change', function() {
+    
+    let $this = $(this),
+      $elements = $this.siblings('.relacional-dropdown').find('.relacional-dropdown-element');
+
+    let $filtereds = $elements.filter(function() {
+      if ($this.val() && $(this).text()) {
+        return $this.val().toLowerCase() == $(this).text().toLowerCase();
+      }
+    });
+
+    // Se não encontrar nenhum cliente com mesmo nome, tira o valor do id_cliente
+    // Dizendo para o software que não tem nenhum cliente cadastrado naquele orçamento
+    if (!$filtereds.length) {
+      $('[name=id_cliente]').val('');
+    }
+
+    // Toda vez que usuario sai do campo nome do cliente
+    // Seta o valor desse campo no campo faturado_para
+    // Mantendo sempre os dois iguais, se o usuario quiser pode alter faturada_para manualmente
+    $('[name=faturado_para]').val($this.val());
+
+  });
+
+  $('#aprovar-orcamento').click(function() {
+    if ($('[name=id_cliente]').val()) {
+      // Cliente já é cadastrado
+    } else {
+      // Necessário cadastrar o cliente antes de aprovar um orçamento
+      $('#modalCadastrarCliente').modal('show');
+    }
+  });
+
 });
 
 function dataAtual() {
@@ -1016,4 +1053,18 @@ function changeTipoServicoProduto(setValueSuccess) {
     }
   });
 
+}
+
+function valorTotal() {
+  let somaTotal = 0;
+  $('#itensOrcamento tbody tr').each(function() {
+    
+    let tdPrecoTotal = $(this).find('td:eq(12)').text(),
+      precoTotalFormatado = parseFloat(floatParaPadraoInternacional(tdPrecoTotal));
+
+      somaTotal += precoTotalFormatado;
+
+  });
+
+  $('[name="valor_total"]').val(floatParaPadraoBrasileiro(somaTotal));
 }
