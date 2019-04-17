@@ -495,13 +495,65 @@ class ajaxController extends controller{
   // ORDENS DE SERVICO
   //
   public function buscaDespesasId() {
+     
     $dados = array();
     $fc = new Fluxocaixa();
     if(isset($_POST) && !empty($_POST)){
-        $dados = $fc->buscaDespId($_POST['idProcurado']);
+        $dados = $fc->buscaDespId($_POST);
     }
     echo json_encode($dados);
   }
+
+  public function excluiRegistroFluxoCaixa() {
+     
+    $dados = array();
+    $fc = new Fluxocaixa();
+    if(isset($_POST) && !empty($_POST)){
+        $dados = $fc->excluiRegistroFluxo($_POST);
+    }
+    echo json_encode($dados);
+  }
+  
+
+  public function adicionarLancamento() {
+    $dados = array();
+    $fc = new Fluxocaixa();
+    if(isset($_POST) && !empty($_POST)){
+      $fc->adicionar($_POST);
+      // print_r($_SESSION["returnMessage"]); exit;
+      if( $_SESSION["returnMessage"]["mensagem"] == "Registro inserido com sucesso!" ){
+        unset($_SESSION["returnMessage"]);
+        echo json_encode(true);
+
+      }else{
+        unset($_SESSION["returnMessage"]);
+        echo json_encode(false);
+
+      }
+      // echo json_encode($_SESSION["returnMessage"]);
+    }
+  }
+
+  public function finalizarOS() {
+     
+      $dados = array();
+      $os = new Ordemservico();
+
+      if(isset($_POST) && !empty($_POST)){
+
+        $id = array_shift($_POST);
+
+        $os->editar($id, $_POST);
+
+        if( $_SESSION["returnMessage"]["mensagem"] == "Registro alterado com sucesso!" ){
+          echo json_encode(true);
+        }else{
+          echo json_encode(false);
+        }
+
+      }
+  }
+  
 
 
 }   

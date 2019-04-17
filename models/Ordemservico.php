@@ -58,11 +58,11 @@ class Ordemservico extends model {
     }
 
     public function editar($id, $request) {
-
+        
         if(!empty($id)){
 
             $id = addslashes(trim($id));
-
+            
             $ipcliente = $this->permissoes->pegaIPcliente();
             $hist = explode("##", addslashes($request['alteracoes']));
 
@@ -75,9 +75,13 @@ class Ordemservico extends model {
                 ];
                 return false;
             }
+            
+            $sharedaux = new Shared('ordemservico');
+            $colunas = $sharedaux->nomeDasColunas();
+            // print_r($request); exit;
+            $request = $sharedaux->formataDadosParaBD($request);
 
-            $request = $this->shared->formataDadosParaBD($request);
-
+            // print_r($request); exit;
             // Cria a estrutura key = 'valor' para preparar a query do sql
             $output = implode(', ', array_map(
                 function ($value, $key) {
@@ -88,11 +92,13 @@ class Ordemservico extends model {
             ));
 
             $sql = "UPDATE " . $this->table . " SET " . $output . " WHERE id='" . $id . "'";
-             
+            
+            // echo $sql; exit;
             self::db()->query($sql);
 
             $erro = self::db()->errorInfo();
 
+            // print_r($erro); exit;
             if (empty($erro[2])){
 
                 $_SESSION["returnMessage"] = [
