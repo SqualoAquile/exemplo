@@ -17,6 +17,11 @@ class controller {
         extract($viewData);
         include "views/template.php";
     }
+
+    public function loadTemplate2($viewName, $viewData = array()) {
+        extract($viewData, EXTR_REFS);
+        include "views/template.php";
+    }
     
     public function loadViewInTemplate($viewName, $viewData = array()) {
         extract($viewData);

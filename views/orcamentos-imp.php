@@ -8,45 +8,6 @@
 <script src="<?php echo BASE_URL?>/assets/js/vendor/FileSaver.min.js" type="text/javascript"></script>
 <script src="<?php echo BASE_URL?>/assets/js/orcamentos-imp.js" type="text/javascript"></script>
 
-<?php
-$infos = [];
-$infos["cliente"] = "Fulano da Silva";
-$infos["faturado_para"] = "Ciclano Nunes";
-$infos["contato_cliente"] = "51-99555-3346";
-$infos["tecnico"] = "Funcionário 1";
-$infos["contato_tecnico"] = "51-98124-2746";
-$infos["codigo"] = "OÇ1234OÇ";
-$infos["status"] = "em espera";
-$infos["descricao"] = "Valquira - Adesivagem de Geladeira";
-$infos["prazo_entrega"] = "30 dias";
-$infos["forma_pagamento"] = "Até 6x sem juros no cartão";
-$infos["data_emissao"] = "13/04/2019";
-$infos["data_validade"] = "25/04/2019";
-
-$infos["itens_geral"]["preco_total"] = "1500,00";
-$infos["itens_geral"]["preco_alternativo"] = "1300,00";
-$infos["itens_geral"]["desconto"] = "200,00";
-$infos["itens_geral"]["deslocamento"] = "10 km";
-$infos["itens_geral"]["desconto"] = "0,00";
-
-
-for ($k=0; $k <8 ; $k++) { 
-    for ($i=0; $i <9 ; $i++) { 
-        $infos["itens"][$k]["nome"] = "Nome do Item";
-        $infos["itens"][$k]["preco_total"] = "450,00";
-        $infos["itens"][$k]["preco_alternativo"] = "300,00";
-        $infos["itens"][$k]["itens"][$i]["nome"] = "Produto/Servico";
-        $infos["itens"][$k]["itens"][$i]["quantidade"] = "3";
-        $infos["itens"][$k]["itens"][$i]["medidas"] = "L: 0,5 x C: 1,25";
-        $infos["itens"][$k]["itens"][$i]["unidade"] = "M²";
-        $infos["itens"][$k]["itens"][$i]["preco_unitario"] = "1,5";
-        $infos["itens"][$k]["itens"][$i]["preco_total"] = "4,50";
-
-    }
-
-}
-
-?>
 
 <style>
     p.small {
@@ -72,6 +33,10 @@ for ($k=0; $k <8 ; $k++) {
     .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
     padding:0; 
     }
+    
+    header, footer{
+    display:none;
+    }
 
  @media print {
 
@@ -87,7 +52,7 @@ for ($k=0; $k <8 ; $k++) {
 
     .break-before { page-break-before: always; }
 
-    #imprimirPDF, #imprimirJPG, #header, footer{ display:none !important;}
+    #cardOpcoes, #header, .footer, .header { display:none !important;}
 
     table { page-break-after:auto; margin-bottom:3rem }
     tr    { page-break-inside:avoid; page-break-after:auto }
@@ -124,21 +89,37 @@ for ($k=0; $k <8 ; $k++) {
     </div>
 </div>
 
-<!-- BOTOES DE IMPRESSAO -->
-<div class="row">
-    <button type="button" class="btn btn-info mt-2 mx-3" id="imprimirPDF"> 
-        <a onClick="window.print();">
-            Salvar em PDF
-        </a>
-    </button>
-    
-    <button type="button" class="btn btn-info mt-2" id="imprimirJPG"> 
-        Salvar como imagem
-    </button>
+
+<!-- BOTOES DE IMPRESSAO E CHECKBOX DAS COLUNAS -->
+<div class="card my-4 px-4" id="cardOpcoes">
+    <div class="card-body">
+        <div class="row">
+
+            <div class="col-2">
+                <button type="button" class="btn btn-info mt-2 mx-3" id="imprimirPDF"> 
+                    <a onClick="window.print();">
+                        Imprimir / Salvar em PDF
+                    </a>
+                </button>
+            </div>
+
+            <div class="col-3">
+                <button type="button" class="btn btn-info mt-2" id="imprimirJPG"> 
+                    Salvar como imagem
+                </button>
+            </div>
+
+            <div class="col-3">
+                <input type="checkbox" name="checkMedidas" value="medidas" checked> Mostrar Medidas<br>
+                <input type="checkbox" name="checkUnitario" value="unitario" checked> Mostrar Preço Unitário <br>
+            </div>
+
+        </div>
+    </div>
 </div>
 
 <!-- SEGUNDO CABEÇALHO - INFORMAÇÕES BÁSICAS DO ORÇAMENTO -->
-<div class = "card mt-3">
+<div class = "card mb-5">
     <div class = "text-center">
         <div class="card-header h2">
             Orçamento
@@ -149,20 +130,19 @@ for ($k=0; $k <8 ; $k++) {
         <div class="container">
             <div class="col-sm d-flex justify-content-between">
                 <div class="row-sm">
-                    <p class="small"> <b>Código: </b> <?php echo $infos["codigo"]; ?> </p>
-                    <p class="small"> <b>Data de Emissão: </b> <?php echo $infos["data_emissao"]; ?></p>
-                    <p class="small"> <b>Data de Validade:</b> <?php echo $infos["data_validade"]; ?>  </p>      
+                    <p class="small"> <b>Data de Emissão: </b> <?php echo $data_emissao; ?></p>
+                    <p class="small"> <b>Data de Validade:</b> <?php echo $data_validade; ?>  </p>      
                 </div>
 
                 <div class="row-sm">
-                    <p class="small"> <b>Cliente: </b> <?php echo $infos["cliente"]; ?> </p>
-                    <p class="small"> <b>Descrição: </b> <?php echo $infos["descricao"]; ?>  </p>
-                    <p class="small"> <b>Contato vendedor: </b> <?php echo $infos["tecnico"]; ?> </p>
+                    <p class="small"> <b>Cliente: </b> <?php echo $cliente; ?> </p>
+                    <p class="small"> <b>Descrição: </b> <?php echo $descricao; ?>  </p>
+                    <p class="small"> <b>Contato vendedor: </b> <?php echo $tecnico; ?> </p>
                 </div>
 
                 <div class="row-sm">
-                    <p class="small"> <b>Prazo de Entrega: </b> <?php echo $infos["prazo_entrega"]; ?> </p>
-                    <p class="small"> <b>Forma de Pagamento: </b> <?php echo $infos["forma_pagamento"]; ?>  </p>
+                    <p class="small"> <b>Prazo de Entrega: </b> <?php echo $prazo_entrega; ?> </p>
+                    <p class="small"> <b>Forma de Pagamento: </b> <?php echo $forma_pagamento; ?>  </p>
                 </div>
             </div>
         </div>
@@ -177,67 +157,75 @@ for ($k=0; $k <8 ; $k++) {
         <th scope="col"><b>Item</b></th>
         <th scope="col"><b>Quantidade</b></th>
         <th scope="col"><b>Produto/Serviço</b></th>
-        <th scope="col"><b>Medidas</b></th>
-        <th scope="col"><b>Unidade</b></th>
-        <th scope="col"><b>Preço Unitário</b></th>
+        <th scope="col" class="medidas"><b>Medidas</b></th>
+        <th scope="col" ><b>Unidade</b></th>
+        <th scope="col" class="unitario"><b>Preço Unitário</b></th>
+        <th> </th>
         <th scope="col"><b>Preço Total</b></th>
         </tr>
     </thead>
 
 
-    <?php for ($j=0; $j < sizeof($infos["itens"])-1 ; $j++): ?>
-        <tbody> 
+    <?php for ($k=0; $k < sizeof($itens) ; $k++): ?>
+        <?php $k % 2 == 0 ? $cor = "background-color:WhiteSmoke" : $cor = ""?>
+
+        <tbody style= "<?php $cor ?>"> 
             <div class="break-after">
-                <?php $cor="";?>
 
             <!-- TITULO DO ITEM -->
                 <tr>
-                    <th scope="row"> <?php echo $infos["itens"][$j]["nome"] ?></th>
+                    <th scope="row"> <?php echo $itens[$k]["nome"] ?></th>
                     <td> </td>
                     <td> </td>
+                    <td class="medidas"> </td>
                     <td> </td>
-                    <td> </td>
+                    <td class="unitario"> </td>
                     <td> </td>
                     <td> </td>
                 </tr>
 
-                <?php for ($i=0; $i < 30 ; $i++): ?>
                 <!-- VERIFICACAO DE MATERIAL ALTERNATIVO -->
-                    <?php $i ==  1 ? $cor = "color:red" : $cor = "" ?>
-
-                    <?php if(isset($infos["itens"][$j]["itens"][$i])): ?>
-                    <!-- SUBITENS E INFORMAÇÕES -->
-                        <tr style="<?php echo $cor ?>">
-                            <td> </td>
-                            <th scope="row"><?php echo $infos["itens"][$j]["itens"][$i]["quantidade"] ?></th>
-                            <td><?php echo $infos["itens"][$j]["itens"][$i]["nome"] ?></td>
-                            <td><?php echo $infos["itens"][$j]["itens"][$i]["medidas"] ?></td>
-                            <td><?php echo $infos["itens"][$j]["itens"][$i]["unidade"] ?></td>
-                            <td><?php echo $infos["itens"][$j]["itens"][$i]["preco_unitario"] ?></td>
-                            <td><?php echo $infos["itens"][$j]["itens"][$i]["preco_total"] ?></td>
-                        </tr>
-                    <?php endif ;?>
-                <?php endfor ?>
+                    <?php for ($j=0; $j < sizeof($itens[$k]["subitens"]); $j++): ?>
+                    <!-- <?php $itens[$k]["subitens"][$j]["tipo_material"] ==  'alternativo' ? $cor = "color:red" : $cor = "" ?> -->
+                    
+                        <?php if(isset($itens[$k]["subitens"][$j])): ?>
+                        <!-- SUBITENS E INFORMAÇÕES -->
+                            <tr style="<?php echo $cor ?>">
+                                <td> </td>
+                                <th scope="row"><?php echo $itens[$k]["subitens"][$j]["quantidade"] ?></th>
+                                <td><?php echo $itens[$k]["subitens"][$j]["produto_servico"] ?></td>
+                                <td class="medidas"><?php echo $itens[$k]["subitens"][$j]["medidas"] ?></td>
+                                <td><?php echo $itens[$k]["subitens"][$j]["unidade"] ?></td>
+                                <td class="unitario"><?php echo $itens[$k]["subitens"][$j]["preco_unitario"] ?></td>
+                                <td> </td>
+                                <td><?php echo $itens[$k]["subitens"][$j]["preco_total"] ?></td>
+                            </tr>
+                        <?php endif ;?>
+                    <?php endfor; ?>
 
                 <tr>
                     <td> </td>
                     <td> </td>
+                    <td class="medidas"> </td>
                     <td> </td>
-                    <td> </td>
+                    <td class="unitario"> </td>
                     <td> </td>
                     <td><b>Preço: </b> </td>
-                    <td> <?php echo $infos["itens"][$j]["preco_total"] ?> </td>
+                    <td> <?php echo $itens[$k]["total_principal"] ?> </td>
                 </tr>
 
-                <tr>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td style="color:red"><b>Preço Alternativo: </b> </td>
-                    <td style="color:red"> <?php echo $infos["itens"][$j]["preco_alternativo"] ?> </td>
-                </tr>
+                <?php if(isset($itens[$k]["total_alternativo"]) && $itens[$k]["total_alternativo"] !=0 ): ?>
+                    <tr>
+                        <td> </td>
+                        <td> </td>
+                        <td class="medidas"> </td>
+                        <td> </td>
+                        <td class="unitario"> </td>
+                        <td> </td>
+                        <td style="color:red"><b>Preço Alternativo: </b> </td>
+                        <td style="color:red"> <?php echo $itens[$k]["total_alternativo"] ?> </td>
+                    </tr>
+                <?php endif ?>
 
             </div>
         </tbody>
@@ -247,18 +235,18 @@ for ($k=0; $k <8 ; $k++) {
     <tr>
         <td> </td>
         <td> </td>
+        <td class="medidas"> </td>
         <td> </td>
-        <td> </td>
-        <td> </td>
+        <td class="unitario"> </td>
         <td> </td>
         <td> </td>
     </tr>
     <tr>
         <td> </td>
         <td> </td>
+        <td class="medidas"> </td>
         <td> </td>
-        <td> </td>
-        <td> </td>
+        <td class="unitario"> </td>
         <td> </td>
         <td> </td>
     </tr>
@@ -267,43 +255,62 @@ for ($k=0; $k <8 ; $k++) {
     <tr>
         <td> </td>
         <td> </td>
+        <td class="medidas"> </td>
         <td> </td>
-        <td> </td>
+        <td class="unitario"> </td>
         <td> </td>
         <td>Deslocamento:  </td>
-        <td><b> <?php echo $infos["itens_geral"]["deslocamento"] ?> </b> </td>
+        <td><b> <?php echo $deslocamento ?> </b> </td>
     </tr>
+
 
     <tr>
         <td> </td>
         <td> </td>
+        <td class="medidas"> </td>
         <td> </td>
-        <td> </td>
-        <td> </td>
-        <td>Desconto:  </td>
-        <td><b> <?php echo $infos["itens_geral"]["desconto"] ?> </b> </td>
-    </tr>
-
-    <tr>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-        <td> </td>
+        <td class="unitario"> </td>
         <td> </td>
         <td>Preço Total:  </td>
-        <td><b> <?php echo $infos["itens_geral"]["preco_total"] ?> </b> </td>
+        <td><b> <?php echo $preco_total ?> </b> </td>
     </tr>
 
-    <tr style="color:red">
+    <tr>
         <td> </td>
         <td> </td>
+        <td class="medidas"> </td>
         <td> </td>
+        <td class="unitario"> </td>
         <td> </td>
-        <td> </td>
-        <td>Preço Alternativo:  </td>
-        <td><b> <?php echo $infos["itens_geral"]["preco_alternativo"] ?> </b> </td>
+        <td>Desconto:  </td>
+        <td><b> <?php echo $desconto ?> </b> </td>
     </tr>
+
+    <tr>
+        <td> </td>
+        <td> </td>
+        <td class="medidas"> </td>
+        <td> </td>
+        <td class="unitario"> </td>
+        <td> </td>
+        <td>Preço Final:  </td>
+        <td><b> <?php echo $preco_final ?> </b> </td>
+    </tr>
+    <?php if(isset($preco_alternativo) && $preco_alternativo != 0 ): ?>
+        <tr style="color:red">
+            <td> </td>
+            <td> </td>
+            <td class="medidas"> </td>
+            <td> </td>
+            <td class="unitario"> </td>
+            <td> </td>
+            <td>Preço Alternativo:  </td>
+            <td><b> <?php echo $preco_alternativo ?> </b> </td>
+        </tr>
+    <?php endif;?>
+
 </table>
+
 
 <div class="card mt-2">
     <div class="card-body">
