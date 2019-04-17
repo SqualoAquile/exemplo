@@ -58,7 +58,7 @@ class Clientes extends model {
     }
 
     public function editar($id, $request) {
-
+        
         if(!empty($id)){
 
             $id = addslashes(trim($id));

@@ -71,7 +71,7 @@ class ordemservicoController extends controller{
     }
     
     public function editar($id) {
-
+        
         if(in_array($this->table . "_edt", $_SESSION["permissoesUsuario"]) == false || empty($id) || !isset($id)){
             header("Location: " . BASE_URL . "/" . $this->table); 
         }
@@ -81,8 +81,9 @@ class ordemservicoController extends controller{
         }
 
         $dados['infoUser'] = $_SESSION;
-        
         if(isset($_POST) && !empty($_POST)){
+            //  print_r($_POST); exit;
+            $a = array_shift($_POST);
             $this->model->editar($id, $_POST);
             header("Location: " . BASE_URL . "/" . $this->table); 
         }else{

@@ -285,7 +285,7 @@
                     $formIdModal = "ModalFluxoCaixa";
                     require "fluxocaixa-form.php";
                 ?>
-                <div class="alert alert-danger" role="alert" id="alertaValorIgual">
+                <div class="alert alert-danger text-center" role="alert" id="alertaValorIgual">
                     O Valor Final da O.S. deve ser igual ao valor da Receita Total
                 </div>
             </div>
