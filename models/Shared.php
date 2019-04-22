@@ -35,6 +35,10 @@ class Shared extends model {
             if(in_array($this->table."_exc", $_SESSION["permissoesUsuario"])){
                 $stringBtn .= '<input type="hidden" name="id" value="'. $id .'"><button type="submit" onclick="return confirm(\'Tem Certeza?\')" class="btn btn-sm btn-danger ml-1"><i class="fas fa-trash-alt"></i></button>';
             }
+
+            if(($this->table == "orcamentos" || $this->table == "ordensservico") && in_array( $this->table.'_edt' , $_SESSION["permissoesUsuario"]) ){
+                $stringBtn .=  '<a href="' . BASE_URL . '/orcamentos/imprimir/' . $id . '" class="btn btn-warning btn-sm ml-2"><i class="fas fa-print"></i></a>';
+            }            
             
             $stringBtn .= '</form>';
         }
@@ -659,7 +663,8 @@ class Shared extends model {
         
         if(isset($registro) && !empty($registro)){
             $array = array();
-            $nomeColunas = $this->nomeDasColunas();        // busca o nome dos campos das colunas para ver qual o tipo a ser formatado
+            $nomeColunas = $this->nomeDasColunas();
+            // busca o nome dos campos das colunas para ver qual o tipo a ser formatado
             $primeiroElemento = array_shift($nomeColunas); // usado só para retirar o primeiro elemento do array que é o ID
             $i=0;
             
@@ -680,7 +685,6 @@ class Shared extends model {
                             $array[$chave] = $dtaux[2]."-".$dtaux[1]."-".$dtaux[0];
                         }
                         
-
                     }elseif (substr_count($nomeColunas[$i]['Type'], "float") > 0){
                         //formatação de float padrão internacional "." - divisor decimal e "," - divisor milhão
                         $array[$chave]  = floatval(str_replace(",",".",str_replace(".", "",addslashes($registro[$chave]))));
@@ -697,6 +701,7 @@ class Shared extends model {
                 }
                 $i++;
             }
+            
             return $array;
         }
     }
