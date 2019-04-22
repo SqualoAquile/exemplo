@@ -91,29 +91,50 @@
 
 
 <!-- BOTOES DE IMPRESSAO E CHECKBOX DAS COLUNAS -->
-<div class="card my-4 px-4" id="cardOpcoes">
+<div class="card my-4 px-1" id="cardOpcoes">
     <div class="card-body">
         <div class="row">
 
             <div class="col-2">
-                <button type="button" class="btn btn-info mt-2 mx-3" id="imprimirPDF"> 
+                <button type="button" class="btn btn-sm btn-info" id="imprimirPDF"> 
                     <a onClick="window.print();">
-                        Imprimir / Salvar em PDF
+                        Imprimir/ Salvar em PDF
                     </a>
                 </button>
-            </div>
 
-            <div class="col-3">
-                <button type="button" class="btn btn-info mt-2" id="imprimirJPG"> 
+                <button type="button" class="btn btn-sm btn-info mt-2" id="imprimirJPG"> 
                     Salvar como imagem
                 </button>
+            </div>            
+
+            <div class="col-2"> 
+                <input type="checkbox" name="checkMedidas" value="medidas" checked> Medidas<br>
+                <input type="checkbox" name="checkUnitario" value="unitario" checked> Preço Unitário <br>
+                <input type="checkbox" name="checkAvisos" value="avisos"> Avisos <br>
             </div>
 
-            <div class="col-3">
-                <input type="checkbox" name="checkMedidas" value="medidas" checked> Mostrar Medidas<br>
-                <input type="checkbox" name="checkUnitario" value="unitario" checked> Mostrar Preço Unitário <br>
+<!-- DROPDOWN COM AVISOS -->
+            <div class="col-8 collapse" id="collapseAvisos">
+                <div class="h4">Selecionar avisos:</div>
+                <div class="relacional-dropdown-wrapper dropdown"> 
+                    <input 
+                    type="text" 
+                    class="dropdown-toggle form-control relacional-dropdown-input" 
+                    data-toggle="dropdown" 
+                    autocomplete="new-password"
+                    aria-haspopup="true" 
+                    aria-expanded="false"
+                    />
+                    <label data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent" class="btn btn-sm text-secondary icon-dropdown m-0 toggle-btn dropdown-toggle">
+                        <i class="fas fa-caret-down"></i>
+                    </label>
+                    <div class="dropdown-menu w-100 p-0 list-group-flush relacional-dropdown">
+                        <div class="p-3 nenhum-result d-none">Nenhum resultado encontrado</div>
+                        <div class="dropdown-menu-wrapper"></div>
+                    </div>
+                </div>        
             </div>
-
+<!-- FIM DROPDOWN -->
         </div>
     </div>
 </div>
@@ -311,8 +332,24 @@
 
 </table>
 
+<div class="card my-2 collapse" id="cardAvisos">
+    <div class="card-body">
+   
+        <div class="row d-flex justify-content-center">
+            <div class="h4"> AVISOS </div>
+        </div>
 
-<div class="card mt-2">
+        <div class="row justify-content-between">
+            <div class="col-12-sm">
+                <?php foreach ($avisos as $key => $value): ?>
+                    <p class = "small d-none" id="aviso<?php echo $value["id"] ?>">- <?php echo $value["mensagem"] ?></p>
+                <?php endforeach;?> 
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card my-2" id="cardObservacoes">
     <div class="card-body">
     <small>
         <div class="row justify-content-between">
