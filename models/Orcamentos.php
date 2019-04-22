@@ -26,41 +26,16 @@ class Orcamentos extends model {
         return $array; 
     }
 
-    public function adicionar($request) {
-        
-        $ipcliente = $this->permissoes->pegaIPcliente();
-        $request["alteracoes"] = ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
-        
-        $request["situacao"] = "ativo";
-        $request["status"] = "em espera";
+    private function adicionarItens($_itens, $id_orcamento) {
 
-        if (isset($request['quem_indicou'])) {
-            unset($request['quem_indicou']);
-        }
+        $returnItens = false;
 
-        //
-        // Inserção de Itens
-        //
-
-        $format_itens = str_replace("][", "|", $request["itens"]);
+        $format_itens = str_replace("][", "|", $_itens);
         $format_itens = str_replace(" *", ",", $format_itens);
         $format_itens = str_replace("[", "", $format_itens);
         $format_itens = str_replace("]", "", $format_itens);
 
         $itens = explode("|", $format_itens);
-
-        $keys = implode(",", array_keys($request));
-
-        $values = "'" . implode("','", array_values($this->shared->formataDadosParaBD($request))) . "'";
-
-        $sql = "INSERT INTO " . $this->table . " (" . $keys . ") VALUES (" . $values . ")";
-        
-        self::db()->query($sql);
-
-        $erro = self::db()->errorInfo();
-
-        $id_orcamento = self::db()->lastInsertId();
-        $erroItensBoolean = false;
 
         foreach ($itens as $keyItem => $item) {
 
@@ -114,9 +89,61 @@ class Orcamentos extends model {
             $erroItens = self::db()->errorInfo();
 
             if (!empty($erroItens[2])){
-                $erroItensBoolean = true;
+                $returnItens = true;
             }
+
         }
+
+        return $returnItens;
+
+    }
+
+    private function excluirItens($id_orcamento) {
+
+        $returnItens = false;
+
+        if(!empty($id_orcamento)) {
+
+            $id_orcamento = addslashes(trim($id_orcamento));
+
+            $sql = "UPDATE orcamentositens SET situacao = 'excluido' WHERE id_orcamento = '$id_orcamento' ";
+            self::db()->query($sql);
+            $erro = self::db()->errorInfo();
+
+            if (!empty($erroItens[2])){
+                $returnItens = true;
+            }
+
+        }
+
+        return $returnItens;
+
+    }
+
+    public function adicionar($request) {
+        
+        $ipcliente = $this->permissoes->pegaIPcliente();
+        $request["alteracoes"] = ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
+        
+        $request["situacao"] = "ativo";
+        $request["status"] = "em espera";
+
+        if (isset($request['quem_indicou'])) {
+            unset($request['quem_indicou']);
+        }
+
+        $keys = implode(",", array_keys($request));
+
+        $values = "'" . implode("','", array_values($this->shared->formataDadosParaBD($request))) . "'";
+
+        $sql = "INSERT INTO " . $this->table . " (" . $keys . ") VALUES (" . $values . ")";
+        
+        self::db()->query($sql);
+
+        $erro = self::db()->errorInfo();
+
+        $id_orcamento = self::db()->lastInsertId();
+        $erroItensBoolean = $this->adicionarItens($request["itens"], $id_orcamento);
 
         if (empty($erro[2]) && !$erroItensBoolean){
 
@@ -168,7 +195,10 @@ class Orcamentos extends model {
 
             $erro = self::db()->errorInfo();
 
-            if (empty($erro[2])){
+            $erroItensBooleanExcluir = $this->excluirItens($id);
+            $erroItensBooleanAdicionar = $this->adicionarItens($request["itens"], $id);
+
+            if (empty($erro[2]) && !$erroItensBooleanExcluir && !$erroItensBooleanAdicionar){
 
                 $_SESSION["returnMessage"] = [
                     "mensagem" => "Registro alterado com sucesso!",
@@ -199,20 +229,19 @@ class Orcamentos extends model {
                 $ipcliente = $this->permissoes->pegaIPcliente();
                 $palter = $palter." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - EXCLUSÃO";
 
-                $sqlA = "UPDATE ". $this->table ." SET alteracoes = '$palter', situacao = 'excluido' WHERE id = '$id' ";
-                self::db()->query($sqlA);
-                $erroA = self::db()->errorInfo();
+                $sql = "UPDATE ". $this->table ." SET alteracoes = '$palter', situacao = 'excluido' WHERE id = '$id' ";
+                self::db()->query($sql);
+                $erro = self::db()->errorInfo();
 
-                $sqlB = "UPDATE orcamentositens SET situacao = 'excluido' WHERE id_orcamento = '$id' ";
-                self::db()->query($sqlB);
-                $erroB = self::db()->errorInfo();
+                $erroItensBoolean = $this->excluirItens($id);
 
-                if (empty($erroA[2]) && empty($erroB[2])){
+                if (empty($erro[2]) && !$erroItensBoolean){
 
                     $_SESSION["returnMessage"] = [
                         "mensagem" => "Registro deletado com sucesso!",
                         "class" => "alert-success"
                     ];
+
                 } else {
                     $_SESSION["returnMessage"] = [
                         "mensagem" => "Houve uma falha, tente novamente! <br /> ".$erro[2],

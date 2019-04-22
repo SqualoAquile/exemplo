@@ -15,7 +15,7 @@ $(function() {
     .parent('[class^=col-]')
       .addClass('d-none');
 
-  $('#status, #custo_total, #sub_total, #valor_total, #custo_deslocamento')
+  $('#status, #custo_total, #sub_total, #valor_total, #custo_deslocamento, #desconto')
     .attr('readonly', 'readonly');
 
   $('#titulo_orcamento')
@@ -99,6 +99,7 @@ $(function() {
         $('#custo_deslocamento').attr('data-custodesloc', custodesloc);
 
         calculaCustoDeslocamento();
+        resumoItens();
       }
     }
   });
@@ -269,7 +270,7 @@ $(function() {
   //
   //
 
-  $("#preco_tot_subitem").on("blur", function() {
+  $("#preco_tot_subitem").on("change", function() {
     var $custo = $("#custo_tot_subitem");
     var $preco = $("#preco_tot_subitem");
     var $material = $("#material_servico");
@@ -451,13 +452,13 @@ $(function() {
         $this.siblings(".relacional-dropdown-element").removeClass("active");
         $this.addClass("active");
 
-        $preco.val(floatParaPadraoBrasileiro(data_preco)).blur();
+        $preco.val(floatParaPadraoBrasileiro(data_preco)).change();
 
-        $custo.val(floatParaPadraoBrasileiro(data_custo)).blur();
+        $custo.val(floatParaPadraoBrasileiro(data_custo)).change();
 
-        $preco.val(floatParaPadraoBrasileiro(data_preco)).trigger("setar");
+        $preco.val(floatParaPadraoBrasileiro(data_preco)).change();
 
-        $unidade.val(unidade).blur();
+        $unidade.val(unidade).change();
 
         $material
           .attr("data-tabela", data_tabela)
@@ -705,7 +706,7 @@ $(function() {
     // Se não encontrar nenhum cliente com mesmo nome, tira o valor do id_cliente
     // Dizendo para o software que não tem nenhum cliente cadastrado naquele orçamento
     if (!$filtereds.length) {
-      $('[name=id_cliente]').val('');
+      $('[name=id_cliente]').val('0');
     }
 
     // Toda vez que usuario sai do campo nome do cliente
@@ -716,7 +717,7 @@ $(function() {
   });
 
   $('#aprovar-orcamento').click(function() {
-    if ($('[name=id_cliente]').val()) {
+    if ($('[name=id_cliente]').val() != '0') {
       // Cliente já é cadastrado
     } else {
       // Necessário cadastrar o cliente antes de aprovar um orçamento
@@ -724,8 +725,10 @@ $(function() {
     }
   });
 
-  $('#deslocamento_km').on('blur change', function() {
+  $('#embaixo input').on('change', function() {
     calculaCustoDeslocamento();
+    calculaDesconto();
+    resumoItens();
   });
 
 });
@@ -1075,12 +1078,13 @@ function valorTotal() {
       tdTipoMaterial = $this.find('td:eq(9)').text(),
       precoTotalFormatado = parseFloat(floatParaPadraoInternacional(tdPrecoTotal));
 
-      if (tdTipoMaterial != 'alternativo') {
-        somaTotal += precoTotalFormatado;
-      }
-
-
+    if (tdTipoMaterial != 'alternativo') {
+      somaTotal += precoTotalFormatado;
+    }
+    
   });
+
+  resumoItens();
 
   $('[name="valor_total"]').val(floatParaPadraoBrasileiro(somaTotal));
 }
@@ -1111,4 +1115,40 @@ function calculaCustoDeslocamento() {
 
   }
 
+}
+
+function calculaDesconto() {
+
+  let $descontoPorcent = $('#desconto_porcent'),
+    $valorTotal = $('#valor_total'),
+    $descontoReais = $('#desconto'),
+    $custoTotal = $('#custo_total'),
+    custoTotalFormated = parseFloat(floatParaPadraoInternacional($custoTotal.val()));
+
+  if ($descontoPorcent.val()) {
+    
+    let descontoPorcent = parseFloat(floatParaPadraoInternacional($descontoPorcent.val())) / 100;
+
+    if ($valorTotal.val()) {
+
+      let valorTotal = parseFloat(floatParaPadraoInternacional($valorTotal.val())),
+        totalDescontoReais = valorTotal * descontoPorcent,
+        diferenca = valorTotal - totalDescontoReais;
+
+      console.log('boolean', valorTotal, custoTotalFormated, valorTotal > custoTotalFormated);
+
+      $descontoReais.val(floatParaPadraoBrasileiro(totalDescontoReais.toFixed(2)));
+
+      $valorTotal.val(floatParaPadraoBrasileiro(diferenca.toFixed(2)));
+
+    }
+  }
+}
+
+function resumoItens() {
+  let $custo_tot = $('#custo_total'),
+    $valorTotal = $('#valor_total');
+
+  $('#resumoItensCustoTota').text($custo_tot.val());
+  $('#resumoItensValorTotal').text($valorTotal.val());
 }
