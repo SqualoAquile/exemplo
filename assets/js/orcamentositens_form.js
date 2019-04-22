@@ -391,6 +391,9 @@ $(function() {
 
     if ($("#itensOrcamento tbody").length > 0) {
       $("#itensOrcamento tbody tr").each(function() {
+
+        let tdTipoMaterial = $(this).find('td:eq(9)').text();
+
         custoaux = 0;
         precoaux = 0;
 
@@ -398,17 +401,23 @@ $(function() {
           .closest("tr")
           .children("td:eq(11)")
           .text();
+
         custoaux = floatParaPadraoInternacional(custoaux);
         custoaux = parseFloat(custoaux);
-        custototal = custototal + custoaux;
 
         precoaux = $(this)
           .closest("tr")
           .children("td:eq(12)")
           .text();
+
         precoaux = floatParaPadraoInternacional(precoaux);
         precoaux = parseFloat(precoaux);
-        precototal = precototal + precoaux;
+        
+        if (tdTipoMaterial != 'alternativo') {
+          custototal = custototal + custoaux;
+          precototal = precototal + precoaux;
+        }
+
       });
 
       precototal = parseFloat(precototal);

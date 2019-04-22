@@ -1,5 +1,4 @@
 .tableFixHead {
-    height: 250px;
     #itensOrcamento {
         thead {
             > tr {
@@ -11,4 +10,9 @@
             }
         }
     }
+}
+#direita,
+#esquerda {
+    height: 1172px;
+    overflow-y: auto;
 }

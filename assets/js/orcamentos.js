@@ -15,7 +15,7 @@ $(function() {
     .parent('[class^=col-]')
       .addClass('d-none');
 
-  $('#status')
+  $('#status, #custo_total, #sub_total, #valor_total, #custo_deslocamento')
     .attr('readonly', 'readonly');
 
   $('#titulo_orcamento')
@@ -93,6 +93,12 @@ $(function() {
       if (data['taxa_seg_op']) {
         segop = floatParaPadraoInternacional(data['taxa_seg_op']);
         $('#preco_tot_subitem').attr('data-seg_op', segop);
+      }
+      if (data['custo_deslocamento']) {
+        custodesloc = floatParaPadraoInternacional(data['custo_deslocamento']);
+        $('#custo_deslocamento').attr('data-custodesloc', custodesloc);
+
+        calculaCustoDeslocamento();
       }
     }
   });
@@ -559,23 +565,24 @@ $(function() {
       }
 
       if ($this.val()) {
-        var $quemIndicou = $("#quem_indicou");
 
         if (
           $this.val().toLocaleLowerCase() == "contato" ||
           $this.val().startsWith("Contato - ")
         ) {
           $this.parent('.form-group').parent("[class^=col]").after(`
-                            <div class="column-quem-indicou col-xl-12" style="order:12;">
-                                <div class="form-group">
-                                    <label class="font-weight-bold" for="quem_indicou">
-                                        <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Campo Obrigatório">*</i>
-                                        <span>Quem Indicou</span>
-                                    </label>
-                                    <input type="text" class="form-control" name="quem_indicou" value="" required data-unico="" data-anterior="" id="quem_indicou" tabindex="12" data-mascara_validacao="false">
-                                </div>
-                            </div>
-                        `);
+            <div class="column-quem-indicou col-xl-12" style="order:12;">
+              <div class="form-group">
+                <label class="font-weight-bold" for="quem_indicou">
+                  <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Campo Obrigatório">*</i>
+                  <span>Quem Indicou</span>
+                </label>
+                <input type="text" class="form-control" name="quem_indicou" value="" required data-unico="" data-anterior="" id="quem_indicou" tabindex="12" data-mascara_validacao="false">
+              </div>
+            </div>
+          `);
+
+          var $quemIndicou = $("#quem_indicou");
 
           $quemIndicou
             .val($this.attr("data-anterior").replace("Contato - ", ""))
@@ -715,6 +722,10 @@ $(function() {
       // Necessário cadastrar o cliente antes de aprovar um orçamento
       $('#modalCadastrarCliente').modal('show');
     }
+  });
+
+  $('#deslocamento_km').on('blur change', function() {
+    calculaCustoDeslocamento();
   });
 
 });
@@ -1059,12 +1070,45 @@ function valorTotal() {
   let somaTotal = 0;
   $('#itensOrcamento tbody tr').each(function() {
     
-    let tdPrecoTotal = $(this).find('td:eq(12)').text(),
+    let $this = $(this),
+      tdPrecoTotal = $this.find('td:eq(12)').text(),
+      tdTipoMaterial = $this.find('td:eq(9)').text(),
       precoTotalFormatado = parseFloat(floatParaPadraoInternacional(tdPrecoTotal));
 
-      somaTotal += precoTotalFormatado;
+      if (tdTipoMaterial != 'alternativo') {
+        somaTotal += precoTotalFormatado;
+      }
+
 
   });
 
   $('[name="valor_total"]').val(floatParaPadraoBrasileiro(somaTotal));
+}
+
+function calculaCustoDeslocamento() {
+
+  let $deslocamentoKm = $('#deslocamento_km'),
+    $deslocamentoCusto = $('#custo_deslocamento'),
+    $valorTotal = $('#valor_total'),
+    $subTotal = $('#sub_total'),
+    custoDeslocamentoParam = $deslocamentoCusto.attr('data-custodesloc'),
+    custoDeslocamentoParamFormated = parseFloat(custoDeslocamentoParam),
+    valorDeslocamento = $deslocamentoKm.val() || 0,
+    valorDeslocamentoFormated = parseFloat(valorDeslocamento);
+
+  let multiplicacaoCustoDesloc = valorDeslocamentoFormated * custoDeslocamentoParamFormated;
+
+  $deslocamentoCusto.val(floatParaPadraoBrasileiro(multiplicacaoCustoDesloc));
+
+  // Acrescentar valor de deslocamento ao valor total
+  if ($subTotal.val()) {
+
+    let valorTotal = $subTotal.val(),
+      valorTotalFormated = parseFloat(floatParaPadraoInternacional(valorTotal)),
+      somaValorTotalCustoDesloc = multiplicacaoCustoDesloc + valorTotalFormated;
+
+    $valorTotal.val(floatParaPadraoBrasileiro(somaValorTotalCustoDesloc.toFixed(2)));
+
+  }
+
 }
