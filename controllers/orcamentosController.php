@@ -103,5 +103,103 @@ class orcamentosController extends controller{
             $this->loadTemplate($this->table . "-form", $dados); 
         }
     }
+
+    public function imprimir($id) {
+
+        $infos['infoUser'] = $_SESSION;
+                
+        $informacoes = $this->model->infosOrcamento($id);
+
+        $infos["cliente"] = $informacoes[0]['nome_cliente'];
+        $infos["tecnico"] = $informacoes[0]['funcionario'];
+        $infos["descricao"] = $informacoes[0]['titulo_orcamento'];
+        $infos["prazo_entrega"] = $informacoes[0]['prazo_entrega'];
+        $infos["forma_pagamento"] = $informacoes[0]['forma_pgto_descricao'];
+        $infos["data_emissao"] = $informacoes[0]['data_emissao'];
+        $infos["data_validade"] = $informacoes[0]['data_validade'];
+
+        $infos["preco_total"] = number_format($informacoes[0]['sub_total'],2,",",".");
+        $infos["desconto"] =  number_format($informacoes[0]['desconto'],2,",",".");
+        $infos["preco_final"] = number_format($informacoes[0]['valor_total'],2,",",".");
+
+        
+
+        $infos["deslocamento"] = $informacoes[0]['deslocamento_km']. " km";
+
+        $itens = $this->model->itensOrcamento($id);
+        $qtdItens = $this->model->qtdItensOrcamento($id);
+        $precoItens = $this->model->precosItens($id);
+
+        $k=0;
+        $j=0;
+
+        for ($i=0; $i < sizeof($itens) ; $i++) {
+
+            if ($i>0 && ($itens[$i]['descricao_item'] != $itens[$i-1]['descricao_item'] || 
+                        $itens[$i]['descricao_subitem'] != $itens[$i-1]['descricao_subitem'])) {
+
+                $infos["itens"][$k]["nome"] = $itens[$i]['descricao_item'] . " - " . $itens[$i]['descricao_subitem'];
+                $k++;
+                $j=0;
+            } else if ($i==0){
+                $infos["itens"][$k]["nome"] = $itens[$i]['descricao_item'] . " - " . $itens[$i]['descricao_subitem'];
+                $k++;
+            }
+            
+            $infos["itens"][$k-1]["subitens"][$j]["produto_servico"] = $itens[$i]['material_servico'];
+            $infos["itens"][$k-1]["subitens"][$j]["tipo_material"] = $itens[$i]['tipo_material'];
+            $infos["itens"][$k-1]["subitens"][$j]["quantidade"] = $itens[$i]['quant'];
+            $infos["itens"][$k-1]["subitens"][$j]["medidas"] = "L: ".$itens[$i]['largura']. " x C: ".$itens[$i]['comprimento'];
+            $infos["itens"][$k-1]["subitens"][$j]["unidade"] = $itens[$i]['unidade'];
+            $infos["itens"][$k-1]["subitens"][$j]["preco_unitario"] = $itens[$i]['custo_tot_subitem'];
+            $infos["itens"][$k-1]["subitens"][$j]["preco_total"] =  $itens[$i]['preco_tot_subitem'];
+
+            $j++;
+        }
+        
+        $totalAlternativo = 0;
+        for ($p=0; $p < $k ; $p++) {
+            $precoPrincipal = 0;
+            $precoAlternativo = 0;
+            for ($j=0; $j < sizeof($infos["itens"][$p]["subitens"]) ; $j++) {
+
+                $precoTotal = $infos["itens"][$p]["subitens"][$j]["preco_total"];
+
+                if ( $infos["itens"][$p]["subitens"][$j]["tipo_material"]=='') {
+                    $precoPrincipal += $precoTotal;
+                    $precoAlternativo += $precoTotal;
+                }else if ($infos["itens"][$p]["subitens"][$j]["tipo_material"]=='principal'){
+                    $precoPrincipal += $precoTotal;
+                }else if ($infos["itens"][$p]["subitens"][$j]["tipo_material"]=='alternativo'){
+                    $precoAlternativo += $precoTotal;
+                }
+            }
+
+            $infos["itens"][$p]["total_principal"] = $precoPrincipal;
+            $infos["itens"][$p]["total_alternativo"] = $precoAlternativo;
+            $totalAlternativo += $precoAlternativo;
+        }
+
+        $infos["preco_alternativo"] = number_format($totalAlternativo,2,",","."); 
+
+        // FORMATAÇÃO
+        for ($p=0; $p < $k ; $p++) {
+            $infos["itens"][$p]["total_principal"] = number_format($infos["itens"][$p]["total_principal"],2,",",".");
+            $infos["itens"][$p]["total_alternativo"] = number_format($infos["itens"][$p]["total_alternativo"],2,",",".");
+
+            for ($j=0; $j < sizeof($infos["itens"][$p]["subitens"]) ; $j++) {
+                $precoUnitFormat = $infos["itens"][$p]["subitens"][$j]["preco_unitario"];
+                $precoTotalFormat =  $infos["itens"][$p]["subitens"][$j]["preco_total"];
+                
+                $infos["itens"][$p]["subitens"][$j]["preco_unitario"] = number_format($precoUnitFormat,2,",",".");
+                $infos["itens"][$p]["subitens"][$j]["preco_total"] = number_format($precoTotalFormat,2,",",".");
+            }
+        }
+    
+        $this->loadTemplate($this->table . "-imp",$infos); 
+    }
 }   
+            
 ?>
+
+

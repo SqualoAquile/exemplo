@@ -1,8 +1,8 @@
 <script src="<?php echo BASE_URL;?>/assets/js/orcamentositens_form.js" type="text/javascript"></script>
 
 <h3 class="mt-5 mb-4">Itens do Orçamento</h3>
-<div class="table-responsive tableFixHead mb-lg-5 mb-3">
-    <table id="itensOrcamento" class="table table-striped table-hover    bg-white table-nowrap first-column-fixed">
+<div class="table-responsive tableFixHead h-100">
+    <table id="itensOrcamento" class="table table-striped table-hover bg-white table-nowrap first-column-fixed">
         <thead>
             <tr>
                 <th>Ações</th>

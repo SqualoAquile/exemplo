@@ -223,6 +223,74 @@ class Orcamentos extends model {
         }
     }
 
+    public function itensOrcamento($id) {
+        if(!empty($id)){
+
+            $id = addslashes(trim($id));
+            
+            $sql = 
+            "SELECT tipo_material,descricao_item, quant, descricao_subitem, material_servico,largura,comprimento,unidade,custo_tot_subitem,preco_tot_subitem 
+            FROM `orcamentositens`
+            WHERE id_orcamento='$id' and situacao='ativo' 
+            ORDER BY descricao_item, descricao_subitem";
+
+            $sql = self::db()->query($sql);
+        
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
+            
+        }
+    }
+
+    public function qtdItensOrcamento($id) {
+        if(!empty($id)){
+
+            $id = addslashes(trim($id));
+            $sql = "SELECT descricao_item from orcamentositens where id_orcamento='$id' and situacao='ativo' group by descricao_item";
+            $sql = self::db()->query($sql);
+            $sql = $sql->fetchAll(PDO::FETCH_ASSOC);
+            return sizeof($sql);
+        }
+    }
+    
+
+    public function infosOrcamento($id) {
+
+        if(!empty($id)){
+
+            $id = addslashes(trim($id));
+            
+            $sql = 
+            "SELECT * FROM orcamentos WHERE id='$id' AND situacao='ativo'";
+
+            $sql = self::db()->query($sql);
+                    
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
+            
+        }
+    }
+
+    // VER COMO O NISSARGAM VAI FAZER A CONVENÇÃO DE MATERIAL PRINCIPAL E ALTERNATIVO
+    public function precosItens($id){
+
+        if(!empty($id)){
+
+            $id = addslashes(trim($id));
+            
+            $sql = 
+            "SELECT descricao_item,descricao_subitem, SUM(preco_tot_subitem) as valor
+            FROM `orcamentositens` 
+            WHERE id_orcamento='$id' AND situacao='ativo'
+            GROUP BY descricao_item, descricao_subitem";
+
+            $sql = self::db()->query($sql);
+                    
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
+            
+        }
+
+
+    }
+
     public function getRelacionalDropdown($request) {
 
         if ($request["tabela"]) {
