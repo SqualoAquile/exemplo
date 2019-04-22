@@ -287,8 +287,6 @@ class Orcamentos extends model {
             return $sql->fetchAll(PDO::FETCH_ASSOC);
             
         }
-
-
     }
 
     public function getRelacionalDropdown($request) {

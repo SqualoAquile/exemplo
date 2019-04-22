@@ -107,9 +107,12 @@ class orcamentosController extends controller{
     public function imprimir($id) {
 
         $infos['infoUser'] = $_SESSION;
-                
-        $informacoes = $this->model->infosOrcamento($id);
 
+        $request["tabela"] = "avisos";
+        $avisos = $this->model->getRelacionalDropdown($request);
+        $infos["avisos"] = $avisos;
+
+        $informacoes = $this->model->infosOrcamento($id);
         $infos["cliente"] = $informacoes[0]['nome_cliente'];
         $infos["tecnico"] = $informacoes[0]['funcionario'];
         $infos["descricao"] = $informacoes[0]['titulo_orcamento'];
@@ -121,8 +124,6 @@ class orcamentosController extends controller{
         $infos["preco_total"] = number_format($informacoes[0]['sub_total'],2,",",".");
         $infos["desconto"] =  number_format($informacoes[0]['desconto'],2,",",".");
         $infos["preco_final"] = number_format($informacoes[0]['valor_total'],2,",",".");
-
-        
 
         $infos["deslocamento"] = $informacoes[0]['deslocamento_km']. " km";
 
