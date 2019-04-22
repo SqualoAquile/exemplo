@@ -150,4 +150,43 @@ class Ordemservico extends model {
             }
         }
     }
+
+    public function cancelarOS($id, $motivo){
+        if(!empty($id) && !empty($motivo)) {
+
+            $id = addslashes(trim($id));
+            $motivo = addslashes(trim($motivo));
+
+            $sql = "SELECT alteracoes FROM ". $this->table ." WHERE id = '$id' AND situacao = 'ativo'";
+            $sql = self::db()->query($sql);
+            
+            if($sql->rowCount() > 0){  
+
+                $sql = $sql->fetch();
+                $palter = $sql["alteracoes"];
+                $ipcliente = $this->permissoes->pegaIPcliente();
+                $palter = $palter." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CANCELAMENTO >> Motivo do Cancelamento: ".ucfirst( $motivo );
+
+                $sqlA = "UPDATE ". $this->table ." SET alteracoes = '$palter', status = 'Cancelada', motivo_cancelamento = '$motivo' WHERE id = '$id' ";
+                
+                self::db()->query($sqlA);
+
+                $erro = self::db()->errorInfo();
+
+                if (empty($erro[2])){
+
+                    $_SESSION["returnMessage"] = [
+                        "mensagem" => "Registro cancelado com sucesso!",
+                        "class" => "alert-success"
+                    ];
+                } else {
+                    $_SESSION["returnMessage"] = [
+                        "mensagem" => "Houve uma falha, tente novamente! <br /> ".$erro[2],
+                        "class" => "alert-danger"
+                    ];
+                }
+            }
+        }
+    }
+
 }

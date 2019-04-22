@@ -553,6 +553,27 @@ class ajaxController extends controller{
 
       }
   }
+
+  public function cancelarOS() {
+     
+    $dados = array();
+    $os = new Ordemservico();
+
+    if(isset($_POST) && !empty($_POST)){
+
+      $motivo = $_POST['motivo'];
+      $id = $_POST['idOS'];
+            
+      $os->cancelarOS($id, $motivo);
+
+      if( $_SESSION["returnMessage"]["mensagem"] == "Registro cancelado com sucesso!" ){
+        echo json_encode(true);
+      }else{
+        echo json_encode(false);
+      }
+
+    }
+}
   
 
 

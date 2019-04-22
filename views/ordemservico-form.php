@@ -254,7 +254,25 @@
             <label for="main-form" id="btn_salvarOS" class="btn btn-primary btn-block" tabindex="0">Salvar</label>
         </div>
         <div class="col-lg-4">
-            <div id="btn_lancamentoVenda"  class="btn btn-secondary btn-block">Finalizar Ordem de Serviço</div>
+            <div id="btn_lancamentoVenda"  class="btn btn-success btn-block">Finalizar Ordem de Serviço</div>
+        </div>
+                                                        
+        <div class="col-lg-4">
+            <div id="btn_cancelamentoVenda"  class="btn btn-danger btn-block">Cancelar Ordem de Serviço</div>
+        </div> 
+        <div class="col-lg-4 btn btn-light btn-block">
+            <div class="form-check form-check-inline">
+                <input 
+                    id="chk_cancelamentoVenda" 
+                    type="checkbox" 
+                    class="form-check-input" 
+                    tabindex=""
+                    value=""
+                    data-mascara_validacao = "false" 
+                />
+                <label class="form-check-label" for="chk_cancelamentoVenda" > Cancelar Ordem de Serviço </label>
+            </div>
+            <!-- <div id="btn_cancelamentoVenda"  class="btn btn-danger btn-block">Cancelar Ordem de Serviço</div> -->
         </div>
         
         <?php if (isset($item)): ?>
