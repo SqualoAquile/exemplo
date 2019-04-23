@@ -717,7 +717,7 @@
 
             <?php if ((isset($item) && $item["status"] != "Aprovado" && $item["status"] != "Cancelado") || !isset($item)): ?>
 
-                <div class="col-lg-2">
+                <div id="col-salvar" class="col-lg-2">
                     <button type="submit" id="main-form" class="h-100 btn btn-primary btn-block btn-lg">Salvar</button>
                 </div>
 
@@ -725,7 +725,7 @@
 
             <?php if (isset($item)): ?>
                 
-                <div id="col-salvar" class="col-lg">
+                <div class="col-lg">
                     <button class="h-100 btn btn-dark btn-block btn-lg" type="button" data-toggle="collapse" data-target="#historico" aria-expanded="false" aria-controls="historico">Histórico de Alterações</button>
                 </div>
 
