@@ -194,7 +194,7 @@ class Shared extends model {
         } else if ( $this->table == "relatoriosaldos"){
             $this->table = "controlesaldos";
         } else if ( $this->table == "relatorioordensservico"){
-            $this->table = "ordensservico";
+            $this->table = "ordemservico";
         }
         
         $sql = self::db()->query("SHOW FULL COLUMNS FROM " . $this->table);

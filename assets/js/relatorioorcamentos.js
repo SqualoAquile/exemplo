@@ -44,7 +44,7 @@ $(function () {
         dataTable = window.dataTable,
         indexColumns = {
             acoes: 0,
-            valor_total: 22,
+            valor_total: 23,
             data_emissao: 8,
             data_validade: 9,
             status:16
@@ -59,18 +59,18 @@ $(function () {
         var rowData = dataTable.rows().data(),
         quantidadeOrcamentos = 0,
         totalOrcado = 0;
-    
+        
     
         i = 0;
         rowData.each(function () {
-            if (rowData[i][indexColumns.status].toLowerCase() == 'ativo') {
-                               
+            // if (rowData[i][indexColumns.status].toLowerCase() == 'ativo') {
+                                              
                 var valor = rowData[i][indexColumns.valor_total];
                 valor = valor.replace('R$  ', '');
-                valor = floatParaPadraoInternacional(despesa);
-                totalOrcado += valor;
+                valor = floatParaPadraoInternacional(valor);
+                totalOrcado = parseFloat(totalOrcado) + parseFloat(valor);
                 quantidadeOrcamentos++;
-            }
+            // }
             i++;
         });
 

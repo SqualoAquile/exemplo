@@ -235,7 +235,7 @@
                     <td> </td>
                     <td class="unitario"> </td>
                     <td> </td>
-                    <td><b>Preço: </b> </td>
+                    <td><b>Preço Principal: </b> </td>
                     <td> <?php echo $itens[$k]["total_principal"] ?> </td>
                 </tr>
 

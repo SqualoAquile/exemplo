@@ -108,7 +108,6 @@ class ordemservicoController extends controller{
         $dados['infoUser'] = $_SESSION;
         $dados = array_merge($dados, $this->model->imprimir($id)); 
         $this->loadTemplate($this->table . "-imp", $dados); 
-        
     }
 }   
 ?>

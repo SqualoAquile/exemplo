@@ -2,7 +2,7 @@
 class relatorioordensservicoController extends controller{
 
     // Protected - estas variaveis só podem ser usadas nesse arquivo
-    protected $table = "ordensservico";
+    protected $table = "ordemservico";
     protected $nome = "relatorioordensservico";
     protected $colunas;
     
