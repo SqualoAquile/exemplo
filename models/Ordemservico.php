@@ -217,7 +217,6 @@ class Ordemservico extends model {
             $sql = $sql->fetchAll(PDO::FETCH_ASSOC);
             $informacoes = $sql[0];
 
-
             $infos['cliente'] = ucwords($informacoes['nome_razao_social']);
             $infos['tecnico'] = ucwords($informacoes['tec_responsavel']);
             $infos['vendedor'] = ucwords($informacoes['vendedor']);

@@ -1,7 +1,7 @@
 <?php
 class Relatorioordensservico extends model {
 
-    protected $table = "ordenservico";
+    protected $table = "ordemservico";
     protected $permissoes;
     protected $shared;
   
