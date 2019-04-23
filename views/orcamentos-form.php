@@ -725,7 +725,7 @@
 
             <?php if (isset($item)): ?>
                 
-                <div class="col-lg">
+                <div id="col-salvar" class="col-lg">
                     <button class="h-100 btn btn-dark btn-block btn-lg" type="button" data-toggle="collapse" data-target="#historico" aria-expanded="false" aria-controls="historico">Histórico de Alterações</button>
                 </div>
 

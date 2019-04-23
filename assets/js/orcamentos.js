@@ -391,10 +391,14 @@ $(function() {
             "#esquerda .relacional-dropdown-wrapper .dropdown-menu .dropdown-menu-wrapper"
           ).html(htmlDropdown);
 
+          changeRequiredsPfPj();
+
           if (!$pfPj.attr('data-anterior')) {
             $pfPj.change();
           }
+
           $('[name="tipo_servico_produto"]').change();
+
         }
       });
     })
@@ -512,41 +516,7 @@ $(function() {
           .removeClass('is-valid is-invalid')
           .val('');
 
-        if ($radio.attr("id") == "pj") {
-
-          $("[name=telefone]")
-            .attr("required", "required")
-            .siblings("label")
-            .addClass("font-weight-bold")
-            .find("> i")
-            .removeClass('d-none')
-            .addClass('d-inline-block');
-
-          $("[name=celular]")
-            .removeAttr("required", "required")
-            .siblings("label")
-            .removeClass("font-weight-bold")
-            .find("> i")
-            .hide();
-
-        } else {
-
-          $("[name=celular]")
-            .attr("required", "required")
-            .siblings("label")
-            .addClass("font-weight-bold")
-            .find("> i")
-            .show();
-
-          $("[name=telefone]")
-            .removeAttr("required", "required")
-            .siblings("label")
-            .removeClass("font-weight-bold")
-            .find("> i")
-            .addClass('d-none')
-            .removeClass('d-inline-block');
-
-        }
+        changeRequiredsPfPj();
 
       }
 
@@ -742,7 +712,7 @@ $(function() {
     if( $(this).is(':checked') ){
 
       $('#col-cancelar').removeClass('d-none');
-      $('#col-aprovar').addClass('d-none');
+      $('#col-aprovar, #col-salvar').addClass('d-none');
 
       $motivoDesistencia.parent().parent().removeClass('d-none');
       $motivoDesistencia.focus();
@@ -750,7 +720,7 @@ $(function() {
     }else{
 
       $('#col-cancelar').addClass('d-none');
-      $('#col-aprovar').removeClass('d-none');
+      $('#col-aprovar, #col-salvar').removeClass('d-none');
 
       $motivoDesistencia.parent().parent().addClass('d-none');
     }
@@ -1151,6 +1121,10 @@ function valorTotal() {
 
   $('[name="valor_total"]').val(floatParaPadraoBrasileiro(somaTotal));
 
+  if ($('#form-principal').hasClass('was-validated')) {
+    $('[name="valor_total"]').blur();
+  }
+
   calculaCustoDeslocamento();
   calculaDesconto();
   resumoItens();
@@ -1289,4 +1263,45 @@ function aprovarOrcamento() {
       }
     }
   });
+}
+
+function changeRequiredsPfPj() {
+
+  let $radio = $('[name="pf_pj"]');
+
+  if ($radio.attr("id") == "pj") {
+
+    $("[name=telefone]")
+      .attr("required", "required")
+      .siblings("label")
+      .addClass("font-weight-bold")
+      .find("> i")
+      .removeClass('d-none')
+      .addClass('d-inline-block');
+
+    $("[name=celular]")
+      .removeAttr("required", "required")
+      .siblings("label")
+      .removeClass("font-weight-bold")
+      .find("> i")
+      .hide();
+
+  } else {
+
+    $("[name=celular]")
+      .attr("required", "required")
+      .siblings("label")
+      .addClass("font-weight-bold")
+      .find("> i")
+      .show();
+
+    $("[name=telefone]")
+      .removeAttr("required", "required")
+      .siblings("label")
+      .removeClass("font-weight-bold")
+      .find("> i")
+      .addClass('d-none')
+      .removeClass('d-inline-block');
+
+  }
 }

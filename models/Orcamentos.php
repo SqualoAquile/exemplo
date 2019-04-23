@@ -188,6 +188,9 @@ class Orcamentos extends model {
 
             $id = addslashes(trim($id));
 
+            $erroItensBooleanExcluir = $this->excluirItens($id);
+            $erroItensBooleanAdicionar = $this->adicionarItens($request["itens"], $id);
+
             $ipcliente = $this->permissoes->pegaIPcliente();
             $hist = explode("##", addslashes($request['alteracoes']));
 
@@ -217,9 +220,6 @@ class Orcamentos extends model {
             self::db()->query($sql);
 
             $erro = self::db()->errorInfo();
-
-            $erroItensBooleanExcluir = $this->excluirItens($id);
-            $erroItensBooleanAdicionar = $this->adicionarItens($request["itens"], $id);
 
             if (empty($erro[2]) && !$erroItensBooleanExcluir && !$erroItensBooleanAdicionar){
 
