@@ -555,7 +555,7 @@ class ajaxController extends controller{
   }
 
   public function cancelarOS() {
-     
+
     $dados = array();
     $os = new Ordemservico();
 
@@ -563,7 +563,7 @@ class ajaxController extends controller{
 
       $motivo = $_POST['motivo'];
       $id = $_POST['idOS'];
-            
+
       $os->cancelarOS($id, $motivo);
 
       if( $_SESSION["returnMessage"]["mensagem"] == "Registro cancelado com sucesso!" ){
@@ -573,7 +573,11 @@ class ajaxController extends controller{
       }
 
     }
-}
+  }
+
+  //
+  // ORCAMENTO
+  //
 
   public function cancelarOrcamento() {
 
@@ -594,8 +598,19 @@ class ajaxController extends controller{
 
     }
   }
-  
 
+  public function aprovarOrcamento() {
+
+    $ordemServico = new Ordemservico();
+    $orcamento = new Orcamentos();
+
+    if(isset($_POST) && !empty($_POST)){
+      $returnAprovar = $ordemServico->aprovar($_POST);
+      if ($returnAprovar["message"][0] == "00000") {
+        echo json_encode($orcamento->aprovar($returnAprovar["id_orcamento"], $returnAprovar["id_ordemservico"]));
+      }
+    }
+  }
 
 }   
 ?>

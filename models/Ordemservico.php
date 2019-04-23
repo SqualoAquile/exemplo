@@ -57,6 +57,34 @@ class Ordemservico extends model {
         }
     }
 
+
+    public function aprovar($request) {
+        
+        $ipcliente = $this->permissoes->pegaIPcliente();
+        $request["alteracoes"] = ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
+        
+        $request["situacao"] = "ativo";
+
+        $keys = implode(",", array_keys($request));
+
+        $values = "'" . implode("','", array_values($this->shared->formataDadosParaBD($request))) . "'";
+
+        $sql = "INSERT INTO " . $this->table . " (" . $keys . ") VALUES (" . $values . ")";
+        
+        self::db()->query($sql);
+
+        $lastInsertId = self::db()->lastInsertId();
+
+        $erro = self::db()->errorInfo();
+
+        return [
+            "id_ordemservico" => $lastInsertId,
+            "id_orcamento" => $request["id_orcamento"],
+            "message" => $erro
+        ];
+
+    }
+
     public function editar($id, $request) {
         
         if(!empty($id)){

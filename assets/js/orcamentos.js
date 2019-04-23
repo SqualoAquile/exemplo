@@ -644,6 +644,8 @@ $(function() {
               .find(".is-valid, .is-invalid")
               .removeClass("is-valid is-invalid");
 
+            aprovarOrcamento();
+
             $("#modalCadastrarCliente").modal("hide");
 
             Toast({ message: data.mensagem, class: data.class });
@@ -720,6 +722,7 @@ $(function() {
   $('#aprovar-orcamento').click(function() {
     if ($('[name=id_cliente]').val() != '0') {
       // Cliente já é cadastrado
+      aprovarOrcamento();
     } else {
       // Necessário cadastrar o cliente antes de aprovar um orçamento
       $('#modalCadastrarCliente').modal('show');
@@ -1240,4 +1243,54 @@ function resumoItens() {
 
   $('#resumoItensCustoTota').text($custo_tot.val());
   $('#resumoItensValorTotal').text($valorTotal.val());
+}
+
+function aprovarOrcamento() {
+
+  let $id_cliente = $('[name=id_cliente]'),
+    $id_orcamento = $('#form-principal'),
+    $titulo_orcamento = $('[name=titulo_orcamento]'),
+    $nome_razao_social = $('[name=nome_cliente]'),
+    $vendedor = $('[name=funcionario]'),
+    $custo_total = $('[name=custo_total]'),
+    $valor_total = $('[name=valor_total]');
+
+  let dadosParaEnviar = {
+    id_cliente: $id_cliente.val(),
+    id_orcamento: $id_orcamento.attr('data-id-orcamento'),
+    data_aprovacao: dataAtual(),
+    titulo_orcamento: $titulo_orcamento.val(),
+    nome_razao_social: $nome_razao_social.val(),
+    veiculo_usado: '',
+    vendedor: $vendedor.val(),
+    tec_responsavel: '',
+    tec_auxiliar: '',
+    data_inicio: '',
+    data_fim: '',
+    custo_total: $custo_total.val(),
+    subtotal: $valor_total.val(),
+    desconto_porcent: '0.00',
+    desconto: '0.00',
+    valor_final: $valor_total.val(),
+    nro_nf: '',
+    data_emissao_nf: '',
+    data_revisao_1: '',
+    data_revisao_2: '',
+    data_revisao_3: '',
+    status: 'Em Produção',
+    observacao: '',
+    motivo_cancelamento: ''
+  };
+
+  $.ajax({
+    url: baselink + '/ajax/aprovarOrcamento',
+    type: 'POST',
+    data: dadosParaEnviar,
+    dataType: 'json',
+    success: function(data) {
+      if (data.message[0] == '00000') {
+        window.location.href = baselink + '/ordemservico/imprimir/' + data.id_ordemservico;
+      }
+    }
+  });
 }
