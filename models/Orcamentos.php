@@ -252,7 +252,7 @@ class Orcamentos extends model {
                 $ipcliente = $this->permissoes->pegaIPcliente();
                 $palter = $palter." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CANCELAMENTO >> Motivo da Desistência: ".ucfirst( $motivo );
 
-                $sqlA = "UPDATE ". $this->table ." SET alteracoes = '$palter', status = 'Cancelada', motivo_desistencia = '$motivo' WHERE id = '$id' ";
+                $sqlA = "UPDATE ". $this->table ." SET alteracoes = '$palter', status = 'Cancelado', motivo_desistencia = '$motivo' WHERE id = '$id' ";
                 
                 self::db()->query($sqlA);
 

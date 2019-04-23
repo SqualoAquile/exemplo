@@ -715,7 +715,7 @@
         </div>
         <div class="row mt-3">
 
-            <?php if ((isset($item) && $item["status"] != "Aprovado") || !isset($item)): ?>
+            <?php if ((isset($item) && $item["status"] != "Aprovado" && $item["status"] != "Cancelado") || !isset($item)): ?>
 
                 <div class="col-lg-2">
                     <button type="submit" id="main-form" class="h-100 btn btn-primary btn-block btn-lg">Salvar</button>
@@ -729,7 +729,7 @@
                     <button class="h-100 btn btn-dark btn-block btn-lg" type="button" data-toggle="collapse" data-target="#historico" aria-expanded="false" aria-controls="historico">Histórico de Alterações</button>
                 </div>
 
-                <?php if ($item["status"] != "Aprovado"): ?>
+                <?php if ($item["status"] != "Aprovado" && $item["status"] != "Cancelado"): ?>
                     <div id="col-aprovar" class="col-lg">
                         <button class="h-100 btn btn-success btn-block btn-lg" type="button" id="aprovar-orcamento">Aprovar Orçamento</button>
                     </div>
