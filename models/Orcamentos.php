@@ -98,6 +98,29 @@ class Orcamentos extends model {
 
     }
 
+    public function aprovar($id, $id_ordemservico) {
+
+        if(!empty($id)){
+
+            $id = addslashes(trim($id));
+
+            $ipcliente = $this->permissoes->pegaIPcliente();
+            $palter = " | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - APROVADO";
+
+            $sql = "UPDATE ". $this->table ." SET alteracoes = CONCAT(alteracoes, '$palter'), status = 'Aprovado' WHERE id = '$id' ";
+            
+            self::db()->query($sql);
+
+            $erro = self::db()->errorInfo();
+
+            return [
+                "id_ordemservico" => $id_ordemservico,
+                "message" => $erro
+            ];
+
+        }
+    }
+
     private function excluirItens($id_orcamento) {
 
         $returnItens = false;
