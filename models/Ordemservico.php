@@ -189,4 +189,175 @@ class Ordemservico extends model {
         }
     }
 
+    public function infosOrcamento($id) {
+
+        if(!empty($id)){
+
+            $id = addslashes(trim($id));
+            
+            $sql = 
+            "SELECT * FROM orcamentos WHERE id='$id' AND situacao='ativo'";
+
+            $sql = self::db()->query($sql);
+                    
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
+            
+        }
+    }
+
+    public function imprimir($id){
+        if(!empty($id)){
+            $id = addslashes(trim($id));
+            $infos=[];
+            
+            //---------------------------------------------------------------------------------------------
+            // Pega algumas infos da OS
+            $sql = "SELECT * FROM ". $this->table ." WHERE id = '$id' AND situacao = 'ativo'";
+            $sql = self::db()->query($sql);
+            $sql = $sql->fetchAll(PDO::FETCH_ASSOC);
+            $informacoes = $sql[0];
+
+
+            $infos['cliente'] = ucwords($informacoes['nome_razao_social']);
+            $infos['tecnico'] = ucwords($informacoes['tec_responsavel']);
+            $infos['vendedor'] = ucwords($informacoes['vendedor']);
+            $infos['observacao'] = $informacoes['observacao'];
+            $dataAux1 = explode('-',$informacoes['data_inicio']);
+            $informacoes['data_inicio'] != "0000-00-00" ? $infos['data_inicio'] = $dataAux1[2]."/".$dataAux1[1]. "/".$dataAux1[0] : $infos['data_inicio'] = "" ;
+            $dataAux2 = explode('-',$informacoes['data_fim']);
+            $informacoes['data_fim'] != "0000-00-00" ? $infos['data_fim'] = $dataAux2[2]."/".$dataAux2[1]. "/".$dataAux2[0] : $infos['data_fim'] = "" ;
+            $dataAux3 = explode('-',$informacoes['data_aprovacao']);
+            $informacoes['data_aprovacao'] != "0000-00-00" ? $infos['data_aprovacao'] = $dataAux3[2]."/".$dataAux3[1]. "/".$dataAux3[0] : $infos['data_aprovacao'] = "" ;
+            $infos['preco_total'] = number_format($informacoes['subtotal'],2,",",".");
+            $infos['desconto'] =  number_format($informacoes['desconto'],2,",",".");
+            $infos['preco_final'] = number_format($informacoes['valor_final'],2,",",".");
+
+            //---------------------------------------------------------------------------------------------
+            
+            $id_cliente = $informacoes['id_cliente'];
+            unset($sql);
+            // Pega informações do cliente
+            $sql = "SELECT endereco,numero,complemento,bairro,cidade,telefone,celular,email,cpf_cnpj FROM clientes WHERE id = '$id_cliente' AND situacao = 'ativo'";
+            $sql = self::db()->query($sql);
+            $sql = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+            $informacoes = $sql[0];
+
+            $infos['endereco'] = $informacoes['endereco'] .",". $informacoes['numero'];
+            empty($informacoes['complemento']) ? $infos['endereco'] = $infos['endereco'] .",". $informacoes['complemento'] : $infos['endereco'] = $infos['endereco'] ;
+            $infos['endereco'] = $infos['endereco'] .",". $informacoes['bairro'] .",". $informacoes['cidade'];
+            $infos['email'] = $informacoes['email'];
+            if(empty($informacoes['telefone'])){
+                $infos['contato'] = $informacoes['celular'];
+            }else{
+                $infos['contato'] = $informacoes['celular'] ." / ". $informacoes['telefone'];
+            }
+            $infos['cpf_cnpj'] = $informacoes['cpf_cnpj'];
+
+            //---------------------------------------------------------------------------------------------
+            
+            unset($sql);
+            // Pega a ID do orçamento
+            $sql = "SELECT id_orcamento FROM ". $this->table ." WHERE id = '$id' AND situacao = 'ativo'";
+            $sql = self::db()->query($sql);
+            $sql = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+            $id_orcamento = $sql[0]['id_orcamento'];
+
+
+            //---------------------------------------------------------------------------------------------
+            unset($sql);
+            // Pega as informações do orçamento através do ID 
+            $sql = "SELECT * FROM orcamentos WHERE id='$id_orcamento' AND situacao='ativo'";
+            $sql = self::db()->query($sql);
+            $sql = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+            $informacoes = $sql[0];
+
+            $infos["descricao"] = $informacoes['titulo_orcamento'];
+            $infos["prazo_entrega"] = $informacoes['prazo_entrega'];
+            $infos["forma_pagamento"] = $informacoes['forma_pgto_descricao'];
+            $infos["deslocamento"] = $informacoes['deslocamento_km']. " km";
+
+            //---------------------------------------------------------------------------------------------
+            unset($sql);
+            // Pega as informações dos itens de orçamento através do ID de orçamento
+            $sql = "SELECT * FROM orcamentositens WHERE id_orcamento='$id_orcamento' AND situacao='ativo'";
+            $sql = self::db()->query($sql);
+            $sql = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+            $itens = $sql;
+
+            $k=0;
+            $j=0;
+        
+            for ($i=0; $i < sizeof($itens) ; $i++) {
+
+                if ($i>0 && ($itens[$i]['descricao_item'] != $itens[$i-1]['descricao_item'] || 
+                            $itens[$i]['descricao_subitem'] != $itens[$i-1]['descricao_subitem'])) {
+
+                    $infos["itens"][$k]["nome"] = $itens[$i]['descricao_item'] . " - " . $itens[$i]['descricao_subitem'];
+                    $k++;
+                    $j=0;
+                } else if ($i==0){
+                    $infos["itens"][$k]["nome"] = $itens[$i]['descricao_item'] . " - " . $itens[$i]['descricao_subitem'];
+                    $k++;
+                }
+            
+                $infos["itens"][$k-1]["subitens"][$j]["produto_servico"] = ucfirst(str_replace("_"," ",$itens[$i]['material_servico']));
+                $infos["itens"][$k-1]["subitens"][$j]["tipo_material"] = $itens[$i]['tipo_material'];
+                $infos["itens"][$k-1]["subitens"][$j]["quantidade"] = $itens[$i]['quant'];
+                $infos["itens"][$k-1]["subitens"][$j]["medidas"] = "L: ".$itens[$i]['largura']. " x C: ".$itens[$i]['comprimento'];
+                $infos["itens"][$k-1]["subitens"][$j]["unidade"] = $itens[$i]['unidade'];
+                $infos["itens"][$k-1]["subitens"][$j]["preco_unitario"] = $itens[$i]['custo_tot_subitem'];
+                $infos["itens"][$k-1]["subitens"][$j]["preco_total"] =  $itens[$i]['preco_tot_subitem'];
+
+                $j++;
+            }
+        
+            $totalAlternativo = 0;
+            for ($p=0; $p < $k ; $p++) {
+                $precoPrincipal = 0;
+                $precoAlternativo = 0;
+                for ($j=0; $j < sizeof($infos["itens"][$p]["subitens"]) ; $j++) {
+
+                    $precoTotal = $infos["itens"][$p]["subitens"][$j]["preco_total"];
+
+                    if ( $infos["itens"][$p]["subitens"][$j]["tipo_material"]=='') {
+                        $precoPrincipal += $precoTotal;
+                        $precoAlternativo += $precoTotal;
+                    }else if ($infos["itens"][$p]["subitens"][$j]["tipo_material"]=='principal'){
+                        $precoPrincipal += $precoTotal;
+                    }else if ($infos["itens"][$p]["subitens"][$j]["tipo_material"]=='alternativo'){
+                        $precoAlternativo += $precoTotal;
+                    }
+                }
+                
+                $infos["itens"][$p]["total_principal"] = $precoPrincipal;
+                $infos["itens"][$p]["total_alternativo"] = $precoAlternativo;
+                $totalAlternativo += $precoAlternativo;
+            }
+
+            $infos["preco_alternativo"] = number_format($totalAlternativo,2,",","."); 
+
+            // FORMATAÇÃO
+            for ($p=0; $p < $k ; $p++) {
+                $infos["itens"][$p]["total_principal"] = number_format($infos["itens"][$p]["total_principal"],2,",",".");
+                $infos["itens"][$p]["total_alternativo"] = number_format($infos["itens"][$p]["total_alternativo"],2,",",".");
+
+                for ($j=0; $j < sizeof($infos["itens"][$p]["subitens"]) ; $j++) {
+                    $precoUnitFormat = $infos["itens"][$p]["subitens"][$j]["preco_unitario"];
+                    $precoTotalFormat =  $infos["itens"][$p]["subitens"][$j]["preco_total"];
+                    
+                    $infos["itens"][$p]["subitens"][$j]["preco_unitario"] = number_format($precoUnitFormat,2,",",".");
+                    $infos["itens"][$p]["subitens"][$j]["preco_total"] = number_format($precoTotalFormat,2,",",".");
+                }
+            }         
+
+            return $infos;
+
+        }
+
+    }
+
 }

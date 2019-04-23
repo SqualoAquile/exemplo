@@ -727,15 +727,21 @@
             <div class="col-lg">
                 <button class="h-100 btn btn-danger btn-block btn-lg" type="button">Cancelar Orçamento</button>
             </div>
+            <!-- <div class="col-lg">
+                <button class="h-100 btn btn-warning btn-block btn-lg" type="button" data-toggle="modal" data-target="#modalImprimirOrcamento" >Imprimir</button>
+            </div> -->
             <div class="col-lg">
-                <button class="h-100 btn btn-warning btn-block btn-lg" type="button">Imprimir</button>
+                <button onclick="location.href='<?php echo BASE_URL?>/orcamentos/imprimir/<?php echo $item['id']?>'" type="button" class="h-100 btn btn-warning btn-block btn-lg">
+                    Imprimir
+                </button>
             </div>
             <?php endif ?>
         </div>
     </form>
     <?php include "_historico.php" ?>
 </section>
-<!-- Modal -->
+
+<!-- Modal - Adicionar Cliente -->
 <div class="modal fade modais-require" id="modalCadastrarCliente" tabindex="-1" role="dialog" aria-labelledby="modalCadastrarClienteLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content">
@@ -758,10 +764,11 @@
 
                     // Configurações para o submit do form
                     $formIdModal = "ModalOrcamentos";
-
+                    
                     require "clientes-form.php";
                 ?>
             </div>
         </div>
     </div>
 </div>
+
