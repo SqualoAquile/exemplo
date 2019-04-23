@@ -146,32 +146,52 @@
 <div class = "card mb-5">
     <div class = "text-center">
         <div class="card-header h2">
-            Orçamento
+            Ordem de Serviço
         </div>
     </div>
+
+
+    <!-- (PJ | PF) - NOME | RAZÃO SOCIAL : ( PF ) - VALQUÍRIA SOSINHO DOS SANTOS - CPF: 902.562.040-04
+FATURADO PARA : VALQUÍRIA SOSINHO DOS SANTOS
+TELEFONE | CELULAR : (51)9834-7303 |
+
+
+OBSERVAÇÃO : AV GRÉCIA 1100
+
+  -->
+
 
     <div class="card-body">
         <div class="container">
             <div class="col-sm d-flex justify-content-between">
-                <div class="row-sm">
-                    <p class="small"> <b>Data de Emissão: </b> <?php echo $data_emissao; ?></p>
-                    <p class="small"> <b>Data de Validade:</b> <?php echo $data_validade; ?>  </p>      
-                </div>
-
-                <div class="row-sm">
+ 
+                 <div class="row-sm">
+                    <p class="small"> <b>Descrição: </b> <?php echo $descricao; ?></p>
                     <p class="small"> <b>Cliente: </b> <?php echo $cliente; ?> </p>
-                    <p class="small"> <b>Descrição: </b> <?php echo $descricao; ?>  </p>
-                    <p class="small"> <b>Contato vendedor: </b> <?php echo $tecnico; ?> </p>
+                    <p class="small"> <b>CPF/CNPJ: </b> <?php echo $cpf_cnpj; ?> </p>
+                    <p class="small"> <b>Email: </b> <?php echo $email; ?> </p>
                 </div>
 
                 <div class="row-sm">
-                    <p class="small"> <b>Prazo de Entrega: </b> <?php echo $prazo_entrega; ?> </p>
-                    <p class="small"> <b>Forma de Pagamento: </b> <?php echo $forma_pagamento; ?>  </p>
+                    <p class="small"> <b>Endereço: </b> <?php echo $endereco; ?> </p>
+                    <p class="small"> <b>Contato do Cliente: </b> <?php echo $contato; ?> </p>
+                    <p class="small"> <b>Forma de Pagamento: </b> <?php echo $forma_pagamento; ?></p>
+                </div>
+
+                <div class="row-sm">
+                    <p class="small"> <b>Prazo de Entrega:</b> <?php echo $prazo_entrega; ?>  </p>
+                    <p class="small"> <b>Vendedor: </b> <?php echo $vendedor; ?> </p> 
+                    <p class="small"> <b>Técnico: </b> <?php echo $tecnico; ?> </p>     
+                </div>
+
+                <div class="row-sm">
+                    <p class="small"> <b>Data de Aprovação: </b> <?php echo $data_aprovacao; ?></p>
+                    <p class="small"> <b>Data de Inicio: </b> <?php echo $data_inicio; ?></p>
+                    <p class="small"> <b>Data de Finalização: </b> <?php echo $data_fim; ?></p>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 
 <table class="table borderless my-3" >
@@ -353,22 +373,21 @@
     </div>
 </div>
 
-<div class="card my-2" id="cardObservacoes">
+<div class="card my-2" id="cardAssinaturas">
     <div class="card-body">
     <small>
         <div class="row justify-content-between">
-            <div class="col-6-sm">
-            <p class = "small">OBS. OS ITENS EM VERMELHO SÃO FEITOS COM MATERIAL ALTERNATIVO.</p>
-            <p class = "small">O DESCONTO É REFERENTE AOS ITENS DESCRITOS EM PRETO.</p>
-            <p class = "small">* ESTE TRABALHO TEM 1 ANO DE GARANTIA DE APLICAÇÃO.</p>
-            <p class = "small">* O PAGAMENTO P ODE SER FEITO EM ATÉ 6X SEM JUROS NO CARTÃO</p>
-            <p class = "small">* ESTE ORÇAMENTO TEM VALIDADE DE 15 DIAS, A PARTIR DA SUA DATA DE EMISSÃO</p>
+            <div class="col-3-sm px-2">
+                <p>_________________________________</p>
+                <p>Assinatura do técnico responsável</p>
             </div>
-            <div class="col-6-sm">
-            <p class = "small">* MATERIAL IMPORTADO TRADICIONAL, TEM 5 ANOS DE GARANTIA DE DURABILIDADE.</p>
-            <p class = "small">* MATERIAL NACIONAL, TEM 2 ANOS DE GARANTIA DE DURABILIDADE (EXTERNO)</p>
-            <p class = "small">* PARA CONFIRMAR O AGENDAMENTO, SOLICITAMOS UMA ENTRADA DE 30% DO PREÇO FINAL DO TRABALHO.</p>
-            <p class = "small">* NÃO ACEITAMOS PAGAMENTOS COM CHEQUE.</p>
+            <div class="col-8-sm px-2">
+                <p>_________________________________</p>
+                <p>Assinatura do cliente</p>
+                <p class = "small">AFIRMO QUE LI E CONCORDO COM TODO O CONTEÚDO DESTA ORDEM DE SERVIÇO E AUTORIZO A EXECUÇÃO DA MESMA. </p>
+                <p class = "small">AFIRMO QUE O SERVIÇO FOI PRESTADO DE FORMA CORRETA DE ACORDO COM O CONTEÚDO AQUI ESPECIFICADO.</p>
+                <p class = "small">AUTORIZO O USO DE IMAGEM DO BEM (OBJETO DO SERVIÇO) PARA DIVULGAÇÃO EM QUALQUER TIPO DE MÍDIA.</p>
+                <p class = "small">CONCORDO EM REALIZAR AS REVISÕES DO SERVIÇO EM 15 DIAS E 30 DIAS APÓS A DATA DE REALIZAÇÃO DO SERVIÇO.</p>
             </div>
         </div>
     </small>

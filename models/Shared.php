@@ -36,8 +36,8 @@ class Shared extends model {
                 $stringBtn .= '<input type="hidden" name="id" value="'. $id .'"><button type="submit" onclick="return confirm(\'Tem Certeza?\')" class="btn btn-sm btn-danger ml-1"><i class="fas fa-trash-alt"></i></button>';
             }
 
-            if(($this->table == "orcamentos" || $this->table == "ordensservico") && in_array( $this->table.'_edt' , $_SESSION["permissoesUsuario"]) ){
-                $stringBtn .=  '<a href="' . BASE_URL . '/orcamentos/imprimir/' . $id . '" class="btn btn-warning btn-sm ml-2"><i class="fas fa-print"></i></a>';
+            if(($this->table == "orcamentos" || $this->table == "ordemservico") && in_array( $this->table.'_edt' , $_SESSION["permissoesUsuario"]) ){
+                $stringBtn .=  '<a href="' . BASE_URL . '/'. $this->table .'/imprimir/' . $id . '" class="btn btn-warning btn-sm ml-2"><i class="fas fa-print"></i></a>';
             }            
             
             $stringBtn .= '</form>';

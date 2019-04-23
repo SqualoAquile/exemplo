@@ -94,5 +94,21 @@ class ordemservicoController extends controller{
             $this->loadTemplate($this->table . "-form", $dados); 
         }
     }
+
+    public function imprimir($id) {
+        
+        if(in_array($this->table . "_ver", $_SESSION["permissoesUsuario"]) == false || empty($id) || !isset($id)){
+            header("Location: " . BASE_URL . "/" . $this->table); 
+        }
+
+        if($this->shared->idAtivo($id) == false){
+            header("Location: " . BASE_URL . "/" . $this->table); 
+        }
+
+        $dados['infoUser'] = $_SESSION;
+        $dados = array_merge($dados, $this->model->imprimir($id)); 
+        $this->loadTemplate($this->table . "-imp", $dados); 
+        
+    }
 }   
 ?>
