@@ -574,6 +574,26 @@ class ajaxController extends controller{
 
     }
 }
+
+  public function cancelarOrcamento() {
+
+    $orcamento = new Orcamentos();
+
+    if(isset($_POST) && !empty($_POST)){
+
+      $motivo_desistencia = $_POST['motivo_desistencia'];
+      $id = $_POST['id'];
+
+      $orcamento->cancelar($id, $motivo_desistencia);
+
+      if(isset($_SESSION["returnMessage"]) && $_SESSION["returnMessage"]["mensagem"] == "Registro cancelado com sucesso!"){
+        echo json_encode(true);
+      }else{
+        echo json_encode(false);
+      }
+
+    }
+  }
   
 
 

@@ -13,7 +13,7 @@ $(function() {
   $('#motivo_desistencia')
     .parent()
     .parent('[class^=col-]')
-      .addClass('d-none');
+      .addClass('d-none col-lg-12');
 
   $('#status, #custo_total, #sub_total, #valor_total, #custo_deslocamento, #desconto')
     .attr('readonly', 'readonly');
@@ -98,8 +98,8 @@ $(function() {
         custodesloc = floatParaPadraoInternacional(data['custo_deslocamento']);
         $('#custo_deslocamento').attr('data-custodesloc', custodesloc);
 
-        calculaCustoDeslocamento();
-        resumoItens();
+        console.log('chamada valorTotal() 1');
+        valorTotal();
       }
     }
   });
@@ -689,6 +689,7 @@ $(function() {
   });
 
   $('#itensOrcamento').on('DOMNodeInserted DOMNodeRemoved', function() {
+    console.log('chamada valorTotal() 2');
     valorTotal();
   });
 
@@ -726,10 +727,73 @@ $(function() {
   });
 
   $('#embaixo input').on('change', function() {
-    calculaCustoDeslocamento();
-    calculaDesconto();
-    resumoItens();
+    console.log('chamada valorTotal() 3');
+    valorTotal();
   });
+
+  // $('#checkCancelar').click(() => $('#chk_cancelamentoOrc').click());
+
+  $('#chk_cancelamentoOrc').click(function(){
+
+    let $motivoDesistencia = $('#motivo_desistencia');
+
+    $motivoDesistencia.val('');
+
+    if( $(this).is(':checked') ){
+
+      $('#col-cancelar').removeClass('d-none');
+      $('#col-aprovar').addClass('d-none');
+
+      $motivoDesistencia.parent().parent().removeClass('d-none');
+      $motivoDesistencia.focus();
+
+    }else{
+
+      $('#col-cancelar').addClass('d-none');
+      $('#col-aprovar').removeClass('d-none');
+
+      $motivoDesistencia.parent().parent().addClass('d-none');
+    }
+
+  });
+
+  $('#btn_cancelamentoOrc').click(function(){
+
+    var $motivoCancela = $('#motivo_desistencia');
+
+    if($motivoCancela.val() == ''){
+      alert('Preencha o Motivo da Desistência.');
+      $motivoCancela.focus();
+      return;
+    }
+
+    if (confirm('Tem Certeza que quer Cancelar esse Orçamento?') ==  true && $motivoCancela.val() != ''){
+
+        var idOrcamento = $('#form-principal').attr('data-id-orcamento');
+        var motivo = $motivoCancela.val()+'a';
+
+        $.ajax({
+            url: baselink + "/ajax/cancelarOrcamento",
+            type: "POST",
+            data: {
+              motivo_desistencia: motivo,
+              id: idOrcamento
+            },
+            dataType: "json",
+            success: data => {
+              if(data == true){
+                // deu certo o cancelamento
+                // vai ser redirecionado pro browser, não precisa fazer nada
+                window.location.href = baselink + "/orcamentos";
+              }else{
+                alert('Não foi possível realizar o cancelamento.\nTente Novamente.');
+                return;
+              }
+            }      
+        });
+
+    }        
+});
 
 });
 
@@ -1070,6 +1134,9 @@ function changeTipoServicoProduto(setValueSuccess) {
 }
 
 function valorTotal() {
+
+  console.log('\n\nvalorTotal() \n------\n')
+
   let somaTotal = 0;
   $('#itensOrcamento tbody tr').each(function() {
     
@@ -1084,9 +1151,11 @@ function valorTotal() {
     
   });
 
-  resumoItens();
-
   $('[name="valor_total"]').val(floatParaPadraoBrasileiro(somaTotal));
+
+  calculaCustoDeslocamento();
+  calculaDesconto();
+  resumoItens();
 }
 
 function calculaCustoDeslocamento() {
@@ -1131,15 +1200,35 @@ function calculaDesconto() {
 
     if ($valorTotal.val()) {
 
+      console.log('valor total', $valorTotal.val())
+      console.log('custo total', $custoTotal.val())
+
       let valorTotal = parseFloat(floatParaPadraoInternacional($valorTotal.val())),
         totalDescontoReais = valorTotal * descontoPorcent,
         diferenca = valorTotal - totalDescontoReais;
 
-      console.log('boolean', valorTotal, custoTotalFormated, valorTotal > custoTotalFormated);
+      console.log('diferenca', diferenca);
+      console.log('custoTotalFormated', custoTotalFormated);
 
-      $descontoReais.val(floatParaPadraoBrasileiro(totalDescontoReais.toFixed(2)));
+      if (diferenca > custoTotalFormated) {
+        
+        $descontoReais.val(floatParaPadraoBrasileiro(totalDescontoReais.toFixed(2)));
+  
+        $valorTotal.val(floatParaPadraoBrasileiro(diferenca.toFixed(2)));
 
-      $valorTotal.val(floatParaPadraoBrasileiro(diferenca.toFixed(2)));
+      } else if (diferenca == custoTotalFormated) {
+        
+        alert('O desconto dado faz o valor final ser igual custo total.');
+
+        $descontoPorcent.val($descontoPorcent.attr('data-anterior') || '');
+
+      } else {
+
+        console.log('O desconto dado faz o valor final ser menor do que custo total.');
+        
+        $descontoPorcent.val($descontoPorcent.attr('data-anterior') || '');
+
+      }
 
     }
   }

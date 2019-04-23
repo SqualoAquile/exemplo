@@ -106,7 +106,7 @@ class Orcamentos extends model {
 
             $id_orcamento = addslashes(trim($id_orcamento));
 
-            $sql = "UPDATE orcamentositens SET situacao = 'excluido' WHERE id_orcamento = '$id_orcamento' ";
+            $sql = "DELETE FROM orcamentositens WHERE id_orcamento = '$id_orcamento' ";
             self::db()->query($sql);
             $erro = self::db()->errorInfo();
 
@@ -126,7 +126,7 @@ class Orcamentos extends model {
         $request["alteracoes"] = ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
         
         $request["situacao"] = "ativo";
-        $request["status"] = "em espera";
+        $request["status"] = "Em Espera";
 
         if (isset($request['quem_indicou'])) {
             unset($request['quem_indicou']);
@@ -212,13 +212,13 @@ class Orcamentos extends model {
             }
         }
     }
-    
-    public function excluir($id){
-        if(!empty($id)) {
+
+    public function cancelar($id, $motivo){
+        if(!empty($id) && !empty($motivo)) {
 
             $id = addslashes(trim($id));
+            $motivo = addslashes(trim($motivo));
 
-            //se não achar nenhum usuario associado ao grupo - pode deletar, ou seja, tornar o cadastro situacao=excluído
             $sql = "SELECT alteracoes FROM ". $this->table ." WHERE id = '$id' AND situacao = 'ativo'";
             $sql = self::db()->query($sql);
             
@@ -227,21 +227,53 @@ class Orcamentos extends model {
                 $sql = $sql->fetch();
                 $palter = $sql["alteracoes"];
                 $ipcliente = $this->permissoes->pegaIPcliente();
-                $palter = $palter." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - EXCLUSÃO";
+                $palter = $palter." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CANCELAMENTO >> Motivo da Desistência: ".ucfirst( $motivo );
 
-                $sql = "UPDATE ". $this->table ." SET alteracoes = '$palter', situacao = 'excluido' WHERE id = '$id' ";
-                self::db()->query($sql);
+                $sqlA = "UPDATE ". $this->table ." SET alteracoes = '$palter', status = 'Cancelada', motivo_desistencia = '$motivo' WHERE id = '$id' ";
+                
+                self::db()->query($sqlA);
+
                 $erro = self::db()->errorInfo();
 
-                $erroItensBoolean = $this->excluirItens($id);
+                if (empty($erro[2])){
 
-                if (empty($erro[2]) && !$erroItensBoolean){
-
+                    $_SESSION["returnMessage"] = [
+                        "mensagem" => "Registro cancelado com sucesso!",
+                        "class" => "alert-success"
+                    ];
+                } else {
+                    $_SESSION["returnMessage"] = [
+                        "mensagem" => "Houve uma falha, tente novamente! <br /> ".$erro[2],
+                        "class" => "alert-danger"
+                    ];
+                }
+            }
+        }
+    }
+    
+    public function excluir($id){
+        if(!empty($id)) {
+            $id = addslashes(trim($id));
+            //se não achar nenhum usuario associado ao grupo - pode deletar, ou seja, tornar o cadastro situacao=excluído
+            $sql = "SELECT alteracoes FROM ". $this->table ." WHERE id = '$id' AND situacao = 'ativo'";
+            $sql = self::db()->query($sql);
+            
+            if($sql->rowCount() > 0){  
+                $sql = $sql->fetch();
+                $palter = $sql["alteracoes"];
+                $ipcliente = $this->permissoes->pegaIPcliente();
+                $palter = $palter." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - EXCLUSÃO";
+                $sqlA = "UPDATE ". $this->table ." SET alteracoes = '$palter', situacao = 'excluido' WHERE id = '$id' ";
+                self::db()->query($sqlA);
+                $erroA = self::db()->errorInfo();
+                $sqlB = "UPDATE orcamentositens SET situacao = 'excluido' WHERE id_orcamento = '$id' ";
+                self::db()->query($sqlB);
+                $erroB = self::db()->errorInfo();
+                if (empty($erroA[2]) && empty($erroB[2])){
                     $_SESSION["returnMessage"] = [
                         "mensagem" => "Registro deletado com sucesso!",
                         "class" => "alert-success"
                     ];
-
                 } else {
                     $_SESSION["returnMessage"] = [
                         "mensagem" => "Houve uma falha, tente novamente! <br /> ".$erro[2],

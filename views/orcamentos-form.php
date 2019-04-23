@@ -247,7 +247,7 @@
         </div>
     </div>
     </div>
-    <form id="form-principal" method="POST" class="needs-validation" novalidate autocomplete="off">
+    <form id="form-principal" method="POST" class="needs-validation" novalidate autocomplete="off" data-id-orcamento="<?php echo isset($item) ? $item["id"] : "" ?>">
         <div class="col-lg-5 pl-lg-0 pr-lg-3 px-0">
             <div id="esquerda" class="card card-body my-4 my-lg-0">
                 <div class="row">
@@ -721,11 +721,21 @@
             <div class="col-lg-2">
                 <button class="h-100 btn btn-dark btn-block btn-lg" type="button" data-toggle="collapse" data-target="#historico" aria-expanded="false" aria-controls="historico">Histórico de Alterações</button>
             </div>
-            <div class="col-lg">
+            <div id="col-aprovar" class="col-lg">
                 <button class="h-100 btn btn-success btn-block btn-lg" type="button" id="aprovar-orcamento">Aprovar Orçamento</button>
             </div>
+            <div id="col-cancelar" class="col-lg d-none">
+                <button id="btn_cancelamentoOrc" class="h-100 btn btn-danger btn-block btn-lg" type="button">Cancelar Orçamento</button>
+            </div>
             <div class="col-lg">
-                <button class="h-100 btn btn-danger btn-block btn-lg" type="button">Cancelar Orçamento</button>
+                <div id="checkCancelar" class="form-check form-check-inline h-100 btn btn-secondary btn-lg btn-block d-flex justify-content-center">
+                    <input 
+                        id="chk_cancelamentoOrc" 
+                        type="checkbox" 
+                        class="form-check-input mr-3" 
+                    />
+                    <label class="form-check-label" for="chk_cancelamentoOrc">Cancelar Orçamento</label>
+                </div>
             </div>
             <div class="col-lg">
                 <button class="h-100 btn btn-warning btn-block btn-lg" type="button">Imprimir</button>
