@@ -39,12 +39,12 @@ class Orcamentos extends model {
 
         foreach ($itens as $keyItem => $item) {
 
-            $explodedItem = explode(",", $item);
+            $explodedItem = explode(", ", $item);
 
             $tipoProdutoServico = $explodedItem[6];
             $tipoMaterial = $explodedItem[8];
 
-            if ($tipoProdutoServico != "produtos") {
+            if (trim($tipoProdutoServico) != "produtos") {
                 $tipoMaterial = "";
             }
 
