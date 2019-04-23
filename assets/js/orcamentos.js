@@ -1138,8 +1138,8 @@ function calculaCustoDeslocamento() {
     $subTotal = $('#sub_total'),
     custoDeslocamentoParam = $deslocamentoCusto.attr('data-custodesloc'),
     custoDeslocamentoParamFormated = parseFloat(custoDeslocamentoParam),
-    valorDeslocamento = $deslocamentoKm.val() || 0,
-    valorDeslocamentoFormated = parseFloat(valorDeslocamento);
+    valorDeslocamento = $deslocamentoKm.val() || '0',
+    valorDeslocamentoFormated = parseFloat(floatParaPadraoInternacional(valorDeslocamento));
 
   let multiplicacaoCustoDesloc = valorDeslocamentoFormated * custoDeslocamentoParamFormated;
 
