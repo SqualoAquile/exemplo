@@ -25,19 +25,25 @@ $(function() {
 
     if ($form[0].checkValidity() && !$form.find('.is-invalid').length) {
 
-      let $descricaoSubItemForm = $form.find('#descricao_subitem'),
+      let $descricaoItemForm = $form.find('#descricao_item'),
+        $descricaoSubItemForm = $form.find('#descricao_subitem'),
         $materialServicoForm = $form.find('#material_servico');
 
       let $elsFiltereds = $('#itensOrcamento tbody tr').filter(function() {
         
-        let subItemFilter = $(this).find('td:eq(2)'),
+        let itemFilter = $(this).find('td:eq(1)'),
+          subItemFilter = $(this).find('td:eq(2)'),
           materialServicoFilter = $(this).find('td:eq(8)');
 
-        if (subItemFilter && subItemFilter.text() && $descricaoSubItemForm && $descricaoSubItemForm.val()) {
-          if (subItemFilter.text().toLowerCase() == $descricaoSubItemForm.val().toLowerCase()) {
-            if (materialServicoFilter && materialServicoFilter.text() && $materialServicoForm && $materialServicoForm.val()) {
-              if (materialServicoFilter.text().toLowerCase() == $materialServicoForm.val().toLowerCase()) {
-                return this;
+        if (itemFilter && itemFilter.text() && $descricaoItemForm && $descricaoItemForm.val()) {
+          if (itemFilter.text().toLowerCase() == $descricaoItemForm.val().toLowerCase()) {
+            if (subItemFilter && subItemFilter.text() && $descricaoSubItemForm && $descricaoSubItemForm.val()) {
+              if (subItemFilter.text().toLowerCase() == $descricaoSubItemForm.val().toLowerCase()) {
+                if (materialServicoFilter && materialServicoFilter.text() && $materialServicoForm && $materialServicoForm.val()) {
+                  if (materialServicoFilter.text().toLowerCase() == $materialServicoForm.val().toLowerCase()) {
+                    return this;
+                  }
+                }
               }
             }
           }
@@ -61,7 +67,7 @@ $(function() {
         $('#btn_incluir')
           .after(`
             <div class="alert alert-danger alert-dismissible fade show tipo-material-repetido mt-3" role="alert">
-              Este produto já foi adicionado para este sub item.
+              Este produto já foi adicionado para este grupo.
               <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -81,6 +87,9 @@ $(function() {
     })
     .on('click', '.excluir-item', function() {
       Delete(this);
+    })
+    .on('reset', '#camposOrc', function() {
+      cancelarEdicao();
     });
 
   // Retorna um array de itens puxados do campo hidden com o atributo nome igual a itens
@@ -144,9 +153,26 @@ $(function() {
 
       // Seta o data id como undefined para novos itens poderem ser cadastrados
       $tableItensOrcamento.removeAttr("data-current-id");
+
+      $('#col-cancelar_edicao').addClass('d-none');
+
     }
 
     calculaSubtotalCustotal();
+  }
+
+  function cancelarEdicao() {
+
+    $tableItensOrcamento.removeAttr("data-current-id");
+    $('#col-cancelar_edicao').addClass('d-none');
+    $('#btn_incluir').text('Incluir');
+    $('#camposOrc').removeClass('was-validated');
+
+    let $trs = $tableItensOrcamento.find('tr.disabled');
+
+    $trs.removeClass('disabled');
+    $trs.find('.btn.disabled').removeClass('disabled');
+    
   }
 
   // Pega as linhas da tabela auxiliar e manipula o hidden de itens
@@ -348,6 +374,8 @@ $(function() {
 
     $('#btn_incluir')
       .text('Salvar');
+
+    $('#col-cancelar_edicao').removeClass('d-none');
 
     calculaSubtotalCustotal();
     toggleTipoMaterial(tdUnidade);

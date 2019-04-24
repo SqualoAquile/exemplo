@@ -234,6 +234,9 @@
             <div class="col-lg" style="order: 14;">
                 <button id="btn_incluir" class="btn btn-primary btn-block">Incluir</button>
             </div>
+            <div id="col-cancelar_edicao" class="col-lg-4 d-none" style="order: 14;">
+                <button id="cancelar_edicao" type="reset" class="btn btn-primary btn-light btn-block">Cancelar Edição</button>
+            </div>
         </form>
         <div class="row" style='order: 100;'>
             <div class="col-lg-4 d-none">
@@ -781,6 +784,7 @@
                 <?php
                     $shared = new Shared('clientes');
                     $colunas = $shared->nomeDasColunas();
+                    $viewInfoModal = ["title" => "Adicionar"];
                     $labelTabela = $shared->labelTabela();
 
                     // Em caso de edição do orçamento, a variavel $item será confundida pelo clientes-form
