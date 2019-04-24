@@ -17,10 +17,18 @@
     overflow-y: auto;
 }
 #form-principal {
-    &.was-validated .form-check-input:valid ~ .form-check-label, 
-    .form-check-input.is-valid ~ .form-check-label,
-    &.was-validated .form-check-input:invalid ~ .form-check-label, 
-    .form-check-input.is-invalid ~ .form-check-label {
-        color: $white;
+    &.was-validated {
+        #checkCancelar {
+            .form-check-input:valid ~ .form-check-label,
+            .form-check-input:invalid ~ .form-check-label {
+                color: $white;
+            }
+        }
+    }
+    #checkCancelar {
+        .form-check-input.is-valid ~ .form-check-label,
+        .form-check-input.is-invalid ~ .form-check-label {
+            color: $white;
+        }
     }
 }

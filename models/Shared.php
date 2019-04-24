@@ -669,7 +669,9 @@ class Shared extends model {
             $i=0;
             
             // print_r($registro);
+            // echo "<pre>";
             // print_r($nomeColunas);
+            // echo "</pre>";
             // exit;
             foreach ($registro as $chave => $valor) {
                 //testo se é o valor referente ao mesmo campo do nome das colunas
@@ -698,9 +700,14 @@ class Shared extends model {
                         $array[$chave] = addslashes($registro[$chave]);
                     } 
 
+                } else {
+                    echo $nomeColunas[$i]['Field'] . "<br>";
+                    echo $chave . "<br><br>";
                 }
                 $i++;
             }
+
+            // exit;
             
             return $array;
         }

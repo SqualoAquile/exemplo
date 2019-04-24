@@ -554,9 +554,13 @@ $(function() {
 
           var $quemIndicou = $("#quem_indicou");
 
-          $quemIndicou
-            .val($this.attr("data-anterior").replace("Contato - ", ""))
-            .blur();
+          if ($this.attr("data-anterior").startsWith('Contato - ')) {
+            
+            $quemIndicou
+              .val($this.attr("data-anterior").replace("Contato - ", ""))
+              .blur();
+
+          }
 
           var valueQuemIndicou = $quemIndicou.val(),
             $comoConhec = $("#como_conheceu"),
@@ -659,8 +663,25 @@ $(function() {
       .val($formClienteEsquerda.find("[name=como_conheceu]").val());
   });
 
-  $('#itensOrcamento').on('DOMNodeInserted DOMNodeRemoved', function() {
+  $('#itensOrcamento').on('alteracoes', function() {
+
+    let $msgAlert = $('#invalid-feedback-zero-itens');
+
+    $msgAlert.addClass('d-none');
+    if (!$('[name=itens]').val().length) {
+      $msgAlert.removeClass('d-none');
+    }
+
     valorTotal();
+  });
+
+  $('#main-form').click(function(event) {
+    let $msgAlert = $('#invalid-feedback-zero-itens');
+    $msgAlert.addClass('d-none');
+    if (!$('[name=itens]').val().length) {
+      $msgAlert.removeClass('d-none');
+      event.preventDefault();
+    }
   });
 
   $('#nome_cliente').on('blur change', function() {
@@ -1186,13 +1207,15 @@ function calculaDesconto() {
         
         alert('O desconto dado faz o valor final ser igual custo total.');
 
-        $descontoPorcent.val($descontoPorcent.attr('data-anterior') || '');
-
+        $descontoPorcent.val($descontoPorcent.attr('data-anterior') || 0);
+        $descontoReais.val($descontoReais.attr('data-anterior') || 0);
+        
       } else {
-
+        
         alert('O desconto dado faz o valor final ser menor do que custo total.');
         
-        $descontoPorcent.val($descontoPorcent.attr('data-anterior') || '');
+        $descontoReais.val($descontoReais.attr('data-anterior') || 0);
+        $descontoPorcent.val($descontoPorcent.attr('data-anterior') || 0);
 
       }
 

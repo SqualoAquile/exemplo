@@ -75,6 +75,14 @@ $(function() {
 
   });
 
+  $(document)
+    .on('click', '.editar-item', function() {
+      Edit(this);
+    })
+    .on('click', '.excluir-item', function() {
+      Delete(this);
+    });
+
   // Retorna um array de itens puxados do campo hidden com o atributo nome igual a itens
   function Itens() {
     let returnItens = [];
@@ -138,8 +146,6 @@ $(function() {
       $tableItensOrcamento.removeAttr("data-current-id");
     }
 
-    $(".editar-item").bind("click", Edit);
-    $(".excluir-item").bind("click", Delete);
     calculaSubtotalCustotal();
   }
 
@@ -196,8 +202,8 @@ $(function() {
   }
 
   // Delete item da tabela e do hidden
-  function Delete() {
-    var par = $(this).closest("tr");
+  function Delete(el) {
+    var par = $(el).closest("tr");
     par.remove();
     SetInput();
     calculaSubtotalCustotal();
@@ -205,10 +211,10 @@ $(function() {
 
   // Seta no form o item clicado para editar, desabilita os botoes de acões deste item e seta o id desse item
   // no form dos itens
-  function Edit() {
+  function Edit(el) {
 
     let $tipoServicoProduto = $("[name=tipo_servico_produto]"),
-      $par = $(this).closest("tr"),
+      $par = $(el).closest("tr"),
       $tbody = $par.parent('tbody'),
       tdItem = $par.children("td:nth-child(2)").text(),
       tdSubItem = $par.children("td:nth-child(3)").text(),
@@ -389,7 +395,7 @@ $(function() {
     var $subtot = $("#sub_total");
     var $custotot = $("#custo_total");
 
-    if ($("#itensOrcamento tbody").length > 0) {
+    if ($("#itensOrcamento tbody tr").length > 0) {
       $("#itensOrcamento tbody tr").each(function() {
 
         let tdTipoMaterial = $(this).find('td:eq(9)').text();
@@ -431,7 +437,12 @@ $(function() {
     } else {
       $custotot.val("0,00");
       $subtot.val("0,00");
+
+      $('#desconto_porcent, #desconto').val("0,00");
+
     }
+
+    $('#itensOrcamento').trigger('alteracoes');
   }
   
 });

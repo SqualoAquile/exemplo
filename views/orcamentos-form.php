@@ -713,6 +713,16 @@
                 </div>
             </div>
         </div>
+        <div id="invalid-feedback-zero-itens" class="row mt-3 d-none">
+            <div class="col-lg">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    É preciso ter ao menos 1 item cadastrado no orçamento.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+        </div>
         <div class="row mt-3">
 
             <?php if ((isset($item) && $item["status"] != "Aprovado" && $item["status"] != "Cancelado") || !isset($item)): ?>
