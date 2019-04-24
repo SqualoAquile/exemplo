@@ -221,10 +221,9 @@
       <script src="<?php echo BASE_URL?>/assets/js/vendor/dataTables.searchHighlight.min.js" type="text/javascript"></script>
       <script src="<?php echo BASE_URL;?>/assets/js/vendor/loader.js" type="text/javascript"></script>
       <script src="<?php echo BASE_URL;?>/assets/js/vendor/Chart.bundle.min.js" type="text/javascript"></script>
-      
-
       <script src="<?php echo BASE_URL?>/assets/js/validacoes.js" type="text/javascript"></script>
       <script src="<?php echo BASE_URL?>/assets/js/principal.js" type="text/javascript"></script>
+      
    </head>
    <body class="d-flex flex-column h-100 bg-light <?php echo $viewName ?>">
       <nav id="nav" class="navbar bg-white shadow-sm fixed-top flex-nowrap">

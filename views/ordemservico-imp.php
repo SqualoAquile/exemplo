@@ -5,13 +5,14 @@
 </script>
 
 <script src="<?php echo BASE_URL?>/assets/js/vendor/html2canvas.min.js" type="text/javascript"></script>
+<script src="<?php echo BASE_URL?>/assets/js/vendor/jspdf.min.js" type="text/javascript"></script>
 <script src="<?php echo BASE_URL?>/assets/js/vendor/FileSaver.min.js" type="text/javascript"></script>
 <script src="<?php echo BASE_URL?>/assets/js/orcamentos-imp.js" type="text/javascript"></script>
 
 
 <style>
     p.small {
-    line-height: 0.5;
+    line-height: 1.5;
     }
 
     p.big {
@@ -47,25 +48,29 @@
         margin-bottom: 10mm;
     }
 
-    body {margin-top: 15mm; margin-bottom: 10mm; 
-           margin-left: 3mm; margin-right: 3mm}
+    /* body {margin-top: 15mm; margin-bottom: 10mm; 
+           margin-left: 3mm; margin-right: 3mm} */
 
-    .break-before { page-break-before: always; }
+    /* html, body { height: auto; } */
+
+    body > table:last-of-type{page-break-after:auto}
+
+   /* .break-before { page-break-before: always; } */
 
     #cardOpcoes, #header, .footer, .header { display:none !important;}
 
-    table { page-break-after:auto; margin-bottom:3rem }
+    /* table { page-break-after:auto; margin-bottom:3rem }
     tr    { page-break-inside:avoid; page-break-after:auto }
     td    { page-break-inside:avoid; page-break-after:auto }
     thead { display:table-header-group }
-    tfoot { display:table-footer-group }
+    tfoot { display:table-footer-group } */
 
-    tbody::after {
+    /* tbody::after {
         content: ''; display: block;
         page-break-after: always;
         page-break-inside: avoid;
         page-break-before: always;        
-    }
+    } */
  } 
 
 </style>
@@ -150,41 +155,30 @@
         </div>
     </div>
 
-
-    <!-- (PJ | PF) - NOME | RAZÃO SOCIAL : ( PF ) - VALQUÍRIA SOSINHO DOS SANTOS - CPF: 902.562.040-04
-FATURADO PARA : VALQUÍRIA SOSINHO DOS SANTOS
-TELEFONE | CELULAR : (51)9834-7303 |
-
-
-OBSERVAÇÃO : AV GRÉCIA 1100
-
-  -->
-
-
     <div class="card-body">
         <div class="container">
-            <div class="col-sm d-flex justify-content-between">
+            <div class="row-sm d-flex justify-content-between">
  
-                 <div class="row-sm">
+                 <div class="col-3">
                     <p class="small"> <b>Descrição: </b> <?php echo $descricao; ?></p>
                     <p class="small"> <b>Cliente: </b> <?php echo $cliente; ?> </p>
                     <p class="small"> <b>CPF/CNPJ: </b> <?php echo $cpf_cnpj; ?> </p>
                     <p class="small"> <b>Email: </b> <?php echo $email; ?> </p>
                 </div>
 
-                <div class="row-sm">
+                <div class="col-3">
                     <p class="small"> <b>Endereço: </b> <?php echo $endereco; ?> </p>
                     <p class="small"> <b>Contato do Cliente: </b> <?php echo $contato; ?> </p>
                     <p class="small"> <b>Forma de Pagamento: </b> <?php echo $forma_pagamento; ?></p>
                 </div>
 
-                <div class="row-sm">
+                <div class="col-3">
                     <p class="small"> <b>Prazo de Entrega:</b> <?php echo $prazo_entrega; ?>  </p>
                     <p class="small"> <b>Vendedor: </b> <?php echo $vendedor; ?> </p> 
                     <p class="small"> <b>Técnico: </b> <?php echo $tecnico; ?> </p>     
                 </div>
 
-                <div class="row-sm">
+                <div class="col-3">
                     <p class="small"> <b>Data de Aprovação: </b> <?php echo $data_aprovacao; ?></p>
                     <p class="small"> <b>Data de Inicio: </b> <?php echo $data_inicio; ?></p>
                     <p class="small"> <b>Data de Finalização: </b> <?php echo $data_fim; ?></p>

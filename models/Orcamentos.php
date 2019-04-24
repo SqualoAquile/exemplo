@@ -290,7 +290,7 @@ class Orcamentos extends model {
             $id = addslashes(trim($id));
             
             $sql = 
-            "SELECT tipo_material,descricao_item, quant, descricao_subitem, material_servico,largura,comprimento,unidade,custo_tot_subitem,preco_tot_subitem 
+            "SELECT * 
             FROM `orcamentositens`
             WHERE id_orcamento='$id' and situacao='ativo' 
             ORDER BY descricao_item, descricao_subitem";

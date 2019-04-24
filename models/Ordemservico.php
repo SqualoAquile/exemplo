@@ -308,7 +308,7 @@ class Ordemservico extends model {
                 $infos["itens"][$k-1]["subitens"][$j]["quantidade"] = $itens[$i]['quant'];
                 $infos["itens"][$k-1]["subitens"][$j]["medidas"] = "L: ".$itens[$i]['largura']. " x C: ".$itens[$i]['comprimento'];
                 $infos["itens"][$k-1]["subitens"][$j]["unidade"] = $itens[$i]['unidade'];
-                $infos["itens"][$k-1]["subitens"][$j]["preco_unitario"] = $itens[$i]['custo_tot_subitem'];
+                $infos["itens"][$k-1]["subitens"][$j]["preco_unitario"] = floatval($itens[$i]['preco_tot_subitem']) / floatval(floatval($itens[$i]['quant'])*floatval($itens[$i]['quant_usada']));
                 $infos["itens"][$k-1]["subitens"][$j]["preco_total"] =  $itens[$i]['preco_tot_subitem'];
 
                 $j++;

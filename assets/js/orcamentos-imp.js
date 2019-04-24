@@ -13,6 +13,29 @@ $(function () {
         });
     });
 
+    // $('#imprimirPDF').on('click', function () {
+    //   const filename  = 'Orçamento.pdf';
+  
+    //   html2canvas(document.querySelector('#nodeHTML')).then(canvas => {
+    //     let pdf = new jsPDF('p', 'mm', 'a4');
+    //     pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 211, 298);
+    //     pdf.save(filename);
+    //   });
+    // })
+
+    // Porque isso aqui não funcionou?
+    $('#imprimirPDF').on('click', function() {
+      const filename  = 'Orçamento.pdf';
+  
+      html2canvas(document.querySelector('#nodeHTML'), 
+                  {scale: 4}
+               ).then(canvas => {
+        let pdf = new jsPDF('p', 'mm', 'a4');
+        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 211, 298);
+        pdf.save(filename);
+      });
+    })
+
     // TESTES PARA MELHORAR A QUALIDADE DA IMAGEM
 
 
@@ -73,11 +96,11 @@ $(function () {
         }
     });
 
-    $("input[name='checkUnitario']").on('click', function(){
+    $("input[name='checkPrecos']").on('click', function(){
         if($(this).is(":checked")){
-            $('.unitario').show();
+            $('.preco').show();
         }else{
-            $('.unitario').hide();
+            $('.preco').hide();
         }
     });
 
