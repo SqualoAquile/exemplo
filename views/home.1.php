@@ -15,71 +15,8 @@
   </div>
 
 <?php endif?>
-
 <h1 class="display-4 font-weight-bold pt-4">Home</h1>
-
-<div class="card text-center">
-        <div class="card-header alert-success py-1">
-            <h4 class="text-weight-bold">Financeiro</h4>
-        </div>
-        <div class="card-body">
-            <div class="row my-1 ">
-
-            <div class="col-lg-3 mx-0">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h6 class="card-title"><i class="fas fa-save"></i> Exemplo Título 1</h6>
-                            <h2 class="card-text">R$ 1.000,00</h2>
-                        </div>
-                        <div class="card-footer text-muted">
-                            Na última semana
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-lg-3 mx-0">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h6 class="card-title"><i class="fas fa-save"></i> Exemplo Título 1</h6>
-                            <h2 class="card-text">R$ 1.000,00</h2>
-                        </div>
-                        <div class="card-footer text-muted">
-                            Na última semana
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 mx-0">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h6 class="card-title"><i class="fas fa-save"></i> Exemplo Título 1</h6>
-                            <h2 class="card-text">R$ 1.000,00</h2>
-                        </div>
-                        
-                    <div class="card-footer text-muted">
-                            Na última semana
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 mx-0">
-                    <div class="card text-center">
-                        <div class="card-body alert-danger">
-                            <h6 class="card-title"><i class="fas fa-save"></i> Exemplo Título 1</h6>
-                            <h2 class="card-text">R$ 1.000,00</h2>
-                        </div>
-                        <div class="card-footer">
-                            <i class="fas fa-arrow-up"></i> 14% na última semana
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    
-    
-<!-- <section id="charts">
+<section id="charts">
     <div class="row my-5">
         <div class="col-xl-6">
           <canvas id="chartBar"></canvas>
@@ -96,7 +33,7 @@
           <canvas id="chartLine"></canvas>
         </div>
     </div>
-</section> -->
+</section>
 <script>
 var ctxBar = document.getElementById("chartBar").getContext('2d');
 var ctxPie = document.getElementById("chartPie").getContext('2d');
