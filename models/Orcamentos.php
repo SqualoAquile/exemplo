@@ -188,6 +188,9 @@ class Orcamentos extends model {
 
             $id = addslashes(trim($id));
 
+            $erroItensBooleanExcluir = $this->excluirItens($id);
+            $erroItensBooleanAdicionar = $this->adicionarItens($request["itens"], $id);
+
             $ipcliente = $this->permissoes->pegaIPcliente();
             $hist = explode("##", addslashes($request['alteracoes']));
 
@@ -217,9 +220,6 @@ class Orcamentos extends model {
             self::db()->query($sql);
 
             $erro = self::db()->errorInfo();
-
-            $erroItensBooleanExcluir = $this->excluirItens($id);
-            $erroItensBooleanAdicionar = $this->adicionarItens($request["itens"], $id);
 
             if (empty($erro[2]) && !$erroItensBooleanExcluir && !$erroItensBooleanAdicionar){
 
@@ -252,7 +252,7 @@ class Orcamentos extends model {
                 $ipcliente = $this->permissoes->pegaIPcliente();
                 $palter = $palter." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CANCELAMENTO >> Motivo da Desistência: ".ucfirst( $motivo );
 
-                $sqlA = "UPDATE ". $this->table ." SET alteracoes = '$palter', status = 'Cancelada', motivo_desistencia = '$motivo' WHERE id = '$id' ";
+                $sqlA = "UPDATE ". $this->table ." SET alteracoes = '$palter', status = 'Cancelado', motivo_desistencia = '$motivo' WHERE id = '$id' ";
                 
                 self::db()->query($sqlA);
 

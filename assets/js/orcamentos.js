@@ -98,7 +98,6 @@ $(function() {
         custodesloc = floatParaPadraoInternacional(data['custo_deslocamento']);
         $('#custo_deslocamento').attr('data-custodesloc', custodesloc);
 
-        console.log('chamada valorTotal() 1');
         valorTotal();
       }
     }
@@ -392,10 +391,14 @@ $(function() {
             "#esquerda .relacional-dropdown-wrapper .dropdown-menu .dropdown-menu-wrapper"
           ).html(htmlDropdown);
 
+          changeRequiredsPfPj();
+
           if (!$pfPj.attr('data-anterior')) {
             $pfPj.change();
           }
+
           $('[name="tipo_servico_produto"]').change();
+
         }
       });
     })
@@ -513,41 +516,7 @@ $(function() {
           .removeClass('is-valid is-invalid')
           .val('');
 
-        if ($radio.attr("id") == "pj") {
-
-          $("[name=telefone]")
-            .attr("required", "required")
-            .siblings("label")
-            .addClass("font-weight-bold")
-            .find("> i")
-            .removeClass('d-none')
-            .addClass('d-inline-block');
-
-          $("[name=celular]")
-            .removeAttr("required", "required")
-            .siblings("label")
-            .removeClass("font-weight-bold")
-            .find("> i")
-            .hide();
-
-        } else {
-
-          $("[name=celular]")
-            .attr("required", "required")
-            .siblings("label")
-            .addClass("font-weight-bold")
-            .find("> i")
-            .show();
-
-          $("[name=telefone]")
-            .removeAttr("required", "required")
-            .siblings("label")
-            .removeClass("font-weight-bold")
-            .find("> i")
-            .addClass('d-none')
-            .removeClass('d-inline-block');
-
-        }
+        changeRequiredsPfPj();
 
       }
 
@@ -691,7 +660,6 @@ $(function() {
   });
 
   $('#itensOrcamento').on('DOMNodeInserted DOMNodeRemoved', function() {
-    console.log('chamada valorTotal() 2');
     valorTotal();
   });
 
@@ -730,7 +698,6 @@ $(function() {
   });
 
   $('#embaixo input').on('change', function() {
-    console.log('chamada valorTotal() 3');
     valorTotal();
   });
 
@@ -745,7 +712,7 @@ $(function() {
     if( $(this).is(':checked') ){
 
       $('#col-cancelar').removeClass('d-none');
-      $('#col-aprovar').addClass('d-none');
+      $('#col-aprovar, #col-salvar').addClass('d-none');
 
       $motivoDesistencia.parent().parent().removeClass('d-none');
       $motivoDesistencia.focus();
@@ -753,7 +720,7 @@ $(function() {
     }else{
 
       $('#col-cancelar').addClass('d-none');
-      $('#col-aprovar').removeClass('d-none');
+      $('#col-aprovar, #col-salvar').removeClass('d-none');
 
       $motivoDesistencia.parent().parent().addClass('d-none');
     }
@@ -1138,8 +1105,6 @@ function changeTipoServicoProduto(setValueSuccess) {
 
 function valorTotal() {
 
-  console.log('\n\nvalorTotal() \n------\n')
-
   let somaTotal = 0;
   $('#itensOrcamento tbody tr').each(function() {
     
@@ -1156,6 +1121,10 @@ function valorTotal() {
 
   $('[name="valor_total"]').val(floatParaPadraoBrasileiro(somaTotal));
 
+  if ($('#form-principal').hasClass('was-validated')) {
+    $('[name="valor_total"]').blur();
+  }
+
   calculaCustoDeslocamento();
   calculaDesconto();
   resumoItens();
@@ -1169,8 +1138,8 @@ function calculaCustoDeslocamento() {
     $subTotal = $('#sub_total'),
     custoDeslocamentoParam = $deslocamentoCusto.attr('data-custodesloc'),
     custoDeslocamentoParamFormated = parseFloat(custoDeslocamentoParam),
-    valorDeslocamento = $deslocamentoKm.val() || 0,
-    valorDeslocamentoFormated = parseFloat(valorDeslocamento);
+    valorDeslocamento = $deslocamentoKm.val() || '0',
+    valorDeslocamentoFormated = parseFloat(floatParaPadraoInternacional(valorDeslocamento));
 
   let multiplicacaoCustoDesloc = valorDeslocamentoFormated * custoDeslocamentoParamFormated;
 
@@ -1195,23 +1164,17 @@ function calculaDesconto() {
     $valorTotal = $('#valor_total'),
     $descontoReais = $('#desconto'),
     $custoTotal = $('#custo_total'),
-    custoTotalFormated = parseFloat(floatParaPadraoInternacional($custoTotal.val()));
+    custoTotalFormated = parseFloat(floatParaPadraoInternacional($custoTotal.val())),
+    valorTotal = parseFloat(floatParaPadraoInternacional($valorTotal.val()));
 
   if ($descontoPorcent.val()) {
     
     let descontoPorcent = parseFloat(floatParaPadraoInternacional($descontoPorcent.val())) / 100;
 
-    if ($valorTotal.val()) {
+    if ($valorTotal.val() && valorTotal > 0) {
 
-      console.log('valor total', $valorTotal.val())
-      console.log('custo total', $custoTotal.val())
-
-      let valorTotal = parseFloat(floatParaPadraoInternacional($valorTotal.val())),
-        totalDescontoReais = valorTotal * descontoPorcent,
+      let totalDescontoReais = valorTotal * descontoPorcent,
         diferenca = valorTotal - totalDescontoReais;
-
-      console.log('diferenca', diferenca);
-      console.log('custoTotalFormated', custoTotalFormated);
 
       if (diferenca > custoTotalFormated) {
         
@@ -1227,7 +1190,7 @@ function calculaDesconto() {
 
       } else {
 
-        console.log('O desconto dado faz o valor final ser menor do que custo total.');
+        alert('O desconto dado faz o valor final ser menor do que custo total.');
         
         $descontoPorcent.val($descontoPorcent.attr('data-anterior') || '');
 
@@ -1238,11 +1201,18 @@ function calculaDesconto() {
 }
 
 function resumoItens() {
-  let $custo_tot = $('#custo_total'),
-    $valorTotal = $('#sub_total');
 
-  $('#resumoItensCustoTota').text($custo_tot.val());
-  $('#resumoItensValorTotal').text($valorTotal.val());
+  let $custo_tot = $('#custo_total'),
+      $subTotal = $('#sub_total');
+
+  if ($custo_tot.val()) {
+    $('#resumoItensCustoTotal').text($custo_tot.val());
+  }
+
+  if ($subTotal.val()) {
+    $('#resumoItensSubTotal').text($subTotal.val());
+  }
+
 }
 
 function aprovarOrcamento() {
@@ -1293,4 +1263,45 @@ function aprovarOrcamento() {
       }
     }
   });
+}
+
+function changeRequiredsPfPj() {
+
+  let $radio = $('[name="pf_pj"]');
+
+  if ($radio.attr("id") == "pj") {
+
+    $("[name=telefone]")
+      .attr("required", "required")
+      .siblings("label")
+      .addClass("font-weight-bold")
+      .find("> i")
+      .removeClass('d-none')
+      .addClass('d-inline-block');
+
+    $("[name=celular]")
+      .removeAttr("required", "required")
+      .siblings("label")
+      .removeClass("font-weight-bold")
+      .find("> i")
+      .hide();
+
+  } else {
+
+    $("[name=celular]")
+      .attr("required", "required")
+      .siblings("label")
+      .addClass("font-weight-bold")
+      .find("> i")
+      .show();
+
+    $("[name=telefone]")
+      .removeAttr("required", "required")
+      .siblings("label")
+      .removeClass("font-weight-bold")
+      .find("> i")
+      .addClass('d-none')
+      .removeClass('d-inline-block');
+
+  }
 }
