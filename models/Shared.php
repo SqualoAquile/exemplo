@@ -668,11 +668,6 @@ class Shared extends model {
             $primeiroElemento = array_shift($nomeColunas); // usado só para retirar o primeiro elemento do array que é o ID
             $i=0;
             
-            // print_r($registro);
-            // echo "<pre>";
-            // print_r($nomeColunas);
-            // echo "</pre>";
-            // exit;
             foreach ($registro as $chave => $valor) {
                 //testo se é o valor referente ao mesmo campo do nome das colunas
                 if($nomeColunas[$i]['Field'] == $chave){ 
@@ -706,8 +701,6 @@ class Shared extends model {
                 }
                 $i++;
             }
-
-            // exit;
             
             return $array;
         }

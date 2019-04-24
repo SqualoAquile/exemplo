@@ -209,9 +209,12 @@ class Orcamentos extends model {
                 return false;
             }
 
+            if (isset($request["quem_indicou"])) {
+                unset($request["quem_indicou"]);
+            }
+
             $request = $this->shared->formataDadosParaBD($request);
 
-            // print_r($request);exit;
 
             // Cria a estrutura key = 'valor' para preparar a query do sql
             $output = implode(', ', array_map(
@@ -223,8 +226,6 @@ class Orcamentos extends model {
             ));
 
             $sql = "UPDATE " . $this->table . " SET " . $output . " WHERE id='" . $id . "'";
-
-            // print_r($sql);exit;
              
             self::db()->query($sql);
 
