@@ -315,6 +315,49 @@ $(function() {
     calculaMaterialCustoPreco();
   });
 
+  $("#preco_tot_subitem").on("change", function() {
+    var $custo = $("#custo_tot_subitem");
+    var $preco = $("#preco_tot_subitem");
+    var tx_segop, precoaux;
+
+    tx_segop = parseFloat(
+      parseFloat($("#preco_tot_subitem").attr("data-seg_op")) / parseFloat(100)
+    );
+
+      if ( $("#preco_tot_subitem").attr("data-preco_anterior") != undefined ){
+          if ($("#preco_tot_subitem").attr("data-seg_op") != undefined) {
+            if ($custo.val() != "" && $preco.val() == "") {
+              precoaux = parseFloat(
+                parseFloat($preco.attr("data-preco_anterior")) *
+                  parseFloat(parseFloat(1) + tx_segop)
+              );
+              $preco.val(floatParaPadraoBrasileiro(precoaux));
+              return;
+            }
+    
+            if ($custo.val() != "" && $preco.val() != "") {
+              if (
+                parseFloat(floatParaPadraoInternacional($custo.val())) >=
+                parseFloat(floatParaPadraoInternacional($preco.val()))
+              ) {
+                precoaux = parseFloat(
+                  parseFloat($preco.attr("data-preco_anterior")) *
+                    parseFloat(parseFloat(1) + tx_segop)
+                );
+                $preco.val(floatParaPadraoBrasileiro(precoaux));
+              } else {
+                precoaux = parseFloat(
+                  parseFloat(floatParaPadraoInternacional($preco.val())) *
+                    parseFloat(parseFloat(1) + tx_segop)
+                );
+                $preco.val(floatParaPadraoBrasileiro(precoaux));
+              }
+            }
+          }
+      }
+
+    calculaMaterialCustoPreco();
+  });
   //
   //
   // INPUT material_servico

@@ -462,10 +462,6 @@ $(function () {
 
                 if (dataAnterior != valorAtual) {                    
 
-                    console.log(text_label);
-                console.log(dataAnterior);
-                console.log(valorAtual);
-
                     campos_alterados += '{' + text_label.toUpperCase() + ' de (' + dataAnterior + ') para (' + valorAtual + ')}';
                     
                 }
@@ -675,6 +671,9 @@ $(function () {
 
         var $alteracoes = $('[name=alteracoes]');
         $alteracoes.val( $alteracoes.attr('data-anterior'));
+
+        $("table.table.table-striped.table-hover tbody tr").remove();
+        calcularesumo();        
 
     });
     
