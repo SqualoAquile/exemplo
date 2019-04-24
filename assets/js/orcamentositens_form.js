@@ -296,6 +296,13 @@ $(function() {
 
     changeTipoServicoProduto(tdMaterialServico);
 
+    console.log(`precounit:  `, precoUnit);
+      precoUnit = parseFloat(floatParaPadraoInternacional(precoUnit)) / parseFloat(1.1) ;
+      
+      console.log(`precounit sem seg op:  `, precoUnit);
+
+      console.log($("input[name=material_servico]"))
+
     $("input[name=material_servico]")
       .val(tdMaterialServico)
       .attr("data-anterior", tdMaterialServico);
@@ -316,9 +323,11 @@ $(function() {
       .val(custoUnit)
       .attr("data-anterior", custoUnit);
 
+      precoUnit = floatParaPadraoBrasileiro(precoUnit);
     $("input[name=preco_tot_subitem]")
       .val(precoUnit)
       .attr("data-anterior", precoUnit);
+
 
     $("input[name=quant]")
       .val(tdQuant)
@@ -349,6 +358,11 @@ $(function() {
     calculaSubtotalCustotal();
     toggleTipoMaterial(tdUnidade);
 
+    $("input[name=preco_tot_subitem]").change();
+
+    $("input[name=material_servico]")
+      .attr("data-preco", floatParaPadraoInternacional(precoUnit));
+    
   }
 
   // Ao dar submit neste form, chama essa funcão que pega os dados do formula e Popula a tabela

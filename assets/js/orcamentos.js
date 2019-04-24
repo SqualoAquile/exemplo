@@ -270,6 +270,7 @@ $(function() {
   //
 
   $("#preco_tot_subitem").on("change", function() {
+
     var $custo = $("#custo_tot_subitem");
     var $preco = $("#preco_tot_subitem");
     var $material = $("#material_servico");
@@ -278,6 +279,8 @@ $(function() {
     tx_segop = parseFloat(
       parseFloat($("#preco_tot_subitem").attr("data-seg_op")) / parseFloat(100)
     );
+
+    console.log('change em mim', tx_segop);
 
     if ($("#preco_tot_subitem").attr("data-seg_op") != undefined) {
       if ($custo.val() != "" && $preco.val() == "") {
@@ -710,8 +713,12 @@ $(function() {
 
   $('#aprovar-orcamento').click(function() {
     if ($('[name=id_cliente]').val() != '0') {
+      
       // Cliente já é cadastrado
-      aprovarOrcamento();
+      if (confirm('Tem Certeza?')) {
+        aprovarOrcamento();
+      }
+
     } else {
       // Necessário cadastrar o cliente antes de aprovar um orçamento
       $('#modalCadastrarCliente').modal('show');
