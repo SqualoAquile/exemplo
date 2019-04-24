@@ -28,13 +28,13 @@
     <div class="col-lg">
         <div class="card card-body text-center">
             <p>Custo Total</p>
-            <p class="h2" id="resumoItensCustoTota">0</p>
+            <p class="h2" id="resumoItensCustoTotal">0,00</p>
         </div>
     </div>
     <div class="col-lg">
         <div class="card card-body text-center">
-            <p>Valor Total</p>
-            <p class="h2" id="resumoItensValorTotal">0</p>
+            <p>Sub Total</p>
+            <p class="h2" id="resumoItensSubTotal">0,00</p>
         </div>
     </div>
 </div>

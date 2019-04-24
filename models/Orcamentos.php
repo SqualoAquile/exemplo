@@ -30,72 +30,100 @@ class Orcamentos extends model {
 
         $returnItens = false;
 
-        $format_itens = str_replace("][", "|", $_itens);
-        $format_itens = str_replace(" *", ",", $format_itens);
-        $format_itens = str_replace("[", "", $format_itens);
-        $format_itens = str_replace("]", "", $format_itens);
+        if ($_itens != "") {
 
-        $itens = explode("|", $format_itens);
-
-        foreach ($itens as $keyItem => $item) {
-
-            $explodedItem = explode(", ", $item);
-
-            $tipoProdutoServico = $explodedItem[6];
-            $tipoMaterial = $explodedItem[8];
-
-            if (trim($tipoProdutoServico) != "produtos") {
-                $tipoMaterial = "";
-            }
-
-            $sqlItens = "INSERT INTO orcamentositens 
-            (
-                descricao_item, 
-                descricao_subitem, 
-                quant, 
-                largura, 
-                comprimento, 
-                quant_usada, 
-                tipo_servico_produto, 
-                material_servico, 
-                tipo_material, 
-                unidade, 
-                custo_tot_subitem, 
-                preco_tot_subitem, 
-                observacao_subitem, 
-                id_orcamento, 
-                situacao
-            ) 
-            VALUES (
-                '" . $explodedItem[0] . "',
-                '" . $explodedItem[1] . "',
-                '" . $explodedItem[2] . "',
-                '" . $explodedItem[3] . "',
-                '" . $explodedItem[4] . "',
-                '" . $explodedItem[5] . "',
-                '" . $tipoProdutoServico . "',
-                '" . $explodedItem[7] . "',
-                '" . $tipoMaterial . "',
-                '" . $explodedItem[9] . "',
-                '" . $explodedItem[10] . "',
-                '" . $explodedItem[11] . "',
-                '" . $explodedItem[12] . "',
-                '" . $id_orcamento . "',
-                'ativo'
-            )";
-
-            self::db()->query($sqlItens);
-
-            $erroItens = self::db()->errorInfo();
-
-            if (!empty($erroItens[2])){
-                $returnItens = true;
+            $format_itens = str_replace("][", "|", $_itens);
+            $format_itens = str_replace(" *", ",", $format_itens);
+            $format_itens = str_replace("[", "", $format_itens);
+            $format_itens = str_replace("]", "", $format_itens);
+    
+            $itens = explode("|", $format_itens);
+    
+            foreach ($itens as $keyItem => $item) {
+    
+                $explodedItem = explode(", ", $item);
+    
+                $tipoProdutoServico = $explodedItem[6];
+                $tipoMaterial = $explodedItem[8];
+    
+                if (trim($tipoProdutoServico) != "produtos") {
+                    $tipoMaterial = "";
+                }
+    
+                $sqlItens = "INSERT INTO orcamentositens 
+                (
+                    descricao_item, 
+                    descricao_subitem, 
+                    quant, 
+                    largura, 
+                    comprimento, 
+                    quant_usada, 
+                    tipo_servico_produto, 
+                    material_servico, 
+                    tipo_material, 
+                    unidade, 
+                    custo_tot_subitem, 
+                    preco_tot_subitem, 
+                    observacao_subitem, 
+                    id_orcamento, 
+                    situacao
+                ) 
+                VALUES (
+                    '" . $explodedItem[0] . "',
+                    '" . $explodedItem[1] . "',
+                    '" . $explodedItem[2] . "',
+                    '" . $explodedItem[3] . "',
+                    '" . $explodedItem[4] . "',
+                    '" . $explodedItem[5] . "',
+                    '" . $tipoProdutoServico . "',
+                    '" . $explodedItem[7] . "',
+                    '" . $tipoMaterial . "',
+                    '" . $explodedItem[9] . "',
+                    '" . $explodedItem[10] . "',
+                    '" . $explodedItem[11] . "',
+                    '" . $explodedItem[12] . "',
+                    '" . $id_orcamento . "',
+                    'ativo'
+                )";
+    
+                self::db()->query($sqlItens);
+    
+                $erroItens = self::db()->errorInfo();
+    
+                if (empty($erro[2])){
+                    $returnItens = true;
+                }
+    
             }
 
         }
 
+
         return $returnItens;
 
+    }
+
+    public function aprovar($id, $id_ordemservico) {
+
+        if(!empty($id)){
+
+            $id = addslashes(trim($id));
+
+            $ipcliente = $this->permissoes->pegaIPcliente();
+            $palter = " | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - APROVADO";
+
+            $sql = "UPDATE ". $this->table ." SET alteracoes = CONCAT(alteracoes, '$palter'), status = 'Aprovado' WHERE id = '$id' ";
+            
+            self::db()->query($sql);
+
+            $erro = self::db()->errorInfo();
+
+            return [
+                "id_ordemservico" => $id_ordemservico,
+                "message" => $erro
+            ];
+
+        }
     }
 
     private function excluirItens($id_orcamento) {
@@ -110,7 +138,7 @@ class Orcamentos extends model {
             self::db()->query($sql);
             $erro = self::db()->errorInfo();
 
-            if (!empty($erroItens[2])){
+            if (empty($erro[2])){
                 $returnItens = true;
             }
 
@@ -145,7 +173,7 @@ class Orcamentos extends model {
         $id_orcamento = self::db()->lastInsertId();
         $erroItensBoolean = $this->adicionarItens($request["itens"], $id_orcamento);
 
-        if (empty($erro[2]) && !$erroItensBoolean){
+        if (empty($erro[2]) && $erroItensBoolean){
 
             $_SESSION["returnMessage"] = [
                 "mensagem" => "Registro inserido com sucesso!",
@@ -165,6 +193,9 @@ class Orcamentos extends model {
 
             $id = addslashes(trim($id));
 
+            $erroItensBooleanExcluir = $this->excluirItens($id);
+            $erroItensBooleanAdicionar = $this->adicionarItens($request["itens"], $id);
+
             $ipcliente = $this->permissoes->pegaIPcliente();
             $hist = explode("##", addslashes($request['alteracoes']));
 
@@ -178,7 +209,12 @@ class Orcamentos extends model {
                 return false;
             }
 
+            if (isset($request["quem_indicou"])) {
+                unset($request["quem_indicou"]);
+            }
+
             $request = $this->shared->formataDadosParaBD($request);
+
 
             // Cria a estrutura key = 'valor' para preparar a query do sql
             $output = implode(', ', array_map(
@@ -195,10 +231,7 @@ class Orcamentos extends model {
 
             $erro = self::db()->errorInfo();
 
-            $erroItensBooleanExcluir = $this->excluirItens($id);
-            $erroItensBooleanAdicionar = $this->adicionarItens($request["itens"], $id);
-
-            if (empty($erro[2]) && !$erroItensBooleanExcluir && !$erroItensBooleanAdicionar){
+            if (empty($erro[2]) && $erroItensBooleanExcluir && $erroItensBooleanAdicionar){
 
                 $_SESSION["returnMessage"] = [
                     "mensagem" => "Registro alterado com sucesso!",
@@ -229,7 +262,7 @@ class Orcamentos extends model {
                 $ipcliente = $this->permissoes->pegaIPcliente();
                 $palter = $palter." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CANCELAMENTO >> Motivo da Desistência: ".ucfirst( $motivo );
 
-                $sqlA = "UPDATE ". $this->table ." SET alteracoes = '$palter', status = 'Cancelada', motivo_desistencia = '$motivo' WHERE id = '$id' ";
+                $sqlA = "UPDATE ". $this->table ." SET alteracoes = '$palter', status = 'Cancelado', motivo_desistencia = '$motivo' WHERE id = '$id' ";
                 
                 self::db()->query($sqlA);
 

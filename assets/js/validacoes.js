@@ -965,7 +965,7 @@ $(function () {
 
                         if (dataAnterior != valorAtual) {
 
-                            console.log('é diferente', $(el));
+                            // console.log('é diferente', $(el));
 
                             if ($(el).attr('id') == 'senha') {
                                 campos_alterados += '{ A SENHA foi alteradaa }';

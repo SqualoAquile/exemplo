@@ -713,38 +713,55 @@
                 </div>
             </div>
         </div>
-        <div class="row mt-3">
-            <div class="col-lg-2">
-                <button type="submit" id="main-form" class="h-100 btn btn-primary btn-block btn-lg">Salvar</button>
-            </div>
-            <?php if (isset($item)): ?>
-            <div class="col-lg-2">
-                <button class="h-100 btn btn-dark btn-block btn-lg" type="button" data-toggle="collapse" data-target="#historico" aria-expanded="false" aria-controls="historico">Histórico de Alterações</button>
-            </div>
-            <div id="col-aprovar" class="col-lg">
-                <button class="h-100 btn btn-success btn-block btn-lg" type="button" id="aprovar-orcamento">Aprovar Orçamento</button>
-            </div>
-            <div id="col-cancelar" class="col-lg d-none">
-                <button id="btn_cancelamentoOrc" class="h-100 btn btn-danger btn-block btn-lg" type="button">Cancelar Orçamento</button>
-            </div>
+        <div id="invalid-feedback-zero-itens" class="row mt-3 d-none">
             <div class="col-lg">
-                <div id="checkCancelar" class="form-check form-check-inline h-100 btn btn-secondary btn-lg btn-block d-flex justify-content-center">
-                    <input 
-                        id="chk_cancelamentoOrc" 
-                        type="checkbox" 
-                        class="form-check-input mr-3" 
-                    />
-                    <label class="form-check-label" for="chk_cancelamentoOrc">Cancelar Orçamento</label>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    É preciso ter ao menos 1 item cadastrado no orçamento.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
             </div>
-            <!-- <div class="col-lg">
-                <button class="h-100 btn btn-warning btn-block btn-lg" type="button" data-toggle="modal" data-target="#modalImprimirOrcamento" >Imprimir</button>
-            </div> -->
-            <div class="col-lg">
-                <button onclick="location.href='<?php echo BASE_URL?>/orcamentos/imprimir/<?php echo $item['id']?>'" type="button" class="h-100 btn btn-warning btn-block btn-lg">
-                    Imprimir
-                </button>
-            </div>
+        </div>
+        <div class="row mt-3">
+
+            <?php if ((isset($item) && $item["status"] != "Aprovado" && $item["status"] != "Cancelado") || !isset($item)): ?>
+
+                <div id="col-salvar" class="col-lg-2">
+                    <button type="submit" id="main-form" class="h-100 btn btn-primary btn-block btn-lg">Salvar</button>
+                </div>
+
+            <?php endif ?>
+
+            <?php if (isset($item)): ?>
+                
+                <div class="col-lg">
+                    <button class="h-100 btn btn-dark btn-block btn-lg" type="button" data-toggle="collapse" data-target="#historico" aria-expanded="false" aria-controls="historico">Histórico de Alterações</button>
+                </div>
+
+                <?php if ($item["status"] != "Aprovado" && $item["status"] != "Cancelado"): ?>
+                    <div id="col-aprovar" class="col-lg">
+                        <button class="h-100 btn btn-success btn-block btn-lg" type="button" id="aprovar-orcamento">Aprovar Orçamento</button>
+                    </div>
+                    <div id="col-cancelar" class="col-lg d-none">
+                        <button id="btn_cancelamentoOrc" class="h-100 btn btn-danger btn-block btn-lg" type="button">Cancelar Orçamento</button>
+                    </div>
+                    <div class="col-lg">
+                        <div id="checkCancelar" class="form-check form-check-inline h-100 btn btn-secondary btn-lg btn-block d-flex justify-content-center">
+                            <input 
+                                id="chk_cancelamentoOrc" 
+                                type="checkbox" 
+                                class="form-check-input mr-3" 
+                            />
+                            <label class="form-check-label" for="chk_cancelamentoOrc">Cancelar Orçamento</label>
+                        </div>
+                    </div>
+                <?php endif ?>
+                <div class="col-lg">
+                    <button onclick="location.href='<?php echo BASE_URL?>/orcamentos/imprimir/<?php echo $item['id']?>'" type="button" class="h-100 btn btn-warning btn-block btn-lg">
+                        Imprimir
+                    </button>
+                </div>
             <?php endif ?>
         </div>
     </form>

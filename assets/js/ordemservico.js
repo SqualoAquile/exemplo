@@ -29,6 +29,10 @@ $(function () {
         $('#data_revisao_3').attr('data-anterior','');
     }
 
+    if( $('#data_emissao_nf').attr('data-anterior') == '00/00/0000'){
+        $('#data_emissao_nf').attr('data-anterior','');
+    }
+
     if( $('#data_aprovacao').val() == '00/00/0000' || $('#data_aprovacao').val() == '' ){
         $('#data_inicio').val('');
     }else{
@@ -278,9 +282,9 @@ $(function () {
             
             if( $custo.val() != '' && $custo.val() != undefined && $subtotal.val() != '' && $subtotal.val() != undefined && $desconPorcentagem.val() != undefined && $desconPorcentagem.val() != '' ){
 
-                precoaux = parseFloat( parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) * parseFloat( parseFloat(1) - parseFloat( parseFloat( floatParaPadraoInternacional( $desconPorcentagem.val() ) ) / parseFloat( 100 ) ) ) ).toFixed(2);
+                precoaux = parseFloat( parseFloat( parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) * parseFloat( parseFloat(1) - parseFloat( parseFloat( floatParaPadraoInternacional( $desconPorcentagem.val() ) ) / parseFloat( 100 ) ) ) ).toFixed(2) );
 
-                custoaux = parseFloat( floatParaPadraoInternacional( $custo.val() ) ).toFixed(2);
+                custoaux = parseFloat( parseFloat( floatParaPadraoInternacional( $custo.val() ) ).toFixed(2) );
 
                 if( precoaux < custoaux ){
                     alert( 'O desconto dado faz o valor final ser menor do que custo total.' );
