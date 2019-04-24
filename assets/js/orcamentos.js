@@ -1239,7 +1239,7 @@ function calculaDesconto() {
 
 function resumoItens() {
   let $custo_tot = $('#custo_total'),
-    $valorTotal = $('#valor_total');
+    $valorTotal = $('#sub_total');
 
   $('#resumoItensCustoTota').text($custo_tot.val());
   $('#resumoItensValorTotal').text($valorTotal.val());
