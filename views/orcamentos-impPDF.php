@@ -1,16 +1,13 @@
-<?php $modulo = str_replace("-form", "", basename(__FILE__, ".php")) ?>
-<script type="text/javascript">
-    var baselink = '<?php echo BASE_URL;?>',
-        currentModule = '<?php echo $modulo ?>'
-</script>
-
-<script src="<?php echo BASE_URL?>/assets/js/vendor/html2canvas.min.js" type="text/javascript"></script>
-<script src="<?php echo BASE_URL?>/assets/js/vendor/jspdf.min.js" type="text/javascript"></script>
-<script src="<?php echo BASE_URL?>/assets/js/vendor/FileSaver.min.js" type="text/javascript"></script>
-<script src="<?php echo BASE_URL?>/assets/js/orcamentos-imp.js" type="text/javascript"></script>
-
 <?php
-require_once('C/xampp/htdocs/generico/vendor/examples/tcpdf_include.php');
+ob_start();
+if (!headers_sent()) {
+foreach (headers_list() as $header)
+header_remove($header);
+}
+
+
+require_once $_SERVER['DOCUMENT_ROOT']. '/generico/vendor/tcpdf.php';
+
 // create new PDF document
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 // set document information
@@ -42,76 +39,10 @@ $pdf->SetFont('helvetica', 'B', 20);
 $pdf->AddPage();
 $pdf->Write(0, 'Example of HTML tables', '', 0, 'L', true, 0, false, false, 0);
 $pdf->SetFont('helvetica', '', 8);
-?>
 
-<style>
-    p.small {
-    line-height: 1.5;
-    }
-
-    p.big {
-    line-height: 1.8;
-    }
-
-    .borderless td, .borderless th {
-        border: none;
-    }
-
-    .table {
-    font-size: 12px;
-    }
-
-    .table tr,.table td {
-    height: 10px;
-    }
-
-    .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
-    padding:0; 
-    }
-    
-    header, footer{
-    display:none;
-    }
-
- @media print {
-
-
-    @page {
-        size: A4;
-        margin-top: 15mm;
-        margin-bottom: 10mm;
-    }
-
-    /* body {margin-top: 15mm; margin-bottom: 10mm; 
-           margin-left: 3mm; margin-right: 3mm} */
-
-    /* html, body { height: auto; } */
-
-    body > table:last-of-type{page-break-after:auto}
-
-   /* .break-before { page-break-before: always; } */
-
-    #cardOpcoes, #header, .footer, .header { display:none !important;}
-
-    /* table { page-break-after:auto; margin-bottom:3rem }
-    tr    { page-break-inside:avoid; page-break-after:auto }
-    td    { page-break-inside:avoid; page-break-after:auto }
-    thead { display:table-header-group }
-    tfoot { display:table-footer-group } */
-
-    /* tbody::after {
-        content: ''; display: block;
-        page-break-after: always;
-        page-break-inside: avoid;
-        page-break-before: always;        
-    } */
- } 
-</style>
-
-<?php 
-ob_start();
 
 $html = '
+<html>
 <?php $temAlternativo = false;?>
 
     <!-- PRIMEIRO CABEÇALHO - INFORMAÇÕES DA EMPRESA -->
@@ -436,8 +367,10 @@ $html = '
         </div>
     </div>
 
-    ';
+</html>';
 
 //arranjar outro jeito de direcionar o require
+ob_end_clean();
 $pdf->writeHTML($html, true, false, false, false, '');
+$pdf->Output('C:/Users/Dell/Downloads/example_048.pdf', 'FI');
 ?>
