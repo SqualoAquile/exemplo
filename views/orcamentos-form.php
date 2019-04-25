@@ -234,6 +234,9 @@
             <div class="col-lg" style="order: 14;">
                 <button id="btn_incluir" class="btn btn-primary btn-block">Incluir</button>
             </div>
+            <div id="col-cancelar_edicao" class="col-lg-4 d-none" style="order: 14;">
+                <button id="cancelar_edicao" type="reset" class="btn btn-primary btn-light btn-block">Cancelar Edição</button>
+            </div>
         </form>
         <div class="row" style='order: 100;'>
             <div class="col-lg-4 d-none">
@@ -723,12 +726,22 @@
                 </div>
             </div>
         </div>
-        <div class="row mt-3">
+        <?php if ((isset($item) && $item["status"] != "Recontato" && $item["status"] != "Aprovado" && $item["status"] != "Cancelado")): ?>
+            <div class="row">
+                <div class="col-lg">
+                    <div class="custom-control custom-switch my-3 checkbox-recontato">
+                        <input type="checkbox" class="custom-control-input" id="customSwitch1">
+                        <label class="custom-control-label" for="customSwitch1">Recontato</label>
+                    </div>
+                </div>
+            </div>
+        <?php endif ?>
+        <div id="acoes-orcamento" class="row mt-3">
 
             <?php if ((isset($item) && $item["status"] != "Aprovado" && $item["status"] != "Cancelado") || !isset($item)): ?>
 
                 <div id="col-salvar" class="col-lg-2">
-                    <button type="submit" id="main-form" class="h-100 btn btn-primary btn-block btn-lg">Salvar</button>
+                    <button type="submit" id="main-form" class="h-100 btn btn-primary btn-block">Salvar</button>
                 </div>
 
             <?php endif ?>
@@ -736,18 +749,18 @@
             <?php if (isset($item)): ?>
                 
                 <div class="col-lg">
-                    <button class="h-100 btn btn-dark btn-block btn-lg" type="button" data-toggle="collapse" data-target="#historico" aria-expanded="false" aria-controls="historico">Histórico de Alterações</button>
+                    <button class="h-100 btn btn-dark btn-block" type="button" data-toggle="collapse" data-target="#historico" aria-expanded="false" aria-controls="historico">Histórico de Alterações</button>
                 </div>
 
                 <?php if ($item["status"] != "Aprovado" && $item["status"] != "Cancelado"): ?>
                     <div id="col-aprovar" class="col-lg">
-                        <button class="h-100 btn btn-success btn-block btn-lg" type="button" id="aprovar-orcamento">Aprovar Orçamento</button>
+                        <button class="h-100 btn btn-success btn-block" type="button" id="aprovar-orcamento">Aprovar Orçamento</button>
                     </div>
                     <div id="col-cancelar" class="col-lg d-none">
-                        <button id="btn_cancelamentoOrc" class="h-100 btn btn-danger btn-block btn-lg" type="button">Cancelar Orçamento</button>
+                        <button id="btn_cancelamentoOrc" class="h-100 btn btn-danger btn-block" type="button">Cancelar Orçamento</button>
                     </div>
                     <div class="col-lg">
-                        <div id="checkCancelar" class="form-check form-check-inline h-100 btn btn-secondary btn-lg btn-block d-flex justify-content-center">
+                        <div id="checkCancelar" class="form-check form-check-inline h-100 btn btn-secondary btn-block d-flex justify-content-center">
                             <input 
                                 id="chk_cancelamentoOrc" 
                                 type="checkbox" 
@@ -758,8 +771,13 @@
                     </div>
                 <?php endif ?>
                 <div class="col-lg">
-                    <button onclick="location.href='<?php echo BASE_URL?>/orcamentos/imprimir/<?php echo $item['id']?>'" type="button" class="h-100 btn btn-warning btn-block btn-lg">
+                    <button onclick="location.href='<?php echo BASE_URL?>/orcamentos/imprimir/<?php echo $item['id']?>'" type="button" class="h-100 btn btn-warning btn-block">
                         Imprimir
+                    </button>
+                </div>
+                <div class="col-lg">
+                    <button id="duplica_orcamento" type="button" class="h-100 btn btn-light btn-block">
+                        Duplicar
                     </button>
                 </div>
             <?php endif ?>
@@ -781,6 +799,7 @@
                 <?php
                     $shared = new Shared('clientes');
                     $colunas = $shared->nomeDasColunas();
+                    $viewInfoModal = ["title" => "Adicionar"];
                     $labelTabela = $shared->labelTabela();
 
                     // Em caso de edição do orçamento, a variavel $item será confundida pelo clientes-form
