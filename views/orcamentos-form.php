@@ -726,6 +726,16 @@
                 </div>
             </div>
         </div>
+        <?php if ((isset($item) && $item["status"] != "Recontato" && $item["status"] != "Aprovado" && $item["status"] != "Cancelado")): ?>
+            <div class="row">
+                <div class="col-lg">
+                    <div class="custom-control custom-switch my-3 checkbox-recontato">
+                        <input type="checkbox" class="custom-control-input" id="customSwitch1">
+                        <label class="custom-control-label" for="customSwitch1">Recontato</label>
+                    </div>
+                </div>
+            </div>
+        <?php endif ?>
         <div class="row mt-3">
 
             <?php if ((isset($item) && $item["status"] != "Aprovado" && $item["status"] != "Cancelado") || !isset($item)): ?>
@@ -763,6 +773,11 @@
                 <div class="col-lg">
                     <button onclick="location.href='<?php echo BASE_URL?>/orcamentos/imprimir/<?php echo $item['id']?>'" type="button" class="h-100 btn btn-warning btn-block">
                         Imprimir
+                    </button>
+                </div>
+                <div class="col-lg">
+                    <button id="duplica_orcamento" type="button" class="h-100 btn btn-light btn-block">
+                        Duplicar
                     </button>
                 </div>
             <?php endif ?>

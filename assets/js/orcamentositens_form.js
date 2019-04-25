@@ -1,4 +1,5 @@
 $(function() {
+  
   var $tableItensOrcamento = $('#itensOrcamento'),
     lastInsertId = 0,
     botoes = `
@@ -476,6 +477,47 @@ $(function() {
     }
 
     $('#itensOrcamento').trigger('alteracoes');
+    SummerizeTable($('#itensOrcamento'));
+  }
+
+  function SummerizeTable(table) {
+    $(table).find('td').each(function() {
+      var $this = $(this);
+      var col = $this.index();
+      var html = $this.html();
+      var row = $(this).parent()[0].rowIndex; 
+      var span = 1;
+      var row_above = $($this.parent().prev());
+      var cell_above = $($this.parent().prev().children()[col]);
+
+      if (col == 1 || col == 2) {
+
+        // look for cells one above another with the same text
+        while (cell_above.html() === html) { // if the text is the same
+          
+          span += 1; // increase the span
+          cell_above_old = cell_above; // store this cell
+          cell_above = $(cell_above.parent().prev().children()[col]); // and go to the next cell aboves
+          
+          row_above_old = row_above; // store this cell
+          row_above = $(row_above.parent().prev()); // and go to the next cell aboves
+          
+        }
+  
+        // if there are at least two columns with the same value, 
+        // set a new span to the first and hide the other
+        if (span > 1) {
+          // console.log('row_above_old', row_above_old)
+          // console.log('row_above', row_above)
+          // $(cell_above_old).attr('rowspan', span);
+          // $this.hide();
+        }
+
+      }
+
+      return;
+      
+    });
   }
   
 });

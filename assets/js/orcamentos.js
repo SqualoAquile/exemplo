@@ -360,6 +360,45 @@ $(function() {
     .change()
     .blur();
 
+  $('.checkbox-recontato .custom-control-input').on('change', function() {
+    if ($(this).is(':checked')) {
+      if (confirm('Tem Certeza?')) {
+        $.ajax({
+          url: baselink + "/ajax/changeStatusOrcamento",
+          type: "POST",
+          data: {
+            id_orcamento: $('#form-principal').attr('data-id-orcamento'),
+            status: 'Recontato'
+          },
+          dataType: "json",
+          success: function(data) {
+            if (data) {
+              window.location.href = baselink + "/orcamentos";
+            }
+          }
+        });
+      }
+    }
+  });
+
+  $('#duplica_orcamento').on('click', function() {
+    if (confirm('Tem Certeza?')) {
+      $.ajax({
+        url: baselink + "/ajax/duplicarOrcamento",
+        type: "POST",
+        data: {
+          id_orcamento: $('#form-principal').attr('data-id-orcamento')
+        },
+        dataType: "json",
+        success: function(data) {
+          if (data) {
+            window.location.href = baselink + "/orcamentos";
+          }
+        }
+      });
+    }
+  });
+
   ////////////////////////// COMENTADO BEM ATÉ AQUI ////////////////////////////////
 
   $(document)

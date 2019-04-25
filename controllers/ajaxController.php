@@ -4,6 +4,7 @@ class ajaxController extends controller{
   private $parametros;
   private $servicos;
   private $clientes;
+  private $orcamentos;
 
   public function __construct() {
 
@@ -12,6 +13,7 @@ class ajaxController extends controller{
     $this->parametros = new Parametros;
     $this->servicos = new Servicos;
     $this->clientes = new Clientes;
+    $this->orcamentos = new Orcamentos;
 
     //verifica se está logado
     if($user->isLogged() == false){
@@ -402,8 +404,7 @@ class ajaxController extends controller{
   //////// ORÇAMENTOS
   public function getRelacionalDropdownOrcamentos() {
     if (isset($_POST) && !empty($_POST)) {
-      $orcamento = new Orcamentos;
-      echo json_encode($orcamento->getRelacionalDropdown($_POST));
+      echo json_encode($this->orcamentos->getRelacionalDropdown($_POST));
     }
   }
   
@@ -581,14 +582,12 @@ class ajaxController extends controller{
 
   public function cancelarOrcamento() {
 
-    $orcamento = new Orcamentos();
-
     if(isset($_POST) && !empty($_POST)){
 
       $motivo_desistencia = $_POST['motivo_desistencia'];
       $id = $_POST['id'];
 
-      $orcamento->cancelar($id, $motivo_desistencia);
+      $this->orcamentos->cancelar($id, $motivo_desistencia);
 
       if(isset($_SESSION["returnMessage"]) && $_SESSION["returnMessage"]["mensagem"] == "Registro cancelado com sucesso!"){
         echo json_encode(true);
@@ -602,12 +601,39 @@ class ajaxController extends controller{
   public function aprovarOrcamento() {
 
     $ordemServico = new Ordemservico();
-    $orcamento = new Orcamentos();
 
     if(isset($_POST) && !empty($_POST)){
       $returnAprovar = $ordemServico->aprovar($_POST);
       if ($returnAprovar["message"][0] == "00000") {
-        echo json_encode($orcamento->aprovar($returnAprovar["id_orcamento"], $returnAprovar["id_ordemservico"]));
+        echo json_encode($this->orcamentos->aprovar($returnAprovar["id_orcamento"], $returnAprovar["id_ordemservico"]));
+      }
+    }
+  }
+
+  public function changeStatusOrcamento() {
+
+    if(isset($_POST) && !empty($_POST)){
+
+      $this->orcamentos->changeStatus($_POST["id_orcamento"], $_POST["status"]);
+
+      if(isset($_SESSION["returnMessage"]) && $_SESSION["returnMessage"]["mensagem"] == "Registro alterado com sucesso!"){
+        echo json_encode(true);
+      }else{
+        echo json_encode(false);
+      }
+    }
+  }
+
+  public function duplicarOrcamento() {
+
+    if(isset($_POST) && !empty($_POST)){
+
+      $this->orcamentos->duplicar($_POST["id_orcamento"]);
+
+      if(isset($_SESSION["returnMessage"]) && $_SESSION["returnMessage"]["mensagem"] == "Registro duplicado com sucesso!"){
+        echo json_encode(true);
+      }else{
+        echo json_encode(false);
       }
     }
   }
