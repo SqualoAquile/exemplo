@@ -736,7 +736,7 @@
                 </div>
             </div>
         <?php endif ?>
-        <div class="row mt-3">
+        <div id="acoes-orcamento" class="row mt-3">
 
             <?php if ((isset($item) && $item["status"] != "Aprovado" && $item["status"] != "Cancelado") || !isset($item)): ?>
 

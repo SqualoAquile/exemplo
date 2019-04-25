@@ -22,15 +22,19 @@ $(function() {
     event.preventDefault();
 
     var $form = $(this),
-      $fields = $($form).find('.form-control');
+      $fields = $($form).find('.form-control'),
+      $table = $('#itensOrcamento'),
+      $trsTbodyTable = $table.find('tbody tr'),
+      $btnIncluir = $('#btn_incluir');
 
     if ($form[0].checkValidity() && !$form.find('.is-invalid').length) {
 
       let $descricaoItemForm = $form.find('#descricao_item'),
         $descricaoSubItemForm = $form.find('#descricao_subitem'),
-        $materialServicoForm = $form.find('#material_servico');
+        $materialServicoForm = $form.find('#material_servico'),
+        $tipoMaterial = $('[name=tipo_material]:checked');
 
-      let $elsFiltereds = $('#itensOrcamento tbody tr').filter(function() {
+      let $elsFiltereds = $trsTbodyTable.filter(function() {
         
         let itemFilter = $(this).find('td:eq(1)'),
           subItemFilter = $(this).find('td:eq(2)'),
@@ -51,29 +55,51 @@ $(function() {
         }
       });
 
+      let $elsFilteredsByTipoProduto = $trsTbodyTable.filter(function() {
+        
+        let $itemFilterByTipo = $(this).find('td:eq(1)'),
+          $subItemFilterByTipo = $(this).find('td:eq(2)'),
+          $tipoMaterialFilterByTipo = $(this).find('td:eq(9)');
+
+        if ($itemFilterByTipo.text() == $descricaoItemForm.val()) {
+          if ($subItemFilterByTipo.text() == $descricaoSubItemForm.val()) {
+            if ($tipoMaterial.is(':visible')) {
+              if ($tipoMaterial.val() == $tipoMaterialFilterByTipo.text()) {
+                return this;
+              }
+            }
+          }
+        }
+
+      });
+
       $('.tipo-material-repetido').remove();
 
-      if (!$elsFiltereds.length || $('#itensOrcamento').attr('data-current-id')) {
+      if (!$elsFiltereds.length || $table.attr('data-current-id')) {
+
+        if (!$elsFilteredsByTipoProduto.length || $table.attr('data-current-id')) {
         
-        Save();
-  
-        // Limpar formulario
-        $form.removeClass('was-validated');
-  
-        $fields
-          .removeClass('is-valid is-invalid')
-          .removeAttr('data-anterior');
+          Save();
+
+          // Limpar formulario
+          $form.removeClass('was-validated');
+
+          $fields
+            .removeClass('is-valid is-invalid')
+            .removeAttr('data-anterior');
+
+        } else {
+
+          $btnIncluir
+            .after(alertDismissible('Só pode ter um produto com material alternativo ou principal.'));
+
+        }
 
       } else {
-        $('#btn_incluir')
-          .after(`
-            <div class="alert alert-danger alert-dismissible fade show tipo-material-repetido mt-3" role="alert">
-              Este produto já foi adicionado para este grupo.
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-          `);
+
+        $btnIncluir
+          .after(alertDismissible('Este produto já foi adicionado para este grupo.'));
+
       }
         
     } else {
@@ -229,9 +255,13 @@ $(function() {
   }
 
   // Delete item da tabela e do hidden
-  function Delete(el) {
-    var par = $(el).closest("tr");
-    par.remove();
+  function Delete(element) {
+    
+    let $tr = $(element).closest('tr');
+    
+    $tr.remove();
+
+    transformarAlternativo($tr);
     SetInput();
     calculaSubtotalCustotal();
   }
@@ -477,47 +507,81 @@ $(function() {
     }
 
     $('#itensOrcamento').trigger('alteracoes');
-    SummerizeTable($('#itensOrcamento'));
+
+    agruparTabela();
+
   }
 
-  function SummerizeTable(table) {
-    $(table).find('td').each(function() {
-      var $this = $(this);
-      var col = $this.index();
-      var html = $this.html();
-      var row = $(this).parent()[0].rowIndex; 
-      var span = 1;
-      var row_above = $($this.parent().prev());
-      var cell_above = $($this.parent().prev().children()[col]);
+  function agruparTabela() {
+    
+    let $trs = $('#itensOrcamento').find('tbody tr');
 
-      if (col == 1 || col == 2) {
+    $trs.each(function() {
 
-        // look for cells one above another with the same text
-        while (cell_above.html() === html) { // if the text is the same
+      let $firstTr = $(this),
+        $indexFirstTr = $firstTr.index(),
+        $item = $firstTr.find('td:eq(1)'),
+        $subitem = $firstTr.find('td:eq(2)');
+
+      $trs.each(function() {
+        
+        let $otherTr = $(this),
+          $indexOtherTr = $otherTr.index(),
+          $itemComparar = $otherTr.find('td:eq(1)'),
+          $subitemComparar = $otherTr.find('td:eq(2)');
+
+        if ($indexFirstTr != $indexOtherTr) {
           
-          span += 1; // increase the span
-          cell_above_old = cell_above; // store this cell
-          cell_above = $(cell_above.parent().prev().children()[col]); // and go to the next cell aboves
-          
-          row_above_old = row_above; // store this cell
-          row_above = $(row_above.parent().prev()); // and go to the next cell aboves
+          if ($item.text() == $itemComparar.text()) {
+
+            if ($subitem.text() == $subitemComparar.text()) {
+
+              $otherTr.after($firstTr);
+
+            }
+
+          }
           
         }
-  
-        // if there are at least two columns with the same value, 
-        // set a new span to the first and hide the other
-        if (span > 1) {
-          // console.log('row_above_old', row_above_old)
-          // console.log('row_above', row_above)
-          // $(cell_above_old).attr('rowspan', span);
-          // $this.hide();
-        }
 
+      });
+
+    });
+  }
+
+  function alertDismissible(texto, classes = 'tipo-material-repetido mt-3') {
+    return `
+      <div class="alert alert-danger alert-dismissible fade show ` + classes + `" role="alert">
+        ` + texto + `
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    `;
+  }
+
+  function transformarAlternativo($tr) {
+
+    let $item = $tr.find('td:eq(1)'),
+      $subitem = $tr.find('td:eq(2)'),
+      $tipoMaterial = $tr.find('td:eq(9)');
+
+    $('#itensOrcamento tbody tr').each(function() {
+
+      let $itemFilterByTipo = $(this).find('td:eq(1)'),
+          $subItemFilterByTipo = $(this).find('td:eq(2)'),
+          $tipoMaterialFilterByTipo = $(this).find('td:eq(9)');
+
+      if ($itemFilterByTipo.text() == $item.text()) {
+        if ($subItemFilterByTipo.text() == $subitem.text()) {
+          if ($tipoMaterial.text().toLowerCase() == 'principal' && $tipoMaterialFilterByTipo.text().toLowerCase() == 'alternativo') {
+            $tipoMaterialFilterByTipo.text('principal');
+          }
+        }
       }
 
-      return;
-      
     });
+
   }
   
 });

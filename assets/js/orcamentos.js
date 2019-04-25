@@ -403,7 +403,9 @@ $(function() {
 
   $(document)
     .ready(function() {
+      
       let $pfPj = $('[name="pf_pj"]');
+      
       $.ajax({
         url: baselink + "/ajax/getRelacionalDropdownOrcamentos",
         type: "POST",
@@ -450,6 +452,9 @@ $(function() {
 
         }
       });
+
+      ajustarTabIndex();
+
     })
     .on("click", '[name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element', function() {
 
@@ -1377,4 +1382,8 @@ function changeRequiredsPfPj() {
       .removeClass('d-inline-block');
 
   }
+}
+
+function ajustarTabIndex() {
+  console.log('ajustarTabIndex');
 }
