@@ -18,68 +18,80 @@
 
 <h1 class="display-4 font-weight-bold pt-4">Home</h1>
 
+
+<div class="row">
+    <div class="col-lg-6 border-dark">
+    </div>
+    <div class="col-lg-6 border-dark">
+    </div>
+</div>
+
 <div class="card text-center">
-        <div class="card-header alert-success py-1">
-            <h4 class="text-weight-bold">Financeiro</h4>
+        <div class="card-header py-1">
+            <h3 class="text-weight-bold text-dark">Financeiro</h3>
         </div>
-        <div class="card-body">
+        <div class="card-body p-2">
             <div class="row my-1 ">
 
             <div class="col-lg-3 mx-0">
                     <div class="card text-center">
-                        <div class="card-body">
-                            <h6 class="card-title"><i class="fas fa-save"></i> Exemplo Título 1</h6>
-                            <h2 class="card-text">R$ 1.000,00</h2>
+                        <div class="card-body p-2 ">
+                            <h6 class="card-title"><i class="fas fa-angle-double-up"></i> Receita Realizada</h6>
+                            <h2 class="card-text">R$ 210.000,00</h2>
                         </div>
-                        <div class="card-footer text-muted">
-                            Na última semana
+                        <div class="card-footer">
+                            <i class="fas fa-arrow-up"></i> <b>14%</b>  da Meta
                         </div>
                     </div>
                 </div>
                 
                 <div class="col-lg-3 mx-0">
                     <div class="card text-center">
-                        <div class="card-body">
-                            <h6 class="card-title"><i class="fas fa-save"></i> Exemplo Título 1</h6>
-                            <h2 class="card-text">R$ 1.000,00</h2>
-                        </div>
-                        <div class="card-footer text-muted">
-                            Na última semana
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 mx-0">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h6 class="card-title"><i class="fas fa-save"></i> Exemplo Título 1</h6>
-                            <h2 class="card-text">R$ 1.000,00</h2>
-                        </div>
-                        
-                    <div class="card-footer text-muted">
-                            Na última semana
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 mx-0">
-                    <div class="card text-center">
-                        <div class="card-body alert-danger">
-                            <h6 class="card-title"><i class="fas fa-save"></i> Exemplo Título 1</h6>
-                            <h2 class="card-text">R$ 1.000,00</h2>
+                        <div class="card-body p-2">
+                            <h6 class="card-title"><i class="fas fa-angle-double-down"></i> Despesa Realizada</h6>
+                            <h2 class="card-text">R$ 117.000,00</h2>
                         </div>
                         <div class="card-footer">
-                            <i class="fas fa-arrow-up"></i> 14% na última semana
+                            <i class="fas fa-arrow-down"></i> <b>4%</b>  da Meta
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 mx-0">
+                    <div class="card text-center">
+                        <div class="card-body p-2">
+                            <h6 class="card-title"><i class="fas fa-dollar-sign"></i> Lucro</h6>
+                            <h2 class="card-text">R$ 123.000,00</h2>
+                        </div>
+                        
+                        <div class="card-footer">
+                            <i class="fas fa-arrow-up"></i> <b>313%</b>  da Meta
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 mx-0">
+                    <div class="card text-center">
+                        <div class="card-body p-2">
+                            <h6 class="card-title"><i class="fas fa-percent"></i> Lucratividade</h6>
+                            <h2 class="card-text"> 30%</h2>
+                        </div>
+                        <div class="card-footer">
+                            <i class="fas fa-arrow-up"></i> <b>5%</b>  da Meta
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div id="charts" >
+            <canvas id="chartLine"></canvas>
+        </div>
     </div>
+    
 
     
     
-<!-- <section id="charts">
+<!-- <section id="charts"> -->
     <div class="row my-5">
         <div class="col-xl-6">
           <canvas id="chartBar"></canvas>
@@ -89,102 +101,100 @@
         </div>
     </div>
     <div class="row my-5">
-        <div class="col-xl-6">
+        <div class="col-xl-12">
           <canvas id="chartPolarArea"></canvas>
         </div>
-        <div class="col-xl-6">
-          <canvas id="chartLine"></canvas>
-        </div>
     </div>
-</section> -->
+<!-- </section> -->
 <script>
-var ctxBar = document.getElementById("chartBar").getContext('2d');
-var ctxPie = document.getElementById("chartPie").getContext('2d');
-var ctxLine = document.getElementById("chartLine").getContext('2d');
-var ctxPolarArea = document.getElementById("chartPolarArea").getContext('2d');
+    // var ctxBar = document.getElementById("chartBar").getContext('2d');
+    // var ctxPie = document.getElementById("chartPie").getContext('2d');
+    var ctxLine = document.getElementById("chartLine").getContext('2d');
+    // var ctxPolarArea = document.getElementById("chartPolarArea").getContext('2d');
 
-var chartBar = new Chart(ctxBar, {
-    type: 'bar',
-    data: {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-        datasets: [{
-            label: '0 de Votos',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                '#007DFF',
-                '#3076BF',
-                '#0051A6',
-                '#409EFF',
-                '#73B8FF'
-            ]
-        }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero:true
+    // var chartBar = new Chart(ctxBar, {
+    //     type: 'bar',
+    //     data: {
+    //         labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+    //         datasets: [{
+    //             label: '0 de Votos',
+    //             data: [12, 19, 3, 5, 2, 3],
+    //             backgroundColor: [
+    //                 '#007DFF',
+    //                 '#3076BF',
+    //                 '#0051A6',
+    //                 '#409EFF',
+    //                 '#73B8FF'
+    //             ]
+    //         }]
+    //     },
+    //     options: {
+    //         scales: {
+    //             yAxes: [{
+    //                 ticks: {
+    //                     beginAtZero:true
+    //                 }
+    //             }]
+    //         }
+    //     }
+    // });
+
+    // var chartPie = new Chart(ctxPie, {
+    //     type: 'doughnut',
+    //     data: {
+    //         labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+    //         datasets: [{
+    //             label: '# of Votes',
+    //             data: [12, 19, 3, 5, 2, 3],
+    //             backgroundColor: [
+    //                 '#007DFF',
+    //                 '#3076BF',
+    //                 '#0051A6',
+    //                 '#409EFF',
+    //                 '#73B8FF'
+    //             ]
+    //         }]
+    //     }
+    // });
+
+    var chartLine = new Chart(ctxLine, {
+        type: 'line',
+        data: {
+            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+            datasets: [{
+                label: '0 de Votos',
+                data: [12, 19, 3, 5, 2, 3],
+                backgroundColor: '#CCC',
+                options: {
+                    scales: {
+                        yAxes: [{
+                            stacked: false
+                        }]
+                    }
                 }
             }]
         }
-    }
-});
+    });
 
-var chartPie = new Chart(ctxPie, {
-    type: 'doughnut',
-    data: {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                '#007DFF',
-                '#3076BF',
-                '#0051A6',
-                '#409EFF',
-                '#73B8FF'
-            ]
-        }]
-    }
-});
+    // var chartPolarArea = new Chart(ctxPolarArea, {
+    //     type: 'polarArea',
+    //     data: {
+    //         datasets: [{
+    //             data: [10, 20, 30],
+    //             backgroundColor: [
+    //                 '#007DFF',
+    //                 '#3076BF',
+    //                 '#0051A6',
+    //                 '#409EFF',
+    //                 '#73B8FF'
+    //             ]
+    //         }],
+    //         labels: [
+    //             'Red',
+    //             'Yellow',
+    //             'Blue'
+    //         ]
+    //     }
+    // });
 
-var chartLine = new Chart(ctxLine, {
-    type: 'line',
-    data: {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-        datasets: [{
-            label: '0 de Votos',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: '#007DFF',
-            options: {
-                scales: {
-                    yAxes: [{
-                        stacked: true
-                    }]
-                }
-            }
-        }]
-    }
-});
-
-var chartPolarArea = new Chart(ctxPolarArea, {
-    type: 'polarArea',
-    data: {
-        datasets: [{
-            data: [10, 20, 30],
-            backgroundColor: [
-                '#007DFF',
-                '#3076BF',
-                '#0051A6',
-                '#409EFF',
-                '#73B8FF'
-            ]
-        }],
-        labels: [
-            'Red',
-            'Yellow',
-            'Blue'
-        ]
-    }
-});
 </script>
