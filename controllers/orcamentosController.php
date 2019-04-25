@@ -389,7 +389,7 @@ $html .= '
 //arranjar outro jeito de direcionar o require
 $mpdf->WriteHTML($html);
 
-$mpdf->Output(); exit;
+$mpdf->Output('Orcamento.pdf','D'); exit;
     
        // $this->loadTemplate($this->table . "-imp",$infos); 
     }
