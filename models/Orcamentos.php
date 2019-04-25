@@ -352,7 +352,6 @@ class Orcamentos extends model {
             return sizeof($sql);
         }
     }
-    
 
     public function infosOrcamento($id) {
 
@@ -360,8 +359,7 @@ class Orcamentos extends model {
 
             $id = addslashes(trim($id));
             
-            $sql = 
-            "SELECT * FROM orcamentos WHERE id='$id' AND situacao='ativo'";
+            $sql = "SELECT * FROM orcamentos WHERE id='$id' AND situacao='ativo'";
 
             $sql = self::db()->query($sql);
                     
@@ -402,5 +400,85 @@ class Orcamentos extends model {
         $sql = self::db()->query($sql);
         
         return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function changeStatus($id_orcamento, $status) {
+
+        if(!empty($id_orcamento)){
+
+            $id_orcamento = addslashes(trim($id_orcamento));
+
+            $ipcliente = $this->permissoes->pegaIPcliente();
+            $palter = " | ". ucwords($_SESSION["nomeUsuario"]) . " - $ipcliente - " . date('d/m/Y H:i:s') . " - " . strtoupper($status);
+
+            $sql = "UPDATE ". $this->table ." SET alteracoes = CONCAT(alteracoes, '$palter'), status = '" . $status . "' WHERE id = '$id_orcamento' ";
+            
+            self::db()->query($sql);
+
+            $erro = self::db()->errorInfo();
+
+            if (empty($erro[2])){
+
+                $_SESSION["returnMessage"] = [
+                    "mensagem" => "Registro alterado com sucesso!",
+                    "class" => "alert-success"
+                ];
+            } else {
+                $_SESSION["returnMessage"] = [
+                    "mensagem" => "Houve uma falha, tente novamente! <br /> ".$erro[2],
+                    "class" => "alert-danger"
+                ];
+            }
+
+        }
+
+    }
+
+    public function duplicar($id_orcamento) {
+
+        if(!empty($id_orcamento)){
+
+            $id_orcamento = addslashes(trim($id_orcamento));
+
+            $sqlSelect = "SELECT * FROM " . $this->table . " WHERE id='$id_orcamento' AND situacao='ativo'";
+            $sqlSelect = self::db()->query($sqlSelect);
+                    
+            $returnSelect = $sqlSelect->fetch(PDO::FETCH_ASSOC);
+
+            $ipcliente = $this->permissoes->pegaIPcliente();
+            $palter = " | ". ucwords($_SESSION["nomeUsuario"]) . " - $ipcliente - " . date('d/m/Y H:i:s') . " - CADASTRO";
+
+            if ($returnSelect["id"]) {
+                unset($returnSelect["id"]);
+            }
+            
+            $returnSelect["alteracoes"] = $palter;
+            $returnSelect["titulo_orcamento"] = $returnSelect["titulo_orcamento"] . "_2";
+
+            $keys = implode(",", array_keys($returnSelect));
+
+            $values = "'" . implode("','", array_values($returnSelect)) . "'";
+
+            $sqlInsert = "INSERT INTO " . $this->table . " (" . $keys . ") VALUES (" . $values . ")";
+
+            self::db()->query($sqlInsert);
+
+            $erro = self::db()->errorInfo();
+
+            if (empty($erro[2])){
+
+                $_SESSION["returnMessage"] = [
+                    "mensagem" => "Registro duplicado com sucesso!",
+                    "class" => "alert-success"
+                ];
+            } else {
+                $_SESSION["returnMessage"] = [
+                    "mensagem" => "Houve uma falha, tente novamente! <br /> ".$erro[2],
+                    "class" => "alert-danger"
+                ];
+            }
+
+        }
+
     }
 }

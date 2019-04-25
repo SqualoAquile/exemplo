@@ -1,4 +1,5 @@
 $(function() {
+  
   var $tableItensOrcamento = $('#itensOrcamento'),
     lastInsertId = 0,
     botoes = `
@@ -21,52 +22,84 @@ $(function() {
     event.preventDefault();
 
     var $form = $(this),
-      $fields = $($form).find('.form-control');
+      $fields = $($form).find('.form-control'),
+      $table = $('#itensOrcamento'),
+      $trsTbodyTable = $table.find('tbody tr'),
+      $btnIncluir = $('#btn_incluir');
 
     if ($form[0].checkValidity() && !$form.find('.is-invalid').length) {
 
-      let $descricaoSubItemForm = $form.find('#descricao_subitem'),
-        $materialServicoForm = $form.find('#material_servico');
+      let $descricaoItemForm = $form.find('#descricao_item'),
+        $descricaoSubItemForm = $form.find('#descricao_subitem'),
+        $materialServicoForm = $form.find('#material_servico'),
+        $tipoMaterial = $('[name=tipo_material]:checked');
 
-      let $elsFiltereds = $('#itensOrcamento tbody tr').filter(function() {
+      let $elsFiltereds = $trsTbodyTable.filter(function() {
         
-        let subItemFilter = $(this).find('td:eq(2)'),
+        let itemFilter = $(this).find('td:eq(1)'),
+          subItemFilter = $(this).find('td:eq(2)'),
           materialServicoFilter = $(this).find('td:eq(8)');
 
-        if (subItemFilter && subItemFilter.text() && $descricaoSubItemForm && $descricaoSubItemForm.val()) {
-          if (subItemFilter.text().toLowerCase() == $descricaoSubItemForm.val().toLowerCase()) {
-            if (materialServicoFilter && materialServicoFilter.text() && $materialServicoForm && $materialServicoForm.val()) {
-              if (materialServicoFilter.text().toLowerCase() == $materialServicoForm.val().toLowerCase()) {
-                return this;
+        if (itemFilter && itemFilter.text() && $descricaoItemForm && $descricaoItemForm.val()) {
+          if (itemFilter.text().toLowerCase() == $descricaoItemForm.val().toLowerCase()) {
+            if (subItemFilter && subItemFilter.text() && $descricaoSubItemForm && $descricaoSubItemForm.val()) {
+              if (subItemFilter.text().toLowerCase() == $descricaoSubItemForm.val().toLowerCase()) {
+                if (materialServicoFilter && materialServicoFilter.text() && $materialServicoForm && $materialServicoForm.val()) {
+                  if (materialServicoFilter.text().toLowerCase() == $materialServicoForm.val().toLowerCase()) {
+                    return this;
+                  }
+                }
               }
             }
           }
         }
       });
 
+      let $elsFilteredsByTipoProduto = $trsTbodyTable.filter(function() {
+        
+        let $itemFilterByTipo = $(this).find('td:eq(1)'),
+          $subItemFilterByTipo = $(this).find('td:eq(2)'),
+          $tipoMaterialFilterByTipo = $(this).find('td:eq(9)');
+
+        if ($itemFilterByTipo.text() == $descricaoItemForm.val()) {
+          if ($subItemFilterByTipo.text() == $descricaoSubItemForm.val()) {
+            if ($tipoMaterial.is(':visible')) {
+              if ($tipoMaterial.val() == $tipoMaterialFilterByTipo.text()) {
+                return this;
+              }
+            }
+          }
+        }
+
+      });
+
       $('.tipo-material-repetido').remove();
 
-      if (!$elsFiltereds.length || $('#itensOrcamento').attr('data-current-id')) {
+      if (!$elsFiltereds.length || $table.attr('data-current-id')) {
+
+        if (!$elsFilteredsByTipoProduto.length || $table.attr('data-current-id')) {
         
-        Save();
-  
-        // Limpar formulario
-        $form.removeClass('was-validated');
-  
-        $fields
-          .removeClass('is-valid is-invalid')
-          .removeAttr('data-anterior');
+          Save();
+
+          // Limpar formulario
+          $form.removeClass('was-validated');
+
+          $fields
+            .removeClass('is-valid is-invalid')
+            .removeAttr('data-anterior');
+
+        } else {
+
+          $btnIncluir
+            .after(alertDismissible('Só pode ter um produto com material alternativo ou principal.'));
+
+        }
 
       } else {
-        $('#btn_incluir')
-          .after(`
-            <div class="alert alert-danger alert-dismissible fade show tipo-material-repetido mt-3" role="alert">
-              Este produto já foi adicionado para este sub item.
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-          `);
+
+        $btnIncluir
+          .after(alertDismissible('Este produto já foi adicionado para este grupo.'));
+
       }
         
     } else {
@@ -81,6 +114,9 @@ $(function() {
     })
     .on('click', '.excluir-item', function() {
       Delete(this);
+    })
+    .on('reset', '#camposOrc', function() {
+      cancelarEdicao();
     });
 
   // Retorna um array de itens puxados do campo hidden com o atributo nome igual a itens
@@ -144,9 +180,26 @@ $(function() {
 
       // Seta o data id como undefined para novos itens poderem ser cadastrados
       $tableItensOrcamento.removeAttr("data-current-id");
+
+      $('#col-cancelar_edicao').addClass('d-none');
+
     }
 
     calculaSubtotalCustotal();
+  }
+
+  function cancelarEdicao() {
+
+    $tableItensOrcamento.removeAttr("data-current-id");
+    $('#col-cancelar_edicao').addClass('d-none');
+    $('#btn_incluir').text('Incluir');
+    $('#camposOrc').removeClass('was-validated');
+
+    let $trs = $tableItensOrcamento.find('tr.disabled');
+
+    $trs.removeClass('disabled');
+    $trs.find('.btn.disabled').removeClass('disabled');
+    
   }
 
   // Pega as linhas da tabela auxiliar e manipula o hidden de itens
@@ -202,9 +255,13 @@ $(function() {
   }
 
   // Delete item da tabela e do hidden
-  function Delete(el) {
-    var par = $(el).closest("tr");
-    par.remove();
+  function Delete(element) {
+    
+    let $tr = $(element).closest('tr');
+    
+    $tr.remove();
+
+    transformarAlternativo($tr);
     SetInput();
     calculaSubtotalCustotal();
   }
@@ -316,9 +373,12 @@ $(function() {
       .val(custoUnit)
       .attr("data-anterior", custoUnit);
 
+    precoUnit = parseFloat(floatParaPadraoInternacional(precoUnit)) / parseFloat(1.1);
+
     $("input[name=preco_tot_subitem]")
-      .val(precoUnit)
-      .attr("data-anterior", precoUnit);
+      .val(floatParaPadraoBrasileiro(precoUnit))
+      .attr("data-preco_anterior", floatParaPadraoInternacional(floatParaPadraoBrasileiro(precoUnit)))
+      .attr("data-anterior", floatParaPadraoBrasileiro(precoUnit));
 
     $("input[name=quant]")
       .val(tdQuant)
@@ -346,9 +406,13 @@ $(function() {
     $('#btn_incluir')
       .text('Salvar');
 
+    $('#col-cancelar_edicao').removeClass('d-none');
+
     calculaSubtotalCustotal();
     toggleTipoMaterial(tdUnidade);
 
+    $("input[name=preco_tot_subitem]").change();
+    
   }
 
   // Ao dar submit neste form, chama essa funcão que pega os dados do formula e Popula a tabela
@@ -443,6 +507,81 @@ $(function() {
     }
 
     $('#itensOrcamento').trigger('alteracoes');
+
+    agruparTabela();
+
+  }
+
+  function agruparTabela() {
+    
+    let $trs = $('#itensOrcamento').find('tbody tr');
+
+    $trs.each(function() {
+
+      let $firstTr = $(this),
+        $indexFirstTr = $firstTr.index(),
+        $item = $firstTr.find('td:eq(1)'),
+        $subitem = $firstTr.find('td:eq(2)');
+
+      $trs.each(function() {
+        
+        let $otherTr = $(this),
+          $indexOtherTr = $otherTr.index(),
+          $itemComparar = $otherTr.find('td:eq(1)'),
+          $subitemComparar = $otherTr.find('td:eq(2)');
+
+        if ($indexFirstTr != $indexOtherTr) {
+          
+          if ($item.text() == $itemComparar.text()) {
+
+            if ($subitem.text() == $subitemComparar.text()) {
+
+              $otherTr.after($firstTr);
+
+            }
+
+          }
+          
+        }
+
+      });
+
+    });
+  }
+
+  function alertDismissible(texto, classes = 'tipo-material-repetido mt-3') {
+    return `
+      <div class="alert alert-danger alert-dismissible fade show ` + classes + `" role="alert">
+        ` + texto + `
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    `;
+  }
+
+  function transformarAlternativo($tr) {
+
+    let $item = $tr.find('td:eq(1)'),
+      $subitem = $tr.find('td:eq(2)'),
+      $tipoMaterial = $tr.find('td:eq(9)');
+
+    $('#itensOrcamento tbody tr').each(function() {
+
+      let $itemFilterByTipo = $(this).find('td:eq(1)'),
+          $subItemFilterByTipo = $(this).find('td:eq(2)'),
+          $tipoMaterialFilterByTipo = $(this).find('td:eq(9)');
+
+      if ($itemFilterByTipo.text() == $item.text()) {
+        if ($subItemFilterByTipo.text() == $subitem.text()) {
+          if ($tipoMaterial.text().toLowerCase() == 'principal' && $tipoMaterialFilterByTipo.text().toLowerCase() == 'alternativo') {
+            $tipoMaterialFilterByTipo.text('principal');
+          }
+        }
+      }
+
+    });
+
   }
   
 });

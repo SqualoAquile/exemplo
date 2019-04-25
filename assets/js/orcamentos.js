@@ -270,6 +270,7 @@ $(function() {
   //
 
   $("#preco_tot_subitem").on("change", function() {
+
     var $custo = $("#custo_tot_subitem");
     var $preco = $("#preco_tot_subitem");
     var $material = $("#material_servico");
@@ -294,11 +295,20 @@ $(function() {
           parseFloat(floatParaPadraoInternacional($custo.val())) >=
           parseFloat(floatParaPadraoInternacional($preco.val()))
         ) {
+
+          let dataPreco = $material.attr("data-preco");
+
+          if (!$material.attr("data-preco")) {
+            dataPreco = $preco.attr("data-preco_anterior");
+          }
+
           precoaux = parseFloat(
-            parseFloat($material.attr("data-preco")) *
+            parseFloat(dataPreco) *
               parseFloat(parseFloat(1) + tx_segop)
           );
+          
           $preco.val(floatParaPadraoBrasileiro(precoaux));
+
         } else {
           precoaux = parseFloat(
             parseFloat(floatParaPadraoInternacional($preco.val())) *
@@ -350,11 +360,52 @@ $(function() {
     .change()
     .blur();
 
+  $('.checkbox-recontato .custom-control-input').on('change', function() {
+    if ($(this).is(':checked')) {
+      if (confirm('Tem Certeza?')) {
+        $.ajax({
+          url: baselink + "/ajax/changeStatusOrcamento",
+          type: "POST",
+          data: {
+            id_orcamento: $('#form-principal').attr('data-id-orcamento'),
+            status: 'Recontato'
+          },
+          dataType: "json",
+          success: function(data) {
+            if (data) {
+              window.location.href = baselink + "/orcamentos";
+            }
+          }
+        });
+      }
+    }
+  });
+
+  $('#duplica_orcamento').on('click', function() {
+    if (confirm('Tem Certeza?')) {
+      $.ajax({
+        url: baselink + "/ajax/duplicarOrcamento",
+        type: "POST",
+        data: {
+          id_orcamento: $('#form-principal').attr('data-id-orcamento')
+        },
+        dataType: "json",
+        success: function(data) {
+          if (data) {
+            window.location.href = baselink + "/orcamentos";
+          }
+        }
+      });
+    }
+  });
+
   ////////////////////////// COMENTADO BEM ATÉ AQUI ////////////////////////////////
 
   $(document)
     .ready(function() {
+      
       let $pfPj = $('[name="pf_pj"]');
+      
       $.ajax({
         url: baselink + "/ajax/getRelacionalDropdownOrcamentos",
         type: "POST",
@@ -401,6 +452,9 @@ $(function() {
 
         }
       });
+
+      ajustarTabIndex();
+
     })
     .on("click", '[name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element', function() {
 
@@ -470,6 +524,11 @@ $(function() {
           .attr("data-custo", data_custo);
 
         toggleTipoMaterial($unidade.val());
+
+        // Ao trocar de produto sempre voltar para o radio de material principal marcado
+        $("input:radio[name=tipo_material]:first").click();
+
+        $('.tipo-material-repetido').remove();
 
         if ($unidade.val() == "ML" || $unidade.val() == "M²") {
           
@@ -610,19 +669,7 @@ $(function() {
           type: "POST",
           data: $form.serialize(),
           dataType: "json",
-          success: data => {
-            $form.removeClass("was-validated").trigger("reset");
-
-            $form
-              .find(".is-valid, .is-invalid")
-              .removeClass("is-valid is-invalid");
-
-            aprovarOrcamento();
-
-            $("#modalCadastrarCliente").modal("hide");
-
-            Toast({ message: data.mensagem, class: data.class });
-          }
+          success: data => aprovarOrcamento(data)
         });
       }
     });
@@ -710,8 +757,12 @@ $(function() {
 
   $('#aprovar-orcamento').click(function() {
     if ($('[name=id_cliente]').val() != '0') {
+      
       // Cliente já é cadastrado
-      aprovarOrcamento();
+      if (confirm('Tem Certeza?')) {
+        aprovarOrcamento();
+      }
+
     } else {
       // Necessário cadastrar o cliente antes de aprovar um orçamento
       $('#modalCadastrarCliente').modal('show');
@@ -1238,7 +1289,7 @@ function resumoItens() {
 
 }
 
-function aprovarOrcamento() {
+function aprovarOrcamento(data) {
 
   let $id_cliente = $('[name=id_cliente]'),
     $id_orcamento = $('#form-principal'),
@@ -1247,6 +1298,10 @@ function aprovarOrcamento() {
     $vendedor = $('[name=funcionario]'),
     $custo_total = $('[name=custo_total]'),
     $valor_total = $('[name=valor_total]');
+
+  if (data && data.lastInsertId) {
+    $id_cliente.val(data.lastInsertId);
+  }
 
   let dadosParaEnviar = {
     id_cliente: $id_cliente.val(),
@@ -1290,7 +1345,7 @@ function aprovarOrcamento() {
 
 function changeRequiredsPfPj() {
 
-  let $radio = $('[name="pf_pj"]');
+  let $radio = $('[name="pf_pj"]:checked');
 
   if ($radio.attr("id") == "pj") {
 
@@ -1327,4 +1382,8 @@ function changeRequiredsPfPj() {
       .removeClass('d-inline-block');
 
   }
+}
+
+function ajustarTabIndex() {
+  console.log('ajustarTabIndex');
 }

@@ -42,12 +42,14 @@ class Clientes extends model {
         self::db()->query($sql);
 
         $erro = self::db()->errorInfo();
+        $lastInsertId = self::db()->lastInsertId();
 
         if (empty($erro[2])){
 
             $_SESSION["returnMessage"] = [
                 "mensagem" => "Registro inserido com sucesso!",
-                "class" => "alert-success"
+                "class" => "alert-success",
+                "lastInsertId" => $lastInsertId
             ];
         } else {
             $_SESSION["returnMessage"] = [

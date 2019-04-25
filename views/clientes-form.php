@@ -14,7 +14,15 @@
             <i class="fas fa-chevron-left"></i>
         </a>
     <?php endif ?>
-    <h1 class="display-4 m-0 text-capitalize font-weight-bold"><?php echo $viewInfo["title"]." ".ucfirst($labelTabela["labelForm"]); ?></h1>
+
+    <?php
+        $title = $viewInfo["title"];
+        if (isset($viewInfoModal)) {
+            $title = $viewInfoModal["title"];
+        }
+    ?>
+
+    <h1 class="display-4 m-0 text-capitalize font-weight-bold"><?php echo $title." ".ucfirst($labelTabela["labelForm"]); ?></h1>
 </header>
 
 <?php $table = false ?>
