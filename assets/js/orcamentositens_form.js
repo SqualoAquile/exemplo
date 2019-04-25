@@ -25,7 +25,7 @@ $(function() {
       $fields = $($form).find('.form-control'),
       $table = $('#itensOrcamento'),
       $trsTbodyTable = $table.find('tbody tr'),
-      $btnIncluir = $('#btn_incluir');
+      $cancelEdicao = $('#col-cancelar_edicao');
 
     if ($form[0].checkValidity() && !$form.find('.is-invalid').length) {
 
@@ -73,11 +73,11 @@ $(function() {
 
       });
 
-      $('.tipo-material-repetido').remove();
+      $('.alert-danger').hide();
 
-      if (!$elsFiltereds.length || $table.attr('data-current-id')) {
+      if (!$elsFiltereds.length || ($table.attr('data-current-id') && $materialServicoForm.val() == $('#itensOrcamento tbody tr.disabled td:eq(8)').text())) {
 
-        if (!$elsFilteredsByTipoProduto.length || $table.attr('data-current-id')) {
+        if (!$elsFilteredsByTipoProduto.length || ($table.attr('data-current-id') && $tipoMaterial.val() == $('#itensOrcamento tbody tr.disabled td:eq(9)').text())) {
         
           Save();
 
@@ -90,14 +90,14 @@ $(function() {
 
         } else {
 
-          $btnIncluir
+          $cancelEdicao
             .after(alertDismissible('Só pode ter um produto com material alternativo ou principal.'));
 
         }
 
       } else {
 
-        $btnIncluir
+        $cancelEdicao
           .after(alertDismissible('Este produto já foi adicionado para este grupo.'));
 
       }
@@ -106,6 +106,10 @@ $(function() {
       $($form).addClass('was-validated');
     }
 
+  });
+
+  $('#direita .form-control, #direita [type="radio"]').change(function() {
+    $('#direita .alert-danger').alert('close');
   });
 
   $(document)
@@ -186,6 +190,8 @@ $(function() {
     }
 
     calculaSubtotalCustotal();
+    agruparTabela();
+
   }
 
   function cancelarEdicao() {
@@ -199,6 +205,7 @@ $(function() {
 
     $trs.removeClass('disabled');
     $trs.find('.btn.disabled').removeClass('disabled');
+    $('#direita .alert-danger').alert('close');
     
   }
 
@@ -293,37 +300,37 @@ $(function() {
 
     if (tdUnidade == "ML" || tdUnidade == "M²") {
         
-        quantUsadaAux = parseFloat(floatParaPadraoInternacional(tdQuantUsada));
-        quantAux = parseFloat(floatParaPadraoInternacional(tdQuant));
+      quantUsadaAux = parseFloat(floatParaPadraoInternacional(tdQuantUsada));
+      quantAux = parseFloat(floatParaPadraoInternacional(tdQuant));
 
-        custoUnit = parseFloat(
-            parseFloat(floatParaPadraoInternacional(tdCusto)) / quantUsadaAux
-        );
+      custoUnit = parseFloat(
+        parseFloat(floatParaPadraoInternacional(tdCusto)) / quantUsadaAux
+      );
 
-        custoUnit = floatParaPadraoBrasileiro(
-            parseFloat(custoUnit / quantAux).toFixed(2)
-        );
+      custoUnit = floatParaPadraoBrasileiro(
+        parseFloat(custoUnit / quantAux).toFixed(2)
+      );
 
-        precoUnit = parseFloat(
-            parseFloat(floatParaPadraoInternacional(tdPreco)) / quantUsadaAux
-        );
+      precoUnit = parseFloat(
+        parseFloat(floatParaPadraoInternacional(tdPreco)) / quantUsadaAux
+      );
 
-        precoUnit = floatParaPadraoBrasileiro(
-            parseFloat(precoUnit / quantAux).toFixed(2)
-        );
+      precoUnit = floatParaPadraoBrasileiro(
+        parseFloat(precoUnit / quantAux).toFixed(2)
+      );
 
     } else {
 
         quantAux = parseFloat(floatParaPadraoInternacional(tdQuant));
 
         custoUnit = parseFloat(
-            parseFloat(floatParaPadraoInternacional(tdCusto)) / tdQuant
+          parseFloat(floatParaPadraoInternacional(tdCusto)) / tdQuant
         );
 
         custoUnit = floatParaPadraoBrasileiro(parseFloat(custoUnit).toFixed(2));
 
         precoUnit = parseFloat(
-            parseFloat(floatParaPadraoInternacional(tdPreco)) / tdQuant
+          parseFloat(floatParaPadraoInternacional(tdPreco)) / tdQuant
         );
         precoUnit = floatParaPadraoBrasileiro(parseFloat(precoUnit).toFixed(2));
 
@@ -350,8 +357,6 @@ $(function() {
     $tipoServicoProduto
       .val(tdServicoProduto)
       .attr("data-anterior", tdServicoProduto);
-
-    changeTipoServicoProduto(tdMaterialServico);
 
     $("input[name=material_servico]")
       .val(tdMaterialServico)
@@ -409,6 +414,7 @@ $(function() {
     $('#col-cancelar_edicao').removeClass('d-none');
 
     calculaSubtotalCustotal();
+    changeTipoServicoProduto(tdMaterialServico);
     toggleTipoMaterial(tdUnidade);
 
     $("input[name=preco_tot_subitem]").change();
@@ -508,8 +514,6 @@ $(function() {
 
     $('#itensOrcamento').trigger('alteracoes');
 
-    agruparTabela();
-
   }
 
   function agruparTabela() {
@@ -551,11 +555,13 @@ $(function() {
 
   function alertDismissible(texto, classes = 'tipo-material-repetido mt-3') {
     return `
-      <div class="alert alert-danger alert-dismissible fade show ` + classes + `" role="alert">
-        ` + texto + `
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+      <div class="col-lg-12" style="order:100">
+        <div class="alert alert-danger alert-dismissible fade show ` + classes + `" role="alert">
+          ` + texto + `
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
       </div>
     `;
   }
@@ -569,8 +575,8 @@ $(function() {
     $('#itensOrcamento tbody tr').each(function() {
 
       let $itemFilterByTipo = $(this).find('td:eq(1)'),
-          $subItemFilterByTipo = $(this).find('td:eq(2)'),
-          $tipoMaterialFilterByTipo = $(this).find('td:eq(9)');
+        $subItemFilterByTipo = $(this).find('td:eq(2)'),
+        $tipoMaterialFilterByTipo = $(this).find('td:eq(9)');
 
       if ($itemFilterByTipo.text() == $item.text()) {
         if ($subItemFilterByTipo.text() == $subitem.text()) {

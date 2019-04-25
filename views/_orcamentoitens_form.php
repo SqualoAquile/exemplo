@@ -24,17 +24,13 @@
         <tbody></tbody>
     </table>
 </div>
-<div class="row justify-content-end">
-    <div class="col-lg">
-        <div class="card card-body text-center">
-            <p>Custo Total</p>
-            <p class="h2" id="resumoItensCustoTotal">0,00</p>
-        </div>
+<div class="d-flex justify-content-end">
+    <div class="pt-4 text-right">
+        <div>Custo Total</div>
+        <div class="h4" id="resumoItensCustoTotal">0,00</div>
     </div>
-    <div class="col-lg">
-        <div class="card card-body text-center">
-            <p>Sub Total</p>
-            <p class="h2" id="resumoItensSubTotal">0,00</p>
-        </div>
+    <div class="pl-5 pt-4 text-right">
+        <div>Sub Total</div>
+        <div class="h4" id="resumoItensSubTotal">0,00</div>
     </div>
 </div>
