@@ -59,7 +59,7 @@ class Ordemservico extends model {
 
 
     public function aprovar($request) {
-        
+        print_r("to chegando no model caralho");
         $ipcliente = $this->permissoes->pegaIPcliente();
         $request["alteracoes"] = ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
         
@@ -551,8 +551,8 @@ class Ordemservico extends model {
     
                         if ($mostraPrecos==true) {
                             $htmlRows.='
-                                <td height="10px" align="center" '.$cor.'> R$ '.$infos["itens"][$k]["subitens"][$j]["preco_unitario"].'</td>
-                                <td height="10px" align="center" '.$cor.'> R$ '.$infos["itens"][$k]["subitens"][$j]["preco_total"].'</td>
+                                <td height="10px" align="right" '.$cor.'> R$ '.$infos["itens"][$k]["subitens"][$j]["preco_unitario"].'</td>
+                                <td height="10px" align="right" '.$cor.'> R$ '.$infos["itens"][$k]["subitens"][$j]["preco_total"].'</td>
                             ';
                         }
     
@@ -573,7 +573,7 @@ class Ordemservico extends model {
                         if ($mostraPrecos==true) { $htmlRows.='<td></td>';}
                     $htmlRows.='
                         <td style="color:red"><b>Preço Alternativo: </b> </td>
-                        <td style="color:red">R$ '.$infos["itens"][$k]["total_alternativo"].'</td>
+                        <td align="right" style="color:red">R$ '.$infos["itens"][$k]["total_alternativo"].'</td>
                     </tr>
                     ';
                 }
@@ -587,7 +587,7 @@ class Ordemservico extends model {
                     if ($mostraPrecos==true) { $htmlRows.='<td></td>';}
                 $htmlRows.='
                     <td><b>Preço Principal: </b> </td>
-                    <td>R$ '.$infos["itens"][$k]["total_principal"].'</td>
+                    <td align="right">R$ '.$infos["itens"][$k]["total_principal"].'</td>
                 </tr>
                 
                 ';
