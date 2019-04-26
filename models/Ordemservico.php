@@ -445,24 +445,21 @@ class Ordemservico extends model {
                     <tr>                
                         <td>
                             <p> <b>Descrição: </b> '.$infos["descricao"].'</p>
+                            <p> <b>Forma de Pagamento: </b> '.$infos['forma_pagamento'].' </p>  
+                            <p> <b>Vendedor: </b> '.$infos['vendedor'].'  </p>
+                            <p> <b>Técnico: </b> '.$infos['tecnico'].'  </p>
+                        </td>
+
+                        <td> 
                             <p> <b>Cliente: </b> '.$infos["cliente"].' </p>
                             <p> <b>CPF/CNPJ: </b> '.$infos["cpf_cnpj"].' </p>
                             <p> <b>Email: </b> '.$infos["email"].' </p>
-                        </td>
-    
-                        <td>
-                            <p> <b>Endereço: </b>'.$infos['endereco'].' </p>
                             <p> <b>Contato do Cliente: </b> '.$infos['contato'].'  </p>
-                            <p> <b>Forma de Pagamento: </b> '.$infos['forma_pagamento'].' </p>
-                        </td>
-    
-                        <td>   
-                            <p> <b>Prazo de Entrega: </b> '.$infos['prazo_entrega'].' </p>
-                            <p> <b>Vendedor: </b> '.$infos['vendedor'].'  </p>
-                            <p> <b>Técnico: </b> '.$infos['tecnico'].'  </p>
+                            <p> <b>Endereço: </b>'.$infos['endereco'].' </p>
                         </td>   
 
-                        <td>  
+                        <td>
+                            <p> <b>Prazo de Entrega: </b> '.$infos['prazo_entrega'].' </p>  
                             <p> <b>Data de Aprovação: </b> '.$infos['data_aprovacao'].' </p>
                             <p> <b>Data de Inicio: </b> '.$infos['data_inicio'].'  </p>
                             <p> <b>Data de Finalização: </b> '.$infos['data_fim'].'  </p>
@@ -705,8 +702,7 @@ class Ordemservico extends model {
     // BLOCO COM NOTIFICAÇÕES
 
     $html.='
-
-    <table style="border:1px solid #000000; line-height:120%; font-size:9pt" width="800" cellPadding="9">
+    <table style="border:1px solid #000000;  line-height:100%; font-size:4pt; font-size:9pt" width="800" cellPadding="9">
     
         <tr>
             <td>
@@ -714,6 +710,8 @@ class Ordemservico extends model {
                 <br></br>
                 <p>_________________________________</p>
                 <p>Assinatura do técnico responsável</p>
+                <br></br>
+                <br></br>
                 <br></br>
                 <br></br>
                 <br></br>
