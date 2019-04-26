@@ -59,7 +59,7 @@ class Ordemservico extends model {
 
 
     public function aprovar($request) {
-        print_r("to chegando no model caralho");
+
         $ipcliente = $this->permissoes->pegaIPcliente();
         $request["alteracoes"] = ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
         
@@ -237,6 +237,7 @@ class Ordemservico extends model {
         if(!empty($id)){
             $id = addslashes(trim($id));
             $infos=[];
+            $request = $_POST;
             
             //---------------------------------------------------------------------------------------------
             // Pega algumas infos da OS
