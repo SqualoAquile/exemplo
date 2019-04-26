@@ -128,19 +128,19 @@
             ],
             [
                "text" => "Orçamentos",
-               "icon" => "fas fa-hands-helping",
+               "icon" => "fas fa-tasks",
                "permissao" => "relatorioorcamentos_ver",
                "link" => "/relatorioorcamentos"
             ],
             [
                "text" => "Produtos e Serviços",
-               "icon" => "fas fa-hands-helping",
+               "icon" => "fas fa-boxes",
                "permissao" => "relatorioorcamentositens_ver",
                "link" => "/relatorioorcamentositens"
             ],
             [
                "text" => "Ordens de Serviço",
-               "icon" => "fas fa-hands-helping",
+               "icon" => "fas fa-file-signature",
                "permissao" => "relatorioordensservico_ver",
                "link" => "/relatorioordensservico"
             ]
