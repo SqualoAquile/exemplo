@@ -236,7 +236,7 @@ class orcamentosController extends controller{
         <table width="800" style="border:1px solid #000000;" cellPadding="9"><thead></thead>
             <tbody>
             <tr>
-                <td><img class="card-img-left img-fluid" src='.BASE_URL.'/assets/images/IDFX.png. width = "20%" height = "auto"></td>
+                <td><img class="card-img-left img-fluid" src="' . __DIR__ . '/../assets/images/IDFX.png" width = "20%" height = "auto"></td>
                 <td>
                     <h2><b>Identifixe</b></h2>
                     <p class="small text-center"> AV. TERESÓPOLIS, 2547 - TERESÓPOLIS - PORTO ALEGRE - RS </p>
