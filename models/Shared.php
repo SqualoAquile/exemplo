@@ -37,7 +37,7 @@ class Shared extends model {
             }
 
             if(($this->table == "orcamentos" || $this->table == "ordemservico") && in_array( $this->table.'_edt' , $_SESSION["permissoesUsuario"]) ){
-                $stringBtn .=  '<a href="' . BASE_URL . '/'. $this->table .'/imprimir/' . $id . '" class="btn btn-warning btn-sm ml-2"><i class="fas fa-print"></i></a>';
+                $stringBtn .=  '<a href="' . BASE_URL . '/'. $this->table .'/imprimir/' . $id . '" class="btn btn-warning btn-sm ml-2"><i class="fas fa-file-pdf"></i></a>';
             }            
             
             $stringBtn .= '</form>';
