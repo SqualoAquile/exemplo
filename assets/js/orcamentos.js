@@ -550,6 +550,8 @@ $(function() {
           $relacionalDropdown = $this.parents('.relacional-dropdown-wrapper').find('.relacional-dropdown'),
           campo = $this.attr('data-campo');
 
+        console.log('acho que é aqui')
+
         $.ajax({
           url: baselink + '/ajax/getRelacionalDropdown',
           type: 'POST',
@@ -559,6 +561,8 @@ $(function() {
           },
           dataType: 'json',
           success: function (data) {
+
+            console.log('retorno de: acho que é aqui', data)
 
             // JSON Response - Ordem Alfabética
             data.sort(function (a, b) {
