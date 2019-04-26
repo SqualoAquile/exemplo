@@ -1167,6 +1167,8 @@ $(function () {
         })
         .on('keyup', '.relacional-dropdown-input', function (event) {
 
+            console.log('eu tenho que ser antes');
+
             var code = event.keyCode || event.which;
 
             if (code == 27) {

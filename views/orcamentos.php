@@ -12,7 +12,7 @@ require "_table_datatable.php";
 </script>
 <div class="modal fade" id="modalConfImp" tabindex="-1" role="dialog" aria-labelledby="modalConfImpLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <form class="modal-content" action="<?php echo BASE_URL . "/" . $modulo . "/imprimir/2" ?>">
+        <form class="modal-content" method="POST" action="<?php echo BASE_URL . "/" . $modulo . "/imprimir/2" ?>">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalConfImpLabel">Imprimir Orçamento</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -34,7 +34,7 @@ require "_table_datatable.php";
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
                 <button type="submit" class="btn btn-warning">Imprimir</button>
             </div>
         </form>

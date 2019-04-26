@@ -105,7 +105,8 @@ class orcamentosController extends controller{
     }
 
     public function imprimir($id) {
-    //public function imprimir($id, $request) {
+
+        $request = $_POST;
 
         $infos['infoUser'] = $_SESSION;
 
@@ -213,256 +214,258 @@ class orcamentosController extends controller{
         // $mostraPrecos = $request["mostraPrecos"];
         // $mostraAvisos = $request["mostraAvisos"];
 
-require_once $_SERVER['DOCUMENT_ROOT']. '/generico/vendor/vendor/autoload.php';
+        
+        require_once __DIR__ . '/../vendor/vendor/autoload.php';
+        
+        
+        //$mpdf=new Mpdf\Mpdf(); 
+        $mpdf = new \Mpdf\Mpdf([
+            'mode' => 'c',
+            'margin_left' => 10,
+            'margin_right' => 10,
+            'margin_top' => 45,
+            'margin_bottom' => 25,
+            'margin_header' => 10,
+            'margin_footer' => 10,
+            'setAutoTopMargin' => 'false'
+        ]);
 
-//$mpdf=new Mpdf\Mpdf(); 
-$mpdf = new \Mpdf\Mpdf([
-	'mode' => 'c',
-	'margin_left' => 10,
-	'margin_right' => 10,
-	'margin_top' => 45,
-	'margin_bottom' => 25,
-	'margin_header' => 10,
-    'margin_footer' => 10,
-    'setAutoTopMargin' => 'false'
-]);
+        $mpdf->SetDisplayMode('fullpage');
 
-$mpdf->SetDisplayMode('fullpage');
-
-$htmlHeader = '
-<table width="800" style="border:1px solid #000000;" cellPadding="9"><thead></thead>
-    <tbody>
-    <tr>
-        <td><img class="card-img-left img-fluid" src='.BASE_URL.'/assets/images/IDFX.png. width = "20%" height = "auto"></td>
-        <td>
-            <h2><b>Identifixe</b></h2>
-            <p class="small text-center"> AV. TERESÓPOLIS, 2547 - TERESÓPOLIS - PORTO ALEGRE - RS </p>
-            <p class="small"> CNPJ: 10.639.459/0001-93 | CEP: 90.870-001 | (51) 3109 - 2500 </p>
-            <p class="small"> www.identifixe.com.br | contato@identifixe.com.br</p>
-        </td>
-        <td></td>
-    </tr>
-
-    </tbody>
-</table>
-';
-
-$mpdf->SetHTMLHeader($htmlHeader);
-
-$html ='
-<table width="800" style="border:1px solid #000000;" cellPadding="9"><thead></thead>
-    <tbody>
-        <tr>
-
-            <td align="center">
-                <h2>ORÇAMENTO</h2>
-            </td>
-        </tr>
-    </tbody>
-</table>
-<br></br>
-';
-
-
-// CABEÇALHO - INFORMAÇÕES BÁSICAS DO ORÇAMENTO --------------------------------------------------------
-$html .= '
-    
-<table width="800" style="border:1px solid #000000;" cellPadding="9"><thead></thead>
-    <tbody>
-        <tr>
-            <td>
-                <p> <b>Data de Emissão: </b> '.$infos['data_emissao'].'</p>
-                <p> <b>Data de Validade:</b> '.$infos['data_validade'].'</p>
-            </td>
-
-            <td>
-                <p> <b>Cliente: </b>'.$infos['cliente'].' </p>
-                <p> <b>Descrição: </b> '.$infos['descricao'].'  </p>
-                <p> <b>Contato vendedor: </b> '.$infos['tecnico'].' </p>
-            </td>
-
-            <td>
-                <p class="small"> <b>Prazo de Entrega: </b> '.$infos['prazo_entrega'].' </p>
-                <p class="small"> <b>Forma de Pagamento: </b> '.$infos['forma_pagamento'].'  </p>
-            </td>   
-
-        </tr>
-    </tbody>
-</table>
-<br></br>
-';
-
-
-// CABEÇALHO DA TABELA DE ITENS --------------------------------------------------------
-$html .='
-<table style="border:1px solid #000000; line-height:20%" width="800" cellPadding="9">
-    <thead>
-        <tr>
-            <th scope="col"><b>Item</b></th>
-            <th scope="col"><b>Quantidade</b></th>
-            <th scope="col"><b>Produto/Serviço</b></th>
-            <th scope="col" ><b>Unidade</b></th>
-            ';
-
-            if ($mostraMedidas==true) {
-                $html.='<th scope="col"><b>Medidas</b></th>';
-            }
-
-            if ($mostraPrecos==true) {
-                $html.='
-                    <th scope="col" class="preco"><b>Preço Unit.</b></th>
-                    <th scope="col" class="preco"><b>Preço Total</b> </th>
-                    ';
-            }
-
-            $html.='
-            
-        </tr>
-    </thead>
-
-';
-
-//INICIO DA LISTA DE ITENS E SUBITENS
-
-$htmlRows = '
-<tbody>
-';
-
-for ($k=0; $k < sizeof($infos["itens"]) ; $k++){
-
-    //NOME DO ITEM
-    
-    $htmlRows .='
-    <tr>
-        <td colspan="5"><b>'.$infos["itens"][$k]["nome"].' </b></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        ';
-        if ($mostraMedidas==true) { $htmlRows.='<td></td>';}
-        if ($mostraPrecos==true) { $htmlRows.='<td></td> <td></td>';}
-    $htmlRows.='
-    </tr>
-    ';
-
-    
-    // LOOP PARA DESCREVER OS SUBITENS ASSOCIADOS (ex.: material, corte, aplicação, etc)
-    for ($j=0; $j < sizeof($infos["itens"][$k]["subitens"]); $j++){
-
-        $tipo_material = $infos["itens"][$k]["subitens"][$j]["tipo_material"];
-        if ($tipo_material=='alternativo') {
-            $cor = 'style="color:red"';
-            $temAlternativo = true;
-            $temAlternativoGlobal = true;            
-        }else{
-            $cor = '';
-        }
-
-        $htmlRows .='
+        $htmlHeader = '
+        <table width="800" style="border:1px solid #000000;" cellPadding="9"><thead></thead>
+            <tbody>
             <tr>
-                <td></td>                
-                <td height="10px" align="center" '.$cor.'>'. $infos["itens"][$k]["subitens"][$j]["quantidade"].'</td>
-                <td height="10px" align="center" '.$cor.'> '.$infos["itens"][$k]["subitens"][$j]["produto_servico"].'</td>
-                <td height="10px" align="center" '.$cor.'>'. $infos["itens"][$k]["subitens"][$j]["unidade"].'</td>
+                <td><img class="card-img-left img-fluid" src='.BASE_URL.'/assets/images/IDFX.png. width = "20%" height = "auto"></td>
+                <td>
+                    <h2><b>Identifixe</b></h2>
+                    <p class="small text-center"> AV. TERESÓPOLIS, 2547 - TERESÓPOLIS - PORTO ALEGRE - RS </p>
+                    <p class="small"> CNPJ: 10.639.459/0001-93 | CEP: 90.870-001 | (51) 3109 - 2500 </p>
+                    <p class="small"> www.identifixe.com.br | contato@identifixe.com.br</p>
+                </td>
+                <td></td>
+            </tr>
+
+            </tbody>
+        </table>
+        ';
+
+        $mpdf->SetHTMLHeader($htmlHeader);
+
+        $html ='
+        <table width="800" style="border:1px solid #000000;" cellPadding="9"><thead></thead>
+            <tbody>
+                <tr>
+
+                    <td align="center">
+                        <h2>ORÇAMENTO</h2>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br></br>
+        ';
+
+
+        // CABEÇALHO - INFORMAÇÕES BÁSICAS DO ORÇAMENTO --------------------------------------------------------
+        $html .= '
+            
+        <table width="800" style="border:1px solid #000000;" cellPadding="9"><thead></thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <p> <b>Data de Emissão: </b> '.$infos['data_emissao'].'</p>
+                        <p> <b>Data de Validade:</b> '.$infos['data_validade'].'</p>
+                    </td>
+
+                    <td>
+                        <p> <b>Cliente: </b>'.$infos['cliente'].' </p>
+                        <p> <b>Descrição: </b> '.$infos['descricao'].'  </p>
+                        <p> <b>Contato vendedor: </b> '.$infos['tecnico'].' </p>
+                    </td>
+
+                    <td>
+                        <p class="small"> <b>Prazo de Entrega: </b> '.$infos['prazo_entrega'].' </p>
+                        <p class="small"> <b>Forma de Pagamento: </b> '.$infos['forma_pagamento'].'  </p>
+                    </td>   
+
+                </tr>
+            </tbody>
+        </table>
+        <br></br>
+        ';
+
+
+        // CABEÇALHO DA TABELA DE ITENS --------------------------------------------------------
+        $html .='
+        <table style="border:1px solid #000000; line-height:20%" width="800" cellPadding="9">
+            <thead>
+                <tr>
+                    <th scope="col"><b>Item</b></th>
+                    <th scope="col"><b>Quantidade</b></th>
+                    <th scope="col"><b>Produto/Serviço</b></th>
+                    <th scope="col" ><b>Unidade</b></th>
+                    ';
+
+                    if ($mostraMedidas==true) {
+                        $html.='<th scope="col"><b>Medidas</b></th>';
+                    }
+
+                    if ($mostraPrecos==true) {
+                        $html.='
+                            <th scope="col" class="preco"><b>Preço Unit.</b></th>
+                            <th scope="col" class="preco"><b>Preço Total</b> </th>
+                            ';
+                    }
+
+                    $html.='
+                    
+                </tr>
+            </thead>
+
+        ';
+
+        //INICIO DA LISTA DE ITENS E SUBITENS
+
+        $htmlRows = '
+        <tbody>
+        ';
+
+        for ($k=0; $k < sizeof($infos["itens"]) ; $k++){
+
+            //NOME DO ITEM
+            
+            $htmlRows .='
+            <tr>
+                <td colspan="5"><b>'.$infos["itens"][$k]["nome"].' </b></td>
+                <td></td>
+                <td></td>
+                <td></td>
                 ';
-
-            if ($mostraMedidas==true) {
-                $htmlRows.='<td height="10px" align="center" '.$cor.'>'.$infos["itens"][$k]["subitens"][$j]["medidas"].' </td>';
-            }
-
-            if ($mostraPrecos==true) {
-                $htmlRows.='
-                    <td height="10px" align="center" '.$cor.'> R$ '.$infos["itens"][$k]["subitens"][$j]["preco_unitario"].'</td>
-                    <td height="10px" align="center" '.$cor.'> R$ '.$infos["itens"][$k]["subitens"][$j]["preco_total"].'</td>
-                ';
-            }
-
+                if ($mostraMedidas==true) { $htmlRows.='<td></td>';}
+                if ($mostraPrecos==true) { $htmlRows.='<td></td> <td></td>';}
             $htmlRows.='
             </tr>
+            ';
+
+            
+            // LOOP PARA DESCREVER OS SUBITENS ASSOCIADOS (ex.: material, corte, aplicação, etc)
+            for ($j=0; $j < sizeof($infos["itens"][$k]["subitens"]); $j++){
+
+                $tipo_material = $infos["itens"][$k]["subitens"][$j]["tipo_material"];
+                if ($tipo_material=='alternativo') {
+                    $cor = 'style="color:red"';
+                    $temAlternativo = true;
+                    $temAlternativoGlobal = true;            
+                }else{
+                    $cor = '';
+                }
+
+                $htmlRows .='
+                    <tr>
+                        <td></td>                
+                        <td height="10px" align="center" '.$cor.'>'. $infos["itens"][$k]["subitens"][$j]["quantidade"].'</td>
+                        <td height="10px" align="center" '.$cor.'> '.$infos["itens"][$k]["subitens"][$j]["produto_servico"].'</td>
+                        <td height="10px" align="center" '.$cor.'>'. $infos["itens"][$k]["subitens"][$j]["unidade"].'</td>
+                        ';
+
+                    if ($mostraMedidas==true) {
+                        $htmlRows.='<td height="10px" align="center" '.$cor.'>'.$infos["itens"][$k]["subitens"][$j]["medidas"].' </td>';
+                    }
+
+                    if ($mostraPrecos==true) {
+                        $htmlRows.='
+                            <td height="10px" align="center" '.$cor.'> R$ '.$infos["itens"][$k]["subitens"][$j]["preco_unitario"].'</td>
+                            <td height="10px" align="center" '.$cor.'> R$ '.$infos["itens"][$k]["subitens"][$j]["preco_total"].'</td>
+                        ';
+                    }
+
+                    $htmlRows.='
+                    </tr>
+                ';
+            };
+
+            //VALOR PRINCIPAL E ALTERNATIVO DO SUBITEM
+            $htmlRows .='
+            <tr>
+                <td> </td>
+                <td> </td>
+                <td> </td>';
+                if ($mostraMedidas==true) { $htmlRows.='<td></td>';}     
+                if ($mostraPrecos==true) { $htmlRows.='<td></td>';}
+            $htmlRows.='
+                <td><b>Preço Principal: </b> </td>
+                <td>R$ '.$infos["itens"][$k]["total_principal"].'</td>
+            </tr>
+            ';
+
+            if(isset($infos["itens"][$k]["total_alternativo"]) && $infos["itens"][$k]["total_alternativo"] !=0 && $temAlternativo==true){
+                $htmlRows .='
+                <tr>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>';
+                    if ($mostraMedidas==true) { $htmlRows.='<td></td>';}     
+                    if ($mostraPrecos==true) { $htmlRows.='<td></td>';}
+                $htmlRows.='
+                    <td style="color:red"><b>Preço Alternativo: </b> </td>
+                    <td style="color:red">R$ '.$infos["itens"][$k]["total_alternativo"].'</td>
+                </tr>
+                ';
+            }
+        };
+
+        $html .= $htmlRows;
+        $html .= '
+            </tbody>
+        </table>
+        <br></br>
         ';
-    };
 
-    //VALOR PRINCIPAL E ALTERNATIVO DO SUBITEM
-    $htmlRows .='
-    <tr>
-        <td> </td>
-        <td> </td>
-        <td> </td>';
-        if ($mostraMedidas==true) { $htmlRows.='<td></td>';}     
-        if ($mostraPrecos==true) { $htmlRows.='<td></td>';}
-    $htmlRows.='
-        <td><b>Preço Principal: </b> </td>
-        <td>R$ '.$infos["itens"][$k]["total_principal"].'</td>
-    </tr>
-    ';
+        // BLOCO COM INFORMAÇÕES GERAIS
 
-    if(isset($infos["itens"][$k]["total_alternativo"]) && $infos["itens"][$k]["total_alternativo"] !=0 && $temAlternativo==true){
-        $htmlRows .='
-        <tr>
-            <td> </td>
-            <td> </td>
-            <td> </td>';
-            if ($mostraMedidas==true) { $htmlRows.='<td></td>';}     
-            if ($mostraPrecos==true) { $htmlRows.='<td></td>';}
-        $htmlRows.='
-            <td style="color:red"><b>Preço Alternativo: </b> </td>
-            <td style="color:red">R$ '.$infos["itens"][$k]["total_alternativo"].'</td>
-        </tr>
-        ';
-    }
-};
+        $html .='
+        <table style="border:1px solid #000000; line-height:20%" width="800" cellPadding="9">
+            <tr>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td><b>Deslocamento:  </b></td>
+                <td><b>'.$infos["deslocamento"].'</b> </td>
+            </tr>
 
-$html .= $htmlRows;
-$html .= '
-    </tbody>
-</table>
-<br></br>
-';
+            <tr>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td><b>Preço Total: </b> </td>
+                <td><b> '.$infos["preco_total"] .' </b> </td>
+            </tr>
 
-// BLOCO COM INFORMAÇÕES GERAIS
+            <tr>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td><b>Desconto:  </b></td>
+                <td><b> '.$infos["desconto"].'</b> </td>
+            </tr>
 
-$html .='
-<table style="border:1px solid #000000; line-height:20%" width="800" cellPadding="9">
-    <tr>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-        <td><b>Deslocamento:  </b></td>
-        <td><b>'.$infos["deslocamento"].'</b> </td>
-    </tr>
-
-    <tr>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-        <td><b>Preço Total: </b> </td>
-        <td><b> '.$infos["preco_total"] .' </b> </td>
-    </tr>
-
-    <tr>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-        <td><b>Desconto:  </b></td>
-        <td><b> '.$infos["desconto"].'</b> </td>
-    </tr>
-
-    <tr>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-        <td><b>Preço Final:  </b></td>
-        <td><b> '.$infos["preco_final"].' </b> </td>
-    </tr>
-        ';
+            <tr>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td><b>Preço Final:  </b></td>
+                <td><b> '.$infos["preco_final"].' </b> </td>
+            </tr>
+                ';
 
 
         if(isset($infos["preco_alternativo"]) && $infos["preco_alternativo"] != 0 && $temAlternativoGlobal==true ){
@@ -489,69 +492,69 @@ $html .='
         }
 
 
-// BLOCO COM AVISOS
+        // BLOCO COM AVISOS
 
-    if ($mostraAvisos==true) {
-        $html .='
-        <table style="border:1px solid #000000; line-height:120%; font-size:9pt" width="800" cellPadding="9">
-            <thead>
-                <tr>
-                    <td align="center">
-                        <h3>AVISOS</h3>
-                    </td>
-                </tr>
-            </thead>
-            
-            <tbody>
-                <tr>
-                    <td>';
+        if ($mostraAvisos==true) {
+            $html .='
+            <table style="border:1px solid #000000; line-height:120%; font-size:9pt" width="800" cellPadding="9">
+                <thead>
+                    <tr>
+                        <td align="center">
+                            <h3>AVISOS</h3>
+                        </td>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <tr>
+                        <td>';
 
-                    foreach ($avisos as $key => $value) {
-                        $html.='
-                            <p id='.$key.'> - '. $value.'</p>
-                        ';
-                    }
+                        foreach ($avisos as $key => $value) {
+                            $html.='
+                                <p id='.$key.'> - '. $value.'</p>
+                            ';
+                        }
+
+            $html.='
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br></br>
+            ';
+
+        }
+
+
+        // BLOCO COM NOTIFICAÇÕES
 
         $html.='
-                    </td>
-                </tr>
-            </tbody>
+
+        <table style="border:1px solid #000000; line-height:120%; font-size:9pt" width="800" cellPadding="9">
+            <tr>
+                <td>
+                    <p class = "small">Obs.: Os itens em vermelho são feitos com material alternativo.</p>
+                    <p class = "small">O desconto é referente aos itens descritos em preto.</p>
+                    <p class = "small">* Este trabalho tem 1 ano de garantia de aplicação.</p>
+                    <p class = "small">* O pagamento pode ser feito em até 6x sem juros no cartão</p>
+                    <p class = "small">* Este orçamento tem validade de 15 dias, a partir da sua data de emissão</p>
+                </td>
+                <td>
+                    <p class = "small">* Material importado tradicional, tem 5 anos de garantia de durabilidade.</p>
+                    <p class = "small">* Material nacional, tem 2 anos de garantia de durabilidade (externo)</p>
+                    <p class = "small">* Para confirmar o agendamento, solicitamos uma entrada de 30% do preço final do trabalho</p>
+                    <p class = "small">* Não aceitamos pagamentos com cheque</p>
+                </td>
+            </tr>
         </table>
-        <br></br>
+
         ';
 
-    }
 
+        //arranjar outro jeito de direcionar o require
+        $mpdf->WriteHTML($html);
 
-    // BLOCO COM NOTIFICAÇÕES
-
-    $html.='
-
-    <table style="border:1px solid #000000; line-height:120%; font-size:9pt" width="800" cellPadding="9">
-        <tr>
-            <td>
-                <p class = "small">Obs.: Os itens em vermelho são feitos com material alternativo.</p>
-                <p class = "small">O desconto é referente aos itens descritos em preto.</p>
-                <p class = "small">* Este trabalho tem 1 ano de garantia de aplicação.</p>
-                <p class = "small">* O pagamento pode ser feito em até 6x sem juros no cartão</p>
-                <p class = "small">* Este orçamento tem validade de 15 dias, a partir da sua data de emissão</p>
-            </td>
-            <td>
-                <p class = "small">* Material importado tradicional, tem 5 anos de garantia de durabilidade.</p>
-                <p class = "small">* Material nacional, tem 2 anos de garantia de durabilidade (externo)</p>
-                <p class = "small">* Para confirmar o agendamento, solicitamos uma entrada de 30% do preço final do trabalho</p>
-                <p class = "small">* Não aceitamos pagamentos com cheque</p>
-            </td>
-        </tr>
-    </table>
-
-    ';
-
-
-//arranjar outro jeito de direcionar o require
-$mpdf->WriteHTML($html);
-
-$mpdf->Output('Orcamento.pdf','I');
+        $mpdf->Output('Orcamento.pdf','I');
     
     }
 }   
