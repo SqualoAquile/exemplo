@@ -322,16 +322,6 @@ $(function() {
     calculaMaterialCustoPreco();
   });
 
-  //
-  //
-  // INPUT material_servico
-  //
-  //
-  //
-
-  $('#material_servico')
-    .change();
-
   $('#recontato').on('click', function() {
     if (confirm('Tem Certeza?')) {
       $.ajax({
@@ -374,8 +364,6 @@ $(function() {
   $(document)
     .ready(function() {
       
-      let $pfPj = $('[name="pf_pj"]');
-      
       $.ajax({
         url: baselink + "/ajax/getRelacionalDropdownOrcamentos",
         type: "POST",
@@ -396,7 +384,7 @@ $(function() {
 
           data.forEach(element => {
             htmlDropdown += `
-              <div class="list-group-item list-group-item-action relacional-dropdown-element"
+              <div class="list-group-item list-group-item-action relacional-dropdown-element-cliente"
                 data-id="` + element["id"] + `"
                 data-tipo_pessoa="` + element["tipo_pessoa"] + `"
                 data-telefone="` + element["telefone"] + `"
@@ -408,32 +396,24 @@ $(function() {
             `;
           });
 
-          $(
-            "#esquerda .relacional-dropdown-wrapper .dropdown-menu .dropdown-menu-wrapper"
-          ).html(htmlDropdown);
-
-          changeRequiredsPfPj();
-
-          if (!$pfPj.attr('data-anterior')) {
-            console.log('to aqui')
-            $pfPj.change();
-          }
-
-          $('[name="tipo_servico_produto"]').change();
+          $("#esquerda .relacional-dropdown-wrapper .dropdown-menu .dropdown-menu-wrapper").html(htmlDropdown);
 
         }
       });
 
-      ajustarTabIndex();
       acoesByStatus();
+      changeRequiredsPfPj();
+      $('[name="tipo_servico_produto"]').change();
 
     })
-    .on("click", '[name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element', function() {
+    .on("click", '[name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element-cliente', function() {
+
+      console.log('clickando aqui sim');
 
       var $this = $(this),
         $esquerda = $("#esquerda");
 
-      $this.siblings(".relacional-dropdown-element").removeClass("active");
+      $this.siblings(".relacional-dropdown-element-cliente").removeClass("active");
       $this.addClass("active");
 
       $esquerda.find("[name=faturado_para]").val($this.text());
@@ -533,71 +513,33 @@ $(function() {
     })
     .on("change", '[name="pf_pj"]', function() {
 
-      console.log('change aqui no pf_pj')
+      let $this = $(this),
+        $elements = $('#esquerda [name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element-cliente'),
+        $filtereds = $elements.filter(function() {
+          return $(this).attr("data-tipo_pessoa") == $this.attr("id");
+        });
 
-      if ($(this).is(":checked")) {
+      $elements
+        .removeClass('filtered')
+        .hide();
 
-        let $radio = $(this),
-          $elements = $('#esquerda [name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element'),
-          $filtereds = $elements.filter(function() {
-            return $(this).attr("data-tipo_pessoa") == $radio.attr("id");
-          });
+      $filtereds
+        .addClass('filtered')
+        .show();
 
-        $elements.hide();
-        $filtereds.show();
+      $('.observacao_cliente_wrapper').addClass('d-none');
 
-        $('.observacao_cliente_wrapper').addClass('d-none');
+      $('[name="nome_cliente"], [name=faturado_para], [name=telefone], [name=celular], [name=email], #observacao_cliente')
+        .removeClass('is-valid is-invalid')
+        .val('');
 
-        $('[name="nome_cliente"], [name=faturado_para], [name=telefone], [name=celular], [name=email], #observacao_cliente')
-          .removeClass('is-valid is-invalid')
-          .val('');
-
-        changeRequiredsPfPj();
-
-      }
+      changeRequiredsPfPj();
 
     });
 
   // Eventos responsáveis pelo: Select Dropdown com Pesquisa
   // do campo Material Serviço dos Itens do Orçamento
   $(document)
-    .ready(function () {
-
-      $('.relacional-dropdown-input-orcamento').each(function () {
-
-        var $this = $(this),
-          $relacionalDropdown = $this.parents('.relacional-dropdown-wrapper').find('.relacional-dropdown'),
-          campo = $this.attr('data-campo');
-
-        $.ajax({
-          url: baselink + '/ajax/getRelacionalDropdown',
-          type: 'POST',
-          data: {
-            tabela: $this.attr('data-tabela'),
-            campo: campo
-          },
-          dataType: 'json',
-          success: function (data) {
-
-            // JSON Response - Ordem Alfabética
-            data.sort(function (a, b) {
-              a = a[campo].toLowerCase();
-              b = b[campo].toLowerCase();
-              return a < b ? -1 : a > b ? 1 : 0;
-            });
-
-            var htmlDropdown = '';
-            data.forEach(element => {
-              htmlDropdown += `
-                <div class="list-group-item list-group-item-action relacional-dropdown-element-orcamento">` + element[campo] + `</div>
-              `;
-            });
-
-            $relacionalDropdown.find('.dropdown-menu-wrapper').html(htmlDropdown);
-          }
-        });
-      });
-    })
     .on('click', '.relacional-dropdown-element-orcamento', function () {
 
       var $this = $(this),
@@ -607,7 +549,7 @@ $(function() {
         .val($this.text())
         .change();
     })
-    .on('keyup focus', '.relacional-dropdown-input-orcamento', function (event) {
+    .on('keyup', '.relacional-dropdown-input-orcamento', function (event) {
 
       var code = event.keyCode || event.which;
 
@@ -725,7 +667,7 @@ $(function() {
                   <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Campo Obrigatório">*</i>
                   <span>Quem Indicou</span>
                 </label>
-                <input type="text" class="form-control" name="quem_indicou" value="" required data-unico="" data-anterior="" id="quem_indicou" tabindex="12" data-mascara_validacao="false">
+                <input type="text" class="form-control" name="quem_indicou" value="" required data-unico="" data-anterior="" id="quem_indicou" data-mascara_validacao="false">
               </div>
             </div>
           `);
@@ -842,9 +784,19 @@ $(function() {
   });
 
   $('#main-form').click(function(event) {
-    let $msgAlert = $('#invalid-feedback-zero-itens');
+    
+    let $msgAlert = $('#invalid-feedback-zero-itens'),
+      $forms = $('#form-principal, #camposOrc');
+
     $msgAlert.addClass('d-none');
+
     if (!$('[name=itens]').val().length) {
+      
+      $forms
+        .addClass('was-validated');
+
+      $forms.find(':invalid').first().focus();
+
       $msgAlert.removeClass('d-none');
       event.preventDefault();
     }
@@ -854,7 +806,7 @@ $(function() {
     .on('blur change', function() {
       
       let $this = $(this),
-        $elements = $this.siblings('.relacional-dropdown').find('.relacional-dropdown-element');
+        $elements = $this.siblings('.relacional-dropdown').find('.relacional-dropdown-element-cliente');
 
       let $filtereds = $elements.filter(function() {
         if ($this.val() && $(this).text()) {
@@ -877,17 +829,19 @@ $(function() {
     .on('focus', function() {
 
       let $radio = $('[name="pf_pj"]:checked'),
-        $elements = $('#esquerda [name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element'),
+        $elements = $('#esquerda [name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element-cliente'),
         $filtereds = $elements.filter(function() {
           return $(this).attr("data-tipo_pessoa") == $radio.attr("id");
         });
 
-      $elements.hide();
-      $filtereds.show();
+      $elements
+        .removeClass('filtered')
+        .hide();
 
-    })
-    .keyup(function() {
-      console.log('eu tenho que ser depois');
+      $filtereds
+        .addClass('filtered')
+        .show();
+
     });
 
   $('#aprovar-orcamento').click(function() {
@@ -972,6 +926,111 @@ $(function() {
     }        
 
   });
+
+  // Eventos responsáveis pelo: Select Dropdown com Pesquisa de Cliente
+  // Cliente
+  $(document)
+    .on('click', '.relacional-dropdown-element-cliente', function () {
+
+      var $this = $(this),
+        $input = $this.parents('.relacional-dropdown-wrapper').find('.relacional-dropdown-input-cliente');
+
+      $input
+        .val($this.text())
+        .change();
+    })
+    .on('keyup', '.relacional-dropdown-input-cliente', function (event) {
+
+      var code = event.keyCode || event.which;
+
+      if (code == 27) {
+        
+        $(this)
+          .dropdown('hide')
+          .blur();
+
+        return;
+      }
+
+      var $this = $(this),
+        $dropdownMenu = $this.siblings('.dropdown-menu'),
+        $nenhumResult = $dropdownMenu.find('.nenhum-result'),
+        $elements = $dropdownMenu.find('.relacional-dropdown-element-cliente.filtered');
+
+      if ($this.attr('data-anterior').length != $this.val()) {
+
+        var $filtereds = $elements.filter(function () {
+          return $(this).text().toLowerCase().indexOf($this.val().toLowerCase()) != -1;
+        });
+
+        if (!$filtereds.length) {
+          $nenhumResult.removeClass('d-none');
+        } else {
+          $nenhumResult.addClass('d-none');
+        }
+
+        $elements.not($filtereds).hide();
+        $filtereds.show();
+
+      } else {
+
+        $nenhumResult.addClass('d-none');
+        $elements.show();
+
+      }
+
+    });
+
+  $('.relacional-dropdown-input-cliente')
+    .click(function () {
+      var $this = $(this)
+      if ($this.parents('.dropdown').hasClass('show')) {
+        $this.dropdown('toggle');
+      }
+    })
+    .on('blur change', function () {
+
+      var $this = $(this),
+      $dropdownMenu = $this.siblings('.dropdown-menu');
+
+      $this.removeClass('is-valid is-invalid');
+
+      if ($this.val()) {
+
+        $dropdownMenu.find('.nenhum-result').addClass('d-none');
+
+        $filtereds = $dropdownMenu.find('.relacional-dropdown-element-cliente.filtered').filter(function () {
+          return $(this).text().toLowerCase().indexOf($this.val().toLowerCase()) != -1;
+        });
+
+        if (!$filtereds.length) {
+
+          if ($this.attr('data-pode_nao_cadastrado') == 'false') {
+
+            $this
+              .removeClass('is-valid')
+              .addClass('is-invalid');
+
+            this.setCustomValidity('invalid');
+            $this.after('<div class="invalid-feedback">Selecione um item existente.</div>');
+
+          } else {
+
+            $this.addClass('is-valid');
+            this.setCustomValidity('');
+
+          }
+
+        } else {
+
+          $this.addClass('is-valid');
+          this.setCustomValidity('');
+
+        }
+
+      }
+    })
+    .attr('autocomplete', 'off');
 
 });
 
@@ -1286,13 +1345,7 @@ function changeTipoServicoProduto(setValueSuccess) {
         .removeAttr('data-tabela data-custo data-preco data-unidade')
         .val(setValueSuccess ? setValueSuccess : '');
 
-      if (val == 'produtos') {
-        $materialDropdown.html(htmlDropdown);
-      } else if (val == 'servicos') {
-        $materialDropdown.html(htmlDropdown);
-      } else {
-        $materialDropdown.html(htmlDropdown);
-      }
+      $materialDropdown.html(htmlDropdown);
 
       $materialDropdown
         .find('.relacional-dropdown-element-orcamento.active')
@@ -1486,8 +1539,6 @@ function aprovarOrcamento(data) {
 
 function changeRequiredsPfPj() {
 
-  console.log('changeRequiredsPfPj')
-
   let $radio = $('[name="pf_pj"]:checked');
 
   if ($radio.attr("id") == "pj") {
@@ -1525,10 +1576,6 @@ function changeRequiredsPfPj() {
       .removeClass('d-inline-block');
 
   }
-}
-
-function ajustarTabIndex() {
-  console.log('ajustarTabIndex');
 }
 
 function acoesByStatus() {

@@ -638,5 +638,29 @@ class ajaxController extends controller{
     }
   }
 
+
+  //
+  // DASHBOARD
+  //
+
+  public function graficoFluxoCaixaRealizado(){
+    
+    if(isset($_POST) && !empty($_POST)){
+      $relatFC = new Relatoriofluxocaixa();
+      $dados = $relatFC->graficoFluxoCaixaRealizado($_POST['intervalo']);
+    }
+    echo json_encode($dados);
+  }
+
+  public function graficoFluxoCaixaPrevisto(){
+    
+    if(isset($_POST) && !empty($_POST)){
+      $relatFC = new Relatoriofluxocaixa();
+      $dados = $relatFC->graficoFluxoCaixaPrevisto($_POST['intervalo']);
+    }
+    echo json_encode($dados);
+  }
+  
+
 }   
 ?>

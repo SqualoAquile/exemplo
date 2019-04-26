@@ -283,10 +283,10 @@ $(function () {
 
         $('#collapseFiltros')
             .on('hide.bs.collapse', function () {
-                $('#tituloHeader .fas').removeClass('fa-minus-square').addClass('fa-plus-square');
+                $('#tituloHeader .fas').removeClass('fa-minus').addClass('fa-plus');
             })
             .on('show.bs.collapse', function () {
-                $('#tituloHeader .fas').removeClass('fa-plus-square').addClass('fa-minus-square');
+                $('#tituloHeader .fas').removeClass('fa-plus').addClass('fa-minus');
             });
 
           

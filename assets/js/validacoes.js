@@ -1151,7 +1151,7 @@ $(function () {
                             `;
                         });
 
-                        $relacionalDropdown.find('.dropdown-menu-wrapper').html(htmlDropdown);
+                        // $relacionalDropdown.find('.dropdown-menu-wrapper').html(htmlDropdown);
                     }
                 });
             });
@@ -1166,8 +1166,6 @@ $(function () {
                 .change();
         })
         .on('keyup', '.relacional-dropdown-input', function (event) {
-
-            console.log('eu tenho que ser antes');
 
             var code = event.keyCode || event.which;
 
