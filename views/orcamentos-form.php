@@ -769,7 +769,7 @@
                     </div>
                 <?php endif ?>
                 <div class="col-lg">
-                    <button onclick="location.href='<?php echo BASE_URL?>/orcamentos/imprimir/<?php echo $item['id']?>'" type="button" class="btn btn-warning btn-block">
+                    <button type="button" class="btn btn-warning btn-block" data-id="<?php echo isset($item) ? $item["id"] : "" ?>" data-toggle="modal" data-target="#modalConfImp">
                         Imprimir
                     </button>
                 </div>
@@ -778,6 +778,8 @@
     </form>
     <?php include "_historico.php" ?>
 </section>
+
+<?php include "_modal_configuracoes_impressao.php" ?>
 
 <!-- Modal - Adicionar Cliente -->
 <div class="modal fade modais-require" id="modalCadastrarCliente" tabindex="-1" role="dialog" aria-labelledby="modalCadastrarClienteLabel" aria-hidden="true">
