@@ -39,24 +39,26 @@ require "_table_datatable.php";
                 <div class="row">
                     <div class="col">
                         <div class="collapse" id="collapseAvisos">
-                            <div class="h4">Selecionar avisos:</div>
-                            <div class="relacional-dropdown-wrapper dropdown"> 
-                                <input 
-                                type="text" 
-                                class="dropdown-toggle form-control relacional-dropdown-input" 
-                                data-toggle="dropdown" 
-                                autocomplete="new-password"
-                                aria-haspopup="true" 
-                                aria-expanded="false"
-                                />
-                                <label data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent" class="btn btn-sm text-secondary icon-dropdown m-0 toggle-btn dropdown-toggle">
-                                    <i class="fas fa-caret-down"></i>
-                                </label>
-                                <div class="dropdown-menu w-100 p-0 list-group-flush relacional-dropdown">
-                                    <div class="p-3 nenhum-result d-none">Nenhum resultado encontrado</div>
-                                    <div class="dropdown-menu-wrapper"></div>
+                            <div class="py-4">
+                                <h6>Selecionar Avisos</h6>
+                                <div class="relacional-dropdown-wrapper dropdown"> 
+                                    <input 
+                                    type="text" 
+                                    class="dropdown-toggle form-control relacional-dropdown-input" 
+                                    data-toggle="dropdown" 
+                                    autocomplete="off"
+                                    aria-haspopup="true" 
+                                    aria-expanded="false"
+                                    />
+                                    <label data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent" class="btn btn-sm text-secondary icon-dropdown m-0 toggle-btn dropdown-toggle">
+                                        <i class="fas fa-caret-down"></i>
+                                    </label>
+                                    <div class="dropdown-menu w-100 p-0 list-group-flush relacional-dropdown">
+                                        <div class="p-3 nenhum-result d-none">Nenhum resultado encontrado</div>
+                                        <div class="dropdown-menu-wrapper"></div>
+                                    </div>
                                 </div>
-                            </div>        
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -75,4 +77,42 @@ require "_table_datatable.php";
 
         $form.attr('action', $form.attr('action') + id);
     });
+
+    $(document)
+        .ready(function() {
+            $.ajax({
+                url: baselink + "/ajax/getRelacionalDropdownOrcamentos",
+                type: "POST",
+                data: {
+                    tabela: "avisos"
+                },
+                dataType: "json",
+                success: function(data) {
+
+                    var htmlDropdown = "";
+
+                    htmlDropdown += '<div id="opcoesAvisos">';
+
+                    data.forEach(element => {
+                        htmlDropdown += `
+                            <div class="list-group-item list-group-item-action relacional-dropdown-element"
+                            data-titulo="` + element["titulo"] + `"
+                            data-id="` + element["id"] + `"
+                            data-mensagem="` + element["mensagem"] + `"
+                            >
+                            <input class="lista-itens mx-2" type="checkbox" name="checkboxAviso" value="`+ element["titulo"]+ `">`
+                            + element["titulo"] + `:   ` + element["mensagem"] + `</div>
+                        `;
+                    });
+
+                    htmlDropdown += '</div>';
+
+                    $('.relacional-dropdown-wrapper .dropdown-menu .dropdown-menu-wrapper').html(htmlDropdown);
+
+                }
+            });
+        })
+        .on('change', '#checkAvisos', function() {
+            $('#collapseAvisos').collapse('toggle');
+        });
 </script>
