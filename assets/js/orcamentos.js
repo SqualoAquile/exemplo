@@ -1478,7 +1478,7 @@ function aprovarOrcamento(data) {
     dataType: 'json',
     success: function(data) {
       if (data.message[0] == '00000') {
-        window.location.href = baselink + '/ordemservico/imprimir/' + data.id_ordemservico;
+        window.location.href = baselink + '/orcamentos';
       }
     }
   });
