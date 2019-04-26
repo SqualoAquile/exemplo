@@ -233,6 +233,16 @@ class Ordemservico extends model {
         }
     }
 
+    public function custoDeslocamento() {
+
+        $sql = "SELECT valor FROM parametros WHERE parametro='custo_deslocamento' AND situacao='ativo'";
+        $sql = self::db()->query($sql);
+        $sql = $sql->fetchAll(PDO::FETCH_ASSOC);
+        $sql = $sql[0]['valor'];
+        return $sql;
+                
+    }
+
     public function imprimir($id){
         if(!empty($id)){
             $id = addslashes(trim($id));
@@ -308,6 +318,9 @@ class Ordemservico extends model {
             $infos["deslocamento"] = $informacoes['deslocamento_km']. " km";
 
             //---------------------------------------------------------------------------------------------
+            $custoDeslocamento = $this->custoDeslocamento();
+            $custoDeslocamento = str_replace(",",".",$custoDeslocamento);
+            //---------------------------------------------------------------------------------------------
             unset($sql);
             // Pega as informações dos itens de orçamento através do ID de orçamento
             $sql = "SELECT * FROM orcamentositens WHERE id_orcamento='$id_orcamento' AND situacao='ativo'";
@@ -366,7 +379,9 @@ class Ordemservico extends model {
                 $totalAlternativo += $precoAlternativo;
             }
 
-            $infos["preco_alternativo"] = number_format($totalAlternativo,2,",","."); 
+            $infos["preco_alternativo"] = $totalAlternativo;
+            $infos["preco_alternativo"] += floatval($custoDeslocamento) * floatval($informacoes['deslocamento_km']);
+            $infos["preco_alternativo"] = number_format($infos["preco_alternativo"],2,",","."); 
 
             // FORMATAÇÃO
             for ($p=0; $p < $k ; $p++) {

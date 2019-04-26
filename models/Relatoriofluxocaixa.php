@@ -341,4 +341,235 @@ class Relatoriofluxocaixa extends model {
         $retorno[5] = number_format((($meta - $atingido)/$retorno[4]),2,",",".");  //faturamento médio para atingir a média
         return $retorno;
     }
+
+    public function graficoFluxoCaixaRealizado($interval_datas){
+        
+        if(count($interval_datas) == 1){
+			$dt1 = 	$interval_datas[0];
+			$dt2 =  $interval_datas[0];
+		}else{
+			$dt1 = $interval_datas[0];
+			$dt2 = $interval_datas[count($interval_datas)-1];
+		}
+     
+        $sql1 = "SELECT data_quitacao , SUM(valor_total) as total FROM `fluxocaixa` WHERE situacao='ativo' AND despesa_receita = 'Despesa' AND status = 'Quitado' AND data_quitacao BETWEEN '$dt1' AND '$dt2' GROUP BY data_quitacao";
+        
+        $sql1 = self::db()->query($sql1);
+        
+        if($sql1->rowCount()>0){
+            $despesaBruta = $sql1->fetchAll();
+        }else{
+            $despesaBruta = array();
+        }
+
+        $despesas = array();
+        if (count($despesaBruta) > 0 ){
+            for($i = 0; $i < count($despesaBruta); $i++){
+                for($j = 0; $j < count($interval_datas); $j++ ){
+                    if($interval_datas[$j] == $despesaBruta[$i][0]){
+                        
+                        $despesas[$interval_datas[$j]] = floatval($despesaBruta[$i][1]);
+                    }
+                }
+            }
+
+        }else{
+
+            for($j = 0; $j < count($interval_datas); $j++ ){
+                $despesas[$interval_datas[$j]] = floatval(0);
+            }
+        }
+
+		// Verifica se as datas do $interval_datas existem no array $despesas
+		for($j = 0; $j < count($interval_datas); $j++ ){
+			if (array_key_exists($interval_datas[$j],$despesas) == 0){
+				$despesas[$interval_datas[$j]] = 0;
+			}
+        }
+
+		// Ordena o array pela ordem das keys
+		ksort($despesas);
+
+		//reescreve as chave do array , para datas no padrão brasileiro
+		foreach ($despesas as $key => $value) {
+			$aux = explode('-',$key);
+			$aux = $aux[2].'/'.$aux[1].'/'.$aux[0];
+			unset($despesas[$key]);
+			$despesas[$aux] = $value;
+			
+        }
+
+        ///// RECEITAS
+
+        $sql2 = "SELECT data_quitacao , SUM(valor_total) as total FROM `fluxocaixa` WHERE situacao='ativo' AND despesa_receita = 'Receita' AND status = 'Quitado' AND data_quitacao BETWEEN '$dt1' AND '$dt2' GROUP BY data_quitacao";
+        
+        $sql2 = self::db()->query($sql2);
+        
+        if($sql2->rowCount()>0){
+            $receitaBruta = $sql2->fetchAll();
+        }else{
+            $receitaBruta = array();
+        }
+
+        $receitas = array();
+        if (count($receitaBruta) > 0 ){
+            for($i = 0; $i < count($receitaBruta); $i++){
+                for($j = 0; $j < count($interval_datas); $j++ ){
+                    if($interval_datas[$j] == $receitaBruta[$i][0]){
+                        
+                        $receitas[$interval_datas[$j]] = floatval($receitaBruta[$i][1]);
+                    }
+                }
+            }
+
+        }else{
+
+            for($j = 0; $j < count($interval_datas); $j++ ){
+                $receitas[$interval_datas[$j]] = floatval(0);
+            }
+        }
+
+		// Verifica se as datas do $interval_datas existem no array $despesas
+		for($j = 0; $j < count($interval_datas); $j++ ){
+			if (array_key_exists($interval_datas[$j],$receitas) == 0){
+				$receitas[$interval_datas[$j]] = 0;
+			}
+        }
+
+		// Ordena o array pela ordem das keys
+		ksort($receitas);
+
+		//reescreve as chave do array , para datas no padrão brasileiro
+		foreach ($receitas as $key => $value) {
+			$aux = explode('-',$key);
+			$aux = $aux[2].'/'.$aux[1].'/'.$aux[0];
+			unset($receitas[$key]);
+			$receitas[$aux] = $value;
+			
+        }
+
+		$data = array();
+		$data[0] = $despesas;
+        $data[1] = $receitas;
+        
+        // print_r($data); exit;
+		return $data; 
+		
+    }
+    
+    public function graficoFluxoCaixaPrevisto($interval_datas){
+        
+        if(count($interval_datas) == 1){
+			$dt1 = 	$interval_datas[0];
+			$dt2 =  $interval_datas[0];
+		}else{
+			$dt1 = $interval_datas[0];
+			$dt2 = $interval_datas[count($interval_datas)-1];
+		}
+     
+        $sql1 = "SELECT data_vencimento , SUM(valor_total) as total FROM `fluxocaixa` WHERE situacao='ativo' AND despesa_receita = 'Despesa' AND status = 'A Quitar' AND data_vencimento BETWEEN '$dt1' AND '$dt2' GROUP BY data_vencimento";
+        
+        $sql1 = self::db()->query($sql1);
+        
+        if($sql1->rowCount()>0){
+            $despesaBruta = $sql1->fetchAll();
+        }else{
+            $despesaBruta = array();
+        }
+
+        $despesas = array();
+        if (count($despesaBruta) > 0 ){
+            for($i = 0; $i < count($despesaBruta); $i++){
+                for($j = 0; $j < count($interval_datas); $j++ ){
+                    if($interval_datas[$j] == $despesaBruta[$i][0]){
+                        
+                        $despesas[$interval_datas[$j]] = floatval($despesaBruta[$i][1]);
+                    }
+                }
+            }
+
+        }else{
+
+            for($j = 0; $j < count($interval_datas); $j++ ){
+                $despesas[$interval_datas[$j]] = floatval(0);
+            }
+        }
+
+		// Verifica se as datas do $interval_datas existem no array $despesas
+		for($j = 0; $j < count($interval_datas); $j++ ){
+			if (array_key_exists($interval_datas[$j],$despesas) == 0){
+				$despesas[$interval_datas[$j]] = 0;
+			}
+        }
+
+		// Ordena o array pela ordem das keys
+		ksort($despesas);
+
+		//reescreve as chave do array , para datas no padrão brasileiro
+		foreach ($despesas as $key => $value) {
+			$aux = explode('-',$key);
+			$aux = $aux[2].'/'.$aux[1].'/'.$aux[0];
+			unset($despesas[$key]);
+			$despesas[$aux] = $value;
+			
+        }
+
+        ///// RECEITAS
+
+        $sql2 = "SELECT data_vencimento , SUM(valor_total) as total FROM `fluxocaixa` WHERE situacao='ativo' AND despesa_receita = 'Receita' AND status = 'A Quitar' AND data_vencimento BETWEEN '$dt1' AND '$dt2' GROUP BY data_vencimento";
+        
+        $sql2 = self::db()->query($sql2);
+        
+        if($sql2->rowCount()>0){
+            $receitaBruta = $sql2->fetchAll();
+        }else{
+            $receitaBruta = array();
+        }
+
+        $receitas = array();
+        if (count($receitaBruta) > 0 ){
+            for($i = 0; $i < count($receitaBruta); $i++){
+                for($j = 0; $j < count($interval_datas); $j++ ){
+                    if($interval_datas[$j] == $receitaBruta[$i][0]){
+                        
+                        $receitas[$interval_datas[$j]] = floatval($receitaBruta[$i][1]);
+                    }
+                }
+            }
+
+        }else{
+
+            for($j = 0; $j < count($interval_datas); $j++ ){
+                $receitas[$interval_datas[$j]] = floatval(0);
+            }
+        }
+
+		// Verifica se as datas do $interval_datas existem no array $despesas
+		for($j = 0; $j < count($interval_datas); $j++ ){
+			if (array_key_exists($interval_datas[$j],$receitas) == 0){
+				$receitas[$interval_datas[$j]] = 0;
+			}
+        }
+
+		// Ordena o array pela ordem das keys
+		ksort($receitas);
+
+		//reescreve as chave do array , para datas no padrão brasileiro
+		foreach ($receitas as $key => $value) {
+			$aux = explode('-',$key);
+			$aux = $aux[2].'/'.$aux[1].'/'.$aux[0];
+			unset($receitas[$key]);
+			$receitas[$aux] = $value;
+			
+        }
+
+		$data = array();
+		$data[0] = $despesas;
+        $data[1] = $receitas;
+        
+        // print_r($data); exit;
+		return $data; 
+		
+    }
+    
 }
