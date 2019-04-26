@@ -23,12 +23,12 @@ require "_table_datatable.php";
                 <div class="row">
                     <div class="col">
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="checkMedidas" id="checkMedidas" value="medidas">
+                            <input class="form-check-input" type="checkbox" checked="checked" name="checkMedidas" id="checkMedidas" value="medidas">
                             <label class="form-check-label" for="checkMedidas">Medidas</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="checkUnitario" id="checkUnitario" value="unitario">
-                            <label class="form-check-label" for="checkUnitario">Preço Unitário e Sub Totais</label>
+                            <input class="form-check-input" type="checkbox" checked="checked" name="checkUnitario" id="checkUnitario" value="unitario">
+                            <label class="form-check-label" for="checkUnitario">Preço Unitário e Subtotais</label>
                         </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" name="checkAvisos" id="checkAvisos" value="avisos">
@@ -95,13 +95,15 @@ require "_table_datatable.php";
 
                     data.forEach(element => {
                         htmlDropdown += `
-                            <div class="list-group-item list-group-item-action relacional-dropdown-element"
-                            data-titulo="` + element["titulo"] + `"
-                            data-id="` + element["id"] + `"
-                            data-mensagem="` + element["mensagem"] + `"
-                            >
-                            <input class="lista-itens mx-2" type="checkbox" name="checkboxAviso" value="`+ element["titulo"]+ `">`
-                            + element["titulo"] + `:   ` + element["mensagem"] + `</div>
+                            <label for="avisos`+ element["id"]+ `" class="list-group-item list-group-item-action relacional-dropdown-element">
+                                <div class="d-flex align-items-center">
+                                    <input class="lista-itens mr-3" type="checkbox" id="avisos`+ element["id"]+ `" name="avisos[]" value="`+ element["id"]+ `">
+                                    <div>
+                                        <div>`+ element["titulo"] + `</div>
+                                        <small>` + element["mensagem"] + `</small>
+                                    </div>
+                                </div>
+                            </label>
                         `;
                     });
 

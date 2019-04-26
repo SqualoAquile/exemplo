@@ -111,8 +111,21 @@ class orcamentosController extends controller{
         $infos['infoUser'] = $_SESSION;
 
         $request["tabela"] = "avisos";
-        $avisos = $this->model->getRelacionalDropdown($request);
-        $infos["avisos"] = $avisos;
+        $avisosDb = $this->model->getRelacionalDropdown($request);
+
+        $avisos = [];
+
+        if ($request["avisos"]) {
+            foreach ($request["avisos"] as $keyAvisos => $valueAvisos) {
+                if ($avisosDb) {
+                    foreach ($avisosDb as $keyAvisosDb => $valueAvisosDb) {
+                        if ($valueAvisosDb["id"] == $valueAvisos) {
+                            $avisos[$valueAvisosDb["id"]] = $valueAvisosDb["mensagem"];
+                        }
+                    }
+                }
+            }
+        }
 
         $informacoes = $this->model->infosOrcamento($id);
         $infos["cliente"] = $informacoes[0]['nome_cliente'];
@@ -204,10 +217,6 @@ class orcamentosController extends controller{
         $mostraMedidas = isset($request["checkMedidas"]) ? true : false;
         $mostraPrecos = isset($request["checkUnitario"]) ? true : false;
         $mostraAvisos = isset($request["checkAvisos"]) ? true : false;
-        $avisos = [
-            "1" => "Aviso 1",
-            "2" => "Aviso 2"
-        ];
         
         require_once __DIR__ . '/../vendor/vendor/autoload.php';
         
