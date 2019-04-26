@@ -201,22 +201,15 @@ class orcamentosController extends controller{
             }
         }
 
-        //PEGAR DO POST
-        $mostraMedidas = true;
-        $mostraPrecos = true;
-        $mostraAvisos = true;
+        $mostraMedidas = isset($request["checkMedidas"]) ? true : false;
+        $mostraPrecos = isset($request["checkUnitario"]) ? true : false;
+        $mostraAvisos = isset($request["checkAvisos"]) ? true : false;
         $avisos = [
             "1" => "Aviso 1",
             "2" => "Aviso 2"
         ];
-
-        // $mostraMedidas = $request["mostraMedidas"];
-        // $mostraPrecos = $request["mostraPrecos"];
-        // $mostraAvisos = $request["mostraAvisos"];
-
         
         require_once __DIR__ . '/../vendor/vendor/autoload.php';
-        
         
         //$mpdf=new Mpdf\Mpdf(); 
         $mpdf = new \Mpdf\Mpdf([
@@ -236,7 +229,7 @@ class orcamentosController extends controller{
         <table width="800" style="border:1px solid #000000;" cellPadding="9"><thead></thead>
             <tbody>
             <tr>
-                <td><img class="card-img-left img-fluid" src='.BASE_URL.'/assets/images/IDFX.png. width = "20%" height = "auto"></td>
+                <td><img class="card-img-left img-fluid" src='.BASE_URL.'/assets/images/IDFX.png width = "20%" height = "auto"></td>
                 <td>
                     <h2><b>Identifixe</b></h2>
                     <p class="small text-center"> AV. TERESÓPOLIS, 2547 - TERESÓPOLIS - PORTO ALEGRE - RS </p>
@@ -337,7 +330,7 @@ class orcamentosController extends controller{
             
             $htmlRows .='
             <tr>
-                <td colspan="5"><b>'.$infos["itens"][$k]["nome"].' </b></td>
+                <td colspan="2"><b>'.$infos["itens"][$k]["nome"].' </b></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -453,7 +446,7 @@ class orcamentosController extends controller{
                 <td> </td>
                 <td> </td>
                 <td><b>Desconto:  </b></td>
-                <td><b> '.$infos["desconto"].'</b> </td>
+                <td><b> '.$infos["desconto"].'</b></td>
             </tr>
 
             <tr>
@@ -466,7 +459,6 @@ class orcamentosController extends controller{
                 <td><b> '.$infos["preco_final"].' </b> </td>
             </tr>
                 ';
-
 
         if(isset($infos["preco_alternativo"]) && $infos["preco_alternativo"] != 0 && $temAlternativoGlobal==true ){
 
