@@ -330,54 +330,53 @@ $(function() {
   //
 
   $('#material_servico')
-    .on('change blur', function() {
+    // .on('change', function() {
 
-      let $this = $(this),
-        $unidade = $('#unidade'),
-        $custo_tot = $('[name="custo_tot_subitem"]'),
-        $preco_tot = $('[name="preco_tot_subitem"]');
+    //   // console.log('change aqui')
 
-      if ($this.val()) {
+    //   let $this = $(this),
+    //     $unidade = $('#unidade'),
+    //     $custo_tot = $('[name="custo_tot_subitem"]'),
+    //     $preco_tot = $('[name="preco_tot_subitem"]');
 
-        $unidade
-          .val('')
-          .removeClass('is-valid is-invalid')
-          .blur();
+    //   // if ($this.val()) {
 
-        $custo_tot
-          .val('')
-          .removeClass('is-valid is-invalid')
-          .blur();
+    //   //   $unidade
+    //   //     .val('')
+    //   //     .removeClass('is-valid is-invalid')
+    //   //     .blur();
 
-        $preco_tot
-          .val('')
-          .removeClass('is-valid is-invalid')
-          .blur();
+    //   //   $custo_tot
+    //   //     .val('')
+    //   //     .removeClass('is-valid is-invalid')
+    //   //     .blur();
 
-      }
+    //   //   $preco_tot
+    //   //     .val('')
+    //   //     .removeClass('is-valid is-invalid')
+    //   //     .blur();
 
-    })
-    .change()
-    .blur();
+    //   // }
 
-  $('.checkbox-recontato .custom-control-input').on('change', function() {
-    if ($(this).is(':checked')) {
-      if (confirm('Tem Certeza?')) {
-        $.ajax({
-          url: baselink + "/ajax/changeStatusOrcamento",
-          type: "POST",
-          data: {
-            id_orcamento: $('#form-principal').attr('data-id-orcamento'),
-            status: 'Recontato'
-          },
-          dataType: "json",
-          success: function(data) {
-            if (data) {
-              window.location.href = baselink + "/orcamentos";
-            }
+    // })
+    .change();
+
+  $('#recontato').on('click', function() {
+    if (confirm('Tem Certeza?')) {
+      $.ajax({
+        url: baselink + "/ajax/changeStatusOrcamento",
+        type: "POST",
+        data: {
+          id_orcamento: $('#form-principal').attr('data-id-orcamento'),
+          status: 'Recontato'
+        },
+        dataType: "json",
+        success: function(data) {
+          if (data) {
+            window.location.href = baselink + "/orcamentos";
           }
-        });
-      }
+        }
+      });
     }
   });
 
@@ -426,7 +425,7 @@ $(function() {
 
           data.forEach(element => {
             htmlDropdown += `
-              <div class="list-group-item list-group-item-action relacional-dropdown-element"
+              <div class="list-group-item list-group-item-action relacional-dropdown-element-orcamento"
                 data-id="` + element["id"] + `"
                 data-tipo_pessoa="` + element["tipo_pessoa"] + `"
                 data-telefone="` + element["telefone"] + `"
@@ -454,9 +453,10 @@ $(function() {
       });
 
       ajustarTabIndex();
+      acoesByStatus();
 
     })
-    .on("click", '[name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element', function() {
+    .on("click", '[name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element-orcamento', function() {
 
       var $this = $(this),
         $esquerda = $("#esquerda");
@@ -491,77 +491,79 @@ $(function() {
 
       }
     })
-    .on('click', '[name="material_servico"] ~ .relacional-dropdown .relacional-dropdown-element', function() {
+    .on('click', '[name="material_servico"] ~ .relacional-dropdown .relacional-dropdown-element-orcamento', function() {
 
-        let $this = $(this),
-          $material = $('[name="material_servico"]'),
-          $unidade = $('[name="unidade"]'),
-          $custo = $('[name="custo_tot_subitem"]'),
-          $preco = $('[name="preco_tot_subitem"]'),
-          $largura = $('[name="largura"]'),
-          $comprimento = $('[name="comprimento"]'),
-          data_tabela = $this.attr("data-tabela"),
-          data_unidade = $this.attr("data-unidade"),
-          data_preco = $this.attr("data-preco"),
-          data_custo = $this.attr("data-custo"),
-          unidade = data_tabela != "servicos" ? data_unidade : "M²";
+      console.log('clicando aqui')
 
-        $this.siblings(".relacional-dropdown-element").removeClass("active");
-        $this.addClass("active");
+      let $this = $(this),
+        $material = $('[name="material_servico"]'),
+        $unidade = $('[name="unidade"]'),
+        $custo = $('[name="custo_tot_subitem"]'),
+        $preco = $('[name="preco_tot_subitem"]'),
+        $largura = $('[name="largura"]'),
+        $comprimento = $('[name="comprimento"]'),
+        data_tabela = $this.attr("data-tabela"),
+        data_unidade = $this.attr("data-unidade"),
+        data_preco = $this.attr("data-preco"),
+        data_custo = $this.attr("data-custo"),
+        unidade = data_tabela != "servicos" ? data_unidade : "M²";
 
-        $preco.val(floatParaPadraoBrasileiro(data_preco)).change();
+      $this.siblings(".relacional-dropdown-element-orcamento").removeClass("active");
+      $this.addClass("active");
 
-        $custo.val(floatParaPadraoBrasileiro(data_custo)).change();
+      $preco.val(floatParaPadraoBrasileiro(data_preco)).change();
 
-        $preco.val(floatParaPadraoBrasileiro(data_preco)).change();
+      $custo.val(floatParaPadraoBrasileiro(data_custo)).change();
 
-        $unidade.val(unidade).change();
+      $preco.val(floatParaPadraoBrasileiro(data_preco)).change();
 
-        $material
-          .attr("data-tabela", data_tabela)
-          .attr("data-unidade", unidade)
-          .attr("data-preco", data_preco)
-          .attr("data-custo", data_custo);
+      $unidade.val(unidade).change();
 
-        toggleTipoMaterial($unidade.val());
+      $material
+        .attr("data-tabela", data_tabela)
+        .attr("data-unidade", unidade)
+        .attr("data-preco", data_preco)
+        .attr("data-custo", data_custo);
 
-        // Ao trocar de produto sempre voltar para o radio de material principal marcado
-        $("input:radio[name=tipo_material]:first").click();
+      toggleTipoMaterial($unidade.val());
 
-        $('.tipo-material-repetido').remove();
+      // Ao trocar de produto sempre voltar para o radio de material principal marcado
+      $("input:radio[name=tipo_material]:first").click();
 
-        if ($unidade.val() == "ML" || $unidade.val() == "M²") {
-          
-          $largura
-            .removeAttr("disabled")
-            .removeClass("is-valid is-invalid");
+      $('.tipo-material-repetido').remove();
 
-          $comprimento
-            .removeAttr("disabled")
-            .removeClass("is-valid is-invalid");
+      if ($unidade.val() == "ML" || $unidade.val() == "M²") {
+        
+        $largura
+          .removeAttr("disabled")
+          .removeClass("is-valid is-invalid");
 
-        } else {
-          
-          $largura
-            .val("")
-            .blur()
-            .attr("disabled", "disabled")
-            .removeClass("is-valid is-invalid");
+        $comprimento
+          .removeAttr("disabled")
+          .removeClass("is-valid is-invalid");
 
-          $comprimento
-            .val("")
-            .blur()
-            .attr("disabled", "disabled")
-            .removeClass("is-valid is-invalid");
+      } else {
+        
+        $largura
+          .val("")
+          .blur()
+          .attr("disabled", "disabled")
+          .removeClass("is-valid is-invalid");
 
-        }
+        $comprimento
+          .val("")
+          .blur()
+          .attr("disabled", "disabled")
+          .removeClass("is-valid is-invalid");
+
+      }
     })
     .on("change", '[name="pf_pj"]', function() {
 
       if ($(this).is(":checked")) {
 
         let $radio = $(this),
-          $elements = $('#esquerda [name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element'),
+          $elements = $('#esquerda [name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element-orcamento'),
           $filtereds = $elements.filter(function() {
             return $(this).attr("data-tipo_pessoa") == $radio.attr("id");
           });
@@ -580,6 +582,159 @@ $(function() {
       }
 
     });
+
+  // Eventos responsáveis pelo: Select Dropdown com Pesquisa
+  $(document)
+    .ready(function () {
+
+      $('.relacional-dropdown-input-orcamento').each(function () {
+
+        var $this = $(this),
+          $relacionalDropdown = $this.parents('.relacional-dropdown-wrapper').find('.relacional-dropdown'),
+          campo = $this.attr('data-campo');
+
+        $.ajax({
+          url: baselink + '/ajax/getRelacionalDropdown',
+          type: 'POST',
+          data: {
+              tabela: $this.attr('data-tabela'),
+              campo: campo
+          },
+          dataType: 'json',
+          success: function (data) {
+
+            // JSON Response - Ordem Alfabética
+            data.sort(function (a, b) {
+              a = a[campo].toLowerCase();
+              b = b[campo].toLowerCase();
+              return a < b ? -1 : a > b ? 1 : 0;
+            });
+
+            var htmlDropdown = '';
+            data.forEach(element => {
+              htmlDropdown += `
+                <div class="list-group-item list-group-item-action relacional-dropdown-element-orcamento">` + element[campo] + `</div>
+              `;
+            });
+
+            $relacionalDropdown.find('.dropdown-menu-wrapper').html(htmlDropdown);
+          }
+        });
+      });
+    })
+    .on('click', '.relacional-dropdown-element-orcamento', function () {
+
+      var $this = $(this),
+        $input = $this.parents('.relacional-dropdown-wrapper').find('.relacional-dropdown-input-orcamento');
+
+      $input
+        .val($this.text())
+        .change();
+    })
+    .on('keyup focus', '.relacional-dropdown-input-orcamento', function (event) {
+
+      var code = event.keyCode || event.which;
+
+      if (code == 27) {
+        $(this)
+          .dropdown('hide')
+          .blur();
+        return;
+      }
+
+      var $this = $(this),
+        $dropdownMenu = $this.siblings('.dropdown-menu'),
+        $nenhumResult = $dropdownMenu.find('.nenhum-result'),
+        $elements = $dropdownMenu.find('.relacional-dropdown-element-orcamento');
+
+      var $filtereds = $elements.filter(function () {
+        return $(this).text().toLowerCase().indexOf($this.val().toLowerCase()) != -1;
+      });
+
+      if (!$filtereds.length) {
+        $nenhumResult.removeClass('d-none');
+      } else {
+        $nenhumResult.addClass('d-none');
+      }
+
+      $elements.not($filtereds).hide();
+      $filtereds.show();
+
+      // if ($this.attr('data-anterior') != $this.val()) {
+
+      //   console.log('if')
+
+
+      // } else {
+
+      //   $nenhumResult.addClass('d-none');
+      //   $elements.show();
+
+      // }
+
+    });
+
+  $('.relacional-dropdown-input-orcamento')
+    .click(function () {
+      var $this = $(this)
+      if ($this.parents('.dropdown').hasClass('show')) {
+        $this.dropdown('toggle');
+      }
+    })
+    .on('blur change', function () {
+
+      var $this = $(this),
+        $dropdownMenu = $this.siblings('.dropdown-menu'),
+        $active = $dropdownMenu.find('.relacional-dropdown-element-orcamento.active');
+
+      $this.removeClass('is-valid is-invalid');
+
+      if ($this.val()) {
+
+        $dropdownMenu.find('.nenhum-result').addClass('d-none');
+
+        $filtereds = $dropdownMenu.find('.relacional-dropdown-element-orcamento').filter(function () {
+          return $(this).text().toLowerCase().indexOf($this.val().toLowerCase()) != -1;
+        });
+
+        if (!$filtereds.length) {
+
+          if ($this.attr('data-pode_nao_cadastrado') == 'false') {
+
+            $this
+              .removeClass('is-valid')
+              .addClass('is-invalid');
+
+            this.setCustomValidity('invalid');
+            $this.after('<div class="invalid-feedback">Selecione um item existente.</div>');
+
+          } else {
+
+            $this.addClass('is-valid');
+            this.setCustomValidity('');
+
+          }
+
+        } else {
+
+          $this.addClass('is-valid');
+          this.setCustomValidity('');
+
+        }
+
+        if (!$active.length || $active.text().toLowerCase() != $this.val().toLowerCase()) {
+          $this.val('');
+        }
+
+      } else {
+
+        if ($active.length) {
+          $this.val($active.text());
+        }
+
+      }
+    })
+    .attr('autocomplete', 'off');
 
   $("#como_conheceu")
     .on("change", function() {
@@ -734,7 +889,7 @@ $(function() {
   $('#nome_cliente').on('blur change', function() {
     
     let $this = $(this),
-      $elements = $this.siblings('.relacional-dropdown').find('.relacional-dropdown-element');
+      $elements = $this.siblings('.relacional-dropdown').find('.relacional-dropdown-element-orcamento');
 
     let $filtereds = $elements.filter(function() {
       if ($this.val() && $(this).text()) {
@@ -1136,7 +1291,7 @@ function changeTipoServicoProduto(setValueSuccess) {
       data.forEach(element => {
         htmlDropdown += `
           <div 
-            class="list-group-item list-group-item-action relacional-dropdown-element" 
+            class="list-group-item list-group-item-action relacional-dropdown-element-orcamento" 
             data-tabela="` + val + `"
             data-custo="` + element["custo"] + `"
             data-preco="` + element["preco_venda"] + `"
@@ -1159,13 +1314,18 @@ function changeTipoServicoProduto(setValueSuccess) {
       }
 
       $materialDropdown
-        .find('.relacional-dropdown-element.active')
+        .find('.relacional-dropdown-element-orcamento.active')
         .removeClass('active');
 
       if (setValueSuccess) {
+
+        let $elFiltered = $materialDropdown.find('.relacional-dropdown-element-orcamento').filter(function() {
+          if ($(this).text().toLowerCase() == setValueSuccess.toLowerCase()) {
+            return this;
+          }
+        });
         
-        $materialDropdown
-          .find('.relacional-dropdown-element:contains(' + setValueSuccess + ')')
+        $elFiltered
           .addClass('active');
 
       }
@@ -1386,4 +1546,19 @@ function changeRequiredsPfPj() {
 
 function ajustarTabIndex() {
   console.log('ajustarTabIndex');
+}
+
+function acoesByStatus() {
+
+  let $status = $('#status'),
+    $tabela = $('#itensOrcamento'),
+    statusLowTxt = $status.val().toLowerCase();
+
+  if ($status.val() && (statusLowTxt == 'cancelado' || statusLowTxt == 'aprovado')) {
+    $tabela.find('thead > tr > th:first-child, tbody > tr > td:first-child').hide();
+    $('#btn_incluir').parent().hide();
+    $('.form-control, [type="radio"]').attr('disabled', 'disabled');
+  } else {
+    $status.parent().hide();
+  }
 }
