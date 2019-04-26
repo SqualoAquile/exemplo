@@ -213,10 +213,11 @@ class orcamentosController extends controller{
         
         //$mpdf=new Mpdf\Mpdf(); 
         $mpdf = new \Mpdf\Mpdf([
+            'default_font' => 'arial',
             'mode' => 'c',
             'margin_left' => 10,
             'margin_right' => 10,
-            'margin_top' => 45,
+            'margin_top' => 40,
             'margin_bottom' => 25,
             'margin_header' => 10,
             'margin_footer' => 10,
@@ -226,7 +227,7 @@ class orcamentosController extends controller{
         $mpdf->SetDisplayMode('fullpage');
 
         $htmlHeader = '
-        <table width="800" style="border:1px solid #000000;" cellPadding="9"><thead></thead>
+        <table width="800" style="border:1px solid #000000; font-size:10pt;" cellPadding="9"><thead></thead>
             <tbody>
             <tr>
                 <td><img class="card-img-left img-fluid" src="' . __DIR__ . '/../assets/images/IDFX.png" width = "20%" height = "auto"></td>
@@ -263,7 +264,7 @@ class orcamentosController extends controller{
         // CABEÇALHO - INFORMAÇÕES BÁSICAS DO ORÇAMENTO --------------------------------------------------------
         $html .= '
             
-        <table width="800" style="border:1px solid #000000;" cellPadding="9"><thead></thead>
+        <table width="800" style="border:1px solid #000000; font-size:9pt" cellPadding="9"><thead></thead>
             <tbody>
                 <tr>
                     <td>
@@ -291,7 +292,7 @@ class orcamentosController extends controller{
 
         // CABEÇALHO DA TABELA DE ITENS --------------------------------------------------------
         $html .='
-        <table style="border:1px solid #000000; line-height:20%" width="800" cellPadding="9">
+        <table style="border:1px solid #000000; line-height:10%; font-size:9pt; padding-top:10px; padding-bottom:10px" width="800" cellPadding="8">
             <thead>
                 <tr>
                     <th scope="col"><b>Item</b></th>
@@ -421,7 +422,7 @@ class orcamentosController extends controller{
         // BLOCO COM INFORMAÇÕES GERAIS
 
         $html .='
-        <table style="border:1px solid #000000; line-height:20%" width="800" cellPadding="9">
+        <table style="border:1px solid #000000; font-size:9pt; padding-top:5px; padding-bottom:5px; line-height:10%" width="800" cellPadding="5">
             <tr>
                 <td> </td>
                 <td> </td>
@@ -439,7 +440,7 @@ class orcamentosController extends controller{
                 <td> </td>
                 <td> </td>
                 <td><b>Preço Total: </b> </td>
-                <td><b> '.$infos["preco_total"] .' </b> </td>
+                <td><b>R$ '.$infos["preco_total"] .' </b> </td>
             </tr>
 
             <tr>
@@ -449,7 +450,7 @@ class orcamentosController extends controller{
                 <td> </td>
                 <td> </td>
                 <td><b>Desconto:  </b></td>
-                <td><b> '.$infos["desconto"].'</b></td>
+                <td><b>R$ '.$infos["desconto"].'</b></td>
             </tr>';
 
             if(isset($infos["preco_alternativo"]) && $infos["preco_alternativo"] != 0 && $temAlternativoGlobal==true ){
@@ -462,7 +463,7 @@ class orcamentosController extends controller{
                     <td> </td>
                     <td> </td>
                     <td style="color:red"><b>Preço Alternativo:  </b></td>
-                    <td style="color:red"><b> '.$infos["preco_alternativo"].' </b> </td>
+                    <td style="color:red"><b>R$ '.$infos["preco_alternativo"].' </b> </td>
                  </tr>
                 ';
             }
@@ -475,7 +476,7 @@ class orcamentosController extends controller{
                 <td> </td>
                 <td> </td>
                 <td><b>Preço Final:  </b></td>
-                <td><b> '.$infos["preco_final"].' </b> </td>
+                <td><b>R$ '.$infos["preco_final"].' </b> </td>
             </tr>
             </table>
             <br></br>
@@ -486,7 +487,7 @@ class orcamentosController extends controller{
 
         if ($mostraAvisos==true) {
             $html .='
-            <table style="border:1px solid #000000; line-height:120%; font-size:9pt" width="800" cellPadding="9">
+            <table style="border:1px solid #000000; line-height:120%; font-size:10pt" width="800" cellPadding="9">
                 <thead>
                     <tr>
                         <td align="center">
@@ -524,7 +525,7 @@ class orcamentosController extends controller{
             <tr>
                 <td>
                     <p class = "small">Obs.: Os itens em vermelho são feitos com material alternativo.</p>
-                    <p class = "small">O desconto é referente aos itens descritos em preto.</p>
+                    <p class = "small">* O desconto é referente aos itens descritos em preto.</p>
                     <p class = "small">* Este trabalho tem 1 ano de garantia de aplicação.</p>
                     <p class = "small">* O pagamento pode ser feito em até 6x sem juros no cartão</p>
                     <p class = "small">* Este orçamento tem validade de 15 dias, a partir da sua data de emissão</p>
