@@ -229,7 +229,7 @@ class orcamentosController extends controller{
         <table width="800" style="border:1px solid #000000;" cellPadding="9"><thead></thead>
             <tbody>
             <tr>
-                <td><img class="card-img-left img-fluid" src='.BASE_URL.'/assets/images/IDFX.png width = "20%" height = "auto"></td>
+                <td><img class="card-img-left img-fluid" src="' . __DIR__ . '/../assets/images/IDFX.png" width = "20%" height = "auto"></td>
                 <td>
                     <h2><b>Identifixe</b></h2>
                     <p class="small text-center"> AV. TERESÓPOLIS, 2547 - TERESÓPOLIS - PORTO ALEGRE - RS </p>
@@ -378,19 +378,7 @@ class orcamentosController extends controller{
                 ';
             };
 
-            //VALOR PRINCIPAL E ALTERNATIVO DO SUBITEM
-            $htmlRows .='
-            <tr>
-                <td> </td>
-                <td> </td>
-                <td> </td>';
-                if ($mostraMedidas==true) { $htmlRows.='<td></td>';}     
-                if ($mostraPrecos==true) { $htmlRows.='<td></td>';}
-            $htmlRows.='
-                <td><b>Preço Principal: </b> </td>
-                <td>R$ '.$infos["itens"][$k]["total_principal"].'</td>
-            </tr>
-            ';
+            //VALOR ALTERNATIVO E PRINCIPAL DO SUBITEM
 
             if(isset($infos["itens"][$k]["total_alternativo"]) && $infos["itens"][$k]["total_alternativo"] !=0 && $temAlternativo==true){
                 $htmlRows .='
@@ -406,6 +394,21 @@ class orcamentosController extends controller{
                 </tr>
                 ';
             }
+
+            $htmlRows .='
+            <tr style="border-bottom-style:thin solid;">
+                <td> </td>
+                <td> </td>
+                <td> </td>';
+                if ($mostraMedidas==true) { $htmlRows.='<td></td>';}     
+                if ($mostraPrecos==true) { $htmlRows.='<td></td>';}
+            $htmlRows.='
+                <td><b>Preço Principal: </b> </td>
+                <td>R$ '.$infos["itens"][$k]["total_principal"].'</td>
+            </tr>
+            
+            ';
+            
         };
 
         $html .= $htmlRows;
@@ -447,8 +450,24 @@ class orcamentosController extends controller{
                 <td> </td>
                 <td><b>Desconto:  </b></td>
                 <td><b> '.$infos["desconto"].'</b></td>
-            </tr>
+            </tr>';
 
+            if(isset($infos["preco_alternativo"]) && $infos["preco_alternativo"] != 0 && $temAlternativoGlobal==true ){
+
+                $html.='
+                <tr>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td style="color:red"><b>Preço Alternativo:  </b></td>
+                    <td style="color:red"><b> '.$infos["preco_alternativo"].' </b> </td>
+                 </tr>
+                ';
+            }
+            
+            $html.='
             <tr>
                 <td> </td>
                 <td> </td>
@@ -458,30 +477,9 @@ class orcamentosController extends controller{
                 <td><b>Preço Final:  </b></td>
                 <td><b> '.$infos["preco_final"].' </b> </td>
             </tr>
-                ';
-
-        if(isset($infos["preco_alternativo"]) && $infos["preco_alternativo"] != 0 && $temAlternativoGlobal==true ){
-
-            $html.='
-            <tr>
-                <td> </td>
-                <td> </td>
-                <td> </td>
-                <td> </td>
-                <td> </td>
-                <td style="color:red"><b>Preço Alternativo:  </b></td>
-                <td style="color:red"><b> '.$infos["preco_alternativo"].' </b> </td>
-             </tr>
-             </table>
-             <br></br>
-            ';
-           
-        }else{
-            $html.='
             </table>
             <br></br>
-            ';
-        }
+                ';
 
 
         // BLOCO COM AVISOS
