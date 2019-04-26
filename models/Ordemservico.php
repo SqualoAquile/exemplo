@@ -243,11 +243,42 @@ class Ordemservico extends model {
                 
     }
 
+    public function getRelacionalDropdown($request) {
+
+        if ($request["tabela"]) {
+            $tabela = trim($request["tabela"]);
+            $tabela = addslashes($tabela);
+        }
+
+        $sql = "SELECT * FROM " . $tabela . " WHERE situacao = 'ativo'";
+
+        $sql = self::db()->query($sql);
+        
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function imprimir($id){
         if(!empty($id)){
             $id = addslashes(trim($id));
             $infos=[];
             $request = $_POST;
+            $request["tabela"] = "avisos";
+
+            $avisosDb = $this->getRelacionalDropdown($request);
+
+            $avisos = [];
+
+            if ($request["avisos"]) {
+                foreach ($request["avisos"] as $keyAvisos => $valueAvisos) {
+                    if ($avisosDb) {
+                        foreach ($avisosDb as $keyAvisosDb => $valueAvisosDb) {
+                            if ($valueAvisosDb["id"] == $valueAvisos) {
+                                $avisos[$valueAvisosDb["id"]] = $valueAvisosDb["mensagem"];
+                            }
+                        }
+                    }
+                }
+            }
             
             //---------------------------------------------------------------------------------------------
             // Pega algumas infos da OS
@@ -267,7 +298,6 @@ class Ordemservico extends model {
             $dataAux3 = explode('-',$informacoes['data_aprovacao']);
             $informacoes['data_aprovacao'] != "0000-00-00" ? $infos['data_aprovacao'] = $dataAux3[2]."/".$dataAux3[1]. "/".$dataAux3[0] : $infos['data_aprovacao'] = "" ;
             $infos['preco_total'] = number_format($informacoes['subtotal'],2,",",".");
-            $infos['desconto'] =  number_format($informacoes['desconto'],2,",",".");
             $infos['preco_final'] = number_format($informacoes['valor_final'],2,",",".");
 
             //---------------------------------------------------------------------------------------------
@@ -316,6 +346,8 @@ class Ordemservico extends model {
             $infos["prazo_entrega"] = $informacoes['prazo_entrega'];
             $infos["forma_pagamento"] = $informacoes['forma_pgto_descricao'];
             $infos["deslocamento"] = $informacoes['deslocamento_km']. " km";
+            $infos['desconto'] =  number_format($informacoes['desconto'],2,",",".");
+
 
             //---------------------------------------------------------------------------------------------
             $custoDeslocamento = $this->custoDeslocamento();
@@ -726,7 +758,6 @@ class Ordemservico extends model {
                 <br></br>
                 <p>_________________________________</p>
                 <p>Assinatura do técnico responsável</p>
-                <br></br>
                 <br></br>
                 <br></br>
                 <br></br>
