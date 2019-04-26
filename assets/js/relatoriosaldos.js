@@ -60,12 +60,22 @@ $(function () {
     
     
     dataTable.page.len(-1).draw();
-    
+    dataTable.order( [ 1, "asc" ] ).draw();
 
     function resumo () {
+       
         
-        var rowData = dataTable.rows().data(),
-        mesReferencia = 0,
+        var rowData = dataTable.rows().data();
+
+        var lastRow = 0;
+
+        rowData.each(function () {
+            lastRow += 1;
+        });
+
+        lastRow = lastRow-1;
+
+       var mesReferencia = 0,
         totalInicial = 0,
         totalEntradas = 0,
         totalSaidas = 0,
@@ -82,24 +92,28 @@ $(function () {
         resultadoOnline = 0,
         resultadoBanco = 0,
     
+        totalInicial = parseFloat(floatParaPadraoInternacional(rowData[0][indexColumns.ctotalInicial].replace('R$','')));
+
+        caixaInicial = parseFloat(floatParaPadraoInternacional(rowData[0][indexColumns.ccaixaInicial].replace('R$','')));
+        onlineInicial = parseFloat(floatParaPadraoInternacional(rowData[0][indexColumns.conlineInicial].replace('R$','')));
+        bancoInicial = parseFloat(floatParaPadraoInternacional(rowData[0][indexColumns.cbancoInicial].replace('R$','')));
+
+        caixaFinal = parseFloat(floatParaPadraoInternacional(rowData[lastRow][indexColumns.ccaixaFinal].replace('R$','')));
+        onlineFinal = parseFloat(floatParaPadraoInternacional(rowData[lastRow][indexColumns.conlineFinal].replace('R$','')));
+        bancoFinal = parseFloat(floatParaPadraoInternacional(rowData[lastRow][indexColumns.cbancoFinal].replace('R$','')));
+
+        totalFinal = parseFloat(floatParaPadraoInternacional(rowData[lastRow][indexColumns.ctotalFinal].replace('R$','')));
+
         i = 0;
         rowData.each(function () {
-
-            totalInicial += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.ctotalInicial].replace('R$','')));
             totalEntradas += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.ctotalEntradas].replace('R$','')));
             totalSaidas += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.ctotalSaidas].replace('R$','')));
-            totalFinal += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.ctotalFinal].replace('R$','')));
-            caixaInicial += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.ccaixaInicial].replace('R$','')));
-            onlineInicial += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.conlineInicial].replace('R$','')));
-            bancoInicial += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.cbancoInicial].replace('R$','')));
-            caixaFinal += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.ccaixaFinal].replace('R$','')));
-            onlineFinal += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.conlineFinal].replace('R$','')));
-            bancoFinal += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.cbancoFinal].replace('R$','')));
-            resultado += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.cresultado].replace('R$','')));
-            diferenca += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.cdiferenca].replace('R$','')));
             i++;
         });
-    
+
+        resultado = parseFloat(totalEntradas-totalSaidas);
+        diferenca = parseFloat(resultado-totalFinal);
+
         $('#totalInicial').text(floatParaPadraoBrasileiro(totalInicial));
         $('#totalEntradas').text(floatParaPadraoBrasileiro(totalEntradas));
         $('#totalSaidas').text(floatParaPadraoBrasileiro(totalSaidas));
