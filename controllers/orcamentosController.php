@@ -147,6 +147,8 @@ class orcamentosController extends controller{
         $itens = $this->model->itensOrcamento($id);
         $qtdItens = $this->model->qtdItensOrcamento($id);
         $precoItens = $this->model->precosItens($id);
+        $custoDeslocamento = $this->model->custoDeslocamento();
+        $custoDeslocamento = str_replace(",",".",$custoDeslocamento);
 
         $k=0;
         $j=0;
@@ -198,7 +200,9 @@ class orcamentosController extends controller{
             $totalAlternativo += $precoAlternativo;
         }
 
-        $infos["preco_alternativo"] = number_format($totalAlternativo,2,",","."); 
+        $infos["preco_alternativo"] = $totalAlternativo;
+        $infos["preco_alternativo"] += floatval($custoDeslocamento) * floatval($informacoes[0]['deslocamento_km']);
+        $infos["preco_alternativo"] = number_format($infos["preco_alternativo"],2,",","."); 
 
         // FORMATAÇÃO
         for ($p=0; $p < $k ; $p++) {
