@@ -11,8 +11,8 @@ require "_table_datatable.php";
         currentModule = '<?php echo $modulo ?>'  // usa o nome da tabela como nome do módulo, necessário para outras interações
 </script>
 <div class="modal fade" id="modalConfImp" tabindex="-1" role="dialog" aria-labelledby="modalConfImpLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <form class="modal-content" method="POST" action="<?php echo BASE_URL . "/" . $modulo . "/imprimir/2" ?>">
+    <div class="modal-dialog modal-lg" role="document">
+        <form class="modal-content" method="POST" action="<?php echo BASE_URL . "/" . $modulo . "/imprimir/" ?>">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalConfImpLabel">Imprimir Orçamento</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -26,7 +26,7 @@ require "_table_datatable.php";
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="checkbox" name="checkUnitario" id="checkUnitario" value="unitario">
-                    <label class="form-check-label" for="checkUnitario">Preço Unitário</label>
+                    <label class="form-check-label" for="checkUnitario">Preço Unitário e Sub Totais</label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="checkbox" name="checkAvisos" id="checkAvisos" value="avisos">
@@ -40,3 +40,11 @@ require "_table_datatable.php";
         </form>
     </div>
 </div>
+<script>
+    $('#modalConfImp').on('shown.bs.modal', function (event) {
+        let id = $(event.relatedTarget).attr('data-id'),
+            $form = $(this).find('form');
+
+        $form.attr('action', $form.attr('action') + id);
+    });
+</script>
