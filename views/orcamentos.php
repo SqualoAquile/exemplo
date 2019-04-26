@@ -5,6 +5,8 @@ $modulo = str_replace("-form", "", basename(__FILE__, ".php"));
 require "_header_browser.php";
 // Constroi a tabela
 require "_table_datatable.php";
+
+require "_modal_configuracoes_impressao.php";
 ?>
 <script type="text/javascript">
     var baselink = '<?php echo BASE_URL;?>',

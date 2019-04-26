@@ -368,6 +368,16 @@ class Orcamentos extends model {
         }
     }
 
+    public function custoDeslocamento() {
+
+        $sql = "SELECT valor FROM parametros WHERE parametro='custo_deslocamento' AND situacao='ativo'";
+        $sql = self::db()->query($sql);
+        $sql = $sql->fetchAll(PDO::FETCH_ASSOC);
+        $sql = $sql[0]['valor'];
+        return $sql;
+                
+    }
+
     // VER COMO O NISSARGAM VAI FAZER A CONVENÇÃO DE MATERIAL PRINCIPAL E ALTERNATIVO
     public function precosItens($id){
 

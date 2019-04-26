@@ -183,7 +183,7 @@
                                         id="<?php echo $value['Field'] ?>" 
                                         name="<?php echo $value['Field'] ?>" 
                                         type="text" 
-                                        class="dropdown-toggle form-control relacional-dropdown-input" 
+                                        class="dropdown-toggle form-control relacional-dropdown-input-orcamento" 
                                         data-toggle="dropdown" 
                                         autocomplete="new-password"
                                         aria-haspopup="true" 
@@ -238,11 +238,6 @@
                 <button id="cancelar_edicao" type="reset" class="btn btn-primary btn-light btn-block">Cancelar Edição</button>
             </div>
         </form>
-        <div class="row" style='order: 100;'>
-            <div class="col-lg-4 d-none">
-                <button id="btn_salvar_cliente" data-toggle="modal" data-target="#modalCadastrarCliente" class="btn btn-secondary btn-block">Cadastrar Cliente</button>
-            </div>
-        </div>
         <div class="row" id='tabelaOrc'>
             <div class="col-lg">
                 <?php include "_orcamentoitens_form.php" ?>
@@ -659,7 +654,7 @@
                                                     id="<?php echo $value['Field'] ?>" 
                                                     name="<?php echo $value['Field'] ?>" 
                                                     type="text" 
-                                                    class="dropdown-toggle form-control relacional-dropdown-input" 
+                                                    class="dropdown-toggle form-control relacional-dropdown-input-orcamento" 
                                                     data-toggle="dropdown" 
                                                     autocomplete="new-password"
                                                     aria-haspopup="true" 
@@ -728,20 +723,18 @@
         </div>
         <?php if ((isset($item) && $item["status"] != "Recontato" && $item["status"] != "Aprovado" && $item["status"] != "Cancelado")): ?>
             <div class="row">
-                <div class="col-lg">
-                    <div class="custom-control custom-switch my-3 checkbox-recontato">
-                        <input type="checkbox" class="custom-control-input" id="customSwitch1">
-                        <label class="custom-control-label" for="customSwitch1">Recontato</label>
-                    </div>
+                <div class="col-lg-2">
+                    <button type="button" id="recontato" class="btn btn-outline-primary btn-block mb-2">Recontato</button>
                 </div>
             </div>
         <?php endif ?>
         <div id="acoes-orcamento" class="row mt-3">
 
+
             <?php if ((isset($item) && $item["status"] != "Aprovado" && $item["status"] != "Cancelado") || !isset($item)): ?>
 
                 <div id="col-salvar" class="col-lg-2">
-                    <button type="submit" id="main-form" class="h-100 btn btn-primary btn-block">Salvar</button>
+                    <button type="submit" id="main-form" class="btn btn-primary btn-block">Salvar</button>
                 </div>
 
             <?php endif ?>
@@ -749,35 +742,35 @@
             <?php if (isset($item)): ?>
                 
                 <div class="col-lg">
-                    <button class="h-100 btn btn-dark btn-block" type="button" data-toggle="collapse" data-target="#historico" aria-expanded="false" aria-controls="historico">Histórico de Alterações</button>
+                    <button class="btn btn-dark btn-block" type="button" data-toggle="collapse" data-target="#historico" aria-expanded="false" aria-controls="historico">Histórico de Alterações</button>
                 </div>
 
                 <?php if ($item["status"] != "Aprovado" && $item["status"] != "Cancelado"): ?>
                     <div id="col-aprovar" class="col-lg">
-                        <button class="h-100 btn btn-success btn-block" type="button" id="aprovar-orcamento">Aprovar Orçamento</button>
+                        <button class="btn btn-success btn-block" type="button" id="aprovar-orcamento">Aprovar Orçamento</button>
                     </div>
                     <div id="col-cancelar" class="col-lg d-none">
-                        <button id="btn_cancelamentoOrc" class="h-100 btn btn-danger btn-block" type="button">Cancelar Orçamento</button>
+                        <button id="btn_cancelamentoOrc" class="btn btn-danger btn-block" type="button">Cancelar Orçamento</button>
                     </div>
                     <div class="col-lg">
-                        <div id="checkCancelar" class="form-check form-check-inline h-100 btn btn-secondary btn-block d-flex justify-content-center">
+                        <div id="checkCancelar" class="form-check form-check-inline btn btn-secondary btn-block">
                             <input 
                                 id="chk_cancelamentoOrc" 
                                 type="checkbox" 
-                                class="form-check-input mr-3" 
+                                class="form-check-input" 
                             />
                             <label class="form-check-label" for="chk_cancelamentoOrc">Cancelar Orçamento</label>
                         </div>
                     </div>
+                    <div class="col-lg">
+                        <button id="duplica_orcamento" type="button" class="btn btn-info btn-block">
+                            Duplicar
+                        </button>
+                    </div>
                 <?php endif ?>
                 <div class="col-lg">
-                    <button onclick="location.href='<?php echo BASE_URL?>/orcamentos/imprimir/<?php echo $item['id']?>'" type="button" class="h-100 btn btn-warning btn-block">
+                    <button type="button" class="btn btn-warning btn-block" data-id="<?php echo isset($item) ? $item["id"] : "" ?>" data-toggle="modal" data-target="#modalConfImp">
                         Imprimir
-                    </button>
-                </div>
-                <div class="col-lg">
-                    <button id="duplica_orcamento" type="button" class="h-100 btn btn-light btn-block">
-                        Duplicar
                     </button>
                 </div>
             <?php endif ?>
@@ -785,6 +778,8 @@
     </form>
     <?php include "_historico.php" ?>
 </section>
+
+<?php include "_modal_configuracoes_impressao.php" ?>
 
 <!-- Modal - Adicionar Cliente -->
 <div class="modal fade modais-require" id="modalCadastrarCliente" tabindex="-1" role="dialog" aria-labelledby="modalCadastrarClienteLabel" aria-hidden="true">
