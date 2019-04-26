@@ -330,35 +330,6 @@ $(function() {
   //
 
   $('#material_servico')
-    // .on('change', function() {
-
-    //   // console.log('change aqui')
-
-    //   let $this = $(this),
-    //     $unidade = $('#unidade'),
-    //     $custo_tot = $('[name="custo_tot_subitem"]'),
-    //     $preco_tot = $('[name="preco_tot_subitem"]');
-
-    //   // if ($this.val()) {
-
-    //   //   $unidade
-    //   //     .val('')
-    //   //     .removeClass('is-valid is-invalid')
-    //   //     .blur();
-
-    //   //   $custo_tot
-    //   //     .val('')
-    //   //     .removeClass('is-valid is-invalid')
-    //   //     .blur();
-
-    //   //   $preco_tot
-    //   //     .val('')
-    //   //     .removeClass('is-valid is-invalid')
-    //   //     .blur();
-
-    //   // }
-
-    // })
     .change();
 
   $('#recontato').on('click', function() {
@@ -425,7 +396,7 @@ $(function() {
 
           data.forEach(element => {
             htmlDropdown += `
-              <div class="list-group-item list-group-item-action relacional-dropdown-element-orcamento"
+              <div class="list-group-item list-group-item-action relacional-dropdown-element-esquerda"
                 data-id="` + element["id"] + `"
                 data-tipo_pessoa="` + element["tipo_pessoa"] + `"
                 data-telefone="` + element["telefone"] + `"
@@ -444,6 +415,7 @@ $(function() {
           changeRequiredsPfPj();
 
           if (!$pfPj.attr('data-anterior')) {
+            console.log('to aqui')
             $pfPj.change();
           }
 
@@ -456,7 +428,7 @@ $(function() {
       acoesByStatus();
 
     })
-    .on("click", '[name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element-orcamento', function() {
+    .on("click", '[name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element-esquerda', function() {
 
       var $this = $(this),
         $esquerda = $("#esquerda");
@@ -492,8 +464,6 @@ $(function() {
       }
     })
     .on('click', '[name="material_servico"] ~ .relacional-dropdown .relacional-dropdown-element-orcamento', function() {
-
-      console.log('clicando aqui')
 
       let $this = $(this),
         $material = $('[name="material_servico"]'),
@@ -560,10 +530,12 @@ $(function() {
     })
     .on("change", '[name="pf_pj"]', function() {
 
+      console.log('change aqui no pf_pj')
+
       if ($(this).is(":checked")) {
 
         let $radio = $(this),
-          $elements = $('#esquerda [name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element-orcamento'),
+          $elements = $('#esquerda [name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element-esquerda'),
           $filtereds = $elements.filter(function() {
             return $(this).attr("data-tipo_pessoa") == $radio.attr("id");
           });
@@ -597,8 +569,8 @@ $(function() {
           url: baselink + '/ajax/getRelacionalDropdown',
           type: 'POST',
           data: {
-              tabela: $this.attr('data-tabela'),
-              campo: campo
+            tabela: $this.attr('data-tabela'),
+            campo: campo
           },
           dataType: 'json',
           success: function (data) {
@@ -659,18 +631,6 @@ $(function() {
 
       $elements.not($filtereds).hide();
       $filtereds.show();
-
-      // if ($this.attr('data-anterior') != $this.val()) {
-
-      //   console.log('if')
-
-
-      // } else {
-
-      //   $nenhumResult.addClass('d-none');
-      //   $elements.show();
-
-      // }
 
     });
 
@@ -889,7 +849,7 @@ $(function() {
   $('#nome_cliente').on('blur change', function() {
     
     let $this = $(this),
-      $elements = $this.siblings('.relacional-dropdown').find('.relacional-dropdown-element-orcamento');
+      $elements = $this.siblings('.relacional-dropdown').find('.relacional-dropdown-element-esquerda');
 
     let $filtereds = $elements.filter(function() {
       if ($this.val() && $(this).text()) {
@@ -990,7 +950,147 @@ $(function() {
         });
 
     }        
-});
+
+  });
+
+  $(document)
+        // .ready(function () {
+
+        //   $('.relacional-dropdown-input-esquerda').each(function () {
+
+        //     var $this = $(this),
+        //       $relacionalDropdown = $this.parents('.relacional-dropdown-wrapper').find('.relacional-dropdown'),
+        //       campo = $this.attr('data-campo');
+
+        //     $.ajax({
+        //         url: baselink + '/ajax/getRelacionalDropdown',
+        //         type: 'POST',
+        //         data: {
+        //           tabela: $this.attr('data-tabela'),
+        //           campo: campo
+        //         },
+        //         dataType: 'json',
+        //         success: function (data) {
+
+        //           // JSON Response - Ordem Alfabética
+        //           data.sort(function (a, b) {
+        //             a = a[campo].toLowerCase();
+        //             b = b[campo].toLowerCase();
+        //             return a < b ? -1 : a > b ? 1 : 0;
+        //           });
+
+        //           var htmlDropdown = '';
+        //           data.forEach(element => {
+        //             htmlDropdown += `
+        //               <div class="list-group-item list-group-item-action relacional-dropdown-element">` + element[campo] + `</div>
+        //             `;
+        //           });
+
+        //           $relacionalDropdown.find('.dropdown-menu-wrapper').html(htmlDropdown);
+        //         }
+        //     });
+        //   });
+        // })
+        .on('click', '.relacional-dropdown-element-esquerda', function () {
+
+            var $this = $(this),
+              $input = $this.parents('.relacional-dropdown-wrapper').find('.relacional-dropdown-input-esquerda');
+
+            $input
+              .val($this.text())
+              .change();
+        })
+        .on('keyup', '.relacional-dropdown-input-esquerda', function (event) {
+
+          var code = event.keyCode || event.which;
+
+          if (code == 27) {
+            $(this)
+              .dropdown('hide')
+              .blur();
+            return;
+          }
+
+          var $this = $(this),
+            $dropdownMenu = $this.siblings('.dropdown-menu'),
+            $nenhumResult = $dropdownMenu.find('.nenhum-result'),
+            $elements = $dropdownMenu.find('.relacional-dropdown-element');
+
+          if ($this.attr('data-anterior') != $this.val()) {
+
+            var $filtereds = $elements.filter(function () {
+              return $(this).text().toLowerCase().indexOf($this.val().toLowerCase()) != -1;
+            });
+
+            if (!$filtereds.length) {
+              $nenhumResult.removeClass('d-none');
+            } else {
+              $nenhumResult.addClass('d-none');
+            }
+
+            $elements.not($filtereds).hide();
+            $filtereds.show();
+
+          } else {
+
+            $nenhumResult.addClass('d-none');
+            $elements.show();
+
+          }
+
+        });
+
+    $('.relacional-dropdown-input-esquerda')
+      .click(function () {
+        var $this = $(this)
+        if ($this.parents('.dropdown').hasClass('show')) {
+          $this.dropdown('toggle');
+        }
+      })
+      .on('blur change', function () {
+
+        var $this = $(this),
+          $dropdownMenu = $this.siblings('.dropdown-menu');
+
+        $this.removeClass('is-valid is-invalid');
+
+        if ($this.val()) {
+
+          $dropdownMenu.find('.nenhum-result').addClass('d-none');
+          $('.relacional-dropdown-element-esquerda').show();
+
+          $filtereds = $dropdownMenu.find('.relacional-dropdown-element-esquerda').filter(function () {
+            return $(this).text().toLowerCase().indexOf($this.val().toLowerCase()) != -1;
+          });
+
+          if (!$filtereds.length) {
+
+            if ($this.attr('data-pode_nao_cadastrado') == 'false') {
+
+              $this
+                .removeClass('is-valid')
+                .addClass('is-invalid');
+
+              this.setCustomValidity('invalid');
+              $this.after('<div class="invalid-feedback">Selecione um item existente.</div>');
+
+            } else {
+
+              $this.addClass('is-valid');
+              this.setCustomValidity('');
+
+            }
+
+          } else {
+
+            $this.addClass('is-valid');
+            this.setCustomValidity('');
+
+          }
+
+        }
+      })
+      .attr('autocomplete', 'off');
 
 });
 
@@ -1504,6 +1604,8 @@ function aprovarOrcamento(data) {
 }
 
 function changeRequiredsPfPj() {
+
+  console.log('changeRequiredsPfPj')
 
   let $radio = $('[name="pf_pj"]:checked');
 

@@ -419,7 +419,7 @@
                                                 id="<?php echo $value['Field'] ?>" 
                                                 name="<?php echo $value['Field'] ?>" 
                                                 type="text" 
-                                                class="dropdown-toggle form-control relacional-dropdown-input-orcamento" 
+                                                class="dropdown-toggle form-control relacional-dropdown-input-esquerda" 
                                                 data-toggle="dropdown" 
                                                 autocomplete="new-password"
                                                 aria-haspopup="true" 
