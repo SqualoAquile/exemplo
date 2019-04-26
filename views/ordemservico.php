@@ -10,6 +10,9 @@ require "_table_datatable.php";
     var baselink = '<?php echo BASE_URL;?>',
         currentModule = '<?php echo $modulo ?>'  // usa o nome da tabela como nome do módulo, necessário para outras interações
 </script>
+<style>
+    #page-content-wrapper header .col-lg-2 { display: none; }
+</style>
 <div class="modal fade" id="modalConfImp" tabindex="-1" role="dialog" aria-labelledby="modalConfImpLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <form class="modal-content" method="POST" action="<?php echo BASE_URL . "/" . $modulo . "/imprimir/" ?>">
