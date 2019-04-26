@@ -1,21 +1,33 @@
 <?php
 class homeController extends controller{
+  
     public function __construct() {
-    
-       $usuario = new Usuarios();
-       
-       if($usuario->isLogged() == false){
-           header("Location: ".BASE_URL."/login"); 
-       }
-        
+
+      $usuario = new Usuarios();
+
+      // verifica se tem permissão para ver esse módulo
+      if(in_array("relatoriofluxocaixa_ver", $_SESSION["permissoesUsuario"]) == false){
+          header("Location: " . BASE_URL . "/home"); 
+      }
+      // Verificar se está logado ou nao
+      if( $usuario->isLogged() == false){
+          header("Location: " . BASE_URL . "/login"); 
+      }
     }
      
     public function index() {
-      $dados = array();
+        
+      /////// FINANCEIRO
+      $relatorioFinanceiro =  new Relatoriofluxocaixa();
+      $sharedFinanceiro = new Shared('fluxocaixa');
       
       $dados['infoUser'] = $_SESSION;
-      $this->loadTemplate("home", $dados); 
+      $dados["colunas"] = $sharedFinanceiro->nomeDasColunas();
+      $dados["meta"] = $relatorioFinanceiro->meta();
+      
+
+      $this->loadTemplate('home', $dados);
     }
-  
-}
+
+}   
 ?>
