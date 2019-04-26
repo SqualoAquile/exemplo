@@ -97,7 +97,7 @@
 
                     htmlDropdown += '</div>';
 
-                    $('.relacional-dropdown-wrapper .dropdown-menu .dropdown-menu-wrapper').html(htmlDropdown);
+                    $('#modalConfImp #collapseAvisos .relacional-dropdown-wrapper .dropdown-menu .dropdown-menu-wrapper').html(htmlDropdown);
                     $('#collapseAvisos .form-control').removeAttr('disabled');
 
                 }

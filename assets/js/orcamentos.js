@@ -396,9 +396,7 @@ $(function() {
             `;
           });
 
-          $(
-            "#esquerda .relacional-dropdown-wrapper .dropdown-menu .dropdown-menu-wrapper"
-          ).html(htmlDropdown);
+          $("#esquerda .relacional-dropdown-wrapper .dropdown-menu .dropdown-menu-wrapper").html(htmlDropdown);
 
         }
       });
@@ -542,47 +540,6 @@ $(function() {
   // Eventos responsáveis pelo: Select Dropdown com Pesquisa
   // do campo Material Serviço dos Itens do Orçamento
   $(document)
-    .ready(function () {
-
-      $('.relacional-dropdown-input-orcamento').each(function () {
-
-        var $this = $(this),
-          $relacionalDropdown = $this.parents('.relacional-dropdown-wrapper').find('.relacional-dropdown'),
-          campo = $this.attr('data-campo');
-
-        console.log('acho que é aqui')
-
-        $.ajax({
-          url: baselink + '/ajax/getRelacionalDropdown',
-          type: 'POST',
-          data: {
-            tabela: $this.attr('data-tabela'),
-            campo: campo
-          },
-          dataType: 'json',
-          success: function (data) {
-
-            console.log('retorno de: acho que é aqui', data)
-
-            // JSON Response - Ordem Alfabética
-            data.sort(function (a, b) {
-              a = a[campo].toLowerCase();
-              b = b[campo].toLowerCase();
-              return a < b ? -1 : a > b ? 1 : 0;
-            });
-
-            var htmlDropdown = '';
-            data.forEach(element => {
-              htmlDropdown += `
-                <div class="list-group-item list-group-item-action relacional-dropdown-element-orcamento">` + element[campo] + `</div>
-              `;
-            });
-
-            $relacionalDropdown.find('.dropdown-menu-wrapper').html(htmlDropdown);
-          }
-        });
-      });
-    })
     .on('click', '.relacional-dropdown-element-orcamento', function () {
 
       var $this = $(this),
@@ -1388,13 +1345,7 @@ function changeTipoServicoProduto(setValueSuccess) {
         .removeAttr('data-tabela data-custo data-preco data-unidade')
         .val(setValueSuccess ? setValueSuccess : '');
 
-      if (val == 'produtos') {
-        $materialDropdown.html(htmlDropdown);
-      } else if (val == 'servicos') {
-        $materialDropdown.html(htmlDropdown);
-      } else {
-        $materialDropdown.html(htmlDropdown);
-      }
+      $materialDropdown.html(htmlDropdown);
 
       $materialDropdown
         .find('.relacional-dropdown-element-orcamento.active')

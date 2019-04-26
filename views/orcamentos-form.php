@@ -657,7 +657,7 @@
                                                     id="<?php echo $value['Field'] ?>" 
                                                     name="<?php echo $value['Field'] ?>" 
                                                     type="text" 
-                                                    class="dropdown-toggle form-control relacional-dropdown-input-orcamento" 
+                                                    class="dropdown-toggle form-control relacional-dropdown-input" 
                                                     data-toggle="dropdown" 
                                                     tabindex="<?php echo $tabIndexEmbaixo ?>"
                                                     aria-haspopup="true" 
