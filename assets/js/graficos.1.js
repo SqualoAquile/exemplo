@@ -34,9 +34,6 @@ $(function () {
         var campoGroup = $selectGraf.val();
         var agrupamento = $selectGrafOpcoes.val();
 
-        console.log(campoGroup);
-        console.log(agrupamento);
-
         $.ajax({ 
             url: baselink + '/ajax/gerarGraficoFiltro', 
             type: 'POST', 
@@ -48,7 +45,7 @@ $(function () {
             },
             dataType: 'json', 
             success: function (resultado) {
-                // console.log(resultado);
+
                 if (resultado){
 
                     var eixoDatas = [], receitas = [], despesas = [];

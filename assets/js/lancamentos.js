@@ -860,7 +860,6 @@ function confirmaPreenchimento() {
     }
 
     //lança o custo financeiro caso ele exista
-    console.log(parseFloat(custofin.replace(",", ".")).toFixed(2));
     if (parseFloat(custofin.replace(",", ".")) > 0) {
         //testar se já tem na tabela os itens selecionados
         if ($("#tabelaenvio tbody").length > 0) {
@@ -933,11 +932,6 @@ function calcularesumo() {
 
         total = parseFloat(total).toFixed(2);
         total = total.replace(".", ",");
-
-        console.log("disparou o calcularresumo");
-        console.log(receita);
-        console.log(despesa);
-        console.log(total);
 
         $("label#ireceita").html("<i>Receita   (R$):</i> " + receita);
         $("label#ireceita").css('color', '#265f3d');
@@ -1080,7 +1074,6 @@ function formataTabela() {
         for (var col = 1; col <= 18; col++) {
             for (var lin = 0; lin < $('#tabelaenvio tbody tr').length; lin++) {
                 largaux = $('#tabelaenvio tbody').children('tr:eq(' + lin + ')').children('td:eq(' + col + ')').children('input:eq(0)').val().length * 8;
-                console.log(largaux);
                 $('#tabelaenvio tbody').children('tr:eq(' + lin + ')').children('td:eq(' + col + ')').children('input:eq(0)').width(largaux);
             }
         }

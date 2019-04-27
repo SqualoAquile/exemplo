@@ -102,7 +102,6 @@ function limparFiltros(){
 }
 
 function calculaSelecao(){
-    console.log("calcula seleçao acionado");
     var totlinhas = $('#tabelalancamentos tbody tr').length;
     var totselec = $('#tabelalancamentos tbody tr.selected').length;
     var desptotal = 0;
@@ -355,7 +354,6 @@ $(document).ready(function () {
     );
     
     table.on( 'draw', function () {
-        console.log("redraw acionado");
         $('#iselectodos').prop('checked',false);
         $('#tabelalancamentos tbody input[type=checkbox]').prop('checked',false);
         $('#tabelalancamentos tbody tr.selected').removeClass('selected');
@@ -618,7 +616,6 @@ function cancelaEdicao(){
 }
 
 function editar(obj){
-    console.log("btn editar acionado");
     $('#iselectodos').prop('checked',false);
     $('#iselectodos').change();
        

@@ -198,10 +198,10 @@ $(function() {
 
   function cancelarEdicao() {
 
+    $('#camposOrc').removeClass('was-validated');
     $tableItensOrcamento.removeAttr("data-current-id");
     $('#col-cancelar_edicao').addClass('d-none');
     $('#btn_incluir').text('Incluir');
-    $('#camposOrc').removeClass('was-validated');
 
     let $trs = $tableItensOrcamento.find('tr.disabled');
 
