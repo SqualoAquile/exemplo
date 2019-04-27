@@ -725,13 +725,6 @@
                 </div>
             </div>
         </div>
-        <?php if ((isset($item) && $item["status"] != "Recontato" && $item["status"] != "Aprovado" && $item["status"] != "Cancelado")): ?>
-            <div class="row">
-                <div class="col-lg-2">
-                    <button type="button" id="recontato" class="btn btn-outline-primary btn-block mb-2">Recontato</button>
-                </div>
-            </div>
-        <?php endif ?>
         <div id="acoes-orcamento" class="row mt-3">
 
 
@@ -745,7 +738,7 @@
 
             <?php if (isset($item)): ?>
                 
-                <div class="col-lg">
+                <div id="col-historico" class="col-lg">
                     <button class="btn btn-dark btn-block" type="button" data-toggle="collapse" data-target="#historico" aria-expanded="false" aria-controls="historico">Histórico de Alterações</button>
                 </div>
 
@@ -766,19 +759,26 @@
                             <label class="form-check-label" for="chk_cancelamentoOrc">Cancelar Orçamento</label>
                         </div>
                     </div>
-                    <div class="col-lg">
+                    <div id="col-duplicar" class="col-lg">
                         <button id="duplica_orcamento" type="button" class="btn btn-info btn-block">
                             Duplicar
                         </button>
                     </div>
                 <?php endif ?>
-                <div class="col-lg">
+                <div id="col-imprimir" class="col-lg">
                     <button type="button" class="btn btn-warning btn-block" data-id="<?php echo isset($item) ? $item["id"] : "" ?>" data-toggle="modal" data-target="#modalConfImp">
                         Imprimir
                     </button>
                 </div>
             <?php endif ?>
         </div>
+        <?php if ((isset($item) && $item["status"] != "Recontato" && $item["status"] != "Aprovado" && $item["status"] != "Cancelado")): ?>
+            <div class="row mt-3 justify-content-end">
+                <div id="col-recontato" class="col-lg-2">
+                    <button type="button" id="recontato" class="btn btn-outline-primary btn-block mb-2">Recontato</button>
+                </div>
+            </div>
+        <?php endif ?>
     </form>
     <?php include "_historico.php" ?>
 </section>

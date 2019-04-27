@@ -895,7 +895,7 @@ $(function() {
     if( $(this).is(':checked') ){
 
       $('#col-cancelar').removeClass('d-none');
-      $('#col-aprovar, #col-salvar').addClass('d-none');
+      $('#col-aprovar, #col-salvar, #col-recontato, #col-historico, #col-duplicar, #col-imprimir').addClass('d-none');
 
       $motivoDesistencia.parent().parent().removeClass('d-none');
       $motivoDesistencia.focus();
@@ -903,7 +903,7 @@ $(function() {
     }else{
 
       $('#col-cancelar').addClass('d-none');
-      $('#col-aprovar, #col-salvar').removeClass('d-none');
+      $('#col-aprovar, #col-salvar, #col-recontato, #col-historico, #col-duplicar, #col-imprimir').removeClass('d-none');
 
       $motivoDesistencia.parent().parent().addClass('d-none');
     }
