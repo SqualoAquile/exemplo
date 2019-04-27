@@ -248,8 +248,7 @@ class ajaxController extends controller{
 
   public function adicionarCliente() {
     if (isset($_POST) && !empty($_POST)) {
-      $this->clientes->adicionar($_POST);
-      echo json_encode($_SESSION["returnMessage"]);
+      echo json_encode($this->clientes->adicionarAjax($_POST));
     }
   }
   
@@ -607,6 +606,12 @@ class ajaxController extends controller{
       if ($returnAprovar["message"][0] == "00000") {
         echo json_encode($this->orcamentos->aprovar($returnAprovar["id_orcamento"], $returnAprovar["id_ordemservico"]));
       }
+    }
+  }
+
+  public function editarClienteOrcamento($id_orcamento) {
+    if(isset($_POST) && !empty($_POST)){
+      echo json_encode($this->orcamentos->editarCliente($id_orcamento, $_POST));
     }
   }
 

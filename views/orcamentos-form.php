@@ -277,6 +277,14 @@
 
                             <!-- CAMPOS DO TIPO HIDDEN - Ex: ALTERAÇÕES -->
                             <?php elseif(array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "hidden"): ?>
+
+                                <!-- <pre>
+                                    <?php
+                                        if ($value["Field"] == "id_cliente") {
+                                            print_r($item);
+                                        }
+                                    ?>
+                                </pre> -->
                                 
                                 <input 
                                     type="hidden" 

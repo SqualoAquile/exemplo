@@ -103,6 +103,31 @@ class Orcamentos extends model {
 
     }
 
+    public function editarCliente($id_orcamento, $request) {
+
+        if(!empty($id_orcamento)){
+
+            print_r($id_orcamento);exit;
+
+            // $id = addslashes(trim($id_orcamento));
+
+            // $ipcliente = $this->permissoes->pegaIPcliente();
+            // $palter = " | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - APROVADO";
+
+            // $sql = "UPDATE ". $this->table ." SET alteracoes = CONCAT(alteracoes, '$palter'), status = 'Aprovado' WHERE id = '$id' ";
+            
+            // self::db()->query($sql);
+
+            // $erro = self::db()->errorInfo();
+
+            // return [
+            //     "id_ordemservico" => $id_ordemservico,
+            //     "message" => $erro
+            // ];
+
+        }
+    }
+
     public function aprovar($id, $id_ordemservico) {
 
         if(!empty($id)){
@@ -158,6 +183,10 @@ class Orcamentos extends model {
 
         if (isset($request['quem_indicou'])) {
             unset($request['quem_indicou']);
+        }
+
+        if (isset($request['observacao_cliente'])) {
+            unset($request['observacao_cliente']);
         }
 
         $keys = implode(",", array_keys($request));

@@ -403,6 +403,7 @@ $(function() {
 
       acoesByStatus();
       changeRequiredsPfPj();
+      checarClienteCadastrado();
       $('[name="tipo_servico_produto"]').change();
 
     })
@@ -509,7 +510,7 @@ $(function() {
 
       }
     })
-    .on("change", '[name="pf_pj"]', function() {
+    .on("change", '#form-principal [name="pf_pj"]', function() {
 
       let $this = $(this),
         $elements = $('#esquerda [name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element-cliente'),
@@ -742,6 +743,7 @@ $(function() {
       }
     })
     .on("submit", "#form-principalModalOrcamentos", event => {
+
       event.preventDefault();
 
       let $form = $("#form-principalModalOrcamentos");
@@ -752,7 +754,7 @@ $(function() {
           type: "POST",
           data: $form.serialize(),
           dataType: "json",
-          success: data => aprovarOrcamento(data)
+          success: cliente => setarClienteCadastrado(cliente)
         });
       }
     });
@@ -791,6 +793,7 @@ $(function() {
     $formClienteModal
       .find("[name=comoconheceu]")
       .val($formClienteEsquerda.find("[name=como_conheceu]").val());
+
   });
 
   $('#itensOrcamento').on('alteracoes', function() {
@@ -847,10 +850,12 @@ $(function() {
       // Mantendo sempre os dois iguais, se o usuario quiser pode alter faturada_para manualmente
       $('[name=faturado_para]').val($this.val());
 
+      checarClienteCadastrado();
+
     })
     .on('focus', function() {
 
-      let $radio = $('[name="pf_pj"]:checked'),
+      let $radio = $('#form-principal [name="pf_pj"]:checked'),
         $elements = $('#esquerda [name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element-cliente'),
         $filtereds = $elements.filter(function() {
           return $(this).attr("data-tipo_pessoa") == $radio.attr("id");
@@ -883,8 +888,6 @@ $(function() {
   $('#embaixo input').on('change', function() {
     valorTotal();
   });
-
-  // $('#checkCancelar').click(() => $('#chk_cancelamentoOrc').click());
 
   $('#chk_cancelamentoOrc').click(function(){
 
@@ -1074,10 +1077,6 @@ $(function() {
           this.setCustomValidity('');
 
         }
-
-        // if (!$active.length || $active.text().toLowerCase() != $this.val().toLowerCase()) {
-        //   $this.val('');
-        // }
 
       } else {
 
@@ -1540,7 +1539,7 @@ function resumoItens() {
 
 }
 
-function aprovarOrcamento(data) {
+function aprovarOrcamento(cliente) {
 
   let $id_cliente = $('[name=id_cliente]'),
     $id_orcamento = $('#form-principal'),
@@ -1549,10 +1548,6 @@ function aprovarOrcamento(data) {
     $vendedor = $('[name=funcionario]'),
     $custo_total = $('[name=custo_total]'),
     $valor_total = $('[name=valor_total]');
-
-  if (data && data.lastInsertId) {
-    $id_cliente.val(data.lastInsertId);
-  }
 
   let dadosParaEnviar = {
     id_cliente: $id_cliente.val(),
@@ -1581,6 +1576,34 @@ function aprovarOrcamento(data) {
     motivo_cancelamento: ''
   };
 
+  if (cliente) {
+    if (cliente.id) {
+      editarClienteOrcamento(dadosParaEnviar.id_orcamento, cliente, function() {
+        ajaxAprovarOrcamento(dadosParaEnviar, cliente.id);
+      });
+    }
+  } else {
+    ajaxAprovarOrcamento(dadosParaEnviar);
+  }
+
+}
+
+function editarClienteOrcamento(id_orcamento, cliente, callback) {
+  $.ajax({
+    url: baselink + '/ajax/editarClienteOrcamento/' + id_orcamento,
+    type: 'POST',
+    data: cliente,
+    dataType: 'json',
+    success: callback
+  });
+}
+
+function ajaxAprovarOrcamento(dadosParaEnviar, id_cliente) {
+
+  if (id_cliente) {
+    dadosParaEnviar.id_cliente = id_cliente;
+  }
+
   $.ajax({
     url: baselink + '/ajax/aprovarOrcamento',
     type: 'POST',
@@ -1596,11 +1619,11 @@ function aprovarOrcamento(data) {
 
 function changeRequiredsPfPj() {
 
-  let $radio = $('[name="pf_pj"]:checked');
+  let $radio = $('#form-principal [name="pf_pj"]:checked');
 
   if ($radio.attr("id") == "pj") {
 
-    $("[name=telefone]")
+    $("#form-principal [name=telefone]")
       .attr("required", "required")
       .siblings("label")
       .addClass("font-weight-bold")
@@ -1608,7 +1631,7 @@ function changeRequiredsPfPj() {
       .removeClass('d-none')
       .addClass('d-inline-block');
 
-    $("[name=celular]")
+    $("#form-principal [name=celular]")
       .removeAttr("required", "required")
       .siblings("label")
       .removeClass("font-weight-bold")
@@ -1617,14 +1640,14 @@ function changeRequiredsPfPj() {
 
   } else {
 
-    $("[name=celular]")
+    $("#form-principal [name=celular]")
       .attr("required", "required")
       .siblings("label")
       .addClass("font-weight-bold")
       .find("> i")
       .show();
 
-    $("[name=telefone]")
+    $("#form-principal [name=telefone]")
       .removeAttr("required", "required")
       .siblings("label")
       .removeClass("font-weight-bold")
@@ -1648,4 +1671,46 @@ function acoesByStatus() {
   } else {
     $status.parent().hide();
   }
+}
+
+function checarClienteCadastrado() {
+
+  let $idCliente = $('[name="id_cliente"]'),
+    $btnAprovar = $('#aprovar-orcamento');
+
+  if ($idCliente.val() == '0') {
+
+    // Cliente não cadastrado
+    $btnAprovar
+      .text('Cadastrar Cliente');
+
+  } else {
+
+    $btnAprovar
+      .text('Aprovar Orçamento');
+
+  }
+
+}
+
+function setarClienteCadastrado(cliente) {
+
+  let $form = $('#form-principal'),
+    $nome = $form.find('#nome_cliente'),
+    $telefone = $form.find('#telefone'),
+    $celular = $form.find('#celular'),
+    $email = $form.find('#email'),
+    $comoConheceu = $form.find('#como_conheceu');
+
+  if (cliente) {
+    $nome.val(cliente.nome);
+    $telefone.val(cliente.telefone);
+    $celular.val(cliente.celular);
+    $email.val(cliente.email);
+    $comoConheceu.val(cliente.comoconheceu);
+
+    $('#modalCadastrarCliente').modal('hide');
+
+  }
+
 }

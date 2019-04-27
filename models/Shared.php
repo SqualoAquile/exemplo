@@ -270,7 +270,6 @@ class Shared extends model {
 
         }
         
-        //print_r($result); exit;
         return $result;
     } 
 
@@ -755,7 +754,7 @@ class Shared extends model {
         
         $labels = array();
         $labels =  json_decode($sql["table_comment"], true);
-        //print_r($labels); exit;        
+
         return $labels;
     }
 
