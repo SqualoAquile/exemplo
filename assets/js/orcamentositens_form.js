@@ -88,6 +88,8 @@ $(function() {
             .removeClass('is-valid is-invalid')
             .removeAttr('data-anterior');
 
+          $form.find('#observacao_subitem').val('');
+
         } else {
 
           $cancelEdicao
@@ -207,7 +209,8 @@ $(function() {
     $trs.find('.btn.disabled').removeClass('disabled');
     $('#direita .alert-danger').alert('close');
 
-    $('#material_servico').parent('.relacional-dropdown-wrapper').parent('.form-group').parent().addClass('d-none');
+    $('[name="tipo_material"]').parents('.form-check').parent('.form-group').parent().addClass('d-none');
+    toggleTipoMaterial()
     
   }
 

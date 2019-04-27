@@ -59,7 +59,7 @@
                         <?php else: ?>
                             <div class="col-xl-<?php echo isset($value["Comment"]["column"]) ? $value["Comment"]["column"] : "12" ?>" 
                                     style="order:<?php echo isset($value["Comment"]["ordem_form"]) ? $value["Comment"]["ordem_form"] : 100 ?>;">
-                                <div class="form-group">
+                                <div class="form-group form-group-foreach">
                                     <!-- Label Geral -->
                                     <label class="<?php echo $value["Null"] == "NO" ? "font-weight-bold" : "" ?>" for="<?php echo $value['Field'] ?>">
                                         
@@ -289,7 +289,7 @@
                             <?php else: ?>
                                 <div    class="col-xl-<?php echo isset($value["Comment"]["column"]) ? $value["Comment"]["column"] : "12" ?>" 
                                         style="order:<?php echo isset($value["Comment"]["ordem_form"]) ? $value["Comment"]["ordem_form"] : 100 ?>;">
-                                    <div class="form-group">
+                                    <div class="form-group form-group-foreach">
 
                                         <!-- Label Geral -->
                                         <label class="<?php echo $value["Null"] == "NO" ? "font-weight-bold" : "" ?>" for="<?php echo $value['Field'] ?>">
@@ -524,7 +524,7 @@
                                     />
                                 <?php else: ?>
                                     <div class="col-lg" style="order:<?php echo isset($value["Comment"]["ordem_form"]) ? $value["Comment"]["ordem_form"] : 100 ?>;">
-                                        <div class="form-group">
+                                        <div class="form-group form-group-foreach">
 
                                             <!-- Label Geral -->
                                             <label class="<?php echo $value["Null"] == "NO" ? "font-weight-bold" : "" ?>" for="<?php echo $value['Field'] ?>">
