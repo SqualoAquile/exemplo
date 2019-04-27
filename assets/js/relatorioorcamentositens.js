@@ -81,7 +81,7 @@ $(function () {
             }else if(tipo=="Servicos"){
                 totalServicos = parseFloat(totalServicos) + parseFloat(valor);
                 quantidadeServicos = parseInt(quantidadeServicos) + parseInt(quantidade);
-            }else if(tipo=="Servicos Complementares"){
+            }else if(tipo=="Servicoscomplementares"){
                 totalServicosCompl = parseFloat(totalServicosCompl) + parseFloat(valor);
                 quantidadeServicosCompl = parseInt(quantidadeServicosCompl) + parseInt(quantidade);
             }
