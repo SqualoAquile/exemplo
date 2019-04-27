@@ -364,7 +364,6 @@ class orcamentosController extends controller{
             $htmlRows.='
             </tr>
             ';
-
             
             // LOOP PARA DESCREVER OS SUBITENS ASSOCIADOS (ex.: material, corte, aplicação, etc)
             for ($j=0; $j < sizeof($infos["itens"][$k]["subitens"]); $j++){
@@ -413,7 +412,7 @@ class orcamentosController extends controller{
                     if ($mostraMedidas==true) { $htmlRows.='<td></td>';}     
                     if ($mostraPrecos==true) { $htmlRows.='<td></td>';}
                 $htmlRows.='
-                    <td style="color:red"><b>Preço Alternativo: </b> </td>
+                    <td style="color:red" align="right"><b>Preço Alternativo: </b> </td>
                     <td style="color:red" align="right">R$ '.$infos["itens"][$k]["total_alternativo"].'</td>
                 </tr>
                 ';
@@ -499,7 +498,6 @@ class orcamentosController extends controller{
             </table>
             <br></br>
                 ';
-
 
         // BLOCO COM AVISOS
 
