@@ -686,7 +686,6 @@ $(function () {
 
                                 if (typeof json.logradouro != 'undefined') {
                                     $('[name=endereco]').val(json['logradouro']);
-                                    $('[name=numero]').focus();
                                 }
 
                                 if (typeof json.bairro != 'undefined') {

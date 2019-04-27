@@ -408,8 +408,6 @@ $(function() {
     })
     .on("click", '[name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element-cliente', function() {
 
-      console.log('clickando aqui sim');
-
       var $this = $(this),
         $esquerda = $("#esquerda");
 
@@ -437,7 +435,7 @@ $(function() {
         $esquerda.find(".observacao_cliente_wrapper").removeClass("d-none");
 
         $esquerda
-          .find("#observacao_cliente[name=observacao]")
+          .find("#observacao_cliente[name=observacao_cliente]")
           .val($this.attr("data-observacao"));
 
       } else {
@@ -557,6 +555,30 @@ $(function() {
         $(this)
           .dropdown('hide')
           .blur();
+        return;
+      }
+
+      if (
+        code == 91 || 
+        code == 93 || 
+        code == 92 || 
+        code == 9 || 
+        code == 13 || 
+        code == 16 || 
+        code == 17 || 
+        code == 18 || 
+        code == 19 || 
+        code == 20 || 
+        code == 33 || 
+        code == 34 || 
+        code == 35 || 
+        code == 36 || 
+        code == 37 || 
+        code == 38 || 
+        code == 39 || 
+        code == 40 || 
+        code == 45
+      ) {
         return;
       }
 
@@ -873,7 +895,7 @@ $(function() {
     if( $(this).is(':checked') ){
 
       $('#col-cancelar').removeClass('d-none');
-      $('#col-aprovar, #col-salvar').addClass('d-none');
+      $('#col-aprovar, #col-salvar, #col-recontato, #col-historico, #col-duplicar, #col-imprimir').addClass('d-none');
 
       $motivoDesistencia.parent().parent().removeClass('d-none');
       $motivoDesistencia.focus();
@@ -881,7 +903,7 @@ $(function() {
     }else{
 
       $('#col-cancelar').addClass('d-none');
-      $('#col-aprovar, #col-salvar').removeClass('d-none');
+      $('#col-aprovar, #col-salvar, #col-recontato, #col-historico, #col-duplicar, #col-imprimir').removeClass('d-none');
 
       $motivoDesistencia.parent().parent().addClass('d-none');
     }
@@ -952,6 +974,30 @@ $(function() {
         return;
       }
 
+      if (
+        code == 91 || 
+        code == 93 || 
+        code == 92 || 
+        code == 9 || 
+        code == 13 || 
+        code == 16 || 
+        code == 17 || 
+        code == 18 || 
+        code == 19 || 
+        code == 20 || 
+        code == 33 || 
+        code == 34 || 
+        code == 35 || 
+        code == 36 || 
+        code == 37 || 
+        code == 38 || 
+        code == 39 || 
+        code == 40 || 
+        code == 45
+      ) {
+        return;
+      }
+
       var $this = $(this),
         $dropdownMenu = $this.siblings('.dropdown-menu'),
         $nenhumResult = $dropdownMenu.find('.nenhum-result'),
@@ -991,7 +1037,8 @@ $(function() {
     .on('blur change', function () {
 
       var $this = $(this),
-      $dropdownMenu = $this.siblings('.dropdown-menu');
+        $dropdownMenu = $this.siblings('.dropdown-menu'),
+        $active = $dropdownMenu.find('.relacional-dropdown-element-cliente.active');
 
       $this.removeClass('is-valid is-invalid');
 
@@ -1026,6 +1073,16 @@ $(function() {
           $this.addClass('is-valid');
           this.setCustomValidity('');
 
+        }
+
+        // if (!$active.length || $active.text().toLowerCase() != $this.val().toLowerCase()) {
+        //   $this.val('');
+        // }
+
+      } else {
+
+        if ($active.length) {
+          $this.val($active.text());
         }
 
       }

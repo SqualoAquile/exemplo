@@ -480,7 +480,7 @@
                 <div class="observacao_cliente_wrapper d-none">
                     <button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapseObsCliente" aria-expanded="false" aria-controls="collapseObsCliente">Observações</button>
                     <div class="collapse mt-3" id="collapseObsCliente">
-                        <textarea id="observacao_cliente" readonly name="observacao" data-anterior="" class="form-control" placeholder="Observações do Cliente"></textarea>
+                        <textarea id="observacao_cliente" readonly name="observacao_cliente" data-anterior="" class="form-control" placeholder="Observações do Cliente"></textarea>
                     </div>
                 </div>
             </div>
@@ -725,13 +725,6 @@
                 </div>
             </div>
         </div>
-        <?php if ((isset($item) && $item["status"] != "Recontato" && $item["status"] != "Aprovado" && $item["status"] != "Cancelado")): ?>
-            <div class="row">
-                <div class="col-lg-2">
-                    <button type="button" id="recontato" class="btn btn-outline-primary btn-block mb-2">Recontato</button>
-                </div>
-            </div>
-        <?php endif ?>
         <div id="acoes-orcamento" class="row mt-3">
 
 
@@ -745,7 +738,7 @@
 
             <?php if (isset($item)): ?>
                 
-                <div class="col-lg">
+                <div id="col-historico" class="col-lg">
                     <button class="btn btn-dark btn-block" type="button" data-toggle="collapse" data-target="#historico" aria-expanded="false" aria-controls="historico">Histórico de Alterações</button>
                 </div>
 
@@ -757,28 +750,35 @@
                         <button id="btn_cancelamentoOrc" class="btn btn-danger btn-block" type="button">Cancelar Orçamento</button>
                     </div>
                     <div class="col-lg">
-                        <div id="checkCancelar" class="form-check form-check-inline btn btn-secondary btn-block">
+                        <label id="checkCancelar" class="btn btn-secondary btn-block d-flex align-items-center justify-content-center" for="chk_cancelamentoOrc">
                             <input 
                                 id="chk_cancelamentoOrc" 
                                 type="checkbox" 
-                                class="form-check-input" 
+                                class="mr-2"
                             />
-                            <label class="form-check-label" for="chk_cancelamentoOrc">Cancelar Orçamento</label>
-                        </div>
+                            <span>Cancelar Orçamento</span>
+                        </label>
                     </div>
-                    <div class="col-lg">
+                    <div id="col-duplicar" class="col-lg">
                         <button id="duplica_orcamento" type="button" class="btn btn-info btn-block">
                             Duplicar
                         </button>
                     </div>
                 <?php endif ?>
-                <div class="col-lg">
+                <div id="col-imprimir" class="col-lg">
                     <button type="button" class="btn btn-warning btn-block" data-id="<?php echo isset($item) ? $item["id"] : "" ?>" data-toggle="modal" data-target="#modalConfImp">
                         Imprimir
                     </button>
                 </div>
             <?php endif ?>
         </div>
+        <?php if ((isset($item) && $item["status"] != "Recontato" && $item["status"] != "Aprovado" && $item["status"] != "Cancelado")): ?>
+            <div class="row mt-3 justify-content-end">
+                <div id="col-recontato" class="col-lg-2">
+                    <button type="button" id="recontato" class="btn btn-outline-primary btn-block mb-2">Recontato</button>
+                </div>
+            </div>
+        <?php endif ?>
     </form>
     <?php include "_historico.php" ?>
 </section>
