@@ -36,9 +36,13 @@ class Shared extends model {
                 $stringBtn .= '<input type="hidden" name="id" value="'. $id .'"><button type="submit" onclick="return confirm(\'Tem Certeza?\')" class="btn btn-sm btn-danger ml-1"><i class="fas fa-trash-alt"></i></button>';
             }
 
-            if(($this->table == "orcamentos" || $this->table == "ordemservico") && in_array( $this->table.'_edt' , $_SESSION["permissoesUsuario"]) ){
+            if(($this->table == "orcamentos") && in_array( $this->table.'_ver' , $_SESSION["permissoesUsuario"]) ){
                 $stringBtn .= '<button type="button" class="btn btn-warning btn-sm ml-2" data-id="' . $id . '" data-toggle="modal" data-target="#modalConfImp"><i class="fas fa-print"></i></button>';
-            }            
+            }
+
+            if(($this->table == "ordemservico") && in_array( $this->table.'_ver' , $_SESSION["permissoesUsuario"]) ){
+                $stringBtn .=  '<a href="' . BASE_URL . '/' . $this->table . '/imprimir/' . $id . '" class="btn btn-warning btn-sm ml-2" target="_blank"><i class="fas fa-print"></i></a>';
+            }      
             
             $stringBtn .= '</form>';
         }
@@ -266,7 +270,6 @@ class Shared extends model {
 
         }
         
-        //print_r($result); exit;
         return $result;
     } 
 
@@ -751,7 +754,7 @@ class Shared extends model {
         
         $labels = array();
         $labels =  json_decode($sql["table_comment"], true);
-        //print_r($labels); exit;        
+
         return $labels;
     }
 

@@ -72,19 +72,16 @@ $(function () {
             subtotal = subtotal.replace('R$  ', '');
             subtotal = floatParaPadraoInternacional(subtotal);
             somasSubtotal += parseFloat(subtotal);
-            console.log(somasSubtotal);
 
             desconto = rowData[i][indexColumns.cdesconto];
             desconto = desconto.replace('R$  ', '');
             desconto = floatParaPadraoInternacional(desconto);
             somasDesconto += parseFloat(desconto);
-            console.log(somasDesconto);
 
             valor = rowData[i][indexColumns.cvalor];
             valor = valor.replace('R$  ', '');
             valor = floatParaPadraoInternacional(valor);
             somasValor += parseFloat(valor);
-            console.log(somasValor);
 
             quantidadeOperacoes++;
             i++;

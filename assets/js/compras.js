@@ -19,7 +19,7 @@ window.onload = function(){
 
 $.fn.dataTable.ext.search.push(
     function( settings, data, dataIndex ) {
-       //console.log(parseFloat(targetCols1));
+
         if(isNaN(parseFloat(targetCols1))){
           targetCols1 = 8;  
         }
@@ -895,7 +895,6 @@ function calcularesumo(){
                 custoProdutos = parseFloat(custoProdutos) + parseFloat(parseFloat(qtdAux) * parseFloat(custoProdAux));
                 custoProdutos = parseFloat(custoProdutos).toFixed(2);
                 
-                console.log(custoProdutos);
             });
         }else{
             custoProdutos = parseFloat(0).toFixed(2);

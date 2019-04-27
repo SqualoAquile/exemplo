@@ -66,15 +66,11 @@ class Ordemservico extends model {
         $request["situacao"] = "ativo";
 
         $keys = implode(",", array_keys($request));
-
         $values = "'" . implode("','", array_values($this->shared->formataDadosParaBD($request))) . "'";
-
         $sql = "INSERT INTO " . $this->table . " (" . $keys . ") VALUES (" . $values . ")";
         
         self::db()->query($sql);
-
         $lastInsertId = self::db()->lastInsertId();
-
         $erro = self::db()->errorInfo();
 
         return [
@@ -82,7 +78,6 @@ class Ordemservico extends model {
             "id_orcamento" => $request["id_orcamento"],
             "message" => $erro
         ];
-
     }
 
     public function editar($id, $request) {
@@ -262,23 +257,6 @@ class Ordemservico extends model {
             $id = addslashes(trim($id));
             $infos=[];
             $request = $_POST;
-            $request["tabela"] = "avisos";
-
-            $avisosDb = $this->getRelacionalDropdown($request);
-
-            $avisos = [];
-
-            if ($request["avisos"]) {
-                foreach ($request["avisos"] as $keyAvisos => $valueAvisos) {
-                    if ($avisosDb) {
-                        foreach ($avisosDb as $keyAvisosDb => $valueAvisosDb) {
-                            if ($valueAvisosDb["id"] == $valueAvisos) {
-                                $avisos[$valueAvisosDb["id"]] = $valueAvisosDb["mensagem"];
-                            }
-                        }
-                    }
-                }
-            }
             
             //---------------------------------------------------------------------------------------------
             // Pega algumas infos da OS
@@ -439,8 +417,8 @@ class Ordemservico extends model {
             }
 
             $mostraMedidas = isset($request["checkMedidas"]) ? true : false;
-            $mostraPrecos = isset($request["checkUnitario"]) ? true : false;
-            $mostraAvisos = isset($request["checkAvisos"]) ? true : false;
+            // $mostraPrecos = isset($request["checkUnitario"]) ? true : false;
+            $mostraPrecos = false;
             
             require_once __DIR__ . '/../vendor/vendor/autoload.php';
             
@@ -458,6 +436,7 @@ class Ordemservico extends model {
             ]);
     
             $mpdf->SetDisplayMode('fullpage');
+            $mpdf->SetTitle("Ordem de Serviço - " . $infos['descricao']);
     
             $htmlHeader = '
             <table width="800" style="border:1px solid #000000; font-size:10pt;" cellPadding="9"><thead></thead>
@@ -617,38 +596,6 @@ class Ordemservico extends model {
                         </tr>
                     ';
                 };
-    
-                //VALOR ALTERNATIVO E PRINCIPAL DO SUBITEM
-    
-                if(isset($infos["itens"][$k]["total_alternativo"]) && $infos["itens"][$k]["total_alternativo"] !=0 && $temAlternativo==true){
-                    $htmlRows .='
-                    <tr>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>';
-                        if ($mostraMedidas==true) { $htmlRows.='<td></td>';}     
-                        if ($mostraPrecos==true) { $htmlRows.='<td></td>';}
-                    $htmlRows.='
-                        <td style="color:red"><b>Preço Alternativo: </b> </td>
-                        <td align="right" style="color:red">R$ '.$infos["itens"][$k]["total_alternativo"].'</td>
-                    </tr>
-                    ';
-                }
-    
-                $htmlRows .='
-                <tr style="border-bottom-style:thin solid;">
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>';
-                    if ($mostraMedidas==true) { $htmlRows.='<td></td>';}     
-                    if ($mostraPrecos==true) { $htmlRows.='<td></td>';}
-                $htmlRows.='
-                    <td><b>Preço Principal: </b> </td>
-                    <td align="right">R$ '.$infos["itens"][$k]["total_principal"].'</td>
-                </tr>
-                
-                ';
-                
             };
     
             $html .= $htmlRows;
@@ -657,104 +604,6 @@ class Ordemservico extends model {
             </table>
             <br></br>
             ';
-    
-            // BLOCO COM INFORMAÇÕES GERAIS
-    
-            $html .='
-            <table style="border:1px solid #000000; font-size:9pt; padding-top:5px; padding-bottom:5px; line-height:10%" width="800" cellPadding="5">
-                <tr>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td><b>Deslocamento:  </b></td>
-                    <td><b>'.$infos["deslocamento"].'</b> </td>
-                </tr>
-    
-                <tr>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td><b>Preço Total: </b> </td>
-                    <td><b>R$ '.$infos["preco_total"] .' </b> </td>
-                </tr>
-    
-                <tr>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td><b>Desconto:  </b></td>
-                    <td><b>R$ '.$infos["desconto"].'</b></td>
-                </tr>';
-    
-                if(isset($infos["preco_alternativo"]) && $infos["preco_alternativo"] != 0 && $temAlternativoGlobal==true ){
-    
-                    $html.='
-                    <tr>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td style="color:red"><b>Preço Alternativo:  </b></td>
-                        <td style="color:red"><b>R$ '.$infos["preco_alternativo"].' </b> </td>
-                     </tr>
-                    ';
-                }
-                
-                $html.='
-                <tr>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td><b>Preço Final:  </b></td>
-                    <td><b>R$ '.$infos["preco_final"].' </b> </td>
-                </tr>
-                </table>
-                <br></br>
-                    ';
-    
-    
-            // BLOCO COM AVISOS
-    
-            if ($mostraAvisos==true) {
-                $html .='
-                <table style="border:1px solid #000000; line-height:120%; font-size:10pt" width="800" cellPadding="9">
-                    <thead>
-                        <tr>
-                            <td align="center">
-                                <h3>AVISOS</h3>
-                            </td>
-                        </tr>
-                    </thead>
-                    
-                    <tbody>
-                        <tr>
-                            <td>';
-    
-                            foreach ($avisos as $key => $value) {
-                                $html.='
-                                    <p id='.$key.'> - '. $value.'</p>
-                                ';
-                            }
-    
-                $html.='
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <br></br>
-                ';
-    
-            }
-
 
     // BLOCO COM NOTIFICAÇÕES
 

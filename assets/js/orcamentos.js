@@ -403,12 +403,12 @@ $(function() {
 
       acoesByStatus();
       changeRequiredsPfPj();
+      checarClienteCadastrado();
+      // disabledBtns();
       $('[name="tipo_servico_produto"]').change();
 
     })
     .on("click", '[name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element-cliente', function() {
-
-      console.log('clickando aqui sim');
 
       var $this = $(this),
         $esquerda = $("#esquerda");
@@ -428,23 +428,11 @@ $(function() {
 
       $esquerda
         .find("[name=como_conheceu]")
-        .val($this.attr("data-comoconheceu"));
+        .val($this.attr("data-comoconheceu"))
+        .change();
 
-      if ($this.attr("data-observacao")) {
+      collapseObsCliente($this.attr("data-observacao"));
 
-        $("#collapseObsCliente").collapse("hide");
-
-        $esquerda.find(".observacao_cliente_wrapper").removeClass("d-none");
-
-        $esquerda
-          .find("#observacao_cliente[name=observacao]")
-          .val($this.attr("data-observacao"));
-
-      } else {
-
-        $esquerda.find(".observacao_cliente_wrapper").addClass("d-none");
-
-      }
     })
     .on('click', '[name="material_servico"] ~ .relacional-dropdown .relacional-dropdown-element-orcamento', function() {
 
@@ -511,7 +499,7 @@ $(function() {
 
       }
     })
-    .on("change", '[name="pf_pj"]', function() {
+    .on("change", '#form-principal [name="pf_pj"]', function() {
 
       let $this = $(this),
         $elements = $('#esquerda [name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element-cliente'),
@@ -520,7 +508,7 @@ $(function() {
         });
 
       $elements
-        .removeClass('filtered')
+        .removeClass('filtered active')
         .hide();
 
       $filtereds
@@ -535,6 +523,9 @@ $(function() {
 
       changeRequiredsPfPj();
 
+    })
+    .on('change', '[name="id_cliente"]', function() {
+      checarClienteCadastrado();
     });
 
   // Eventos responsáveis pelo: Select Dropdown com Pesquisa
@@ -557,6 +548,30 @@ $(function() {
         $(this)
           .dropdown('hide')
           .blur();
+        return;
+      }
+
+      if (
+        code == 91 || 
+        code == 93 || 
+        code == 92 || 
+        code == 9 || 
+        code == 13 || 
+        code == 16 || 
+        code == 17 || 
+        code == 18 || 
+        code == 19 || 
+        code == 20 || 
+        code == 33 || 
+        code == 34 || 
+        code == 35 || 
+        code == 36 || 
+        code == 37 || 
+        code == 38 || 
+        code == 39 || 
+        code == 40 || 
+        code == 45
+      ) {
         return;
       }
 
@@ -644,6 +659,7 @@ $(function() {
 
   $("#como_conheceu")
     .on("change", function() {
+
       var $this = $(this);
 
       $(".column-quem-indicou").remove();
@@ -720,17 +736,16 @@ $(function() {
       }
     })
     .on("submit", "#form-principalModalOrcamentos", event => {
+
       event.preventDefault();
 
-      let $form = $("#form-principalModalOrcamentos");
-
-      if ($form[0].checkValidity()) {
+      if (event.target.checkValidity()) {
         $.ajax({
           url: baselink + "/ajax/adicionarCliente",
           type: "POST",
-          data: $form.serialize(),
+          data: $(event.target).serialize(),
           dataType: "json",
-          success: data => aprovarOrcamento(data)
+          success: cliente => setarClienteCadastrado(cliente)
         });
       }
     });
@@ -740,8 +755,17 @@ $(function() {
     let $formClienteModal = $("#form-principalModalOrcamentos"),
       $formClienteEsquerda = $("#esquerda");
 
+    let $pjModal = $formClienteModal.find('#pj'),
+      $pfModal = $formClienteModal.find('#pf');
+
+    $pjModal.attr('id', 'pj_modal');
+    $pfModal.attr('id', 'pf_modal');
+
+    $pjModal.siblings('[for="pj"]').attr('for', 'pj_modal');
+    $pfModal.siblings('[for="pf"]').attr('for', 'pf_modal');
+
     $formClienteModal
-      .find("#" + $formClienteEsquerda.find("[name=pf_pj]:checked").attr("id"))
+      .find('[name="tipo_pessoa"][value="' + $formClienteEsquerda.find("[name=pf_pj]:checked").attr("id") + '"]')
       .prop("checked", true)
       .change();
 
@@ -769,6 +793,7 @@ $(function() {
     $formClienteModal
       .find("[name=comoconheceu]")
       .val($formClienteEsquerda.find("[name=como_conheceu]").val());
+
   });
 
   $('#itensOrcamento').on('alteracoes', function() {
@@ -825,10 +850,12 @@ $(function() {
       // Mantendo sempre os dois iguais, se o usuario quiser pode alter faturada_para manualmente
       $('[name=faturado_para]').val($this.val());
 
+      checarClienteCadastrado();
+
     })
     .on('focus', function() {
 
-      let $radio = $('[name="pf_pj"]:checked'),
+      let $radio = $('#form-principal [name="pf_pj"]:checked'),
         $elements = $('#esquerda [name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element-cliente'),
         $filtereds = $elements.filter(function() {
           return $(this).attr("data-tipo_pessoa") == $radio.attr("id");
@@ -862,8 +889,6 @@ $(function() {
     valorTotal();
   });
 
-  // $('#checkCancelar').click(() => $('#chk_cancelamentoOrc').click());
-
   $('#chk_cancelamentoOrc').click(function(){
 
     let $motivoDesistencia = $('#motivo_desistencia');
@@ -873,7 +898,7 @@ $(function() {
     if( $(this).is(':checked') ){
 
       $('#col-cancelar').removeClass('d-none');
-      $('#col-aprovar, #col-salvar').addClass('d-none');
+      $('#col-aprovar, #col-salvar, #col-recontato, #col-historico, #col-duplicar, #col-imprimir').addClass('d-none');
 
       $motivoDesistencia.parent().parent().removeClass('d-none');
       $motivoDesistencia.focus();
@@ -881,7 +906,7 @@ $(function() {
     }else{
 
       $('#col-cancelar').addClass('d-none');
-      $('#col-aprovar, #col-salvar').removeClass('d-none');
+      $('#col-aprovar, #col-salvar, #col-recontato, #col-historico, #col-duplicar, #col-imprimir').removeClass('d-none');
 
       $motivoDesistencia.parent().parent().addClass('d-none');
     }
@@ -952,6 +977,30 @@ $(function() {
         return;
       }
 
+      if (
+        code == 91 || 
+        code == 93 || 
+        code == 92 || 
+        code == 9 || 
+        code == 13 || 
+        code == 16 || 
+        code == 17 || 
+        code == 18 || 
+        code == 19 || 
+        code == 20 || 
+        code == 33 || 
+        code == 34 || 
+        code == 35 || 
+        code == 36 || 
+        code == 37 || 
+        code == 38 || 
+        code == 39 || 
+        code == 40 || 
+        code == 45
+      ) {
+        return;
+      }
+
       var $this = $(this),
         $dropdownMenu = $this.siblings('.dropdown-menu'),
         $nenhumResult = $dropdownMenu.find('.nenhum-result'),
@@ -983,23 +1032,29 @@ $(function() {
 
   $('.relacional-dropdown-input-cliente')
     .click(function () {
-      var $this = $(this)
+      
+      var $this = $(this);
+      
+      $this.keyup();
+
       if ($this.parents('.dropdown').hasClass('show')) {
         $this.dropdown('toggle');
       }
+
     })
     .on('blur change', function () {
 
       var $this = $(this),
-      $dropdownMenu = $this.siblings('.dropdown-menu');
+        $dropdownMenu = $this.siblings('.dropdown-menu'),
+        $active = $dropdownMenu.find('.relacional-dropdown-element-cliente.filtered.active'),
+        $elements = $dropdownMenu.find('.relacional-dropdown-element-cliente.filtered');
 
       $this.removeClass('is-valid is-invalid');
+      $dropdownMenu.find('.nenhum-result').addClass('d-none');
 
       if ($this.val()) {
 
-        $dropdownMenu.find('.nenhum-result').addClass('d-none');
-
-        $filtereds = $dropdownMenu.find('.relacional-dropdown-element-cliente.filtered').filter(function () {
+        $filtereds = $elements.filter(function () {
           return $(this).text().toLowerCase().indexOf($this.val().toLowerCase()) != -1;
         });
 
@@ -1028,9 +1083,28 @@ $(function() {
 
         }
 
+      } else {
+
+        if ($active.length) {
+          $this.val($active.text());
+        }
+
       }
+
+      var $equals = $elements.filter(function () {
+        return $(this).text().toLowerCase() == $this.val().toLowerCase();
+      });
+
+      if (!$equals.length) {
+        $elements.removeClass('active');
+      }
+
     })
     .attr('autocomplete', 'off');
+
+    $('#form-principal').find('.form-control, .form-check-input').on('change', function() {
+      // disabledBtns();
+    });
 
 });
 
@@ -1394,6 +1468,8 @@ function valorTotal() {
   calculaCustoDeslocamento();
   calculaDesconto();
   resumoItens();
+  // disabledBtns();
+
 }
 
 function calculaCustoDeslocamento() {
@@ -1483,7 +1559,7 @@ function resumoItens() {
 
 }
 
-function aprovarOrcamento(data) {
+function aprovarOrcamento(cliente) {
 
   let $id_cliente = $('[name=id_cliente]'),
     $id_orcamento = $('#form-principal'),
@@ -1492,10 +1568,6 @@ function aprovarOrcamento(data) {
     $vendedor = $('[name=funcionario]'),
     $custo_total = $('[name=custo_total]'),
     $valor_total = $('[name=valor_total]');
-
-  if (data && data.lastInsertId) {
-    $id_cliente.val(data.lastInsertId);
-  }
 
   let dadosParaEnviar = {
     id_cliente: $id_cliente.val(),
@@ -1524,6 +1596,34 @@ function aprovarOrcamento(data) {
     motivo_cancelamento: ''
   };
 
+  if (cliente) {
+    if (cliente.id) {
+      editarClienteOrcamento(dadosParaEnviar.id_orcamento, cliente, function() {
+        ajaxAprovarOrcamento(dadosParaEnviar, cliente.id);
+      });
+    }
+  } else {
+    ajaxAprovarOrcamento(dadosParaEnviar);
+  }
+
+}
+
+function editarClienteOrcamento(id_orcamento, cliente, callback) {
+  $.ajax({
+    url: baselink + '/ajax/editarClienteOrcamento/' + id_orcamento,
+    type: 'POST',
+    data: cliente,
+    dataType: 'json',
+    success: callback
+  });
+}
+
+function ajaxAprovarOrcamento(dadosParaEnviar, id_cliente) {
+
+  if (id_cliente) {
+    dadosParaEnviar.id_cliente = id_cliente;
+  }
+
   $.ajax({
     url: baselink + '/ajax/aprovarOrcamento',
     type: 'POST',
@@ -1531,7 +1631,23 @@ function aprovarOrcamento(data) {
     dataType: 'json',
     success: function(data) {
       if (data.message[0] == '00000') {
-        window.location.href = baselink + '/orcamentos';
+
+       $.ajax({
+        url: baselink + '/ajax/getIdOrdemServico',
+        type: 'POST',
+        data: {
+          id_orcamento: dadosParaEnviar.id_orcamento
+        },
+        dataType: 'json',
+        success: function(data) {
+          if (data.message[0] == '00000') {
+            window.open(baselink + '/ordemservico/imprimir/'+data.id_ordemservico, '_blank')
+            window.location.href = baselink + '/orcamentos';
+          }
+        }
+      });
+
+        
       }
     }
   });
@@ -1539,11 +1655,11 @@ function aprovarOrcamento(data) {
 
 function changeRequiredsPfPj() {
 
-  let $radio = $('[name="pf_pj"]:checked');
+  let $radio = $('#form-principal [name="pf_pj"]:checked');
 
   if ($radio.attr("id") == "pj") {
 
-    $("[name=telefone]")
+    $("#form-principal [name=telefone]")
       .attr("required", "required")
       .siblings("label")
       .addClass("font-weight-bold")
@@ -1551,7 +1667,7 @@ function changeRequiredsPfPj() {
       .removeClass('d-none')
       .addClass('d-inline-block');
 
-    $("[name=celular]")
+    $("#form-principal [name=celular]")
       .removeAttr("required", "required")
       .siblings("label")
       .removeClass("font-weight-bold")
@@ -1560,14 +1676,14 @@ function changeRequiredsPfPj() {
 
   } else {
 
-    $("[name=celular]")
+    $("#form-principal [name=celular]")
       .attr("required", "required")
       .siblings("label")
       .addClass("font-weight-bold")
       .find("> i")
       .show();
 
-    $("[name=telefone]")
+    $("#form-principal [name=telefone]")
       .removeAttr("required", "required")
       .siblings("label")
       .removeClass("font-weight-bold")
@@ -1585,10 +1701,147 @@ function acoesByStatus() {
     statusLowTxt = $status.val().toLowerCase();
 
   if ($status.val() && (statusLowTxt == 'cancelado' || statusLowTxt == 'aprovado')) {
+
     $tabela.find('thead > tr > th:first-child, tbody > tr > td:first-child').hide();
+    
     $('#btn_incluir').parent().hide();
     $('.form-control, [type="radio"]').attr('disabled', 'disabled');
-  } else {
-    $status.parent().hide();
+
   }
+  
+  if (!$status.val()) {
+    $status.parent('.form-group').parent().hide();
+  }
+
+}
+
+function checarClienteCadastrado() {
+
+  let $idCliente = $('[name="id_cliente"]'),
+    $btnAprovar = $('#aprovar-orcamento');
+
+  if ($idCliente.val() == '0') {
+
+    // Cliente não cadastrado
+    $btnAprovar
+      .text('Cadastrar Cliente');
+
+  } else {
+
+    $btnAprovar
+      .text('Aprovar Orçamento');
+
+  }
+
+}
+
+function setarClienteCadastrado(cliente) {
+
+  let $form = $('#form-principal'),
+    $idCliente = $form.find('[name="id_cliente"]'),
+    $nome = $form.find('#nome_cliente'),
+    $telefone = $form.find('#telefone'),
+    $celular = $form.find('#celular'),
+    $email = $form.find('#email'),
+    $comoConheceu = $form.find('#como_conheceu');
+
+  if (cliente) {
+
+    $form
+      .find('[name="pf_pj"]#' + cliente.tipo_pessoa)
+      .prop('checked', true)
+      .change();
+
+    $nome
+      .val(cliente.nome)
+      .change()
+      .removeClass('is-valid');
+
+    $telefone.val(cliente.telefone);
+    $celular.val(cliente.celular);
+    $email.val(cliente.email);
+    
+    $comoConheceu
+      .val(cliente.comoconheceu)
+      .change();
+
+    $idCliente
+      .val(cliente.id)
+      .change();
+
+    if (cliente.observacao) {
+      collapseObsCliente(cliente.observacao);
+    }
+
+    $('#modalCadastrarCliente').modal('hide');
+
+    // disabledBtns();
+
+  }
+
+}
+
+function collapseObsCliente(observacao) {
+
+  let $esquerda = $('#esquerda');
+
+  if (observacao) {
+
+    $("#collapseObsCliente").collapse("hide");
+
+    $esquerda.find(".observacao_cliente_wrapper").removeClass("d-none");
+
+    $esquerda
+      .find("#observacao_cliente[name=observacao_cliente]")
+      .val(observacao);
+
+  } else {
+
+    $esquerda.find(".observacao_cliente_wrapper").addClass("d-none");
+
+  }
+
+}
+
+function disabledBtns() {
+
+  let $btnSubmit = $('#main-form'),
+    $btnAprovar = $('#aprovar-orcamento'),
+    temAlteracao = false;
+
+  $('#form-principal').find('input[type=text], input[type=hidden]:not([name=alteracoes]), input[type=radio], textarea, select').each(function (i, el) {
+
+    let $this = $(el);
+
+    if ($this.attr('type') == 'radio') {
+      $this = $this.parent().siblings().find(':checked');
+    }
+
+    let valorAtual = $this.val(),
+      dataAnterior = $this.attr('data-anterior');
+
+    valorAtual = String(valorAtual).trim().toUpperCase();
+    dataAnterior = String(dataAnterior).trim().toUpperCase();
+
+    // if (this.nodeName == 'SELECT') {
+    //   console.log('selectao')
+    // } else {
+      if (dataAnterior != valorAtual) {
+        // console.log($this, dataAnterior, valorAtual)
+        temAlteracao = true;
+      }
+    // }
+
+  });
+
+  // console.log('\n\n')
+
+  if (!temAlteracao) {
+    $btnSubmit.attr('disabled', 'disabled');
+    $btnAprovar.removeAttr('disabled');
+  } else {
+    $btnAprovar.attr('disabled', 'disabled');
+    $btnSubmit.removeAttr('disabled');
+  }
+
 }

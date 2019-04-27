@@ -11,4 +11,21 @@ require "_modal_configuracoes_impressao.php";
 <script type="text/javascript">
     var baselink = '<?php echo BASE_URL;?>',
         currentModule = '<?php echo $modulo ?>'  // usa o nome da tabela como nome do módulo, necessário para outras interações
+
+    $(document).ready(function() {
+        dataTable.on('draw', function() {
+            $('table.dataTable').each(function() {
+                $(this).find('tbody tr').each(function() {
+                    let status = $(this).find('td:eq(16)').text();
+                    if (status) {
+                        status = status.toLowerCase();
+                        if (status == 'aprovado') {
+                            $(this).find('.btn-danger').hide();
+                        }
+                    }
+                });
+            });
+        });
+    });
+
 </script>
