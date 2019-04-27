@@ -759,12 +759,12 @@
                             <span>Cancelar Orçamento</span>
                         </label>
                     </div>
-                    <div id="col-duplicar" class="col-lg">
-                        <button id="duplica_orcamento" type="button" class="btn btn-info btn-block">
-                            Duplicar
-                        </button>
-                    </div>
                 <?php endif ?>
+                <div id="col-duplicar" class="col-lg">
+                    <button id="duplica_orcamento" type="button" class="btn btn-info btn-block">
+                        Duplicar
+                    </button>
+                </div>
                 <div id="col-imprimir" class="col-lg">
                     <button type="button" class="btn btn-warning btn-block" data-id="<?php echo isset($item) ? $item["id"] : "" ?>" data-toggle="modal" data-target="#modalConfImp">
                         Imprimir

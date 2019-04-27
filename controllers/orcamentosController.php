@@ -248,6 +248,7 @@ class orcamentosController extends controller{
         ]);
 
         $mpdf->SetDisplayMode('fullpage');
+        $mpdf->SetTitle("Orçamento - " . $infos['descricao']);
 
         $htmlHeader = '
         <table width="800" style="border:1px solid #000000; font-size:10pt;" cellPadding="9"><thead></thead>

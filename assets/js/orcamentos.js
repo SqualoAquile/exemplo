@@ -1752,10 +1752,6 @@ function setarClienteCadastrado(cliente) {
       .prop('checked', true)
       .change();
 
-    $idCliente
-      .val(cliente.id)
-      .change();
-
     $nome
       .val(cliente.nome)
       .change()
@@ -1767,6 +1763,10 @@ function setarClienteCadastrado(cliente) {
     
     $comoConheceu
       .val(cliente.comoconheceu)
+      .change();
+
+    $idCliente
+      .val(cliente.id)
       .change();
 
     if (cliente.observacao) {
