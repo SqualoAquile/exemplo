@@ -15,7 +15,7 @@ class Clientes extends model {
         $arrayAux = array();
 
         $id = addslashes(trim($id));
-        $sql = "SELECT * FROM " . $this->table . " WHERE id='$id' AND situacao = 'ativo'";      
+        $sql = "SELECT * FROM " . $this->table . " WHERE id='$id' AND situacao = 'ativo'";
         $sql = self::db()->query($sql);
 
         if($sql->rowCount()>0){
@@ -48,8 +48,7 @@ class Clientes extends model {
 
             $_SESSION["returnMessage"] = [
                 "mensagem" => "Registro inserido com sucesso!",
-                "class" => "alert-success",
-                "lastInsertId" => $lastInsertId
+                "class" => "alert-success"
             ];
         } else {
             $_SESSION["returnMessage"] = [
@@ -57,6 +56,35 @@ class Clientes extends model {
                 "class" => "alert-danger"
             ];
         }
+    }
+
+    public function adicionarAjax($request) {
+        
+        $ipcliente = $this->permissoes->pegaIPcliente();
+        $request["alteracoes"] = ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
+        
+        $request["situacao"] = "ativo";
+
+        $keys = implode(",", array_keys($request));
+
+        $values = "'" . implode("','", array_values($this->shared->formataDadosParaBD($request))) . "'";
+
+        $sql = "INSERT INTO " . $this->table . " (" . $keys . ") VALUES (" . $values . ")";
+        
+        self::db()->query($sql);
+
+        $erro = self::db()->errorInfo();
+        $lastInsertId = self::db()->lastInsertId();
+
+        $get = "SELECT * FROM " . $this->table . " WHERE id='$lastInsertId' AND situacao = 'ativo'";
+        $get = self::db()->query($get);
+
+        $return = [];
+        if($get->rowCount()>0){
+            $return = $get->fetch(PDO::FETCH_ASSOC);
+        }
+        
+        return $return;
     }
 
     public function editar($id, $request) {
