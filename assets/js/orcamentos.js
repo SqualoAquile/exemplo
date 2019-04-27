@@ -764,6 +764,8 @@ $(function() {
     let $formClienteModal = $("#form-principalModalOrcamentos"),
       $formClienteEsquerda = $("#esquerda");
 
+    $formClienteModal.find('#pj').attr('id', 'pj_modal');
+
     $formClienteModal
       .find("#" + $formClienteEsquerda.find("[name=pf_pj]:checked").attr("id"))
       .prop("checked", true)
