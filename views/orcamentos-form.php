@@ -480,7 +480,7 @@
                 <div class="observacao_cliente_wrapper d-none">
                     <button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapseObsCliente" aria-expanded="false" aria-controls="collapseObsCliente">Observações</button>
                     <div class="collapse mt-3" id="collapseObsCliente">
-                        <textarea id="observacao_cliente" readonly name="observacao" data-anterior="" class="form-control" placeholder="Observações do Cliente"></textarea>
+                        <textarea id="observacao_cliente" readonly name="observacao_cliente" data-anterior="" class="form-control" placeholder="Observações do Cliente"></textarea>
                     </div>
                 </div>
             </div>
@@ -750,14 +750,14 @@
                         <button id="btn_cancelamentoOrc" class="btn btn-danger btn-block" type="button">Cancelar Orçamento</button>
                     </div>
                     <div class="col-lg">
-                        <div id="checkCancelar" class="form-check form-check-inline btn btn-secondary btn-block">
+                        <label id="checkCancelar" class="btn btn-secondary btn-block d-flex align-items-center justify-content-center" for="chk_cancelamentoOrc">
                             <input 
                                 id="chk_cancelamentoOrc" 
                                 type="checkbox" 
-                                class="form-check-input" 
+                                class="mr-2"
                             />
-                            <label class="form-check-label" for="chk_cancelamentoOrc">Cancelar Orçamento</label>
-                        </div>
+                            <span>Cancelar Orçamento</span>
+                        </label>
                     </div>
                     <div id="col-duplicar" class="col-lg">
                         <button id="duplica_orcamento" type="button" class="btn btn-info btn-block">

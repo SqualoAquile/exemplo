@@ -435,7 +435,7 @@ $(function() {
         $esquerda.find(".observacao_cliente_wrapper").removeClass("d-none");
 
         $esquerda
-          .find("#observacao_cliente[name=observacao]")
+          .find("#observacao_cliente[name=observacao_cliente]")
           .val($this.attr("data-observacao"));
 
       } else {
