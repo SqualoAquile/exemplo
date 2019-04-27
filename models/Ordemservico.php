@@ -416,8 +416,7 @@ class Ordemservico extends model {
                 }
             }
 
-            $mostraMedidas = isset($request["checkMedidas"]) ? true : false;
-            // $mostraPrecos = isset($request["checkUnitario"]) ? true : false;
+            $mostraMedidas = true;
             $mostraPrecos = false;
             
             require_once __DIR__ . '/../vendor/vendor/autoload.php';
