@@ -73,22 +73,47 @@ $(function() {
 
       });
 
+      let $elFilteredPrincipal = $trsTbodyTable.filter(function() {
+
+        let $itemFilterByTipo = $(this).find('td:eq(1)'),
+          $subItemFilterByTipo = $(this).find('td:eq(2)'),
+          $tipoMaterialFilterByTipo = $(this).find('td:eq(9)');
+
+        if ($itemFilterByTipo.text() == $descricaoItemForm.val()) {
+          if ($subItemFilterByTipo.text() == $descricaoSubItemForm.val()) {
+            if ($tipoMaterialFilterByTipo.text() == 'principal') {
+              return this;
+            }
+          }
+        }
+
+      });
+
       $('.alert-danger').hide();
 
       if (!$elsFiltereds.length || ($table.attr('data-current-id') && $materialServicoForm.val() == $('#itensOrcamento tbody tr.disabled td:eq(8)').text())) {
 
         if (!$elsFilteredsByTipoProduto.length || ($table.attr('data-current-id') && $tipoMaterial.val() == $('#itensOrcamento tbody tr.disabled td:eq(9)').text())) {
         
-          Save();
+          if ($tipoMaterial.val() == 'principal' || ($tipoMaterial.val() == 'alternativo' && $elFilteredPrincipal.length)) {
+        
+            Save();
 
-          // Limpar formulario
-          $form.removeClass('was-validated');
+            // Limpar formulario
+            $form.removeClass('was-validated');
 
-          $fields
-            .removeClass('is-valid is-invalid')
-            .removeAttr('data-anterior');
+            $fields
+              .removeClass('is-valid is-invalid')
+              .removeAttr('data-anterior');
 
-          $form.find('#observacao_subitem').val('');
+            $form.find('#observacao_subitem').val('');
+
+          } else {
+
+            $cancelEdicao
+              .after(alertDismissible('Insira o material principal primeiro.'));
+
+          }
 
         } else {
 
