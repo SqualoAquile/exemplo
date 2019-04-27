@@ -139,6 +139,7 @@ class orcamentosController extends controller{
         $infos["data_validade"] = $dataAux2[2]."/".$dataAux2[1]. "/".$dataAux2[0];
 
         $infos["preco_total"] = number_format($informacoes[0]['sub_total'],2,",",".");
+        $desconto = $informacoes[0]['desconto'];
         $infos["desconto"] =  number_format($informacoes[0]['desconto'],2,",",".");
         $infos["preco_final"] = number_format($informacoes[0]['valor_total'],2,",",".");
 
@@ -178,6 +179,7 @@ class orcamentosController extends controller{
         }
         
         $totalAlternativo = 0;
+        $totalPrincipal = 0;
         for ($p=0; $p < $k ; $p++) {
             $precoPrincipal = 0;
             $precoAlternativo = 0;
@@ -198,7 +200,14 @@ class orcamentosController extends controller{
             $infos["itens"][$p]["total_principal"] = $precoPrincipal;
             $infos["itens"][$p]["total_alternativo"] = $precoAlternativo;
             $totalAlternativo += $precoAlternativo;
+            $totalPrincipal += $precoPrincipal;
         }
+
+        $infos["preco_total"] = $totalPrincipal;
+        $infos["preco_total"] += floatval($custoDeslocamento) * floatval($informacoes[0]['deslocamento_km']);
+        $infos["preco_final"] = floatval($infos["preco_total"]) - floatval($desconto);
+        $infos["preco_final"] = number_format($infos["preco_final"],2,",",".");
+        $infos["preco_total"] = number_format($infos["preco_total"],2,",","."); 
 
         $infos["preco_alternativo"] = $totalAlternativo;
         $infos["preco_alternativo"] += floatval($custoDeslocamento) * floatval($informacoes[0]['deslocamento_km']);

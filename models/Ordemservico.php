@@ -297,7 +297,6 @@ class Ordemservico extends model {
             $informacoes['data_fim'] != "0000-00-00" ? $infos['data_fim'] = $dataAux2[2]."/".$dataAux2[1]. "/".$dataAux2[0] : $infos['data_fim'] = "" ;
             $dataAux3 = explode('-',$informacoes['data_aprovacao']);
             $informacoes['data_aprovacao'] != "0000-00-00" ? $infos['data_aprovacao'] = $dataAux3[2]."/".$dataAux3[1]. "/".$dataAux3[0] : $infos['data_aprovacao'] = "" ;
-            $infos['preco_total'] = number_format($informacoes['subtotal'],2,",",".");
             $infos['preco_final'] = number_format($informacoes['valor_final'],2,",",".");
 
             //---------------------------------------------------------------------------------------------
@@ -346,7 +345,9 @@ class Ordemservico extends model {
             $infos["prazo_entrega"] = $informacoes['prazo_entrega'];
             $infos["forma_pagamento"] = $informacoes['forma_pgto_descricao'];
             $infos["deslocamento"] = $informacoes['deslocamento_km']. " km";
+            $desconto = $informacoes['desconto'];
             $infos['desconto'] =  number_format($informacoes['desconto'],2,",",".");
+            $infos["preco_total"] =  number_format($informacoes['sub_total'],2,",",".");
 
 
             //---------------------------------------------------------------------------------------------
@@ -389,6 +390,7 @@ class Ordemservico extends model {
             }
         
             $totalAlternativo = 0;
+            $totalPrincipal = 0;
             for ($p=0; $p < $k ; $p++) {
                 $precoPrincipal = 0;
                 $precoAlternativo = 0;
@@ -409,7 +411,14 @@ class Ordemservico extends model {
                 $infos["itens"][$p]["total_principal"] = $precoPrincipal;
                 $infos["itens"][$p]["total_alternativo"] = $precoAlternativo;
                 $totalAlternativo += $precoAlternativo;
+                $totalPrincipal += $precoPrincipal;
             }
+
+            $infos["preco_total"] = $totalPrincipal;
+            $infos["preco_total"] += floatval($custoDeslocamento) * floatval($informacoes['deslocamento_km']);
+            $infos["preco_final"] = floatval($infos["preco_total"]) - floatval($desconto);
+            $infos["preco_final"] = number_format($infos["preco_final"],2,",",".");
+            $infos["preco_total"] = number_format($infos["preco_total"],2,",","."); 
 
             $infos["preco_alternativo"] = $totalAlternativo;
             $infos["preco_alternativo"] += floatval($custoDeslocamento) * floatval($informacoes['deslocamento_km']);
