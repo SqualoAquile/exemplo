@@ -408,8 +408,6 @@ $(function() {
     })
     .on("click", '[name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element-cliente', function() {
 
-      console.log('clickando aqui sim');
-
       var $this = $(this),
         $esquerda = $("#esquerda");
 
@@ -581,7 +579,7 @@ $(function() {
     });
 
   $('.relacional-dropdown-input-orcamento')
-    .click(function () {
+    .on('focus', function () {
       var $this = $(this)
       if ($this.parents('.dropdown').hasClass('show')) {
         $this.dropdown('toggle');
@@ -982,7 +980,7 @@ $(function() {
     });
 
   $('.relacional-dropdown-input-cliente')
-    .click(function () {
+    .on('focus', function () {
       var $this = $(this)
       if ($this.parents('.dropdown').hasClass('show')) {
         $this.dropdown('toggle');
