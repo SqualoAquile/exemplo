@@ -404,7 +404,7 @@ $(function() {
       acoesByStatus();
       changeRequiredsPfPj();
       checarClienteCadastrado();
-      disabledBtns();
+      // disabledBtns();
       $('[name="tipo_servico_produto"]').change();
 
     })
@@ -1102,6 +1102,10 @@ $(function() {
     })
     .attr('autocomplete', 'off');
 
+    $('#form-principal').find('.form-control, .form-check-input').on('change', function() {
+      // disabledBtns();
+    });
+
 });
 
 function dataAtual() {
@@ -1464,7 +1468,7 @@ function valorTotal() {
   calculaCustoDeslocamento();
   calculaDesconto();
   resumoItens();
-  disabledBtns();
+  // disabledBtns();
 
 }
 
@@ -1771,7 +1775,7 @@ function setarClienteCadastrado(cliente) {
 
     $('#modalCadastrarCliente').modal('hide');
 
-    disabledBtns();
+    // disabledBtns();
 
   }
 
@@ -1819,11 +1823,18 @@ function disabledBtns() {
     valorAtual = String(valorAtual).trim().toUpperCase();
     dataAnterior = String(dataAnterior).trim().toUpperCase();
 
-    if (dataAnterior != valorAtual) {
-      temAlteracao = true;
-    }
+    // if (this.nodeName == 'SELECT') {
+    //   console.log('selectao')
+    // } else {
+      if (dataAnterior != valorAtual) {
+        // console.log($this, dataAnterior, valorAtual)
+        temAlteracao = true;
+      }
+    // }
 
   });
+
+  // console.log('\n\n')
 
   if (!temAlteracao) {
     $btnSubmit.attr('disabled', 'disabled');

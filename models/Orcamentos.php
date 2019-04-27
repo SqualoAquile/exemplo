@@ -499,46 +499,126 @@ class Orcamentos extends model {
 
     public function duplicar($id_orcamento) {
 
+        $ipcliente = $this->permissoes->pegaIPcliente();
+
         if(!empty($id_orcamento)){
 
             $id_orcamento = addslashes(trim($id_orcamento));
 
-            $sqlSelect = "SELECT * FROM " . $this->table . " WHERE id='$id_orcamento' AND situacao='ativo'";
-            $sqlSelect = self::db()->query($sqlSelect);
-                    
-            $returnSelect = $sqlSelect->fetch(PDO::FETCH_ASSOC);
+            //
+            // Inserir historico de DUPLICADO no orcamento original
+            //
 
-            $ipcliente = $this->permissoes->pegaIPcliente();
-            $palter = " | ". ucwords($_SESSION["nomeUsuario"]) . " - $ipcliente - " . date('d/m/Y H:i:s') . " - CADASTRO";
-
-            if ($returnSelect["id"]) {
-                unset($returnSelect["id"]);
-            }
+            $alteracaoDuplicado = " | ". ucwords($_SESSION["nomeUsuario"]) . " - $ipcliente - " . date('d/m/Y H:i:s') . " - DUPLICADO";
             
-            $returnSelect["alteracoes"] = $palter;
-            $returnSelect["titulo_orcamento"] = $returnSelect["titulo_orcamento"] . "_2";
+            $sqlOriginal = "UPDATE ". $this->table ." SET alteracoes = CONCAT(alteracoes, '$alteracaoDuplicado') WHERE id = '$id_orcamento' ";
+            
+            self::db()->query($sqlOriginal);
 
-            $keys = implode(",", array_keys($returnSelect));
+            $erroOriginal = self::db()->errorInfo();
 
-            $values = "'" . implode("','", array_values($returnSelect)) . "'";
+            // FIM
 
-            $sqlInsert = "INSERT INTO " . $this->table . " (" . $keys . ") VALUES (" . $values . ")";
+            if (empty($erroOriginal[2])){
 
-            self::db()->query($sqlInsert);
+                $sqlSelect = "SELECT * FROM " . $this->table . " WHERE id='$id_orcamento' AND situacao='ativo'";
+                $sqlSelect = self::db()->query($sqlSelect);
+                        
+                $returnSelect = $sqlSelect->fetch(PDO::FETCH_ASSOC);
+                
+                $palter = ucwords($_SESSION["nomeUsuario"]) . " - $ipcliente - " . date('d/m/Y H:i:s') . " - CADASTRO";
 
-            $erro = self::db()->errorInfo();
+                if ($returnSelect["id"]) {
+                    unset($returnSelect["id"]);
+                }
+                
+                $returnSelect["alteracoes"] = $palter;
+                $returnSelect["titulo_orcamento"] = $returnSelect["titulo_orcamento"] . "_2";
+                $returnSelect["status"] = "Em Espera";
+                $returnSelect["motivo_desistencia"] = "";
 
-            if (empty($erro[2])){
+                $keys = implode(",", array_keys($returnSelect));
 
-                $_SESSION["returnMessage"] = [
-                    "mensagem" => "Registro duplicado com sucesso!",
-                    "class" => "alert-success"
-                ];
+                $values = "'" . implode("','", array_values($returnSelect)) . "'";
+
+                $sqlInsert = "INSERT INTO " . $this->table . " (" . $keys . ") VALUES (" . $values . ")";
+
+                self::db()->query($sqlInsert);
+
+                $erroInsert = self::db()->errorInfo();
+                $id_orcamento_copia = self::db()->lastInsertId();
+
+                if (empty($erroInsert[2])){
+
+                    //
+                    // Duplicar Itens do Orçamento
+                    //
+
+                    $erroInsertSelectItensReturn = false;
+
+                    $sqlSelectItens = "SELECT * FROM orcamentositens WHERE id_orcamento='$id_orcamento' AND situacao='ativo'";
+                    $sqlSelectItens = self::db()->query($sqlSelectItens);
+                            
+                    $returnSelectItens = $sqlSelectItens->fetchAll(PDO::FETCH_ASSOC);
+
+                    foreach ($returnSelectItens as $keySelectItens => $valueSelectItens) {
+
+                        $valueSelectItens["id_orcamento"] = $id_orcamento_copia;
+                        
+                        if ($valueSelectItens["id"]) {
+                            unset($valueSelectItens["id"]);
+                        }
+
+                        $keysSelectItens = implode(",", array_keys($valueSelectItens));
+                        $valuesSelectItens = "'" . implode("','", array_values($valueSelectItens)) . "'";
+
+                        $sqlInsertSelectItens = "INSERT INTO orcamentositens (" . $keysSelectItens . ") VALUES (" . $valuesSelectItens . ")";
+
+                        self::db()->query($sqlInsertSelectItens);
+
+                        $erroInsertSelectItens = self::db()->errorInfo();
+
+                        if (!empty($erroInsertSelectItens[2])){
+                            $erroInsertSelectItensReturn = true;
+                        }
+
+                    }
+
+                    // FIM
+
+                    if (!$erroInsertSelectItensReturn) {
+
+                        $_SESSION["returnMessage"] = [
+                            "mensagem" => "Registro duplicado com sucesso!",
+                            "class" => "alert-success"
+                        ];
+
+                    } else {
+                        
+                        $_SESSION["returnMessage"] = [
+                            "mensagem" => "Houve uma falha, tente novamente! <br /> ".$erro[2],
+                            "class" => "alert-danger"
+                        ];
+
+                    }
+
+
+                } else {
+
+                    $_SESSION["returnMessage"] = [
+                        "mensagem" => "Houve uma falha, tente novamente! <br /> ".$erro[2],
+                        "class" => "alert-danger"
+                    ];
+
+                }
+
             } else {
+
                 $_SESSION["returnMessage"] = [
                     "mensagem" => "Houve uma falha, tente novamente! <br /> ".$erro[2],
                     "class" => "alert-danger"
                 ];
+
             }
 
         }

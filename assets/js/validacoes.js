@@ -74,6 +74,7 @@ $(function () {
     };
 
     function habilitaBotao($campos) {
+        console.log('disparou habilita botao')
 
         var temAlteracao = false;
 
@@ -93,6 +94,7 @@ $(function () {
 
 
             if (dataAnterior != valorAtual) {
+                console.log($this, dataAnterior, valorAtual)
                 temAlteracao = true;
             }
 
