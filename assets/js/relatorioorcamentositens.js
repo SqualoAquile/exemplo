@@ -58,10 +58,11 @@ $(function () {
         var rowData = dataTable.rows().data(),
         quantidadeProdutos = 0,
         quantidadeServicos = 0,
+        quantidadeServicosCompl = 0,
         totalServicos = 0,
+        totalServicosCompl = 0,
         totalProdutos = 0,
         totalItens = 0;
-        
     
         i = 0;
         rowData.each(function () {                                              
@@ -72,18 +73,23 @@ $(function () {
             valor = valor.replace('R$  ', '');
             valor = floatParaPadraoInternacional(valor);
 
+            valor = valor * quantidade;
+
             if(tipo=="Produtos"){
                 totalProdutos = parseFloat(totalProdutos) + parseFloat(valor);
                 quantidadeProdutos = parseInt(quantidadeProdutos) + parseInt(quantidade);
-            }else if(tipo=="Serviços" || tipo == "Serviços Complementares"){
+            }else if(tipo=="Servicos"){
                 totalServicos = parseFloat(totalServicos) + parseFloat(valor);
-                quantidadeServicos = parseInt(quantidadeServicos    ) + parseInt(quantidade);
+                quantidadeServicos = parseInt(quantidadeServicos) + parseInt(quantidade);
+            }else if(tipo=="Servicos Complementares"){
+                totalServicosCompl = parseFloat(totalServicosCompl) + parseFloat(valor);
+                quantidadeServicosCompl = parseInt(quantidadeServicosCompl) + parseInt(quantidade);
             }
 
             i++;
         });
 
-        totalItens = parseFloat(totalProdutos) + parseFloat(totalServicos);
+        totalItens = parseFloat(totalProdutos) + parseFloat(totalServicos) + parseFloat(totalServicosCompl);
 
         i = 0;
        
@@ -92,9 +98,13 @@ $(function () {
         $('#quantidadeServicos').text(parseInt(quantidadeServicos));
         $('#totalServicos').text(floatParaPadraoBrasileiro(totalServicos));
 
+        $('#quantidadeServicosCompl').text(parseInt(quantidadeServicosCompl));
+        $('#totalServicosCompl').text(floatParaPadraoBrasileiro(totalServicosCompl));
+
+
         $('#quantidadeProdutos').text(parseInt(quantidadeProdutos));
         $('#totalProdutos').text(floatParaPadraoBrasileiro(totalProdutos));
-        
+
         dataTable.page.len(10).draw();
         $('#DataTables_Table_0_length').removeClass('d-none');
   
