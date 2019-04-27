@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <form class="modal-content" method="POST" id="formModal" target="_blank" action="<?php echo BASE_URL . "/" . $modulo . "/imprimir/" ?>">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalConfImpLabel">Imprimir Orçamento</h5>
+                <h5 class="modal-title" id="modalConfImpLabel">Imprimir</h5>
                 <button type="button" class="close"  data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -14,10 +14,12 @@
                             <input class="form-check-input" type="checkbox" checked="checked" name="checkMedidas" id="checkMedidas" value="medidas">
                             <label class="form-check-label" for="checkMedidas">Medidas</label>
                         </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" checked="checked" name="checkUnitario" id="checkUnitario" value="unitario">
-                            <label class="form-check-label" for="checkUnitario">Preço Unitário e Subtotais</label>
-                        </div>
+                        <?php if ($modulo !='ordemservico'): ?>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" checked="checked" name="checkUnitario" id="checkUnitario" value="unitario">
+                                <label class="form-check-label" for="checkUnitario">Preço Unitário e Subtotais</label>
+                            </div>
+                        <?php endif; ?>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" name="checkAvisos" id="checkAvisos" value="avisos">
                             <label class="form-check-label" for="checkAvisos">Avisos</label>
