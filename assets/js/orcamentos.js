@@ -764,6 +764,15 @@ $(function() {
     let $formClienteModal = $("#form-principalModalOrcamentos"),
       $formClienteEsquerda = $("#esquerda");
 
+    let $pjModal = $formClienteModal.find('#pj'),
+      $pfModal = $formClienteModal.find('#pf');
+
+    $pjModal.attr('id', 'pj_modal');
+    $pfModal.attr('id', 'pf_modal');
+
+    $pjModal.siblings('[for="pj"]').attr('for', 'pj_modal');
+    $pfModal.siblings('[for="pf"]').attr('for', 'pf_modal');
+
     $formClienteModal
       .find("#" + $formClienteEsquerda.find("[name=pf_pj]:checked").attr("id"))
       .prop("checked", true)

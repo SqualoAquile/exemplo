@@ -24,7 +24,7 @@ $(function () {
                 
                 $input[0].setCustomValidity('');
 
-                if ($(this).attr('id') == 'pj') {
+                if ($(this).attr('value') == 'pj') {
 
                     $input
                         .mask('00.000.000/0000-00')
