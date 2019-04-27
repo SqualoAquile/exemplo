@@ -404,6 +404,7 @@ $(function() {
       acoesByStatus();
       changeRequiredsPfPj();
       checarClienteCadastrado();
+      // disabledBtns();
       $('[name="tipo_servico_produto"]').change();
 
     })
@@ -427,23 +428,11 @@ $(function() {
 
       $esquerda
         .find("[name=como_conheceu]")
-        .val($this.attr("data-comoconheceu"));
+        .val($this.attr("data-comoconheceu"))
+        .change();
 
-      if ($this.attr("data-observacao")) {
+      collapseObsCliente($this.attr("data-observacao"));
 
-        $("#collapseObsCliente").collapse("hide");
-
-        $esquerda.find(".observacao_cliente_wrapper").removeClass("d-none");
-
-        $esquerda
-          .find("#observacao_cliente[name=observacao_cliente]")
-          .val($this.attr("data-observacao"));
-
-      } else {
-
-        $esquerda.find(".observacao_cliente_wrapper").addClass("d-none");
-
-      }
     })
     .on('click', '[name="material_servico"] ~ .relacional-dropdown .relacional-dropdown-element-orcamento', function() {
 
@@ -519,7 +508,7 @@ $(function() {
         });
 
       $elements
-        .removeClass('filtered')
+        .removeClass('filtered active')
         .hide();
 
       $filtereds
@@ -534,6 +523,9 @@ $(function() {
 
       changeRequiredsPfPj();
 
+    })
+    .on('change', '[name="id_cliente"]', function() {
+      checarClienteCadastrado();
     });
 
   // Eventos responsáveis pelo: Select Dropdown com Pesquisa
@@ -667,6 +659,7 @@ $(function() {
 
   $("#como_conheceu")
     .on("change", function() {
+
       var $this = $(this);
 
       $(".column-quem-indicou").remove();
@@ -746,13 +739,11 @@ $(function() {
 
       event.preventDefault();
 
-      let $form = $("#form-principalModalOrcamentos");
-
-      if ($form[0].checkValidity()) {
+      if (event.target.checkValidity()) {
         $.ajax({
           url: baselink + "/ajax/adicionarCliente",
           type: "POST",
-          data: $form.serialize(),
+          data: $(event.target).serialize(),
           dataType: "json",
           success: cliente => setarClienteCadastrado(cliente)
         });
@@ -774,7 +765,7 @@ $(function() {
     $pfModal.siblings('[for="pf"]').attr('for', 'pf_modal');
 
     $formClienteModal
-      .find("#" + $formClienteEsquerda.find("[name=pf_pj]:checked").attr("id"))
+      .find('[name="tipo_pessoa"][value="' + $formClienteEsquerda.find("[name=pf_pj]:checked").attr("id") + '"]')
       .prop("checked", true)
       .change();
 
@@ -1041,24 +1032,29 @@ $(function() {
 
   $('.relacional-dropdown-input-cliente')
     .click(function () {
-      var $this = $(this)
+      
+      var $this = $(this);
+      
+      $this.keyup();
+
       if ($this.parents('.dropdown').hasClass('show')) {
         $this.dropdown('toggle');
       }
+
     })
     .on('blur change', function () {
 
       var $this = $(this),
         $dropdownMenu = $this.siblings('.dropdown-menu'),
-        $active = $dropdownMenu.find('.relacional-dropdown-element-cliente.active');
+        $active = $dropdownMenu.find('.relacional-dropdown-element-cliente.filtered.active'),
+        $elements = $dropdownMenu.find('.relacional-dropdown-element-cliente.filtered');
 
       $this.removeClass('is-valid is-invalid');
+      $dropdownMenu.find('.nenhum-result').addClass('d-none');
 
       if ($this.val()) {
 
-        $dropdownMenu.find('.nenhum-result').addClass('d-none');
-
-        $filtereds = $dropdownMenu.find('.relacional-dropdown-element-cliente.filtered').filter(function () {
+        $filtereds = $elements.filter(function () {
           return $(this).text().toLowerCase().indexOf($this.val().toLowerCase()) != -1;
         });
 
@@ -1094,8 +1090,21 @@ $(function() {
         }
 
       }
+
+      var $equals = $elements.filter(function () {
+        return $(this).text().toLowerCase() == $this.val().toLowerCase();
+      });
+
+      if (!$equals.length) {
+        $elements.removeClass('active');
+      }
+
     })
     .attr('autocomplete', 'off');
+
+    $('#form-principal').find('.form-control, .form-check-input').on('change', function() {
+      // disabledBtns();
+    });
 
 });
 
@@ -1459,6 +1468,8 @@ function valorTotal() {
   calculaCustoDeslocamento();
   calculaDesconto();
   resumoItens();
+  // disabledBtns();
+
 }
 
 function calculaCustoDeslocamento() {
@@ -1690,12 +1701,18 @@ function acoesByStatus() {
     statusLowTxt = $status.val().toLowerCase();
 
   if ($status.val() && (statusLowTxt == 'cancelado' || statusLowTxt == 'aprovado')) {
+
     $tabela.find('thead > tr > th:first-child, tbody > tr > td:first-child').hide();
+    
     $('#btn_incluir').parent().hide();
     $('.form-control, [type="radio"]').attr('disabled', 'disabled');
-  } else {
-    $status.parent().hide();
+
   }
+  
+  if (!$status.val()) {
+    $status.parent('.form-group').parent().hide();
+  }
+
 }
 
 function checarClienteCadastrado() {
@@ -1721,6 +1738,7 @@ function checarClienteCadastrado() {
 function setarClienteCadastrado(cliente) {
 
   let $form = $('#form-principal'),
+    $idCliente = $form.find('[name="id_cliente"]'),
     $nome = $form.find('#nome_cliente'),
     $telefone = $form.find('#telefone'),
     $celular = $form.find('#celular'),
@@ -1728,14 +1746,102 @@ function setarClienteCadastrado(cliente) {
     $comoConheceu = $form.find('#como_conheceu');
 
   if (cliente) {
-    $nome.val(cliente.nome);
+
+    $form
+      .find('[name="pf_pj"]#' + cliente.tipo_pessoa)
+      .prop('checked', true)
+      .change();
+
+    $idCliente
+      .val(cliente.id)
+      .change();
+
+    $nome
+      .val(cliente.nome)
+      .change()
+      .removeClass('is-valid');
+
     $telefone.val(cliente.telefone);
     $celular.val(cliente.celular);
     $email.val(cliente.email);
-    $comoConheceu.val(cliente.comoconheceu);
+    
+    $comoConheceu
+      .val(cliente.comoconheceu)
+      .change();
+
+    if (cliente.observacao) {
+      collapseObsCliente(cliente.observacao);
+    }
 
     $('#modalCadastrarCliente').modal('hide');
 
+    // disabledBtns();
+
+  }
+
+}
+
+function collapseObsCliente(observacao) {
+
+  let $esquerda = $('#esquerda');
+
+  if (observacao) {
+
+    $("#collapseObsCliente").collapse("hide");
+
+    $esquerda.find(".observacao_cliente_wrapper").removeClass("d-none");
+
+    $esquerda
+      .find("#observacao_cliente[name=observacao_cliente]")
+      .val(observacao);
+
+  } else {
+
+    $esquerda.find(".observacao_cliente_wrapper").addClass("d-none");
+
+  }
+
+}
+
+function disabledBtns() {
+
+  let $btnSubmit = $('#main-form'),
+    $btnAprovar = $('#aprovar-orcamento'),
+    temAlteracao = false;
+
+  $('#form-principal').find('input[type=text], input[type=hidden]:not([name=alteracoes]), input[type=radio], textarea, select').each(function (i, el) {
+
+    let $this = $(el);
+
+    if ($this.attr('type') == 'radio') {
+      $this = $this.parent().siblings().find(':checked');
+    }
+
+    let valorAtual = $this.val(),
+      dataAnterior = $this.attr('data-anterior');
+
+    valorAtual = String(valorAtual).trim().toUpperCase();
+    dataAnterior = String(dataAnterior).trim().toUpperCase();
+
+    // if (this.nodeName == 'SELECT') {
+    //   console.log('selectao')
+    // } else {
+      if (dataAnterior != valorAtual) {
+        // console.log($this, dataAnterior, valorAtual)
+        temAlteracao = true;
+      }
+    // }
+
+  });
+
+  // console.log('\n\n')
+
+  if (!temAlteracao) {
+    $btnSubmit.attr('disabled', 'disabled');
+    $btnAprovar.removeAttr('disabled');
+  } else {
+    $btnAprovar.attr('disabled', 'disabled');
+    $btnSubmit.removeAttr('disabled');
   }
 
 }
