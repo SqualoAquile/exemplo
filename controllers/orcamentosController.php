@@ -115,7 +115,7 @@ class orcamentosController extends controller{
 
         $avisos = [];
 
-        if ($request["avisos"]) {
+        if (isset($request["avisos"])) {
             foreach ($request["avisos"] as $keyAvisos => $valueAvisos) {
                 if ($avisosDb) {
                     foreach ($avisosDb as $keyAvisosDb => $valueAvisosDb) {
