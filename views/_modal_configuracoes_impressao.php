@@ -1,9 +1,9 @@
 <div class="modal fade" id="modalConfImp" tabindex="-1" role="dialog" aria-labelledby="modalConfImpLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
-        <form class="modal-content" method="POST" action="<?php echo BASE_URL . "/" . $modulo . "/imprimir/" ?>">
+        <form class="modal-content" method="POST" id="formModal" target="_blank" action="<?php echo BASE_URL . "/" . $modulo . "/imprimir/" ?>">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalConfImpLabel">Imprimir Orçamento</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title" id="modalConfImpLabel">Imprimir</h5>
+                <button type="button" class="close"  data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -14,10 +14,12 @@
                             <input class="form-check-input" type="checkbox" checked="checked" name="checkMedidas" id="checkMedidas" value="medidas">
                             <label class="form-check-label" for="checkMedidas">Medidas</label>
                         </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" checked="checked" name="checkUnitario" id="checkUnitario" value="unitario">
-                            <label class="form-check-label" for="checkUnitario">Preço Unitário e Subtotais</label>
-                        </div>
+                        <?php if ($modulo !='ordemservico'): ?>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" checked="checked" name="checkUnitario" id="checkUnitario" value="unitario">
+                                <label class="form-check-label" for="checkUnitario">Preço Unitário e Subtotais</label>
+                            </div>
+                        <?php endif; ?>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" name="checkAvisos" id="checkAvisos" value="avisos">
                             <label class="form-check-label" for="checkAvisos">Avisos</label>
@@ -59,11 +61,17 @@
     </div>
 </div>
 <script>
+
+    $('#formModal').submit(function() {
+        $('#modalConfImp').modal('toggle'); 
+    });
+
     $('#modalConfImp').on('shown.bs.modal', function (event) {
         let id = $(event.relatedTarget).attr('data-id'),
             $form = $(this).find('form');
 
-        $form.attr('action', $form.attr('action') + id);
+        $form.attr('action', '<?php echo BASE_URL . "/" . $modulo . "/imprimir/" ?>' + id);
+
     });
 
     $(document)

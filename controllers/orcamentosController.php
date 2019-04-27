@@ -115,7 +115,7 @@ class orcamentosController extends controller{
 
         $avisos = [];
 
-        if ($request["avisos"]) {
+        if (isset($request["avisos"])) {
             foreach ($request["avisos"] as $keyAvisos => $valueAvisos) {
                 if ($avisosDb) {
                     foreach ($avisosDb as $keyAvisosDb => $valueAvisosDb) {
@@ -143,13 +143,13 @@ class orcamentosController extends controller{
         $infos["desconto"] =  number_format($informacoes[0]['desconto'],2,",",".");
         $infos["preco_final"] = number_format($informacoes[0]['valor_total'],2,",",".");
 
-        $infos["deslocamento"] = $informacoes[0]['deslocamento_km']. " km";
-
         $itens = $this->model->itensOrcamento($id);
         $qtdItens = $this->model->qtdItensOrcamento($id);
         $precoItens = $this->model->precosItens($id);
         $custoDeslocamento = $this->model->custoDeslocamento();
         $custoDeslocamento = str_replace(",",".",$custoDeslocamento);
+
+        $infos["deslocamento"] = floatval($custoDeslocamento) * floatval($informacoes[0]['deslocamento_km']);
 
         $k=0;
         $j=0;
@@ -217,6 +217,7 @@ class orcamentosController extends controller{
         for ($p=0; $p < $k ; $p++) {
             $infos["itens"][$p]["total_principal"] = number_format($infos["itens"][$p]["total_principal"],2,",",".");
             $infos["itens"][$p]["total_alternativo"] = number_format($infos["itens"][$p]["total_alternativo"],2,",",".");
+            $infos["deslocamento"] = number_format($infos["deslocamento"],2,",",".");
 
             for ($j=0; $j < sizeof($infos["itens"][$p]["subitens"]) ; $j++) {
                 $precoUnitFormat = $infos["itens"][$p]["subitens"][$j]["preco_unitario"];
@@ -329,8 +330,8 @@ class orcamentosController extends controller{
 
                     if ($mostraPrecos==true) {
                         $html.='
-                            <th scope="col" class="preco"><b>Preço Unit.</b></th>
-                            <th scope="col" class="preco"><b>Preço Total</b> </th>
+                            <th scope="col" class="preco" align="right"><b>Preço Unit.</b></th>
+                            <th scope="col" class="preco" align="right"><b>Preço Total</b> </th>
                             ';
                     }
 
@@ -391,8 +392,8 @@ class orcamentosController extends controller{
 
                     if ($mostraPrecos==true) {
                         $htmlRows.='
-                            <td height="10px" align="center" '.$cor.'> R$ '.$infos["itens"][$k]["subitens"][$j]["preco_unitario"].'</td>
-                            <td height="10px" align="center" '.$cor.'> R$ '.$infos["itens"][$k]["subitens"][$j]["preco_total"].'</td>
+                            <td height="10px" align="right" '.$cor.'> R$ '.$infos["itens"][$k]["subitens"][$j]["preco_unitario"].'</td>
+                            <td height="10px" align="right" '.$cor.'> R$ '.$infos["itens"][$k]["subitens"][$j]["preco_total"].'</td>
                         ';
                     }
 
@@ -413,7 +414,7 @@ class orcamentosController extends controller{
                     if ($mostraPrecos==true) { $htmlRows.='<td></td>';}
                 $htmlRows.='
                     <td style="color:red"><b>Preço Alternativo: </b> </td>
-                    <td style="color:red">R$ '.$infos["itens"][$k]["total_alternativo"].'</td>
+                    <td style="color:red" align="right">R$ '.$infos["itens"][$k]["total_alternativo"].'</td>
                 </tr>
                 ';
             }
@@ -426,8 +427,8 @@ class orcamentosController extends controller{
                 if ($mostraMedidas==true) { $htmlRows.='<td></td>';}     
                 if ($mostraPrecos==true) { $htmlRows.='<td></td>';}
             $htmlRows.='
-                <td><b>Preço Principal: </b> </td>
-                <td>R$ '.$infos["itens"][$k]["total_principal"].'</td>
+                <td align="right"><b>Preço Principal: </b> </td>
+                <td align="right">R$ '.$infos["itens"][$k]["total_principal"].'</td>
             </tr>
             
             ';
@@ -446,59 +447,54 @@ class orcamentosController extends controller{
         $html .='
         <table style="border:1px solid #000000; font-size:9pt; padding-top:5px; padding-bottom:5px; line-height:10%" width="800" cellPadding="5">
             <tr>
-                <td> </td>
-                <td> </td>
-                <td> </td>
-                <td> </td>
-                <td> </td>
-                <td><b>Deslocamento:  </b></td>
-                <td><b>'.$infos["deslocamento"].'</b> </td>
+                <td></td>
+                <td></td>
+                <td align="right"><b>Deslocamento:  </b></td>
+                <td align="left"><b>R$ '.$infos["deslocamento"].'</b> </td>
+                <td></td>
+                <td></td>
             </tr>
 
             <tr>
-                <td> </td>
-                <td> </td>
-                <td> </td>
-                <td> </td>
-                <td> </td>
-                <td><b>Preço Total: </b> </td>
-                <td><b>R$ '.$infos["preco_total"] .' </b> </td>
+                <td></td>
+                <td></td>
+                <td align="right"><b>Preço Total: </b> </td>
+                <td align="left"><b>R$ '.$infos["preco_total"] .' </b> </td>
+                <td></td>
+                <td></td>
             </tr>
 
             <tr>
-                <td> </td>
-                <td> </td>
-                <td> </td>
-                <td> </td>
-                <td> </td>
-                <td><b>Desconto:  </b></td>
-                <td><b>R$ '.$infos["desconto"].'</b></td>
+                <td></td>
+                <td></td>
+                <td align="right"><b>Desconto:  </b></td>
+                <td align="left"><b>R$ '.$infos["desconto"].'</b></td>
+                <td></td>
+                <td></td>
             </tr>';
 
             if(isset($infos["preco_alternativo"]) && $infos["preco_alternativo"] != 0 && $temAlternativoGlobal==true ){
 
                 $html.='
                 <tr>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td style="color:red"><b>Preço Alternativo:  </b></td>
-                    <td style="color:red"><b>R$ '.$infos["preco_alternativo"].' </b> </td>
+                    <td></td>
+                    <td></td>
+                    <td style="color:red" align="right"><b>Preço Alternativo:  </b></td>
+                    <td style="color:red" align="left"><b>R$ '.$infos["preco_alternativo"].' </b> </td>
+                    <td></td>
+                    <td></td>
                  </tr>
                 ';
             }
             
             $html.='
             <tr>
-                <td> </td>
-                <td> </td>
-                <td> </td>
-                <td> </td>
-                <td> </td>
-                <td><b>Preço Final:  </b></td>
-                <td><b>R$ '.$infos["preco_final"].' </b> </td>
+                <td></td>
+                <td></td>
+                <td align="right"><b>Preço Final:  </b></td>
+                <td align="left"><b>R$ '.$infos["preco_final"].' </b> </td>
+                <td></td>
+                <td></td>
             </tr>
             </table>
             <br></br>
