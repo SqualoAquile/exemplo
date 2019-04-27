@@ -1075,9 +1075,9 @@ $(function() {
 
         }
 
-        if (!$active.length || $active.text().toLowerCase() != $this.val().toLowerCase()) {
-          $this.val('');
-        }
+        // if (!$active.length || $active.text().toLowerCase() != $this.val().toLowerCase()) {
+        //   $this.val('');
+        // }
 
       } else {
 
