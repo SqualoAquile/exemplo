@@ -160,6 +160,10 @@ class Orcamentos extends model {
             unset($request['quem_indicou']);
         }
 
+        if (isset($request['observacao_cliente'])) {
+            unset($request['observacao_cliente']);
+        }
+
         $keys = implode(",", array_keys($request));
 
         $values = "'" . implode("','", array_values($this->shared->formataDadosParaBD($request))) . "'";
