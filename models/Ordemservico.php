@@ -66,15 +66,11 @@ class Ordemservico extends model {
         $request["situacao"] = "ativo";
 
         $keys = implode(",", array_keys($request));
-
         $values = "'" . implode("','", array_values($this->shared->formataDadosParaBD($request))) . "'";
-
         $sql = "INSERT INTO " . $this->table . " (" . $keys . ") VALUES (" . $values . ")";
         
         self::db()->query($sql);
-
         $lastInsertId = self::db()->lastInsertId();
-
         $erro = self::db()->errorInfo();
 
         return [
@@ -82,7 +78,6 @@ class Ordemservico extends model {
             "id_orcamento" => $request["id_orcamento"],
             "message" => $erro
         ];
-
     }
 
     public function editar($id, $request) {
@@ -262,23 +257,6 @@ class Ordemservico extends model {
             $id = addslashes(trim($id));
             $infos=[];
             $request = $_POST;
-            $request["tabela"] = "avisos";
-
-            $avisosDb = $this->getRelacionalDropdown($request);
-
-            $avisos = [];
-
-            if ($request["avisos"]) {
-                foreach ($request["avisos"] as $keyAvisos => $valueAvisos) {
-                    if ($avisosDb) {
-                        foreach ($avisosDb as $keyAvisosDb => $valueAvisosDb) {
-                            if ($valueAvisosDb["id"] == $valueAvisos) {
-                                $avisos[$valueAvisosDb["id"]] = $valueAvisosDb["mensagem"];
-                            }
-                        }
-                    }
-                }
-            }
             
             //---------------------------------------------------------------------------------------------
             // Pega algumas infos da OS
@@ -441,7 +419,6 @@ class Ordemservico extends model {
             $mostraMedidas = isset($request["checkMedidas"]) ? true : false;
             // $mostraPrecos = isset($request["checkUnitario"]) ? true : false;
             $mostraPrecos = false;
-            $mostraAvisos = isset($request["checkAvisos"]) ? true : false;
             
             require_once __DIR__ . '/../vendor/vendor/autoload.php';
             
@@ -626,42 +603,6 @@ class Ordemservico extends model {
             </table>
             <br></br>
             ';
-    
-    
-    
-            // BLOCO COM AVISOS
-    
-            if ($mostraAvisos==true) {
-                $html .='
-                <table style="border:1px solid #000000; line-height:120%; font-size:10pt" width="800" cellPadding="9">
-                    <thead>
-                        <tr>
-                            <td align="center">
-                                <h3>AVISOS</h3>
-                            </td>
-                        </tr>
-                    </thead>
-                    
-                    <tbody>
-                        <tr>
-                            <td>';
-    
-                            foreach ($avisos as $key => $value) {
-                                $html.='
-                                    <p id='.$key.'> - '. $value.'</p>
-                                ';
-                            }
-    
-                $html.='
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <br></br>
-                ';
-    
-            }
-
 
     // BLOCO COM NOTIFICAÇÕES
 

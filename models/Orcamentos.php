@@ -128,6 +128,30 @@ class Orcamentos extends model {
         }
     }
 
+    public function getIdOrdemServico($id_orcamento){
+        if(!empty($id_orcamento)){
+
+            $id_orcamento = addslashes(trim($id_orcamento));
+
+            // Pegar o ID do orçamento na ordem de serviço pra imprimir o PDF da OS quando for aprovado o orçamento;
+            
+            $sql = "SELECT id FROM `ordemservico` WHERE id_orcamento='$id_orcamento' AND situacao='ativo'";
+            
+            $sql = self::db()->query($sql);
+
+            $erro = self::db()->errorInfo();
+        
+            $id_ordemservico = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+            $id_ordemservico = $id_ordemservico[0]["id"];
+
+            return [
+                "id_ordemservico" => $id_ordemservico,
+                "message" => $erro
+            ];
+        }
+    }
+
     public function aprovar($id, $id_ordemservico) {
 
         if(!empty($id)){

@@ -609,6 +609,13 @@ class ajaxController extends controller{
     }
   }
 
+  public function getIdOrdemServico() {
+
+    if(isset($_POST) && !empty($_POST)){
+        echo json_encode($this->orcamentos->getIdOrdemServico($_POST["id_orcamento"]));
+    }
+  }
+
   public function editarClienteOrcamento($id_orcamento) {
     if(isset($_POST) && !empty($_POST)){
       echo json_encode($this->orcamentos->editarCliente($id_orcamento, $_POST));

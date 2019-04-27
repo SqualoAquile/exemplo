@@ -1627,7 +1627,23 @@ function ajaxAprovarOrcamento(dadosParaEnviar, id_cliente) {
     dataType: 'json',
     success: function(data) {
       if (data.message[0] == '00000') {
-        window.location.href = baselink + '/orcamentos';
+
+       $.ajax({
+        url: baselink + '/ajax/getIdOrdemServico',
+        type: 'POST',
+        data: {
+          id_orcamento: dadosParaEnviar.id_orcamento
+        },
+        dataType: 'json',
+        success: function(data) {
+          if (data.message[0] == '00000') {
+            window.open(baselink + '/ordemservico/imprimir/'+data.id_ordemservico, '_blank')
+            window.location.href = baselink + '/orcamentos';
+          }
+        }
+      });
+
+        
       }
     }
   });
