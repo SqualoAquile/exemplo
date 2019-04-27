@@ -64,7 +64,7 @@ $(function () {
 
     function resumo () {
        
-        
+        dataTable.order( [ 1, "asc" ] ).draw();
         var rowData = dataTable.rows().data();
 
         var lastRow = 0;
