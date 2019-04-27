@@ -696,9 +696,6 @@ class Shared extends model {
                         $array[$chave] = addslashes($registro[$chave]);
                     } 
 
-                } else {
-                    echo $nomeColunas[$i]['Field'] . "<br>";
-                    echo $chave . "<br><br>";
                 }
                 $i++;
             }
