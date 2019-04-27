@@ -1151,7 +1151,7 @@ $(function () {
                             `;
                         });
 
-                        // $relacionalDropdown.find('.dropdown-menu-wrapper').html(htmlDropdown);
+                        $relacionalDropdown.find('.dropdown-menu-wrapper').html(htmlDropdown);
                     }
                 });
             });

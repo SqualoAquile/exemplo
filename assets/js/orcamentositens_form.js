@@ -91,14 +91,14 @@ $(function() {
         } else {
 
           $cancelEdicao
-            .after(alertDismissible('Só pode ter um produto com material alternativo ou principal.'));
+            .after(alertDismissible('Só pode ter um item com material alternativo ou principal.'));
 
         }
 
       } else {
 
         $cancelEdicao
-          .after(alertDismissible('Este produto já foi adicionado para este grupo.'));
+          .after(alertDismissible('Este item já foi adicionado para este grupo.'));
 
       }
         
@@ -206,6 +206,8 @@ $(function() {
     $trs.removeClass('disabled');
     $trs.find('.btn.disabled').removeClass('disabled');
     $('#direita .alert-danger').alert('close');
+
+    $('#material_servico').parent('.relacional-dropdown-wrapper').parent('.form-group').parent().addClass('d-none');
     
   }
 
