@@ -404,7 +404,7 @@ $(function() {
       acoesByStatus();
       changeRequiredsPfPj();
       checarClienteCadastrado();
-      // disabledBtns();
+
       $('[name="tipo_servico_produto"]').change();
 
     })
@@ -1102,10 +1102,6 @@ $(function() {
     })
     .attr('autocomplete', 'off');
 
-    $('#form-principal').find('.form-control, .form-check-input').on('change', function() {
-      // disabledBtns();
-    });
-
 });
 
 function dataAtual() {
@@ -1468,7 +1464,6 @@ function valorTotal() {
   calculaCustoDeslocamento();
   calculaDesconto();
   resumoItens();
-  // disabledBtns();
 
 }
 
@@ -1775,8 +1770,6 @@ function setarClienteCadastrado(cliente) {
 
     $('#modalCadastrarCliente').modal('hide');
 
-    // disabledBtns();
-
   }
 
 }
@@ -1799,49 +1792,6 @@ function collapseObsCliente(observacao) {
 
     $esquerda.find(".observacao_cliente_wrapper").addClass("d-none");
 
-  }
-
-}
-
-function disabledBtns() {
-
-  let $btnSubmit = $('#main-form'),
-    $btnAprovar = $('#aprovar-orcamento'),
-    temAlteracao = false;
-
-  $('#form-principal').find('input[type=text], input[type=hidden]:not([name=alteracoes]), input[type=radio], textarea, select').each(function (i, el) {
-
-    let $this = $(el);
-
-    if ($this.attr('type') == 'radio') {
-      $this = $this.parent().siblings().find(':checked');
-    }
-
-    let valorAtual = $this.val(),
-      dataAnterior = $this.attr('data-anterior');
-
-    valorAtual = String(valorAtual).trim().toUpperCase();
-    dataAnterior = String(dataAnterior).trim().toUpperCase();
-
-    // if (this.nodeName == 'SELECT') {
-    //   console.log('selectao')
-    // } else {
-      if (dataAnterior != valorAtual) {
-        // console.log($this, dataAnterior, valorAtual)
-        temAlteracao = true;
-      }
-    // }
-
-  });
-
-  // console.log('\n\n')
-
-  if (!temAlteracao) {
-    $btnSubmit.attr('disabled', 'disabled');
-    $btnAprovar.removeAttr('disabled');
-  } else {
-    $btnAprovar.attr('disabled', 'disabled');
-    $btnSubmit.removeAttr('disabled');
   }
 
 }
