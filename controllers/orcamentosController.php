@@ -368,6 +368,8 @@ class orcamentosController extends controller{
             // LOOP PARA DESCREVER OS SUBITENS ASSOCIADOS (ex.: material, corte, aplicação, etc)
             for ($j=0; $j < sizeof($infos["itens"][$k]["subitens"]); $j++){
 
+                $temAlternativo = false;
+
                 $tipo_material = $infos["itens"][$k]["subitens"][$j]["tipo_material"];
                 if ($tipo_material=='alternativo') {
                     $cor = 'style="color:red"';

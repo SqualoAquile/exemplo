@@ -162,9 +162,15 @@ class Orcamentos extends model {
             $palter = " | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - APROVADO";
 
             $sql = "UPDATE ". $this->table ." SET alteracoes = CONCAT(alteracoes, '$palter'), status = 'Aprovado' WHERE id = '$id' ";
+            $date_array = getdate();
+            $data_banco = $date_array['year'].'-'.$date_array['mon'].'-'.$date_array['mday'];
+
+            $sql2 = "UPDATE orcamentositens SET data_aprovacao = '$data_banco' WHERE id_orcamento='$id' AND situacao='ativo'";
             
             self::db()->query($sql);
 
+            self::db()->query($sql2);
+        
             $erro = self::db()->errorInfo();
 
             return [
