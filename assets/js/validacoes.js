@@ -93,7 +93,6 @@ $(function () {
 
 
             if (dataAnterior != valorAtual) {
-                console.log($this, dataAnterior, valorAtual)
                 temAlteracao = true;
             }
 
