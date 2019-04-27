@@ -5,7 +5,7 @@
 </script>
 <script src="<?php echo BASE_URL?>/assets/js/home.js" type="text/javascript"></script>
 
-<h1 class="display-4 font-weight-bold py-4">Home</h1>
+<!-- <h1 class="display-4 font-weight-bold py-4">Home</h1> -->
 
 <div class="card my-3">
     <div class="card-header">
@@ -26,7 +26,7 @@
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="col-lg">
+            <div class="col-lg-5">
                 <div class="row">
 
                     <div class="col-lg-6">
@@ -70,7 +70,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg">
+            <div class="col-lg-7">
                 <canvas id="chart-div2"></canvas>
             </div>
         </div>
@@ -79,7 +79,7 @@
 
 <div class="card card-body my-3">
     <div class="row">
-        <div class="col-lg">
+        <div class="col-lg-5">
             <div class="row">
                 <div class="col-lg-6">
                     <div class="card text-center mb-3">
@@ -123,8 +123,24 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg">
+        <div class="col-lg-7">
             <canvas id="chart-div3"></canvas>
         </div>
     </div>
 </div>
+
+<div class="card card-body my-3">
+    <div class="row">
+        <div class="col-lg-4">
+            <canvas id="graf_saldos"></canvas>
+        </div>
+        <div class="col-lg-4">
+            <canvas id="graf_receita_analitica"></canvas>
+        </div>
+        <div class="col-lg-4">
+            <canvas id="graf_despesa_analitica"></canvas>
+        </div>
+    </div>
+</div>
+
+

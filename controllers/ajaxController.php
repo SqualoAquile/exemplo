@@ -660,6 +660,25 @@ class ajaxController extends controller{
     }
     echo json_encode($dados);
   }
+
+  public function graficoReceitaDespesaAnalitica(){
+    
+    if(isset($_POST) && !empty($_POST)){
+      $relatFC = new Relatoriofluxocaixa();
+      $dados = $relatFC->graficoReceitaDespesaAnalitica($_POST['intervalo']);
+    }
+    echo json_encode($dados);
+  }
+
+  public function saldosMeseAno(){
+    
+    if(isset($_POST) && !empty($_POST)){
+      $relatSaldos = new Relatoriosaldos();
+      $dados = $relatSaldos->saldosMeseAno($_POST);
+    }
+    echo json_encode($dados);
+  }
+
   
 
 }   

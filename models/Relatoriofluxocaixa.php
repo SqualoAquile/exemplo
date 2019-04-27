@@ -571,5 +571,67 @@ class Relatoriofluxocaixa extends model {
 		return $data; 
 		
     }
+
+    public function graficoReceitaDespesaAnalitica($interval_datas){
+        
+        if(count($interval_datas) == 1){
+			$dt1 = 	$interval_datas[0];
+			$dt2 =  $interval_datas[0];
+		}else{
+			$dt1 = $interval_datas[0];
+			$dt2 = $interval_datas[count($interval_datas)-1];
+		}
+     
+        $sql1 = "SELECT conta_analitica , SUM(valor_total) as total FROM `fluxocaixa` WHERE situacao='ativo' AND despesa_receita = 'Despesa' AND status = 'Quitado' AND data_quitacao BETWEEN '$dt1' AND '$dt2' GROUP BY conta_analitica";
+        
+        $sql1 = self::db()->query($sql1);
+        
+        if($sql1->rowCount()>0){
+            $despesasAnaliticas = $sql1->fetchAll();
+        }else{
+            $despesasAnaliticas = array();
+        }
+
+        if (count($despesasAnaliticas) > 0 ){
+            for($i = 0; $i < count($despesasAnaliticas); $i++){
+                $despesas[$despesasAnaliticas[$i][0]] = floatval($despesasAnaliticas[$i][1]);        
+            }
+        }else{
+            for($i = 0; $i < count($despesasAnaliticas); $i++){
+                $despesas[$despesasAnaliticas[$i][0]] = floatval($despesasAnaliticas[$i][1]);        
+            }
+        }
+
+        ///// RECEITAS
+
+        $sql2 = "SELECT conta_analitica , SUM(valor_total) as total FROM `fluxocaixa` WHERE situacao='ativo' AND despesa_receita = 'Receita' AND status = 'Quitado' AND data_quitacao BETWEEN '$dt1' AND '$dt2' GROUP BY conta_analitica";
+
+        $sql2 = self::db()->query($sql2);
+        
+        if($sql2->rowCount()>0){
+            $receitasAnalitica = $sql2->fetchAll();
+        }else{
+            $receitasAnalitica = array();
+        }
+
+        if (count($receitasAnalitica) > 0 ){
+            for($i = 0; $i < count($receitasAnalitica); $i++){
+                $receitas[$receitasAnalitica[$i][0]] = floatval($receitasAnalitica[$i][1]);        
+            }
+        }else{
+            for($i = 0; $i < count($receitasAnalitica); $i++){
+                $receitas[$receitasAnalitica[$i][0]] = floatval($receitasAnalitica[$i][1]);        
+            }
+        }
+
+		$data = array();
+		$data[0] = $despesas;
+        $data[1] = $receitas;
+        
+        // print_r($data); exit;
+		return $data; 
+		
+    }
     
+
 }

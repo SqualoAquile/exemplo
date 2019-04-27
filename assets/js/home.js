@@ -6,6 +6,8 @@ $(function () {
         modo = "agrupar", // agrupar (doughnut, bar, horizontalBar), temporal(line, bar, combo)
         id1 = "#chart-div2",
         id2 = "#chart-div3",
+        id3 = "#graf_despesa_analitica",
+        id4 = "#graf_receita_analitica",
         tipo = "bar",
         ctx = document.getElementById(id1.substr(1)).getContext('2d');
 
@@ -13,6 +15,8 @@ $(function () {
         .val(7)
         .on('change', function() {
             drawChart();
+            receita_despesa_analitica();
+            grafico_saldos();
         })
         .change();
 
@@ -246,6 +250,230 @@ $(function () {
 
     }
 
+    function receita_despesa_analitica() {
+        var titulo, titulo2, intervalo = [];
+
+            if (!$selectGrafTemporal.val() ) {
+                $selectGrafTemporal.val($selectGrafTemporal.find('option:not([disabled])').first().val()).change();
+            };
+
+            //// DESPESAS ANALÍTICAS REALIZADAS
+            titulo = 'Despesas Separadas por Conta Analítica de ' + $selectGrafTemporal.children("option:selected").text().trim() +' até hoje.';
+            titulo2 = 'Receitas Separadas por Conta Analítica de ' + $selectGrafTemporal.children("option:selected").text().trim() +' até hoje.';
+            intervalo = intervaloDatasRealizado($selectGrafTemporal.val());
+
+            ///// despesas e receitas agrupadas por conta analítica
+            $.ajax({ 
+                url: baselink + '/ajax/graficoReceitaDespesaAnalitica', 
+                type: 'POST', 
+                data: {
+                    intervalo: intervalo,
+                },
+                dataType: 'json', 
+                success: function (resultado) { 
+                    if (resultado){   
+
+                        var labelsDespesa = [], valoresDespesa = [], coresDespesa = [];
+                        var labelsReceita = [], valoresReceita = [], coresReceita = [];
+                    
+                        labelsDespesa = Object.keys( resultado[0] );
+                        valoresDespesa = Object.values( resultado[0] );
+                        coresDespesa = ['#022346','#359db5','#0b7bff','#1e43af','#17bae8'];
+                        
+                        labelsReceita = Object.keys( resultado[1] );
+                        valoresReceita = Object.values( resultado[1] );
+                        coresReceita = ['#022346','#0b7bff'];
+                        
+                        var config = {
+                            type: 'doughnut',
+                            data: {
+                                datasets: [{
+                                    data: valoresDespesa,
+                                    backgroundColor: coresDespesa,
+                                }],
+                                labels: labelsDespesa
+                            },
+                            options: {
+                                responsive: true,
+                                legend: {
+                                    position: 'right',
+                                },
+                                title: {
+                                    display: true,
+                                    text: titulo
+                                },
+                                animation: {
+                                    animateScale: true,
+                                    animateRotate: true
+                                }
+                            }
+                        };
+    
+                        if(typeof charts[id3] == "undefined") {   
+                            charts[id3]= new (function(){
+                            this.ctx=$(id3); 
+                            this.chart=new Chart(this.ctx, config);
+                            })();     
+                        } else {
+                            charts[id3].chart.destroy();
+                            charts[id3].chart=new Chart(charts[id3].ctx, config); 
+                        }
+
+                        var config = {
+                            type: 'doughnut',
+                            data: {
+                                datasets: [{
+                                    data: valoresReceita,
+                                    backgroundColor: coresReceita,
+                                }],
+                                labels: labelsReceita
+                            },
+                            options: {
+                                responsive: true,
+                                legend: {
+                                    position: 'right',
+                                },
+                                title: {
+                                    display: true,
+                                    text: titulo2
+                                },
+                                animation: {
+                                    animateScale: true,
+                                    animateRotate: true
+                                }
+                            }
+                        };
+    
+                        if(typeof charts[id4] == "undefined") {   
+                            charts[id4]= new (function(){
+                            this.ctx=$(id4); 
+                            this.chart=new Chart(this.ctx, config);
+                            })();     
+                        } else {
+                            charts[id4].chart.destroy();
+                            charts[id4].chart=new Chart(charts[id4].ctx, config); 
+                        }
+                    }
+                }
+            });            
+    }
+
+    function grafico_saldos() {
+        var titulo, titulo2, intervaloDiasMesAtual = [], intervaloMesesAno = [] ;
+
+            if (!$selectGrafTemporal.val() ) {
+                $selectGrafTemporal.val($selectGrafTemporal.find('option:not([disabled])').first().val()).change();
+            };
+
+            //// DESPESAS ANALÍTICAS REALIZADAS
+            titulo = 'Saldo do mês + resultado de ' + $selectGrafTemporal.children("option:selected").text().trim() +' até hoje.';
+            titulo2 = 'Fluxo de Caixa do Ano '
+            intervaloDiasMesAtual = intervaloDatasRealizado($selectGrafTemporal.val());
+            intervaloMesesAno = intervaloDatasSaldos(dataAtual());
+            // intervaloMesesAno = intervaloDatasSaldos('13/12/2019');
+            
+            ///// saldos do ano e do mês
+            $.ajax({ 
+                url: baselink + '/ajax/saldosMeseAno', 
+                type: 'POST', 
+                data: {
+                    intervaloDias: intervaloDiasMesAtual,
+                    intervaloMeses: intervaloMesesAno
+                },
+                dataType: 'json', 
+                success: function (resultado) { 
+                    if (resultado){   
+
+                        var labelsDespesa = [], valoresDespesa = [], coresDespesa = [];
+                        var labelsReceita = [], valoresReceita = [], coresReceita = [];
+                        var receitaAux = parseFloat(0), saldoAux = parseFloat(0), saldo = parseFloat(0);
+                    
+                        labelsDespesa = Object.keys( resultado[0] );
+                        valoresDespesa = Object.values( resultado[0] );
+                        coresDespesa = ['#022346','#359db5','#0b7bff','#1e43af','#17bae8'];
+                        
+                        labelsReceita = Object.keys( resultado[1] );
+                        valoresReceita = Object.values( resultado[1] );
+                        coresReceita = ['#022346','#0b7bff'];
+
+                        for ( var i = 0; i < valoresReceita.length; i++ ){
+                            receitaAux = receitaAux + parseFloat( valoresReceita[i] );
+                        }
+
+                        
+                        var config = {
+                            type: 'doughnut',
+                            data: {
+                                datasets: [{
+                                    data: valoresDespesa,
+                                    backgroundColor: coresDespesa,
+                                }],
+                                labels: labelsDespesa
+                            },
+                            options: {
+                                responsive: true,
+                                legend: {
+                                    position: 'right',
+                                },
+                                title: {
+                                    display: true,
+                                    text: titulo
+                                },
+                                animation: {
+                                    animateScale: true,
+                                    animateRotate: true
+                                }
+                            }
+                        };
+    
+                        if(typeof charts[id3] == "undefined") {   
+                            charts[id3]= new (function(){
+                            this.ctx=$(id3); 
+                            this.chart=new Chart(this.ctx, config);
+                            })();     
+                        } else {
+                            charts[id3].chart.destroy();
+                            charts[id3].chart=new Chart(charts[id3].ctx, config); 
+                        }
+
+                        var config = {
+                            type: 'doughnut',
+                            data: {
+                                datasets: [{
+                                    data: valoresReceita,
+                                    backgroundColor: coresReceita,
+                                }],
+                                labels: labelsReceita
+                            },
+                            options: {
+                                responsive: true,
+                                legend: {
+                                    position: 'right',
+                                },
+                                title: {
+                                    display: true,
+                                    text: titulo2
+                                },
+                                animation: {
+                                    animateScale: true,
+                                    animateRotate: true
+                                }
+                            }
+                        };
+    
+                        if(typeof charts[id4] == "undefined") {   
+                            charts[id4]= new (function(){
+                            this.ctx=$(id4); 
+                            this.chart=new Chart(this.ctx, config);
+                            })();     
+                        } else {
+                            charts[id4].chart.destroy();
+                            charts[id4].chart=new Chart(charts[id4].ctx, config); 
+                        }
+                    }
+                }
+            });            
+    }
 
 });
 
@@ -441,4 +669,46 @@ function intervaloDatasAQuitar(intervalo) {
         
         return retorno;
 
+}
+
+function intervaloDatasSaldos(dtAtual) {
+    var mes1, ano1, retorno = [];
+
+        // calculando o valor de HOJE
+        dtAtual = dtAtual.split('/');
+        
+        mesAtual = dtAtual[1];
+        anoAtual = dtAtual[2];
+
+        console.log('mesatual: ', mesAtual, 'anoatual: ', anoAtual);
+        console.log(parseInt(mesAtual));
+        // criando o array de DATAS
+
+        if(parseInt(mesAtual) > parseInt(0)){
+            k=0;
+            for(i = 1; i <= parseInt(mesAtual)  ; i++){
+            
+                if (i.toString().length == 1) {
+                    mes1 = "0" + i;
+                }else{
+                    mes1 = i;
+                }
+                ano1 = anoAtual;
+                
+                retorno[k] = ano1 + '-' + mes1 + '-01';
+                k++;
+            }
+        }
+        
+        // if(retorno.length == 1){
+        //     retorno[1] = anoAtual + '-01-01';
+        // }
+        // retorno[0] = ano1 + '-01-01';
+        
+        return retorno;
+
+}
+
+function aleatorioEntre(min, max){
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
