@@ -88,6 +88,7 @@ class orcamentosController extends controller{
         $dados['infoUser'] = $_SESSION;
         
         if(isset($_POST) && !empty($_POST)){
+
             $this->model->editar($id, $_POST);
             header("Location: " . BASE_URL . "/" . $this->table); 
         }else{

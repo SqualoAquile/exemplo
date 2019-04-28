@@ -16,7 +16,7 @@
 
 <header class="pt-4 pb-5"> <!-- Cabeçalho -->
     <div class="row align-items-center"> <!-- Alinhar as linhas -->
-        <div class="col-12-lg"> <!--Colunas da esquerda -->
+        <div class="col-lg"> <!--Colunas da esquerda -->
             <?php if($modulo == "relatoriofluxocaixa"): ?>
                 <h1 class="display-4 text-capitalize font-weight-bold">Relatório de Fluxo de Caixa</h1>
             <?php else : ?>

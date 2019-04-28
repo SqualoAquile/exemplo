@@ -616,12 +616,6 @@ class ajaxController extends controller{
     }
   }
 
-  public function editarClienteOrcamento($id_orcamento) {
-    if(isset($_POST) && !empty($_POST)){
-      echo json_encode($this->orcamentos->editarCliente($id_orcamento, $_POST));
-    }
-  }
-
   public function changeStatusOrcamento() {
 
     if(isset($_POST) && !empty($_POST)){

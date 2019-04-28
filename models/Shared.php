@@ -20,7 +20,7 @@ class Shared extends model {
             $stringBtn .=  '<input type="checkbox" name="checkboxFluxoCaixa" value="' . $id . '">';
             if( in_array( $this->table.'_edt' , $_SESSION["permissoesUsuario"]) ){
                 if (strtolower($row["Status"]) != "quitado") {
-                    $stringBtn .= '<button class="btn btn-primary btn-sm" id="editar" data-id="' . $id . '"><i class="fas fa-edit"></i></button>';
+                    $stringBtn .= '<button class="btn btn-primary btn-sm mx-1" id="editar" data-id="' . $id . '"><i class="fas fa-edit"></i></button>';
                 }
             }
 
@@ -29,19 +29,19 @@ class Shared extends model {
             $stringBtn .= '<form method="POST">';
             
             if( in_array( $this->table.'_edt' , $_SESSION["permissoesUsuario"]) ){
-                $stringBtn .=  '<a href="' . BASE_URL . '/' . $this->table . '/editar/' . $id . '" class="btn btn-primary btn-sm mr-1"><i class="fas fa-edit"></i></a>';
+                $stringBtn .=  '<a href="' . BASE_URL . '/' . $this->table . '/editar/' . $id . '" class="btn btn-primary btn-sm mx-1"><i class="fas fa-edit"></i></a>';
             }
     
             if(in_array($this->table."_exc", $_SESSION["permissoesUsuario"])){
-                $stringBtn .= '<input type="hidden" name="id" value="'. $id .'"><button type="submit" onclick="return confirm(\'Tem Certeza?\')" class="btn btn-sm btn-danger ml-1"><i class="fas fa-trash-alt"></i></button>';
+                $stringBtn .= '<input type="hidden" name="id" value="'. $id .'"><button type="submit" onclick="return confirm(\'Tem Certeza?\')" class="btn btn-sm btn-danger mx-1"><i class="fas fa-trash-alt"></i></button>';
             }
 
             if(($this->table == "orcamentos") && in_array( $this->table.'_ver' , $_SESSION["permissoesUsuario"]) ){
-                $stringBtn .= '<button type="button" class="btn btn-warning btn-sm ml-2" data-id="' . $id . '" data-toggle="modal" data-target="#modalConfImp"><i class="fas fa-print"></i></button>';
+                $stringBtn .= '<button type="button" class="btn btn-warning btn-sm mx-1" data-id="' . $id . '" data-toggle="modal" data-target="#modalConfImp"><i class="fas fa-print"></i></button>';
             }
 
             if(($this->table == "ordemservico") && in_array( $this->table.'_ver' , $_SESSION["permissoesUsuario"]) ){
-                $stringBtn .=  '<a href="' . BASE_URL . '/' . $this->table . '/imprimir/' . $id . '" class="btn btn-warning btn-sm ml-2" target="_blank"><i class="fas fa-print"></i></a>';
+                $stringBtn .=  '<a href="' . BASE_URL . '/' . $this->table . '/imprimir/' . $id . '" class="btn btn-warning btn-sm mx-1" target="_blank"><i class="fas fa-print"></i></a>';
             }      
             
             $stringBtn .= '</form>';
