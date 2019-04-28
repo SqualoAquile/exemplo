@@ -370,10 +370,6 @@ $(function () {
 
   ////////////////////////// COMENTADO BEM ATÉ AQUI ////////////////////////////////
 
-  window.onload = function(){
-    habilitaBotaoOrcamento();
-  }
-
   $(document)
     .ready(function () {
       $.ajax({
@@ -874,7 +870,8 @@ $(function () {
   });
 
   $("#nome_cliente")
-    .on("blur change", function () {
+    .on("blur change", function (e, ignorar) {
+      
       let $this = $(this),
         $elements = $this
           .siblings(".relacional-dropdown")
@@ -893,7 +890,7 @@ $(function () {
 
       // Se não encontrar nenhum cliente com mesmo nome, tira o valor do id_cliente
       // Dizendo para o software que não tem nenhum cliente cadastrado naquele orçamento
-      if (!$filtereds.length) {
+      if (!$filtereds.length && !ignorar) {
         $("[name=id_cliente]").val("0");
       }
 
@@ -903,6 +900,7 @@ $(function () {
       $("[name=faturado_para]").val($this.val());
 
       checarClienteCadastrado();
+      
     })
     .on("focus", function () {
       let $radio = $('#form-principal [name="pf_pj"]:checked'),
@@ -937,7 +935,9 @@ $(function () {
     habilitaBotaoOrcamento();
   });
 
-  $("#esquerda input").on("change", () => habilitaBotaoOrcamento());
+  $("#esquerda input").on("change", () => {
+    habilitaBotaoOrcamento();
+  });
 
   $("#chk_cancelamentoOrc").click(function () {
     let $motivoDesistencia = $("#motivo_desistencia");
@@ -1153,6 +1153,11 @@ $(function () {
       }
     })
     .attr("autocomplete", "off");
+
+  window.onload = function() {
+    habilitaBotaoOrcamento();
+  };
+
 });
 
 function dataAtual() {
@@ -1650,30 +1655,9 @@ function aprovarOrcamento() {
     motivo_cancelamento: ""
   };
 
-  // if (cliente) {
-  //   if (cliente.id) {
-  //     editarClienteOrcamento(
-  //       dadosParaEnviar.id_orcamento,
-  //       cliente,
-  //       function () {
-  //         ajaxAprovarOrcamento(dadosParaEnviar, cliente.id);
-  //       }
-  //     );
-  //   }
-  // } else {
-  // }
   ajaxAprovarOrcamento(dadosParaEnviar);
-}
 
-// function editarClienteOrcamento(id_orcamento, cliente, callback) {
-//   $.ajax({
-//     url: baselink + "/ajax/editarClienteOrcamento/" + id_orcamento,
-//     type: "POST",
-//     data: cliente,
-//     dataType: "json",
-//     success: callback
-//   });
-// }
+}
 
 function ajaxAprovarOrcamento(dadosParaEnviar) {
 
@@ -1784,6 +1768,7 @@ function checarClienteCadastrado() {
 }
 
 function setarClienteCadastrado(cliente) {
+
   let $form = $("#form-principal"),
     $idCliente = $form.find('[name="id_cliente"]'),
     $nome = $form.find("#nome_cliente"),
@@ -1793,6 +1778,9 @@ function setarClienteCadastrado(cliente) {
     $comoConheceu = $form.find("#como_conheceu");
 
   if (cliente) {
+    
+    $("#modalCadastrarCliente").modal("hide");
+
     $form
       .find('[name="pf_pj"]#' + cliente.tipo_pessoa)
       .prop("checked", true)
@@ -1800,7 +1788,7 @@ function setarClienteCadastrado(cliente) {
 
     $nome
       .val(cliente.nome)
-      .change()
+      .trigger('change', [true])
       .removeClass("is-valid");
 
     $telefone.val(cliente.telefone);
@@ -1815,7 +1803,6 @@ function setarClienteCadastrado(cliente) {
       collapseObsCliente(cliente.observacao);
     }
 
-    $("#modalCadastrarCliente").modal("hide");
   }
 }
 
@@ -1838,7 +1825,7 @@ function collapseObsCliente(observacao) {
 function habilitaBotaoOrcamento() {
   var temAlteracao = false;
 
-  $('#form-principal .form-control:visible').each(function (i, el) {
+  $('#form-principal .form-control:visible, #form-principal .form-check-input').each(function (i, el) {
     var $this = $(el);
 
     if ($this.attr("type") == "radio") {
@@ -1859,7 +1846,9 @@ function habilitaBotaoOrcamento() {
       .toUpperCase();
 
     if (dataAnterior != valorAtual) {
-      temAlteracao = true;
+      if ($this.attr('name') != 'quem_indicou') {
+        temAlteracao = true;
+      }
     }
   });
 

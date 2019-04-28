@@ -153,6 +153,7 @@ $(function() {
 
   // Retorna um array de itens puxados do campo hidden com o atributo nome igual a itens
   function Itens() {
+
     let returnItens = [];
     if ($("[name=itens]") && $("[name=itens]").val().length) {
       let itens = $("[name=itens]")
@@ -184,15 +185,16 @@ $(function() {
 
   // Escreve o html na tabela
   function Popula(values) {
+
     if (!values) return;
 
     var currentId = $tableItensOrcamento.attr("data-current-id"),
       tds = "";
 
     // Coloca a tag html TD em volta de cada valor vindo do form de itens
-    values.forEach(
-      value => (tds += `<td class="text-truncate">` + value + `</td>`)
-    );
+    values.forEach(function(value) {
+      tds += `<td class="text-truncate">` + value + `</td>`
+    });
 
     if (!currentId) {
       // Se for undefined então o item está sendo criado
@@ -268,6 +270,13 @@ $(function() {
           preco = floatParaPadraoInternacional(tdPreco.text()),
           quantidadeUsada = floatParaPadraoInternacional(tdQuantUsada.text());
 
+        if (quantidade == 'NaN') quantidade = 0.00;
+        if (comprimento == 'NaN') comprimento = 0.00;
+        if (largura == 'NaN') largura = 0.00;
+        if (custo == 'NaN') custo = 0.00;
+        if (preco == 'NaN') preco = 0.00;
+        if (quantidadeUsada == 'NaN') quantidadeUsada = 0.00;
+
         content += "[" + 
           tdItem.text() + " * " + 
           tdSubItem.text() + " * " + 
@@ -301,7 +310,6 @@ $(function() {
 
     transformarAlternativo($tr);
     SetInput();
-    console.log('calculaSubtotalCustotal 2')
     calculaSubtotalCustotal();
   }
 
@@ -445,8 +453,6 @@ $(function() {
 
     $('#col-cancelar_edicao').removeClass('d-none');
 
-    console.log('calculaSubtotalCustotal 3')
-
     calculaSubtotalCustotal();
     changeTipoServicoProduto(tdMaterialServico);
     toggleTipoMaterial(tdUnidade);
@@ -462,8 +468,12 @@ $(function() {
       unidade = $("[name=unidade]").val(),
       tipo_material = $("[name=tipo_material]:checked").val();
 
-    if ((tipo_material_servico && tipo_material_servico.toLowerCase() != 'produtos') || (unidade && unidade.toLowerCase() != 'ml')) {
-      tipo_material = '';
+    if (tipo_material_servico) {
+      
+      if (tipo_material_servico.toLowerCase() != 'produtos' || (unidade && unidade.toLowerCase() != 'ml')) {
+        tipo_material = '';
+      }
+
     }
 
     Popula([
@@ -483,7 +493,6 @@ $(function() {
     ]);
 
     SetInput();
-    console.log('calculaSubtotalCustotal 1')
     calculaSubtotalCustotal();
 
     $('#btn_incluir').html('<i class="fas fa-check"></i>');
