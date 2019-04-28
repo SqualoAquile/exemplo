@@ -388,8 +388,6 @@ class orcamentosController extends controller{
                 if ($tipo_material=='alternativo') {
                     $infos["itens"][$k]["tem_alternativo"] = true;
                     $temAlternativoGlobal = true; 
-                }else{
-                    $infos["itens"][$k]["tem_alternativo"] = false;
                 }
 
                 $tipo_material = $infos["itens"][$k]["subitens"][$j]["tipo_material"];
