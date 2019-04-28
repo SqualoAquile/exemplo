@@ -235,7 +235,7 @@
                         <?php endif ?>
                     <?php endif ?>
                 <?php endforeach ?>
-                <div class="col-lg" style="order: 14;">
+                <div class="col-lg-4" style="order: 14;">
                     <button id="btn_incluir" class="btn btn-primary btn-block">Incluir</button>
                 </div>
                 <div id="col-cancelar_edicao" class="col-lg-4 d-none" style="order: 14;">

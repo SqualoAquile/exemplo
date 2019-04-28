@@ -130,7 +130,8 @@ $(function() {
       }
         
     } else {
-      $($form).addClass('was-validated');
+      $form.addClass('was-validated');
+      $form.find('.is-invalid, :invalid').first().focus();
     }
 
   });
@@ -481,8 +482,11 @@ $(function() {
     SetInput();
     calculaSubtotalCustotal();
 
-    $('#btn_incluir')
-      .text('Incluir');
+    $('#btn_incluir').html('<i class="fas fa-check"></i>');
+      
+    setTimeout(function(){
+      $('#btn_incluir').html('Incluir');
+    }, 1000);
 
   }
 
