@@ -347,23 +347,31 @@ class Ordemservico extends model {
 
                 if ($i>0 && ($itens[$i]['descricao_item'] != $itens[$i-1]['descricao_item'] || 
                             $itens[$i]['descricao_subitem'] != $itens[$i-1]['descricao_subitem'])) {
-
-                    $infos["itens"][$k]["nome"] = $itens[$i]['descricao_item'] . " - " . $itens[$i]['descricao_subitem'];
+    
+                    $infos["itens"][$k]["nome"] = addslashes($itens[$i]['descricao_item']) . " - " . addslashes($itens[$i]['descricao_subitem']);
                     $k++;
                     $j=0;
                 } else if ($i==0){
-                    $infos["itens"][$k]["nome"] = $itens[$i]['descricao_item'] . " - " . $itens[$i]['descricao_subitem'];
+                    $infos["itens"][$k]["nome"] = addslashes($itens[$i]['descricao_item']) . " - " . addslashes($itens[$i]['descricao_subitem']);
                     $k++;
                 }
-            
+                
                 $infos["itens"][$k-1]["subitens"][$j]["produto_servico"] = ucfirst(str_replace("_"," ",$itens[$i]['material_servico']));
                 $infos["itens"][$k-1]["subitens"][$j]["tipo_material"] = $itens[$i]['tipo_material'];
-                $infos["itens"][$k-1]["subitens"][$j]["quantidade"] = $itens[$i]['quant'];
-                $infos["itens"][$k-1]["subitens"][$j]["medidas"] = "L: ".$itens[$i]['largura']. " x C: ".$itens[$i]['comprimento'];
+                $infos["itens"][$k-1]["subitens"][$j]["quantidade"] = str_replace(".",",",$itens[$i]['quant']);
+                if ($itens[$i]['largura']!=0 && $itens[$i]['comprimento']!=0  ) {
+                    $infos["itens"][$k-1]["subitens"][$j]["medidas"] = "L: ".str_replace(".",",",$itens[$i]['largura']). " x C: ".str_replace(".",",",$itens[$i]['comprimento']);
+                }else{
+                    $infos["itens"][$k-1]["subitens"][$j]["medidas"] ='';
+                }
                 $infos["itens"][$k-1]["subitens"][$j]["unidade"] = $itens[$i]['unidade'];
-                $infos["itens"][$k-1]["subitens"][$j]["preco_unitario"] = floatval($itens[$i]['preco_tot_subitem']) / floatval(floatval($itens[$i]['quant'])*floatval($itens[$i]['quant_usada']));
+                if (empty($itens[$i]['quant_usada'])) {
+                    $infos["itens"][$k-1]["subitens"][$j]["preco_unitario"] = floatval($itens[$i]['preco_tot_subitem']) / floatval($itens[$i]['quant']);
+                }else{
+                    $infos["itens"][$k-1]["subitens"][$j]["preco_unitario"] = floatval($itens[$i]['preco_tot_subitem']) / floatval(floatval($itens[$i]['quant'])*floatval($itens[$i]['quant_usada']));
+                }
                 $infos["itens"][$k-1]["subitens"][$j]["preco_total"] =  $itens[$i]['preco_tot_subitem'];
-
+    
                 $j++;
             }
         
@@ -406,6 +414,8 @@ class Ordemservico extends model {
             for ($p=0; $p < $k ; $p++) {
                 $infos["itens"][$p]["total_principal"] = number_format($infos["itens"][$p]["total_principal"],2,",",".");
                 $infos["itens"][$p]["total_alternativo"] = number_format($infos["itens"][$p]["total_alternativo"],2,",",".");
+                $infos["deslocamento"] = floatval($infos["deslocamento"]);
+                $infos["deslocamento"] = number_format($infos["deslocamento"],2,",",".");
 
                 for ($j=0; $j < sizeof($infos["itens"][$p]["subitens"]) ; $j++) {
                     $precoUnitFormat = $infos["itens"][$p]["subitens"][$j]["preco_unitario"];
