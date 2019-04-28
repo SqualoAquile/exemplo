@@ -1,45 +1,53 @@
-$(function() {
-
+$(function () {
   //
   // Variável global que vai ser usada para guardar o valor do total de material e valor total do subitem do orçamento
   //
 
   let valorTotalSubitem, custoTotalSubitem, quantTotalMaterial;
-  
+
   //
   // Inicializa os inputs da página - parte do orçamento
   //
 
-  $('#motivo_desistencia')
+  $("#motivo_desistencia")
     .parent()
-    .parent('[class^=col-]')
-      .addClass('d-none col-lg-12');
+    .parent("[class^=col-]")
+    .addClass("d-none col-lg-12");
 
-  $('#status, #custo_total, #sub_total, #valor_total, #custo_deslocamento, #desconto')
-    .attr('readonly', 'readonly');
+  $(
+    "#status, #custo_total, #sub_total, #valor_total, #custo_deslocamento, #desconto"
+  ).attr("readonly", "readonly");
 
-  $('#titulo_orcamento')
-    .attr('placeholder', 'Nome - Trabalho...');
+  $("#titulo_orcamento").attr("placeholder", "Nome - Trabalho...");
 
-  $('#data_emissao')
-    .val(dataAtual())
-    .datepicker('update');
+  if ($('[name="alteracoes"]').val() == '') {
 
-  $('#data_validade')
-    .val(proximoDiaUtil($('#data_emissao').val(), 15))
-    .datepicker('update');
+    //
+    // Só seta as datas se for adicionar
+    //
 
-  $('#data_retorno')
-    .val(proximoDiaUtil(dataAtual(), 3))
-    .datepicker('update');
+    $("#data_emissao")
+      .val(dataAtual())
+      .datepicker("update");
+  
+    $("#data_validade")
+      .val(proximoDiaUtil($("#data_emissao").val(), 15))
+      .datepicker("update");
+  
+    $("#data_retorno")
+      .val(proximoDiaUtil(dataAtual(), 3))
+      .datepicker("update");
+    
+  }
+
 
   //
   // Tipo Material
   //
 
-  let $tipoMaterialBody =  $('#tipo_material').parent('.form-group');
+  let $tipoMaterialBody = $("#tipo_material").parent(".form-group");
 
-  $tipoMaterialBody.find('#tipo_material').remove();
+  $tipoMaterialBody.find("#tipo_material").remove();
 
   $tipoMaterialBody.append(`
     <div>
@@ -60,43 +68,46 @@ $(function() {
   // Inicializa os inputs da pagina - parte de itens do orçamento
   //
 
-  $('#quant_usada')
-    .attr('disabled', 'disabled');
-  
-  $('#custo_tot_subitem')
-    .attr('disabled', 'disabled');
+  $("#quant_usada").attr("disabled", "disabled");
 
-  $('#unidade')
-    .attr('disabled', 'disabled');
+  $("#custo_tot_subitem").attr("disabled", "disabled");
+
+  $("#unidade").attr("disabled", "disabled");
 
   //
   // Ajax para pegar informacoes da tabela de parametros
   //
 
   $.ajax({
-    url: baselink + '/ajax/buscaParametrosMaterial',
-    type: 'POST',
+    url: baselink + "/ajax/buscaParametrosMaterial",
+    type: "POST",
     data: {
-      tabela: 'parametros'
+      tabela: "parametros"
     },
-    dataType: 'json',
-    success: function(data) {
+    dataType: "json",
+    success: function (data) {
       var bocarolo, margem, segop;
-      if (data['tamanho_boca_rolo']) {
-        bocarolo = floatParaPadraoInternacional(data['tamanho_boca_rolo']);
-        $('#unidade').attr('data-bocarolo', bocarolo);
+      if (data["tamanho_boca_rolo"]) {
+        bocarolo = floatParaPadraoInternacional(
+          data["tamanho_boca_rolo"]
+        );
+        $("#unidade").attr("data-bocarolo", bocarolo);
       }
-      if (data['margem_erro_material']) {
-        margem = floatParaPadraoInternacional(data['margem_erro_material']);
-        $('#unidade').attr('data-margemerro', margem);
+      if (data["margem_erro_material"]) {
+        margem = floatParaPadraoInternacional(
+          data["margem_erro_material"]
+        );
+        $("#unidade").attr("data-margemerro", margem);
       }
-      if (data['taxa_seg_op']) {
-        segop = floatParaPadraoInternacional(data['taxa_seg_op']);
-        $('#preco_tot_subitem').attr('data-seg_op', segop);
+      if (data["taxa_seg_op"]) {
+        segop = floatParaPadraoInternacional(data["taxa_seg_op"]);
+        $("#preco_tot_subitem").attr("data-seg_op", segop);
       }
-      if (data['custo_deslocamento']) {
-        custodesloc = floatParaPadraoInternacional(data['custo_deslocamento']);
-        $('#custo_deslocamento').attr('data-custodesloc', custodesloc);
+      if (data["custo_deslocamento"]) {
+        custodesloc = floatParaPadraoInternacional(
+          data["custo_deslocamento"]
+        );
+        $("#custo_deslocamento").attr("data-custodesloc", custodesloc);
 
         valorTotal();
       }
@@ -117,17 +128,15 @@ $(function() {
     <option value="servicoscomplementares">Serviços Complementares</option>
   `;
 
-  $('#tipo_servico_produto')
+  $("#tipo_servico_produto")
     .append(htmlTipoServicoProduto)
-    .on('change', function() {
-
+    .on("change", function () {
       changeTipoServicoProduto();
       toggleTipoMaterial();
 
-      $('#unidade, #custo_tot_subitem, #preco_tot_subitem')
-        .removeClass('is-valid is-invalid')
-        .val('');
-
+      $("#unidade, #custo_tot_subitem, #preco_tot_subitem")
+        .removeClass("is-valid is-invalid")
+        .val("");
     });
 
   //
@@ -137,7 +146,7 @@ $(function() {
   //
   //
 
-  $("#data_emissao").on("change blur", function() {
+  $("#data_emissao").on("change blur", function () {
     if ($("#data_emissao").val() != "") {
       $("#data_validade")
         .val(proximoDiaUtil($("#data_emissao").val(), 15))
@@ -157,7 +166,7 @@ $(function() {
   //
   //
 
-  $("#data_validade").on("change blur", function() {
+  $("#data_validade").on("change blur", function () {
     if ($("#data_validade").val() != "") {
       if ($("#data_emissao").val() != "") {
         var dtEmis, dtValid;
@@ -191,7 +200,7 @@ $(function() {
   //
   //
 
-  $("#data_retorno").on("change blur", function() {
+  $("#data_retorno").on("change blur", function () {
     if ($("#data_retorno").val() != "") {
       if ($("#data_emissao").val() != "") {
         var dtEmis, dtRetor;
@@ -221,7 +230,7 @@ $(function() {
   //
   //
 
-  $("#unidade").on("change blur", function() {
+  $("#unidade").on("change blur", function () {
     calculaQuantidadeUsadaMaterial();
     calculaMaterialCustoPreco();
   });
@@ -233,7 +242,7 @@ $(function() {
   //
   //
 
-  $("#quant").on("change blur", function() {
+  $("#quant").on("change blur", function () {
     calculaQuantidadeUsadaMaterial();
     calculaMaterialCustoPreco();
   });
@@ -245,7 +254,7 @@ $(function() {
   //
   //
 
-  $("#largura").on("change blur", function() {
+  $("#largura").on("change blur", function () {
     calculaQuantidadeUsadaMaterial();
     calculaMaterialCustoPreco();
   });
@@ -257,7 +266,7 @@ $(function() {
   //
   //
 
-  $("#comprimento").on("change blur", function() {
+  $("#comprimento").on("change blur", function () {
     calculaQuantidadeUsadaMaterial();
     calculaMaterialCustoPreco();
   });
@@ -269,22 +278,22 @@ $(function() {
   //
   //
 
-  $("#preco_tot_subitem").on("change", function() {
-
+  $("#preco_tot_subitem").on("change", function () {
     var $custo = $("#custo_tot_subitem");
     var $preco = $("#preco_tot_subitem");
     var $material = $("#material_servico");
     var tx_segop, precoaux;
 
     tx_segop = parseFloat(
-      parseFloat($("#preco_tot_subitem").attr("data-seg_op")) / parseFloat(100)
+      parseFloat($("#preco_tot_subitem").attr("data-seg_op")) /
+      parseFloat(100)
     );
 
     if ($("#preco_tot_subitem").attr("data-seg_op") != undefined) {
       if ($custo.val() != "" && $preco.val() == "") {
         precoaux = parseFloat(
           parseFloat($material.attr("data-preco")) *
-            parseFloat(parseFloat(1) + tx_segop)
+          parseFloat(parseFloat(1) + tx_segop)
         );
         $preco.val(floatParaPadraoBrasileiro(precoaux));
         return;
@@ -295,7 +304,6 @@ $(function() {
           parseFloat(floatParaPadraoInternacional($custo.val())) >=
           parseFloat(floatParaPadraoInternacional($preco.val()))
         ) {
-
           let dataPreco = $material.attr("data-preco");
 
           if (!$material.attr("data-preco")) {
@@ -304,15 +312,14 @@ $(function() {
 
           precoaux = parseFloat(
             parseFloat(dataPreco) *
-              parseFloat(parseFloat(1) + tx_segop)
+            parseFloat(parseFloat(1) + tx_segop)
           );
-          
-          $preco.val(floatParaPadraoBrasileiro(precoaux));
 
+          $preco.val(floatParaPadraoBrasileiro(precoaux));
         } else {
           precoaux = parseFloat(
             parseFloat(floatParaPadraoInternacional($preco.val())) *
-              parseFloat(parseFloat(1) + tx_segop)
+            parseFloat(parseFloat(1) + tx_segop)
           );
           $preco.val(floatParaPadraoBrasileiro(precoaux));
         }
@@ -322,17 +329,19 @@ $(function() {
     calculaMaterialCustoPreco();
   });
 
-  $('#recontato').on('click', function() {
-    if (confirm('Tem Certeza?')) {
+  $("#recontato").on("click", function () {
+    if (confirm("Tem Certeza?")) {
       $.ajax({
         url: baselink + "/ajax/changeStatusOrcamento",
         type: "POST",
         data: {
-          id_orcamento: $('#form-principal').attr('data-id-orcamento'),
-          status: 'Recontato'
+          id_orcamento: $("#form-principal").attr(
+            "data-id-orcamento"
+          ),
+          status: "Recontato"
         },
         dataType: "json",
-        success: function(data) {
+        success: function (data) {
           if (data) {
             window.location.href = baselink + "/orcamentos";
           }
@@ -341,16 +350,16 @@ $(function() {
     }
   });
 
-  $('#duplica_orcamento').on('click', function() {
-    if (confirm('Tem Certeza?')) {
+  $("#duplica_orcamento").on("click", function () {
+    if (confirm("Tem Certeza?")) {
       $.ajax({
         url: baselink + "/ajax/duplicarOrcamento",
         type: "POST",
         data: {
-          id_orcamento: $('#form-principal').attr('data-id-orcamento')
+          id_orcamento: $("#form-principal").attr("data-id-orcamento")
         },
         dataType: "json",
-        success: function(data) {
+        success: function (data) {
           if (data) {
             window.location.href = baselink + "/orcamentos";
           }
@@ -361,9 +370,12 @@ $(function() {
 
   ////////////////////////// COMENTADO BEM ATÉ AQUI ////////////////////////////////
 
+  window.onload = function(){
+    habilitaBotaoOrcamento();
+  }
+
   $(document)
-    .ready(function() {
-      
+    .ready(function () {
       $.ajax({
         url: baselink + "/ajax/getRelacionalDropdownOrcamentos",
         type: "POST",
@@ -371,10 +383,9 @@ $(function() {
           tabela: "clientes"
         },
         dataType: "json",
-        success: function(data) {
-
+        success: function (data) {
           // JSON Response - Ordem Alfabética
-          data.sort(function(a, b) {
+          data.sort(function (a, b) {
             a = a.nome.toLowerCase();
             b = b.nome.toLowerCase();
             return a < b ? -1 : a > b ? 1 : 0;
@@ -383,21 +394,39 @@ $(function() {
           var htmlDropdown = "";
 
           data.forEach(element => {
-            htmlDropdown += `
+            htmlDropdown +=
+              `
               <div class="list-group-item list-group-item-action relacional-dropdown-element-cliente"
-                data-id="` + element["id"] + `"
-                data-tipo_pessoa="` + element["tipo_pessoa"] + `"
-                data-telefone="` + element["telefone"] + `"
-                data-celular="` + element["celular"] + `"
-                data-email="` + element["email"] + `"
-                data-comoconheceu="` + element["comoconheceu"] + `"
-                data-observacao="` + element["observacao"] + `"
-              >` + element["nome"] + `</div>
+                data-id="` +
+              element["id"] +
+              `"
+                data-tipo_pessoa="` +
+              element["tipo_pessoa"] +
+              `"
+                data-telefone="` +
+              element["telefone"] +
+              `"
+                data-celular="` +
+              element["celular"] +
+              `"
+                data-email="` +
+              element["email"] +
+              `"
+                data-comoconheceu="` +
+              element["comoconheceu"] +
+              `"
+                data-observacao="` +
+              element["observacao"] +
+              `"
+              >` +
+              element["nome"] +
+              `</div>
             `;
           });
 
-          $("#esquerda .relacional-dropdown-wrapper .dropdown-menu .dropdown-menu-wrapper").html(htmlDropdown);
-
+          $(
+            "#esquerda .relacional-dropdown-wrapper .dropdown-menu .dropdown-menu-wrapper"
+          ).html(htmlDropdown);
         }
       });
 
@@ -406,260 +435,268 @@ $(function() {
       checarClienteCadastrado();
 
       $('[name="tipo_servico_produto"]').change();
-
     })
-    .on("click", '[name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element-cliente', function() {
+    .on(
+      "click",
+      '[name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element-cliente',
+      function () {
+        var $this = $(this),
+          $esquerda = $("#esquerda");
 
-      var $this = $(this),
-        $esquerda = $("#esquerda");
+        $this
+          .siblings(".relacional-dropdown-element-cliente")
+          .removeClass("active");
+        $this.addClass("active");
 
-      $this.siblings(".relacional-dropdown-element-cliente").removeClass("active");
-      $this.addClass("active");
+        $esquerda.find("[name=faturado_para]").val($this.text());
 
-      $esquerda.find("[name=faturado_para]").val($this.text());
+        $esquerda
+          .find("[name=telefone]")
+          .val($this.attr("data-telefone"));
 
-      $esquerda.find("[name=telefone]").val($this.attr("data-telefone"));
+        $esquerda
+          .find("[name=celular]")
+          .val($this.attr("data-celular"));
 
-      $esquerda.find("[name=celular]").val($this.attr("data-celular"));
+        $esquerda.find("[name=email]").val($this.attr("data-email"));
 
-      $esquerda.find("[name=email]").val($this.attr("data-email"));
-      
-      $esquerda.find("[name=id_cliente]").val($this.attr("data-id"));
+        $esquerda.find("[name=id_cliente]").val($this.attr("data-id"));
 
-      $esquerda
-        .find("[name=como_conheceu]")
-        .val($this.attr("data-comoconheceu"))
-        .change();
+        $esquerda
+          .find("[name=como_conheceu]")
+          .val($this.attr("data-comoconheceu"))
+          .change();
 
-      collapseObsCliente($this.attr("data-observacao"));
-
-    })
-    .on('click', '[name="material_servico"] ~ .relacional-dropdown .relacional-dropdown-element-orcamento', function() {
-
-      let $this = $(this),
-        $material = $('[name="material_servico"]'),
-        $unidade = $('[name="unidade"]'),
-        $custo = $('[name="custo_tot_subitem"]'),
-        $preco = $('[name="preco_tot_subitem"]'),
-        $largura = $('[name="largura"]'),
-        $comprimento = $('[name="comprimento"]'),
-        data_tabela = $this.attr("data-tabela"),
-        data_unidade = $this.attr("data-unidade"),
-        data_preco = $this.attr("data-preco"),
-        data_custo = $this.attr("data-custo"),
-        unidade = data_tabela != "servicos" ? data_unidade : "M²";
-
-      $this.siblings(".relacional-dropdown-element-orcamento").removeClass("active");
-      $this.addClass("active");
-
-      $preco.val(floatParaPadraoBrasileiro(data_preco)).change();
-
-      $custo.val(floatParaPadraoBrasileiro(data_custo)).change();
-
-      $preco.val(floatParaPadraoBrasileiro(data_preco)).change();
-
-      $unidade.val(unidade).change();
-
-      $material
-        .attr("data-tabela", data_tabela)
-        .attr("data-unidade", unidade)
-        .attr("data-preco", data_preco)
-        .attr("data-custo", data_custo);
-
-      toggleTipoMaterial($unidade.val());
-
-      // Ao trocar de produto sempre voltar para o radio de material principal marcado
-      $("input:radio[name=tipo_material]:first").click();
-
-      $('.tipo-material-repetido').remove();
-
-      if ($unidade.val() == "ML" || $unidade.val() == "M²") {
-        
-        $largura
-          .removeAttr("disabled")
-          .removeClass("is-valid is-invalid");
-
-        $comprimento
-          .removeAttr("disabled")
-          .removeClass("is-valid is-invalid");
-
-      } else {
-        
-        $largura
-          .val("")
-          .blur()
-          .attr("disabled", "disabled")
-          .removeClass("is-valid is-invalid");
-
-        $comprimento
-          .val("")
-          .blur()
-          .attr("disabled", "disabled")
-          .removeClass("is-valid is-invalid");
-
+        collapseObsCliente($this.attr("data-observacao"));
       }
-    })
-    .on("change", '#form-principal [name="pf_pj"]', function() {
+    )
+    .on(
+      "click",
+      '[name="material_servico"] ~ .relacional-dropdown .relacional-dropdown-element-orcamento',
+      function () {
+        let $this = $(this),
+          $material = $('[name="material_servico"]'),
+          $unidade = $('[name="unidade"]'),
+          $custo = $('[name="custo_tot_subitem"]'),
+          $preco = $('[name="preco_tot_subitem"]'),
+          $largura = $('[name="largura"]'),
+          $comprimento = $('[name="comprimento"]'),
+          data_tabela = $this.attr("data-tabela"),
+          data_unidade = $this.attr("data-unidade"),
+          data_preco = $this.attr("data-preco"),
+          data_custo = $this.attr("data-custo"),
+          unidade = data_tabela != "servicos" ? data_unidade : "M²";
 
+        $this
+          .siblings(".relacional-dropdown-element-orcamento")
+          .removeClass("active");
+        $this.addClass("active");
+
+        $preco.val(floatParaPadraoBrasileiro(data_preco)).change();
+
+        $custo.val(floatParaPadraoBrasileiro(data_custo)).change();
+
+        $preco.val(floatParaPadraoBrasileiro(data_preco)).change();
+
+        $unidade.val(unidade).change();
+
+        $material
+          .attr("data-tabela", data_tabela)
+          .attr("data-unidade", unidade)
+          .attr("data-preco", data_preco)
+          .attr("data-custo", data_custo);
+
+        toggleTipoMaterial($unidade.val());
+
+        // Ao trocar de produto sempre voltar para o radio de material principal marcado
+        $("input:radio[name=tipo_material]:first").click();
+
+        $(".tipo-material-repetido").remove();
+
+        if ($unidade.val() == "ML" || $unidade.val() == "M²") {
+          $largura
+            .removeAttr("disabled")
+            .removeClass("is-valid is-invalid");
+
+          $comprimento
+            .removeAttr("disabled")
+            .removeClass("is-valid is-invalid");
+        } else {
+          $largura
+            .val("")
+            .blur()
+            .attr("disabled", "disabled")
+            .removeClass("is-valid is-invalid");
+
+          $comprimento
+            .val("")
+            .blur()
+            .attr("disabled", "disabled")
+            .removeClass("is-valid is-invalid");
+        }
+      }
+    )
+    .on("change", '#form-principal [name="pf_pj"]', function () {
       let $this = $(this),
-        $elements = $('#esquerda [name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element-cliente'),
-        $filtereds = $elements.filter(function() {
+        $elements = $(
+          '#esquerda [name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element-cliente'
+        ),
+        $filtereds = $elements.filter(function () {
           return $(this).attr("data-tipo_pessoa") == $this.attr("id");
         });
 
-      $elements
-        .removeClass('filtered active')
-        .hide();
+      $elements.removeClass("filtered active").hide();
 
-      $filtereds
-        .addClass('filtered')
-        .show();
+      $filtereds.addClass("filtered").show();
 
-      $('.observacao_cliente_wrapper').addClass('d-none');
+      $(".observacao_cliente_wrapper").addClass("d-none");
 
-      $('[name="nome_cliente"], [name=faturado_para], [name=telefone], [name=celular], [name=email], #observacao_cliente')
-        .removeClass('is-valid is-invalid')
-        .val('');
+      $(
+        '[name="nome_cliente"], [name=faturado_para], [name=telefone], [name=celular], [name=email], #observacao_cliente'
+      )
+        .removeClass("is-valid is-invalid")
+        .val("");
 
       changeRequiredsPfPj();
-
     })
-    .on('change', '[name="id_cliente"]', function() {
+    .on("change", '[name="id_cliente"]', function () {
       checarClienteCadastrado();
     });
 
   // Eventos responsáveis pelo: Select Dropdown com Pesquisa
   // do campo Material Serviço dos Itens do Orçamento
   $(document)
-    .on('click', '.relacional-dropdown-element-orcamento', function () {
-
+    .on("click", ".relacional-dropdown-element-orcamento", function () {
       var $this = $(this),
-        $input = $this.parents('.relacional-dropdown-wrapper').find('.relacional-dropdown-input-orcamento');
+        $input = $this
+          .parents(".relacional-dropdown-wrapper")
+          .find(".relacional-dropdown-input-orcamento");
 
-      $input
-        .val($this.text())
-        .change();
+      $input.val($this.text()).change();
     })
-    .on('keyup', '.relacional-dropdown-input-orcamento', function (event) {
-
+    .on("keyup", ".relacional-dropdown-input-orcamento", function (event) {
       var code = event.keyCode || event.which;
 
       if (code == 27) {
         $(this)
-          .dropdown('hide')
+          .dropdown("hide")
           .blur();
         return;
       }
 
       if (
-        code == 91 || 
-        code == 93 || 
-        code == 92 || 
-        code == 9 || 
-        code == 13 || 
-        code == 16 || 
-        code == 17 || 
-        code == 18 || 
-        code == 19 || 
-        code == 20 || 
-        code == 33 || 
-        code == 34 || 
-        code == 35 || 
-        code == 36 || 
-        code == 37 || 
-        code == 38 || 
-        code == 39 || 
-        code == 40 || 
+        code == 91 ||
+        code == 93 ||
+        code == 92 ||
+        code == 9 ||
+        code == 13 ||
+        code == 16 ||
+        code == 17 ||
+        code == 18 ||
+        code == 19 ||
+        code == 20 ||
+        code == 33 ||
+        code == 34 ||
+        code == 35 ||
+        code == 36 ||
+        code == 37 ||
+        code == 38 ||
+        code == 39 ||
+        code == 40 ||
         code == 45
       ) {
         return;
       }
 
       var $this = $(this),
-        $dropdownMenu = $this.siblings('.dropdown-menu'),
-        $nenhumResult = $dropdownMenu.find('.nenhum-result'),
-        $elements = $dropdownMenu.find('.relacional-dropdown-element-orcamento');
+        $dropdownMenu = $this.siblings(".dropdown-menu"),
+        $nenhumResult = $dropdownMenu.find(".nenhum-result"),
+        $elements = $dropdownMenu.find(
+          ".relacional-dropdown-element-orcamento"
+        );
 
       var $filtereds = $elements.filter(function () {
-        return $(this).text().toLowerCase().indexOf($this.val().toLowerCase()) != -1;
+        return (
+          $(this)
+            .text()
+            .toLowerCase()
+            .indexOf($this.val().toLowerCase()) != -1
+        );
       });
 
       if (!$filtereds.length) {
-        $nenhumResult.removeClass('d-none');
+        $nenhumResult.removeClass("d-none");
       } else {
-        $nenhumResult.addClass('d-none');
+        $nenhumResult.addClass("d-none");
       }
 
       $elements.not($filtereds).hide();
       $filtereds.show();
-
     });
 
-  $('.relacional-dropdown-input-orcamento')
+  $(".relacional-dropdown-input-orcamento")
     .click(function () {
-      var $this = $(this)
-      if ($this.parents('.dropdown').hasClass('show')) {
-        $this.dropdown('toggle');
+      var $this = $(this);
+      if ($this.parents(".dropdown").hasClass("show")) {
+        $this.dropdown("toggle");
       }
     })
-    .on('blur change', function () {
-
+    .on("blur change", function () {
       var $this = $(this),
-        $dropdownMenu = $this.siblings('.dropdown-menu'),
-        $active = $dropdownMenu.find('.relacional-dropdown-element-orcamento.active');
+        $dropdownMenu = $this.siblings(".dropdown-menu"),
+        $active = $dropdownMenu.find(
+          ".relacional-dropdown-element-orcamento.active"
+        );
 
-      $this.removeClass('is-valid is-invalid');
+      $this.removeClass("is-valid is-invalid");
 
       if ($this.val()) {
+        $dropdownMenu.find(".nenhum-result").addClass("d-none");
 
-        $dropdownMenu.find('.nenhum-result').addClass('d-none');
-
-        $filtereds = $dropdownMenu.find('.relacional-dropdown-element-orcamento').filter(function () {
-          return $(this).text().toLowerCase().indexOf($this.val().toLowerCase()) != -1;
-        });
+        $filtereds = $dropdownMenu
+          .find(".relacional-dropdown-element-orcamento")
+          .filter(function () {
+            return (
+              $(this)
+                .text()
+                .toLowerCase()
+                .indexOf($this.val().toLowerCase()) != -1
+            );
+          });
 
         if (!$filtereds.length) {
+          if ($this.attr("data-pode_nao_cadastrado") == "false") {
+            $this.removeClass("is-valid").addClass("is-invalid");
 
-          if ($this.attr('data-pode_nao_cadastrado') == 'false') {
-
-            $this
-              .removeClass('is-valid')
-              .addClass('is-invalid');
-
-            this.setCustomValidity('invalid');
-            $this.after('<div class="invalid-feedback">Selecione um item existente.</div>');
-
+            this.setCustomValidity("invalid");
+            $this.after(
+              '<div class="invalid-feedback">Selecione um item existente.</div>'
+            );
           } else {
-
-            $this.addClass('is-valid');
-            this.setCustomValidity('');
-
+            $this.addClass("is-valid");
+            this.setCustomValidity("");
           }
-
         } else {
-
-          $this.addClass('is-valid');
-          this.setCustomValidity('');
-
+          $this.addClass("is-valid");
+          this.setCustomValidity("");
         }
 
-        if (!$active.length || $active.text().toLowerCase() != $this.val().toLowerCase()) {
-          $this.val('');
+        if (
+          !$active.length ||
+          $active.text().toLowerCase() != $this.val().toLowerCase()
+        ) {
+          $this.val("");
         }
-
       } else {
-
         if ($active.length) {
           $this.val($active.text());
         }
-
       }
     })
-    .attr('autocomplete', 'off');
+    .attr("autocomplete", "off");
 
   $("#como_conheceu")
-    .on("change", function() {
-
+    .on("change", function () {
       var $this = $(this);
 
       $(".column-quem-indicou").remove();
@@ -671,12 +708,11 @@ $(function() {
       }
 
       if ($this.val()) {
-
         if (
           $this.val().toLocaleLowerCase() == "contato" ||
           $this.val().startsWith("Contato - ")
         ) {
-          $this.parent('.form-group').parent("[class^=col]").after(`
+          $this.parent(".form-group").parent("[class^=col]").after(`
             <div class="column-quem-indicou col-xl-12" style="order:12;">
               <div class="form-group">
                 <label class="font-weight-bold" for="quem_indicou">
@@ -690,17 +726,21 @@ $(function() {
 
           var $quemIndicou = $("#quem_indicou");
 
-          if ($this.attr("data-anterior").startsWith('Contato - ')) {
-            
+          if ($this.attr("data-anterior").startsWith("Contato - ")) {
             $quemIndicou
-              .val($this.attr("data-anterior").replace("Contato - ", ""))
+              .val(
+                $this
+                  .attr("data-anterior")
+                  .replace("Contato - ", "")
+              )
               .blur();
-
           }
 
           var valueQuemIndicou = $quemIndicou.val(),
             $comoConhec = $("#como_conheceu"),
-            textOptSelc = $comoConhec.children("option:selected").text(),
+            textOptSelc = $comoConhec
+              .children("option:selected")
+              .text(),
             camposConcat = textOptSelc + " - " + valueQuemIndicou;
 
           if (valueQuemIndicou) {
@@ -709,14 +749,16 @@ $(function() {
               .attr("value", camposConcat);
           }
         } else {
-          $this.children('option:contains("Contato")').attr("value", "Contato");
+          $this
+            .children('option:contains("Contato")')
+            .attr("value", "Contato");
         }
       }
     })
     .change();
 
   $(document)
-    .on("blur", "#quem_indicou", function() {
+    .on("blur", "#quem_indicou", function () {
       var $this = $(this),
         value = $this.val(),
         $comoConhec = $("#como_conheceu"),
@@ -736,7 +778,6 @@ $(function() {
       }
     })
     .on("submit", "#form-principalModalOrcamentos", event => {
-
       event.preventDefault();
 
       if (event.target.checkValidity()) {
@@ -750,22 +791,27 @@ $(function() {
       }
     });
 
-  $("#modalCadastrarCliente").on("show.bs.modal", function(e) {
-
+  $("#modalCadastrarCliente").on("show.bs.modal", function (e) {
     let $formClienteModal = $("#form-principalModalOrcamentos"),
       $formClienteEsquerda = $("#esquerda");
 
-    let $pjModal = $formClienteModal.find('#pj'),
-      $pfModal = $formClienteModal.find('#pf');
+    let $pjModal = $formClienteModal.find("#pj"),
+      $pfModal = $formClienteModal.find("#pf");
 
-    $pjModal.attr('id', 'pj_modal');
-    $pfModal.attr('id', 'pf_modal');
+    $pjModal.attr("id", "pj_modal");
+    $pfModal.attr("id", "pf_modal");
 
-    $pjModal.siblings('[for="pj"]').attr('for', 'pj_modal');
-    $pfModal.siblings('[for="pf"]').attr('for', 'pf_modal');
+    $pjModal.siblings('[for="pj"]').attr("for", "pj_modal");
+    $pfModal.siblings('[for="pf"]').attr("for", "pf_modal");
 
     $formClienteModal
-      .find('[name="tipo_pessoa"][value="' + $formClienteEsquerda.find("[name=pf_pj]:checked").attr("id") + '"]')
+      .find(
+        '[name="tipo_pessoa"][value="' +
+        $formClienteEsquerda
+          .find("[name=pf_pj]:checked")
+          .attr("id") +
+        '"]'
+      )
       .prop("checked", true)
       .change();
 
@@ -793,315 +839,320 @@ $(function() {
     $formClienteModal
       .find("[name=comoconheceu]")
       .val($formClienteEsquerda.find("[name=como_conheceu]").val());
-
   });
 
-  $('#itensOrcamento').on('alteracoes', function() {
+  $("#itensOrcamento").on("alteracoes", function () {
+    let $msgAlert = $("#invalid-feedback-zero-itens");
 
-    let $msgAlert = $('#invalid-feedback-zero-itens');
-
-    $msgAlert.addClass('d-none');
-    if (!$('[name=itens]').val().length) {
-      $msgAlert.removeClass('d-none');
+    $msgAlert.addClass("d-none");
+    if (!$("[name=itens]").val().length) {
+      $msgAlert.removeClass("d-none");
     }
 
     valorTotal();
+    habilitaBotaoOrcamento();
+
   });
 
-  $('#main-form').click(function(event) {
-    
-    let $msgAlert = $('#invalid-feedback-zero-itens'),
-      $forms = $('#form-principal, #camposOrc');
+  $("#main-form").click(function (event) {
+    let $msgAlert = $("#invalid-feedback-zero-itens"),
+      $forms = $("#form-principal, #camposOrc");
 
-    $msgAlert.addClass('d-none');
+    $msgAlert.addClass("d-none");
 
-    if (!$('[name=itens]').val().length) {
-      
+    if (!$("[name=itens]").val().length) {
+      $forms.addClass("was-validated");
+
       $forms
-        .addClass('was-validated');
+        .find(":invalid")
+        .first()
+        .focus();
 
-      $forms.find(':invalid').first().focus();
-
-      $msgAlert.removeClass('d-none');
+      $msgAlert.removeClass("d-none");
       event.preventDefault();
     }
   });
 
-  $('#nome_cliente')
-    .on('blur change', function() {
-      
+  $("#nome_cliente")
+    .on("blur change", function () {
       let $this = $(this),
-        $elements = $this.siblings('.relacional-dropdown').find('.relacional-dropdown-element-cliente');
+        $elements = $this
+          .siblings(".relacional-dropdown")
+          .find(".relacional-dropdown-element-cliente");
 
-      let $filtereds = $elements.filter(function() {
+      let $filtereds = $elements.filter(function () {
         if ($this.val() && $(this).text()) {
-          return $this.val().toLowerCase() == $(this).text().toLowerCase();
+          return (
+            $this.val().toLowerCase() ==
+            $(this)
+              .text()
+              .toLowerCase()
+          );
         }
       });
 
       // Se não encontrar nenhum cliente com mesmo nome, tira o valor do id_cliente
       // Dizendo para o software que não tem nenhum cliente cadastrado naquele orçamento
       if (!$filtereds.length) {
-        $('[name=id_cliente]').val('0');
+        $("[name=id_cliente]").val("0");
       }
 
       // Toda vez que usuario sai do campo nome do cliente
       // Seta o valor desse campo no campo faturado_para
       // Mantendo sempre os dois iguais, se o usuario quiser pode alter faturada_para manualmente
-      $('[name=faturado_para]').val($this.val());
+      $("[name=faturado_para]").val($this.val());
 
       checarClienteCadastrado();
-
     })
-    .on('focus', function() {
-
+    .on("focus", function () {
       let $radio = $('#form-principal [name="pf_pj"]:checked'),
-        $elements = $('#esquerda [name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element-cliente'),
-        $filtereds = $elements.filter(function() {
-          return $(this).attr("data-tipo_pessoa") == $radio.attr("id");
+        $elements = $(
+          '#esquerda [name="nome_cliente"] ~ .relacional-dropdown .relacional-dropdown-element-cliente'
+        ),
+        $filtereds = $elements.filter(function () {
+          return (
+            $(this).attr("data-tipo_pessoa") == $radio.attr("id")
+          );
         });
 
-      $elements
-        .removeClass('filtered')
-        .hide();
+      $elements.removeClass("filtered").hide();
 
-      $filtereds
-        .addClass('filtered')
-        .show();
-
+      $filtereds.addClass("filtered").show();
     });
 
-  $('#aprovar-orcamento').click(function() {
-    if ($('[name=id_cliente]').val() != '0') {
-      
+  $("#aprovar-orcamento").click(function () {
+    if ($("[name=id_cliente]").val() != "0") {
       // Cliente já é cadastrado
-      if (confirm('Tem Certeza?')) {
+      if (confirm("Tem Certeza?")) {
         aprovarOrcamento();
       }
-
     } else {
       // Necessário cadastrar o cliente antes de aprovar um orçamento
-      $('#modalCadastrarCliente').modal('show');
+      $("#modalCadastrarCliente").modal("show");
     }
   });
 
-  $('#embaixo input').on('change', function() {
+  $("#embaixo input").on("change", function () {
     valorTotal();
+    habilitaBotaoOrcamento();
   });
 
-  $('#chk_cancelamentoOrc').click(function(){
+  $("#esquerda input").on("change", () => habilitaBotaoOrcamento());
 
-    let $motivoDesistencia = $('#motivo_desistencia');
+  $("#chk_cancelamentoOrc").click(function () {
+    let $motivoDesistencia = $("#motivo_desistencia");
 
-    $motivoDesistencia.val('');
+    $motivoDesistencia.val("");
 
-    if( $(this).is(':checked') ){
+    if ($(this).is(":checked")) {
+      $("#col-cancelar").removeClass("d-none");
+      $(
+        "#col-aprovar, #col-salvar, #col-recontato, #col-historico, #col-duplicar, #col-imprimir"
+      ).addClass("d-none");
 
-      $('#col-cancelar').removeClass('d-none');
-      $('#col-aprovar, #col-salvar, #col-recontato, #col-historico, #col-duplicar, #col-imprimir').addClass('d-none');
-
-      $motivoDesistencia.parent().parent().removeClass('d-none');
+      $motivoDesistencia
+        .parent()
+        .parent()
+        .removeClass("d-none");
       $motivoDesistencia.focus();
+    } else {
+      $("#col-cancelar").addClass("d-none");
+      $(
+        "#col-aprovar, #col-salvar, #col-recontato, #col-historico, #col-duplicar, #col-imprimir"
+      ).removeClass("d-none");
 
-    }else{
-
-      $('#col-cancelar').addClass('d-none');
-      $('#col-aprovar, #col-salvar, #col-recontato, #col-historico, #col-duplicar, #col-imprimir').removeClass('d-none');
-
-      $motivoDesistencia.parent().parent().addClass('d-none');
+      $motivoDesistencia
+        .parent()
+        .parent()
+        .addClass("d-none");
     }
-
   });
 
-  $('#btn_cancelamentoOrc').click(function(){
+  $("#btn_cancelamentoOrc").click(function () {
+    var $motivoCancela = $("#motivo_desistencia");
 
-    var $motivoCancela = $('#motivo_desistencia');
-
-    if($motivoCancela.val() == ''){
-      alert('Preencha o Motivo da Desistência.');
+    if ($motivoCancela.val() == "") {
+      alert("Preencha o Motivo da Desistência.");
       $motivoCancela.focus();
       return;
     }
 
-    if (confirm('Tem Certeza que quer Cancelar esse Orçamento?') ==  true && $motivoCancela.val() != ''){
+    if (
+      confirm("Tem Certeza que quer Cancelar esse Orçamento?") == true &&
+      $motivoCancela.val() != ""
+    ) {
+      var idOrcamento = $("#form-principal").attr("data-id-orcamento");
+      var motivo = $motivoCancela.val() + "a";
 
-        var idOrcamento = $('#form-principal').attr('data-id-orcamento');
-        var motivo = $motivoCancela.val()+'a';
-
-        $.ajax({
-            url: baselink + "/ajax/cancelarOrcamento",
-            type: "POST",
-            data: {
-              motivo_desistencia: motivo,
-              id: idOrcamento
-            },
-            dataType: "json",
-            success: data => {
-              if(data == true){
-                // deu certo o cancelamento
-                // vai ser redirecionado pro browser, não precisa fazer nada
-                window.location.href = baselink + "/orcamentos";
-              }else{
-                alert('Não foi possível realizar o cancelamento.\nTente Novamente.');
-                return;
-              }
-            }      
-        });
-
-    }        
-
+      $.ajax({
+        url: baselink + "/ajax/cancelarOrcamento",
+        type: "POST",
+        data: {
+          motivo_desistencia: motivo,
+          id: idOrcamento
+        },
+        dataType: "json",
+        success: data => {
+          if (data == true) {
+            // deu certo o cancelamento
+            // vai ser redirecionado pro browser, não precisa fazer nada
+            window.location.href = baselink + "/orcamentos";
+          } else {
+            alert(
+              "Não foi possível realizar o cancelamento.\nTente Novamente."
+            );
+            return;
+          }
+        }
+      });
+    }
   });
 
   // Eventos responsáveis pelo: Select Dropdown com Pesquisa de Cliente
   // Cliente
   $(document)
-    .on('click', '.relacional-dropdown-element-cliente', function () {
-
+    .on("click", ".relacional-dropdown-element-cliente", function () {
       var $this = $(this),
-        $input = $this.parents('.relacional-dropdown-wrapper').find('.relacional-dropdown-input-cliente');
+        $input = $this
+          .parents(".relacional-dropdown-wrapper")
+          .find(".relacional-dropdown-input-cliente");
 
-      $input
-        .val($this.text())
-        .change();
+      $input.val($this.text()).change();
     })
-    .on('keyup', '.relacional-dropdown-input-cliente', function (event) {
-
+    .on("keyup", ".relacional-dropdown-input-cliente", function (event) {
       var code = event.keyCode || event.which;
 
       if (code == 27) {
-        
         $(this)
-          .dropdown('hide')
+          .dropdown("hide")
           .blur();
 
         return;
       }
 
       if (
-        code == 91 || 
-        code == 93 || 
-        code == 92 || 
-        code == 9 || 
-        code == 13 || 
-        code == 16 || 
-        code == 17 || 
-        code == 18 || 
-        code == 19 || 
-        code == 20 || 
-        code == 33 || 
-        code == 34 || 
-        code == 35 || 
-        code == 36 || 
-        code == 37 || 
-        code == 38 || 
-        code == 39 || 
-        code == 40 || 
+        code == 91 ||
+        code == 93 ||
+        code == 92 ||
+        code == 9 ||
+        code == 13 ||
+        code == 16 ||
+        code == 17 ||
+        code == 18 ||
+        code == 19 ||
+        code == 20 ||
+        code == 33 ||
+        code == 34 ||
+        code == 35 ||
+        code == 36 ||
+        code == 37 ||
+        code == 38 ||
+        code == 39 ||
+        code == 40 ||
         code == 45
       ) {
         return;
       }
 
       var $this = $(this),
-        $dropdownMenu = $this.siblings('.dropdown-menu'),
-        $nenhumResult = $dropdownMenu.find('.nenhum-result'),
-        $elements = $dropdownMenu.find('.relacional-dropdown-element-cliente.filtered');
+        $dropdownMenu = $this.siblings(".dropdown-menu"),
+        $nenhumResult = $dropdownMenu.find(".nenhum-result"),
+        $elements = $dropdownMenu.find(
+          ".relacional-dropdown-element-cliente.filtered"
+        );
 
-      if ($this.attr('data-anterior').length != $this.val()) {
-
+      if ($this.attr("data-anterior").length != $this.val()) {
         var $filtereds = $elements.filter(function () {
-          return $(this).text().toLowerCase().indexOf($this.val().toLowerCase()) != -1;
+          return (
+            $(this)
+              .text()
+              .toLowerCase()
+              .indexOf($this.val().toLowerCase()) != -1
+          );
         });
 
         if (!$filtereds.length) {
-          $nenhumResult.removeClass('d-none');
+          $nenhumResult.removeClass("d-none");
         } else {
-          $nenhumResult.addClass('d-none');
+          $nenhumResult.addClass("d-none");
         }
 
         $elements.not($filtereds).hide();
         $filtereds.show();
-
       } else {
-
-        $nenhumResult.addClass('d-none');
+        $nenhumResult.addClass("d-none");
         $elements.show();
-
       }
-
     });
 
-  $('.relacional-dropdown-input-cliente')
+  $(".relacional-dropdown-input-cliente")
     .click(function () {
-      
       var $this = $(this);
-      
+
       $this.keyup();
 
-      if ($this.parents('.dropdown').hasClass('show')) {
-        $this.dropdown('toggle');
+      if ($this.parents(".dropdown").hasClass("show")) {
+        $this.dropdown("toggle");
       }
-
     })
-    .on('blur change', function () {
-
+    .on("blur change", function () {
       var $this = $(this),
-        $dropdownMenu = $this.siblings('.dropdown-menu'),
-        $active = $dropdownMenu.find('.relacional-dropdown-element-cliente.filtered.active'),
-        $elements = $dropdownMenu.find('.relacional-dropdown-element-cliente.filtered');
+        $dropdownMenu = $this.siblings(".dropdown-menu"),
+        $active = $dropdownMenu.find(
+          ".relacional-dropdown-element-cliente.filtered.active"
+        ),
+        $elements = $dropdownMenu.find(
+          ".relacional-dropdown-element-cliente.filtered"
+        );
 
-      $this.removeClass('is-valid is-invalid');
-      $dropdownMenu.find('.nenhum-result').addClass('d-none');
+      $this.removeClass("is-valid is-invalid");
+      $dropdownMenu.find(".nenhum-result").addClass("d-none");
 
       if ($this.val()) {
-
         $filtereds = $elements.filter(function () {
-          return $(this).text().toLowerCase().indexOf($this.val().toLowerCase()) != -1;
+          return (
+            $(this)
+              .text()
+              .toLowerCase()
+              .indexOf($this.val().toLowerCase()) != -1
+          );
         });
 
         if (!$filtereds.length) {
+          if ($this.attr("data-pode_nao_cadastrado") == "false") {
+            $this.removeClass("is-valid").addClass("is-invalid");
 
-          if ($this.attr('data-pode_nao_cadastrado') == 'false') {
-
-            $this
-              .removeClass('is-valid')
-              .addClass('is-invalid');
-
-            this.setCustomValidity('invalid');
-            $this.after('<div class="invalid-feedback">Selecione um item existente.</div>');
-
+            this.setCustomValidity("invalid");
+            $this.after(
+              '<div class="invalid-feedback">Selecione um item existente.</div>'
+            );
           } else {
-
-            $this.addClass('is-valid');
-            this.setCustomValidity('');
-
+            $this.addClass("is-valid");
+            this.setCustomValidity("");
           }
-
         } else {
-
-          $this.addClass('is-valid');
-          this.setCustomValidity('');
-
+          $this.addClass("is-valid");
+          this.setCustomValidity("");
         }
-
       } else {
-
         if ($active.length) {
           $this.val($active.text());
         }
-
       }
 
       var $equals = $elements.filter(function () {
-        return $(this).text().toLowerCase() == $this.val().toLowerCase();
+        return (
+          $(this)
+            .text()
+            .toLowerCase() == $this.val().toLowerCase()
+        );
       });
 
       if (!$equals.length) {
-        $elements.removeClass('active');
+        $elements.removeClass("active");
       }
-
     })
-    .attr('autocomplete', 'off');
-
+    .attr("autocomplete", "off");
 });
 
 function dataAtual() {
@@ -1183,9 +1234,10 @@ function number_format(numero, decimal, decimal_separador, milhar_separador) {
   var n = !isFinite(+numero) ? 0 : +numero,
     prec = !isFinite(+decimal) ? 0 : Math.abs(decimal),
     sep = typeof milhar_separador === "undefined" ? "," : milhar_separador,
-    dec = typeof decimal_separador === "undefined" ? "." : decimal_separador,
+    dec =
+      typeof decimal_separador === "undefined" ? "." : decimal_separador,
     s = "",
-    toFixedFix = function(n, prec) {
+    toFixedFix = function (n, prec) {
       var k = Math.pow(10, prec);
       return "" + Math.round(n * k) / k;
     };
@@ -1222,31 +1274,33 @@ function calculaMaterialCustoPreco() {
 
       custoaux = parseFloat(
         parseFloat($qtd.val()) *
-          parseFloat(floatParaPadraoInternacional($custo.val()))
+        parseFloat(floatParaPadraoInternacional($custo.val()))
       );
       custoTotalSubitem = floatParaPadraoBrasileiro(custoaux);
 
       precoaux = parseFloat(
         parseFloat($qtd.val()) *
-          parseFloat(floatParaPadraoInternacional($preco.val()))
+        parseFloat(floatParaPadraoInternacional($preco.val()))
       );
       valorTotalSubitem = floatParaPadraoBrasileiro(precoaux);
     } else {
       //material ou serviço que a unidade é m², o que interessa é o preço e a quantidade e quantUsada
       quantTotalMaterial = parseFloat(
         parseFloat($qtd.val()) *
-          parseFloat(floatParaPadraoInternacional($qtdUsada.val())).toFixed(0)
+        parseFloat(
+          floatParaPadraoInternacional($qtdUsada.val())
+        ).toFixed(0)
       );
 
       custoaux = parseFloat(
         quantTotalMaterial *
-          parseFloat(floatParaPadraoInternacional($custo.val()))
+        parseFloat(floatParaPadraoInternacional($custo.val()))
       );
       custoTotalSubitem = floatParaPadraoBrasileiro(custoaux);
 
       precoaux = parseFloat(
         quantTotalMaterial *
-          parseFloat(floatParaPadraoInternacional($preco.val()))
+        parseFloat(floatParaPadraoInternacional($preco.val()))
       );
       valorTotalSubitem = floatParaPadraoBrasileiro(precoaux);
     }
@@ -1261,7 +1315,6 @@ function calculaMaterialCustoPreco() {
 }
 
 function calculaQuantidadeUsadaMaterial() {
-
   // recebe os objetos (campos)
 
   var $unidade = $("#unidade");
@@ -1273,394 +1326,401 @@ function calculaQuantidadeUsadaMaterial() {
   var larg, comp, quantUs, quantUsLarg, quantUsComp;
 
   if ($unidade.val() == "ML") {
-
     if ($largura.val() != "" && $comprimento.val() != "") {
-
       larg = parseFloat(
         parseFloat(floatParaPadraoInternacional($largura.val())) *
-          parseFloat(parseFloat(1) + parseFloat(margemErro / 100))
+        parseFloat(parseFloat(1) + parseFloat(margemErro / 100))
       );
 
       comp = parseFloat(
         parseFloat(floatParaPadraoInternacional($comprimento.val())) *
-          parseFloat(parseFloat(1) + parseFloat(margemErro / 100))
+        parseFloat(parseFloat(1) + parseFloat(margemErro / 100))
       );
 
       if (larg > bocaRolo && comp > bocaRolo) {
-
         quantUsLarg = parseFloat(
           parseFloat(Math.ceil(parseFloat(larg / bocaRolo))) *
-            parseFloat(Math.ceil(comp))
+          parseFloat(Math.ceil(comp))
         );
 
         quantUsComp = parseFloat(
           parseFloat(Math.ceil(parseFloat(comp / bocaRolo))) *
-            parseFloat(Math.ceil(larg))
+          parseFloat(Math.ceil(larg))
         );
 
         quantUs = Math.min(quantUsLarg, quantUsComp);
 
         quantUs = floatParaPadraoBrasileiro(quantUs);
         $qtdUsada.val(quantUs);
-
       } else if (larg < bocaRolo && comp < bocaRolo) {
-
         quantUs = floatParaPadraoBrasileiro(parseFloat(1));
         $qtdUsada.val(quantUs);
-
       } else {
-
-        quantUs = parseFloat(Math.ceil(parseFloat(Math.max(larg, comp))));
+        quantUs = parseFloat(
+          Math.ceil(parseFloat(Math.max(larg, comp)))
+        );
         quantUs = floatParaPadraoBrasileiro(quantUs);
         $qtdUsada.val(quantUs);
-
       }
     } else {
-
       $qtdUsada.val("");
-
     }
   } else if ($unidade.val() == "M²") {
-
     if ($largura.val() != "" && $comprimento.val() != "") {
-
       larg = parseFloat(
         parseFloat(floatParaPadraoInternacional($largura.val())) *
-          parseFloat(parseFloat(1) + parseFloat(margemErro / 100))
+        parseFloat(parseFloat(1) + parseFloat(margemErro / 100))
       );
-      
+
       comp = parseFloat(
         parseFloat(floatParaPadraoInternacional($comprimento.val())) *
-          parseFloat(parseFloat(1) + parseFloat(margemErro / 100))
+        parseFloat(parseFloat(1) + parseFloat(margemErro / 100))
       );
 
       quantUs = parseFloat(larg * comp).toFixed(2);
       quantUs = floatParaPadraoBrasileiro(quantUs);
       $qtdUsada.val(quantUs);
-
     } else {
-
-      $qtdUsada.val('');
-
+      $qtdUsada.val("");
     }
   }
 }
 
 function toggleTipoMaterial(unidade) {
-
   let $tipoMaterial = $('[name="tipo_material"]'),
-    $tipoProdutoServico = $('[name=tipo_servico_produto]'),
-    $tipoMaterialServico = $('[name=material_servico]'),
-    $colTipoProdutoServico = $tipoProdutoServico.parents('.form-group').parent(),
-    $colTipoMaterial = $tipoMaterial.parents('.form-group').parent(),
-    $colTipoServico = $tipoMaterialServico.parents('.form-group').parent();
+    $tipoProdutoServico = $("[name=tipo_servico_produto]"),
+    $tipoMaterialServico = $("[name=material_servico]"),
+    $colTipoProdutoServico = $tipoProdutoServico
+      .parents(".form-group")
+      .parent(),
+    $colTipoMaterial = $tipoMaterial.parents(".form-group").parent(),
+    $colTipoServico = $tipoMaterialServico.parents(".form-group").parent();
 
-  $colTipoMaterial.addClass('d-none');
-  $colTipoProdutoServico.removeClass('col-xl-4').addClass('col-xl-6');
-  $colTipoServico.removeClass('col-xl-4').addClass('col-xl-6');
+  $colTipoMaterial.addClass("d-none");
+  $colTipoProdutoServico.removeClass("col-xl-4").addClass("col-xl-6");
+  $colTipoServico.removeClass("col-xl-4").addClass("col-xl-6");
 
-  if ($tipoProdutoServico.val() && $tipoProdutoServico.val().toLowerCase() == 'produtos') {
-    
-    if (unidade && unidade.toLowerCase() == 'ml') {
-  
-      $colTipoMaterial.removeClass('d-none');
-      $colTipoProdutoServico.removeClass('col-xl-6').addClass('col-xl-4');
-      $colTipoServico.removeClass('col-xl-6').addClass('col-xl-4');
-      
+  if (
+    $tipoProdutoServico.val() &&
+    $tipoProdutoServico.val().toLowerCase() == "produtos"
+  ) {
+    if (unidade && unidade.toLowerCase() == "ml") {
+      $colTipoMaterial.removeClass("d-none");
+      $colTipoProdutoServico.removeClass("col-xl-6").addClass("col-xl-4");
+      $colTipoServico.removeClass("col-xl-6").addClass("col-xl-4");
     }
-
   }
-
 }
 
 function changeTipoServicoProduto(setValueSuccess) {
-
-  let $this = $('#tipo_servico_produto'),
-    $material = $('[name=material_servico]'),
+  let $this = $("#tipo_servico_produto"),
+    $material = $("[name=material_servico]"),
     val = $this.val();
 
   $.ajax({
-    url: baselink + '/ajax/getRelacionalDropdownOrcamentos',
-    type: 'POST',
+    url: baselink + "/ajax/getRelacionalDropdownOrcamentos",
+    type: "POST",
     data: {
       tabela: val
     },
-    dataType: 'json',
-    success: function(data) {
-
+    dataType: "json",
+    success: function (data) {
       // JSON Response - Ordem Alfabética
-      data.sort(function(a, b) {
+      data.sort(function (a, b) {
         a = a.descricao.toLowerCase();
         b = b.descricao.toLowerCase();
         return a < b ? -1 : a > b ? 1 : 0;
       });
 
-      let $materialDropdown = $material.siblings('.dropdown-menu').find('.dropdown-menu-wrapper'),
-        htmlDropdown = '';
+      let $materialDropdown = $material
+        .siblings(".dropdown-menu")
+        .find(".dropdown-menu-wrapper"),
+        htmlDropdown = "";
 
       data.forEach(element => {
-        htmlDropdown += `
+        htmlDropdown +=
+          `
           <div 
             class="list-group-item list-group-item-action relacional-dropdown-element-orcamento" 
-            data-tabela="` + val + `"
-            data-custo="` + element["custo"] + `"
-            data-preco="` + element["preco_venda"] + `"
-            data-unidade="` + element["unidade"] + `"
-          >` + element["descricao"] + `</div>
+            data-tabela="` +
+          val +
+          `"
+            data-custo="` +
+          element["custo"] +
+          `"
+            data-preco="` +
+          element["preco_venda"] +
+          `"
+            data-unidade="` +
+          element["unidade"] +
+          `"
+          >` +
+          element["descricao"] +
+          `</div>
         `;
       });
 
       $material
-        .removeClass('is-valid is-invalid')
-        .removeAttr('data-tabela data-custo data-preco data-unidade')
-        .val(setValueSuccess ? setValueSuccess : '');
+        .removeClass("is-valid is-invalid")
+        .removeAttr("data-tabela data-custo data-preco data-unidade")
+        .val(setValueSuccess ? setValueSuccess : "");
 
       $materialDropdown.html(htmlDropdown);
 
       $materialDropdown
-        .find('.relacional-dropdown-element-orcamento.active')
-        .removeClass('active');
+        .find(".relacional-dropdown-element-orcamento.active")
+        .removeClass("active");
 
       if (setValueSuccess) {
+        let $elFiltered = $materialDropdown
+          .find(".relacional-dropdown-element-orcamento")
+          .filter(function () {
+            if (
+              $(this)
+                .text()
+                .toLowerCase() == setValueSuccess.toLowerCase()
+            ) {
+              return this;
+            }
+          });
 
-        let $elFiltered = $materialDropdown.find('.relacional-dropdown-element-orcamento').filter(function() {
-          if ($(this).text().toLowerCase() == setValueSuccess.toLowerCase()) {
-            return this;
-          }
-        });
-        
-        $elFiltered
-          .addClass('active');
-
+        $elFiltered.addClass("active");
       }
-
     }
   });
-
 }
 
 function valorTotal() {
-
   let somaTotal = 0;
-  $('#itensOrcamento tbody tr').each(function() {
-    
+  $("#itensOrcamento tbody tr").each(function () {
     let $this = $(this),
-      tdPrecoTotal = $this.find('td:eq(12)').text(),
-      tdTipoMaterial = $this.find('td:eq(9)').text(),
-      precoTotalFormatado = parseFloat(floatParaPadraoInternacional(tdPrecoTotal));
+      tdPrecoTotal = $this.find("td:eq(12)").text(),
+      tdTipoMaterial = $this.find("td:eq(9)").text(),
+      precoTotalFormatado = parseFloat(
+        floatParaPadraoInternacional(tdPrecoTotal)
+      );
 
-    if (tdTipoMaterial != 'alternativo') {
+    if (tdTipoMaterial != "alternativo") {
       somaTotal += precoTotalFormatado;
     }
-    
   });
 
   $('[name="valor_total"]').val(floatParaPadraoBrasileiro(somaTotal));
 
-  if ($('#form-principal').hasClass('was-validated')) {
+  if ($("#form-principal").hasClass("was-validated")) {
     $('[name="valor_total"]').blur();
   }
 
   calculaCustoDeslocamento();
   calculaDesconto();
   resumoItens();
-
 }
 
 function calculaCustoDeslocamento() {
-
-  let $deslocamentoKm = $('#deslocamento_km'),
-    $deslocamentoCusto = $('#custo_deslocamento'),
-    $valorTotal = $('#valor_total'),
-    $subTotal = $('#sub_total'),
-    custoDeslocamentoParam = $deslocamentoCusto.attr('data-custodesloc'),
+  let $deslocamentoKm = $("#deslocamento_km"),
+    $deslocamentoCusto = $("#custo_deslocamento"),
+    $valorTotal = $("#valor_total"),
+    $subTotal = $("#sub_total"),
+    custoDeslocamentoParam = $deslocamentoCusto.attr("data-custodesloc"),
     custoDeslocamentoParamFormated = parseFloat(custoDeslocamentoParam),
-    valorDeslocamento = $deslocamentoKm.val() || '0',
-    valorDeslocamentoFormated = parseFloat(floatParaPadraoInternacional(valorDeslocamento));
+    valorDeslocamento = $deslocamentoKm.val() || "0",
+    valorDeslocamentoFormated = parseFloat(
+      floatParaPadraoInternacional(valorDeslocamento)
+    );
 
-  let multiplicacaoCustoDesloc = valorDeslocamentoFormated * custoDeslocamentoParamFormated;
+  let multiplicacaoCustoDesloc =
+    valorDeslocamentoFormated * custoDeslocamentoParamFormated;
 
   $deslocamentoCusto.val(floatParaPadraoBrasileiro(multiplicacaoCustoDesloc));
 
   // Acrescentar valor de deslocamento ao valor total
   if ($subTotal.val()) {
-
     let valorTotal = $subTotal.val(),
-      valorTotalFormated = parseFloat(floatParaPadraoInternacional(valorTotal)),
-      somaValorTotalCustoDesloc = multiplicacaoCustoDesloc + valorTotalFormated;
+      valorTotalFormated = parseFloat(
+        floatParaPadraoInternacional(valorTotal)
+      ),
+      somaValorTotalCustoDesloc =
+        multiplicacaoCustoDesloc + valorTotalFormated;
 
-    $valorTotal.val(floatParaPadraoBrasileiro(somaValorTotalCustoDesloc.toFixed(2)));
-
+    $valorTotal.val(
+      floatParaPadraoBrasileiro(somaValorTotalCustoDesloc.toFixed(2))
+    );
   }
-
 }
 
 function calculaDesconto() {
-
-  let $descontoPorcent = $('#desconto_porcent'),
-    $valorTotal = $('#valor_total'),
-    $descontoReais = $('#desconto'),
-    $custoTotal = $('#custo_total'),
-    custoTotalFormated = parseFloat(floatParaPadraoInternacional($custoTotal.val())),
-    valorTotal = parseFloat(floatParaPadraoInternacional($valorTotal.val()));
+  let $descontoPorcent = $("#desconto_porcent"),
+    $valorTotal = $("#valor_total"),
+    $descontoReais = $("#desconto"),
+    $custoTotal = $("#custo_total"),
+    custoTotalFormated = parseFloat(
+      floatParaPadraoInternacional($custoTotal.val())
+    ),
+    valorTotal = parseFloat(
+      floatParaPadraoInternacional($valorTotal.val())
+    );
 
   if ($descontoPorcent.val()) {
-    
-    let descontoPorcent = parseFloat(floatParaPadraoInternacional($descontoPorcent.val())) / 100;
+    let descontoPorcent =
+      parseFloat(floatParaPadraoInternacional($descontoPorcent.val())) /
+      100;
 
     if ($valorTotal.val() && valorTotal > 0) {
-
       let totalDescontoReais = valorTotal * descontoPorcent,
         diferenca = valorTotal - totalDescontoReais;
 
       if (diferenca > custoTotalFormated) {
-        
-        $descontoReais.val(floatParaPadraoBrasileiro(totalDescontoReais.toFixed(2)));
-  
-        $valorTotal.val(floatParaPadraoBrasileiro(diferenca.toFixed(2)));
+        $descontoReais.val(
+          floatParaPadraoBrasileiro(totalDescontoReais.toFixed(2))
+        );
 
+        $valorTotal.val(
+          floatParaPadraoBrasileiro(diferenca.toFixed(2))
+        );
       } else if (diferenca == custoTotalFormated) {
-        
-        alert('O desconto dado faz o valor final ser igual custo total.');
+        alert(
+          "O desconto dado faz o valor final ser igual custo total."
+        );
 
-        $descontoPorcent.val($descontoPorcent.attr('data-anterior') || 0);
-        $descontoReais.val($descontoReais.attr('data-anterior') || 0);
-        
+        $descontoPorcent.val(
+          $descontoPorcent.attr("data-anterior") || 0
+        );
+        $descontoReais.val($descontoReais.attr("data-anterior") || 0);
       } else {
-        
-        alert('O desconto dado faz o valor final ser menor do que custo total.');
-        
-        $descontoReais.val($descontoReais.attr('data-anterior') || 0);
-        $descontoPorcent.val($descontoPorcent.attr('data-anterior') || 0);
+        alert(
+          "O desconto dado faz o valor final ser menor do que custo total."
+        );
 
+        $descontoReais.val($descontoReais.attr("data-anterior") || 0);
+        $descontoPorcent.val(
+          $descontoPorcent.attr("data-anterior") || 0
+        );
       }
-
     }
   }
 }
 
 function resumoItens() {
-
-  let $custo_tot = $('#custo_total'),
-      $subTotal = $('#sub_total');
+  let $custo_tot = $("#custo_total"),
+    $subTotal = $("#sub_total");
 
   if ($custo_tot.val()) {
-    $('#resumoItensCustoTotal').text($custo_tot.val());
+    $("#resumoItensCustoTotal").text($custo_tot.val());
   }
 
   if ($subTotal.val()) {
-    $('#resumoItensSubTotal').text($subTotal.val());
+    $("#resumoItensSubTotal").text($subTotal.val());
   }
-
 }
 
 function aprovarOrcamento(cliente) {
-
-  let $id_cliente = $('[name=id_cliente]'),
-    $id_orcamento = $('#form-principal'),
-    $titulo_orcamento = $('[name=titulo_orcamento]'),
-    $nome_razao_social = $('[name=nome_cliente]'),
-    $vendedor = $('[name=funcionario]'),
-    $custo_total = $('[name=custo_total]'),
-    $valor_total = $('[name=valor_total]');
+  let $id_cliente = $("[name=id_cliente]"),
+    $id_orcamento = $("#form-principal"),
+    $titulo_orcamento = $("[name=titulo_orcamento]"),
+    $nome_razao_social = $("[name=nome_cliente]"),
+    $vendedor = $("[name=funcionario]"),
+    $custo_total = $("[name=custo_total]"),
+    $valor_total = $("[name=valor_total]");
 
   let dadosParaEnviar = {
     id_cliente: $id_cliente.val(),
-    id_orcamento: $id_orcamento.attr('data-id-orcamento'),
+    id_orcamento: $id_orcamento.attr("data-id-orcamento"),
     data_aprovacao: dataAtual(),
     titulo_orcamento: $titulo_orcamento.val(),
     nome_razao_social: $nome_razao_social.val(),
-    veiculo_usado: '',
+    veiculo_usado: "",
     vendedor: $vendedor.val(),
-    tec_responsavel: '',
-    tec_auxiliar: '',
-    data_inicio: '',
-    data_fim: '',
+    tec_responsavel: "",
+    tec_auxiliar: "",
+    data_inicio: "",
+    data_fim: "",
     custo_total: $custo_total.val(),
     subtotal: $valor_total.val(),
-    desconto_porcent: '0.00',
-    desconto: '0.00',
+    desconto_porcent: "0.00",
+    desconto: "0.00",
     valor_final: $valor_total.val(),
-    nro_nf: '',
-    data_emissao_nf: '',
-    data_revisao_1: '',
-    data_revisao_2: '',
-    data_revisao_3: '',
-    status: 'Em Produção',
-    observacao: '',
-    motivo_cancelamento: ''
+    nro_nf: "",
+    data_emissao_nf: "",
+    data_revisao_1: "",
+    data_revisao_2: "",
+    data_revisao_3: "",
+    status: "Em Produção",
+    observacao: "",
+    motivo_cancelamento: ""
   };
 
   if (cliente) {
     if (cliente.id) {
-      editarClienteOrcamento(dadosParaEnviar.id_orcamento, cliente, function() {
-        ajaxAprovarOrcamento(dadosParaEnviar, cliente.id);
-      });
+      editarClienteOrcamento(
+        dadosParaEnviar.id_orcamento,
+        cliente,
+        function () {
+          ajaxAprovarOrcamento(dadosParaEnviar, cliente.id);
+        }
+      );
     }
   } else {
     ajaxAprovarOrcamento(dadosParaEnviar);
   }
-
 }
 
 function editarClienteOrcamento(id_orcamento, cliente, callback) {
   $.ajax({
-    url: baselink + '/ajax/editarClienteOrcamento/' + id_orcamento,
-    type: 'POST',
+    url: baselink + "/ajax/editarClienteOrcamento/" + id_orcamento,
+    type: "POST",
     data: cliente,
-    dataType: 'json',
+    dataType: "json",
     success: callback
   });
 }
 
 function ajaxAprovarOrcamento(dadosParaEnviar, id_cliente) {
-
   if (id_cliente) {
     dadosParaEnviar.id_cliente = id_cliente;
   }
 
   $.ajax({
-    url: baselink + '/ajax/aprovarOrcamento',
-    type: 'POST',
+    url: baselink + "/ajax/aprovarOrcamento",
+    type: "POST",
     data: dadosParaEnviar,
-    dataType: 'json',
-    success: function(data) {
-      if (data.message[0] == '00000') {
-
-       $.ajax({
-        url: baselink + '/ajax/getIdOrdemServico',
-        type: 'POST',
-        data: {
-          id_orcamento: dadosParaEnviar.id_orcamento
-        },
-        dataType: 'json',
-        success: function(data) {
-          if (data.message[0] == '00000') {
-            window.open(baselink + '/ordemservico/imprimir/'+data.id_ordemservico, '_blank')
-            window.location.href = baselink + '/orcamentos';
+    dataType: "json",
+    success: function (data) {
+      if (data.message[0] == "00000") {
+        $.ajax({
+          url: baselink + "/ajax/getIdOrdemServico",
+          type: "POST",
+          data: {
+            id_orcamento: dadosParaEnviar.id_orcamento
+          },
+          dataType: "json",
+          success: function (data) {
+            if (data.message[0] == "00000") {
+              window.open(
+                baselink +
+                "/ordemservico/imprimir/" +
+                data.id_ordemservico,
+                "_blank"
+              );
+              window.location.href = baselink + "/orcamentos";
+            }
           }
-        }
-      });
-
-        
+        });
       }
     }
   });
 }
 
 function changeRequiredsPfPj() {
-
   let $radio = $('#form-principal [name="pf_pj"]:checked');
 
   if ($radio.attr("id") == "pj") {
-
     $("#form-principal [name=telefone]")
       .attr("required", "required")
       .siblings("label")
       .addClass("font-weight-bold")
       .find("> i")
-      .removeClass('d-none')
-      .addClass('d-inline-block');
+      .removeClass("d-none")
+      .addClass("d-inline-block");
 
     $("#form-principal [name=celular]")
       .removeAttr("required", "required")
@@ -1668,9 +1728,7 @@ function changeRequiredsPfPj() {
       .removeClass("font-weight-bold")
       .find("> i")
       .hide();
-
   } else {
-
     $("#form-principal [name=celular]")
       .attr("required", "required")
       .siblings("label")
@@ -1683,103 +1741,90 @@ function changeRequiredsPfPj() {
       .siblings("label")
       .removeClass("font-weight-bold")
       .find("> i")
-      .addClass('d-none')
-      .removeClass('d-inline-block');
-
+      .addClass("d-none")
+      .removeClass("d-inline-block");
   }
 }
 
 function acoesByStatus() {
-
-  let $status = $('#status'),
-    $tabela = $('#itensOrcamento'),
+  let $status = $("#status"),
+    $tabela = $("#itensOrcamento"),
     statusLowTxt = $status.val().toLowerCase();
 
-  if ($status.val() && (statusLowTxt == 'cancelado' || statusLowTxt == 'aprovado')) {
+  if (
+    $status.val() &&
+    (statusLowTxt == "cancelado" || statusLowTxt == "aprovado")
+  ) {
+    $tabela
+      .find("thead > tr > th:first-child, tbody > tr > td:first-child")
+      .hide();
 
-    $tabela.find('thead > tr > th:first-child, tbody > tr > td:first-child').hide();
-    
-    $('#btn_incluir').parent().hide();
-    $('.form-control, [type="radio"]').attr('disabled', 'disabled');
-
+    $("#btn_incluir")
+      .parent()
+      .hide();
+    $('.form-control, [type="radio"]').attr("disabled", "disabled");
   }
-  
+
   if (!$status.val()) {
-    $status.parent('.form-group').parent().hide();
+    $status
+      .parent(".form-group")
+      .parent()
+      .hide();
   }
-
 }
 
 function checarClienteCadastrado() {
-
   let $idCliente = $('[name="id_cliente"]'),
-    $btnAprovar = $('#aprovar-orcamento');
+    $btnAprovar = $("#aprovar-orcamento");
 
-  if ($idCliente.val() == '0') {
-
+  if ($idCliente.val() == "0") {
     // Cliente não cadastrado
-    $btnAprovar
-      .text('Cadastrar Cliente');
-
+    $btnAprovar.text("Cadastrar Cliente");
   } else {
-
-    $btnAprovar
-      .text('Aprovar Orçamento');
-
+    $btnAprovar.text("Aprovar Orçamento");
   }
-
 }
 
 function setarClienteCadastrado(cliente) {
-
-  let $form = $('#form-principal'),
+  let $form = $("#form-principal"),
     $idCliente = $form.find('[name="id_cliente"]'),
-    $nome = $form.find('#nome_cliente'),
-    $telefone = $form.find('#telefone'),
-    $celular = $form.find('#celular'),
-    $email = $form.find('#email'),
-    $comoConheceu = $form.find('#como_conheceu');
+    $nome = $form.find("#nome_cliente"),
+    $telefone = $form.find("#telefone"),
+    $celular = $form.find("#celular"),
+    $email = $form.find("#email"),
+    $comoConheceu = $form.find("#como_conheceu");
 
   if (cliente) {
-
     $form
       .find('[name="pf_pj"]#' + cliente.tipo_pessoa)
-      .prop('checked', true)
+      .prop("checked", true)
       .change();
 
     $nome
       .val(cliente.nome)
       .change()
-      .removeClass('is-valid');
+      .removeClass("is-valid");
 
     $telefone.val(cliente.telefone);
     $celular.val(cliente.celular);
     $email.val(cliente.email);
-    
-    $comoConheceu
-      .val(cliente.comoconheceu)
-      .change();
 
-    $idCliente
-      .val(cliente.id)
-      .change();
+    $comoConheceu.val(cliente.comoconheceu).change();
+
+    $idCliente.val(cliente.id).change();
 
     if (cliente.observacao) {
       collapseObsCliente(cliente.observacao);
     }
 
-    $('#modalCadastrarCliente').modal('hide');
-
+    $("#modalCadastrarCliente").modal("hide");
   }
-
 }
 
 function collapseObsCliente(observacao) {
-
-  let $esquerda = $('#esquerda');
+  let $esquerda = $("#esquerda");
 
   if (observacao) {
-
     $("#collapseObsCliente").collapse("hide");
 
     $esquerda.find(".observacao_cliente_wrapper").removeClass("d-none");
@@ -1787,11 +1832,44 @@ function collapseObsCliente(observacao) {
     $esquerda
       .find("#observacao_cliente[name=observacao_cliente]")
       .val(observacao);
-
   } else {
-
     $esquerda.find(".observacao_cliente_wrapper").addClass("d-none");
-
   }
+}
 
+function habilitaBotaoOrcamento() {
+  var temAlteracao = false;
+
+  $('#form-principal .form-control:visible').each(function (i, el) {
+    var $this = $(el);
+
+    if ($this.attr("type") == "radio") {
+      $this = $this
+        .parent()
+        .siblings()
+        .find(":checked");
+    }
+
+    var valorAtual = $this.val(),
+      dataAnterior = $this.attr("data-anterior");
+
+    valorAtual = String(valorAtual)
+      .trim()
+      .toUpperCase();
+    dataAnterior = String(dataAnterior)
+      .trim()
+      .toUpperCase();
+
+    if (dataAnterior != valorAtual) {
+      temAlteracao = true;
+    }
+  });
+
+  if (temAlteracao) {
+    $("#main-form").removeAttr("disabled");
+    $('#aprovar-orcamento').attr('disabled', 'disabled');
+  } else {
+    $("#main-form").attr("disabled", "disabled");
+    $('#aprovar-orcamento').removeAttr('disabled');
+  }
 }
