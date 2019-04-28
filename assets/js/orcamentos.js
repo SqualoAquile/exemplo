@@ -1418,9 +1418,19 @@ function toggleTipoMaterial(unidade) {
 }
 
 function changeTipoServicoProduto(setValueSuccess) {
+  
   let $this = $("#tipo_servico_produto"),
     $material = $("[name=material_servico]"),
     val = $this.val();
+
+  if ($this.val() == 'servicoscomplementares') {
+    if (!$material.attr('data-unidade') && ($material.attr('data-unidade') != 'M²' || $material.attr('data-unidade') != 'ML')) {
+      $('#camposOrc')
+        .find('#largura, #comprimento')
+        .removeAttr('disabled')
+        .removeClass('is-valid is-invalid');
+    }
+  }
 
   $.ajax({
     url: baselink + "/ajax/getRelacionalDropdownOrcamentos",
@@ -1491,6 +1501,7 @@ function changeTipoServicoProduto(setValueSuccess) {
 
         $elFiltered.addClass("active");
       }
+
     }
   });
 }
@@ -1847,11 +1858,11 @@ function habilitaBotaoOrcamento() {
 
     if (dataAnterior != valorAtual) {
       if ($this.attr('name') != 'quem_indicou') {
-        console.log('putz entrou aqui', $this, dataAnterior, valorAtual)
+        // console.log('putz entrou aqui', $this, dataAnterior, valorAtual)
         temAlteracao = true;
       }
     } else {
-      console.log('ufaaaaaa')
+      // console.log('ufaaaaaa')
     }
   });
 
