@@ -1154,11 +1154,11 @@ $(function () {
     })
     .attr("autocomplete", "off");
 
-  window.onload = function() {
-    habilitaBotaoOrcamento();
-  };
-
 });
+
+window.onload = function() {
+  habilitaBotaoOrcamento();
+};
 
 function dataAtual() {
   var dt, dia, mes, ano, dtretorno;
