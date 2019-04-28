@@ -187,11 +187,26 @@ class orcamentosController extends controller{
 
                 $precoTotal = $infos["itens"][$p]["subitens"][$j]["preco_total"];
 
-                if ( $infos["itens"][$p]["subitens"][$j]["tipo_material"]=='') {
+                if ($infos["itens"][$p]["subitens"][$j]["tipo_material"]=='') {
                     $precoPrincipal += $precoTotal;
                     $precoAlternativo += $precoTotal;
                 }else if ($infos["itens"][$p]["subitens"][$j]["tipo_material"]=='principal'){
-                    $precoPrincipal += $precoTotal;
+
+                    // Verificar se existe algum item que tem APENAS um material principal
+                    $temApenasPrincipal = true;
+                    for ($j2=0; $j2 < sizeof($infos["itens"][$p]["subitens"]) ; $j2++) {
+                        if ($infos["itens"][$p]["subitens"][$j2]["tipo_material"]=='alternativo') {
+                            $temApenasPrincipal = false;
+                        }
+                    }
+                    
+                    if ($temApenasPrincipal==true) {
+                        $precoPrincipal += $precoTotal;
+                        $precoAlternativo += $precoTotal;
+                    }else{
+                        $precoPrincipal += $precoTotal;
+                    }
+
                 }else if ($infos["itens"][$p]["subitens"][$j]["tipo_material"]=='alternativo'){
                     $precoAlternativo += $precoTotal;
                 }
@@ -344,7 +359,6 @@ class orcamentosController extends controller{
         ';
 
         //INICIO DA LISTA DE ITENS E SUBITENS
-
         $htmlRows = '
         <tbody>
         ';
@@ -365,15 +379,22 @@ class orcamentosController extends controller{
             $htmlRows.='
             </tr>
             ';
-            
+        
             // LOOP PARA DESCREVER OS SUBITENS ASSOCIADOS (ex.: material, corte, aplicação, etc)
             for ($j=0; $j < sizeof($infos["itens"][$k]["subitens"]); $j++){
 
                 $tipo_material = $infos["itens"][$k]["subitens"][$j]["tipo_material"];
+
+                if ($tipo_material=='alternativo') {
+                    $infos["itens"][$k]["tem_alternativo"] = true;
+                    $temAlternativoGlobal = true; 
+                }else{
+                    $infos["itens"][$k]["tem_alternativo"] = false;
+                }
+
+                $tipo_material = $infos["itens"][$k]["subitens"][$j]["tipo_material"];
                 if ($tipo_material=='alternativo') {
                     $cor = 'style="color:red"';
-                    $temAlternativo = true;
-                    $temAlternativoGlobal = true;            
                 }else{
                     $cor = '';
                 }
@@ -404,7 +425,7 @@ class orcamentosController extends controller{
 
             //VALOR ALTERNATIVO E PRINCIPAL DO SUBITEM
 
-            if(isset($infos["itens"][$k]["total_alternativo"]) && $infos["itens"][$k]["total_alternativo"] !=0 && $temAlternativo==true){
+            if(isset($infos["itens"][$k]["total_alternativo"]) && $infos["itens"][$k]["total_alternativo"] !=0 && $infos["itens"][$k]["tem_alternativo"]==true){
                 $htmlRows .='
                 <tr>
                     <td> </td>
