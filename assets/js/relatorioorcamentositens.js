@@ -47,7 +47,7 @@ $(function () {
             tipo:3,
             valor: 8,
             quantidade: 9,
-            data:14
+            data_aprov:14
         }
     
     // exibir tudo
@@ -55,30 +55,36 @@ $(function () {
 
     $.fn.dataTable.ext.search.push(
         function( settings, data, dataIndex ) {
-            if (data==''||data==null||data=='00/00/0000') {
+            if (data[14]) {
                 var retorno = false;
             }else{
                 var retorno = true;
             }
+            
             return retorno;
         }
     );
-    
-    dataTable.draw();
+        
+    dataTable.draw();       
+         
 
     function resumo () {  
-        $.fn.dataTable.ext.search.push(
-            function( settings, data, dataIndex ) {
-                if (data==''||data==null||data=='00/00/0000') {
-                    var retorno = true;
-                }else{
-                    var retorno = false;
-                }
-                return retorno;
-            }
-        );
+
+        // $.fn.dataTable.ext.search.push(
+        //     function( settings, data, dataIndex ) {
+        //         if (data[indexColumns.data_aprovacao]) {
+        //             var retorno = false;
+        //         }else{
+        //             var retorno = true;
+        //         }
+                
+        //         return retorno;
+        //     }
+        // );
         
-        dataTable.draw();        
+        // dataTable.draw();       
+        
+        
         var rowData = dataTable.rows().data(),
         quantidadeProdutos = 0,
         quantidadeServicos = 0,
@@ -93,27 +99,26 @@ $(function () {
             var valor = rowData[i][indexColumns.valor];
             var quantidade = rowData[i][indexColumns.quantidade];
             var tipo = rowData[i][indexColumns.tipo];
-            
+            var data = rowData[i][indexColumns.data_aprov];            
             
             //#baile
             // tem que mostrar apenas as linhas que tenham alguma data na coluna de data_aprovacao;
-            var data = rowData[i][indexColumns.data];
-            console.log(data);
-
-            valor = valor.replace('R$  ', '');
-            valor = floatParaPadraoInternacional(valor);
-
-            valor = valor * quantidade;
-
-            if(tipo=="Produtos"){
-                totalProdutos += parseFloat(valor);
-                quantidadeProdutos += parseInt(quantidade);
-            }else if(tipo=="Servicos"){
-                totalServicos += parseFloat(valor);
-                quantidadeServicos += parseInt(quantidade);
-            }else if(tipo=="Servicoscomplementares"){
-                totalServicosCompl += parseFloat(valor);
-                quantidadeServicosCompl += parseInt(quantidade);
+            if (data) {
+                valor = valor.replace('R$  ', '');
+                valor = floatParaPadraoInternacional(valor);
+    
+                valor = valor * quantidade;
+    
+                if(tipo=="Produtos"){
+                    totalProdutos += parseFloat(valor);
+                    quantidadeProdutos += parseInt(quantidade);
+                }else if(tipo=="Servicos"){
+                    totalServicos += parseFloat(valor);
+                    quantidadeServicos += parseInt(quantidade);
+                }else if(tipo=="Servicoscomplementares"){
+                    totalServicosCompl += parseFloat(valor);
+                    quantidadeServicosCompl += parseInt(quantidade);
+                }
             }
             i++;
     
