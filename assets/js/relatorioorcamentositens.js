@@ -46,14 +46,16 @@ $(function () {
             acoes: 0,
             tipo:3,
             valor: 8,
-            quantidade: 9
+            quantidade: 9,
+            data:14
         }
     
-    
+    // exibir tudo
     dataTable.page.len(-1).draw();
-    
+    //dataTable.columns(indexColumns.data).search("\\/").draw();
 
-    function resumo () {
+    function resumo () {  
+        //dataTable.columns(indexColumns.data).search("\\/").draw();
         
         var rowData = dataTable.rows().data(),
         quantidadeProdutos = 0,
@@ -69,24 +71,34 @@ $(function () {
             var valor = rowData[i][indexColumns.valor];
             var quantidade = rowData[i][indexColumns.quantidade];
             var tipo = rowData[i][indexColumns.tipo];
+            
+            
+            //#baile
+            // tem que mostrar apenas as linhas que tenham alguma data na coluna de data_aprovacao;
+            var data = rowData[i][indexColumns.data];
+            console.log(data);
 
-            valor = valor.replace('R$  ', '');
-            valor = floatParaPadraoInternacional(valor);
+            if (data== null || data=='' || data=='00/00/0000') {
+                console.log(data);
+                console.log("sem data memo");
+            }else{
+                valor = valor.replace('R$  ', '');
+                valor = floatParaPadraoInternacional(valor);
 
-            valor = valor * quantidade;
+                valor = valor * quantidade;
 
-            if(tipo=="Produtos"){
-                totalProdutos = parseFloat(totalProdutos) + parseFloat(valor);
-                quantidadeProdutos = parseInt(quantidadeProdutos) + parseInt(quantidade);
-            }else if(tipo=="Servicos"){
-                totalServicos = parseFloat(totalServicos) + parseFloat(valor);
-                quantidadeServicos = parseInt(quantidadeServicos) + parseInt(quantidade);
-            }else if(tipo=="Servicoscomplementares"){
-                totalServicosCompl = parseFloat(totalServicosCompl) + parseFloat(valor);
-                quantidadeServicosCompl = parseInt(quantidadeServicosCompl) + parseInt(quantidade);
+                if(tipo=="Produtos"){
+                    totalProdutos += parseFloat(valor);
+                    quantidadeProdutos += parseInt(quantidade);
+                }else if(tipo=="Servicos"){
+                    totalServicos += parseFloat(valor);
+                    quantidadeServicos += parseInt(quantidade);
+                }else if(tipo=="Servicoscomplementares"){
+                    totalServicosCompl += parseFloat(valor);
+                    quantidadeServicosCompl += parseInt(quantidade);
+                }
+                i++;
             }
-
-            i++;
         });
 
         totalItens = parseFloat(totalProdutos) + parseFloat(totalServicos) + parseFloat(totalServicosCompl);
