@@ -301,6 +301,7 @@ $(function() {
 
     transformarAlternativo($tr);
     SetInput();
+    console.log('calculaSubtotalCustotal 2')
     calculaSubtotalCustotal();
   }
 
@@ -444,6 +445,8 @@ $(function() {
 
     $('#col-cancelar_edicao').removeClass('d-none');
 
+    console.log('calculaSubtotalCustotal 3')
+
     calculaSubtotalCustotal();
     changeTipoServicoProduto(tdMaterialServico);
     toggleTipoMaterial(tdUnidade);
@@ -480,6 +483,7 @@ $(function() {
     ]);
 
     SetInput();
+    console.log('calculaSubtotalCustotal 1')
     calculaSubtotalCustotal();
 
     $('#btn_incluir').html('<i class="fas fa-check"></i>');
