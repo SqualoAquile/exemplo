@@ -103,30 +103,30 @@ class Orcamentos extends model {
 
     }
 
-    public function editarCliente($id_orcamento, $request) {
+    // public function editarCliente($id_orcamento, $request) {
 
-        if(!empty($id_orcamento)){
+    //     if(!empty($id_orcamento)){
 
-            print_r($id_orcamento);exit;
+    //         print_r($id_orcamento);exit;
 
-            // $id = addslashes(trim($id_orcamento));
+    //         // $id = addslashes(trim($id_orcamento));
 
-            // $ipcliente = $this->permissoes->pegaIPcliente();
-            // $palter = " | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - APROVADO";
+    //         // $ipcliente = $this->permissoes->pegaIPcliente();
+    //         // $palter = " | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - APROVADO";
 
-            // $sql = "UPDATE ". $this->table ." SET alteracoes = CONCAT(alteracoes, '$palter'), status = 'Aprovado' WHERE id = '$id' ";
+    //         // $sql = "UPDATE ". $this->table ." SET alteracoes = CONCAT(alteracoes, '$palter'), status = 'Aprovado' WHERE id = '$id' ";
             
-            // self::db()->query($sql);
+    //         // self::db()->query($sql);
 
-            // $erro = self::db()->errorInfo();
+    //         // $erro = self::db()->errorInfo();
 
-            // return [
-            //     "id_ordemservico" => $id_ordemservico,
-            //     "message" => $erro
-            // ];
+    //         // return [
+    //         //     "id_ordemservico" => $id_ordemservico,
+    //         //     "message" => $erro
+    //         // ];
 
-        }
-    }
+    //     }
+    // }
 
     public function getIdOrdemServico($id_orcamento){
         if(!empty($id_orcamento)){

@@ -1613,7 +1613,8 @@ function resumoItens() {
   }
 }
 
-function aprovarOrcamento(cliente) {
+function aprovarOrcamento() {
+
   let $id_cliente = $("[name=id_cliente]"),
     $id_orcamento = $("#form-principal"),
     $titulo_orcamento = $("[name=titulo_orcamento]"),
@@ -1649,35 +1650,32 @@ function aprovarOrcamento(cliente) {
     motivo_cancelamento: ""
   };
 
-  if (cliente) {
-    if (cliente.id) {
-      editarClienteOrcamento(
-        dadosParaEnviar.id_orcamento,
-        cliente,
-        function () {
-          ajaxAprovarOrcamento(dadosParaEnviar, cliente.id);
-        }
-      );
-    }
-  } else {
-    ajaxAprovarOrcamento(dadosParaEnviar);
-  }
+  // if (cliente) {
+  //   if (cliente.id) {
+  //     editarClienteOrcamento(
+  //       dadosParaEnviar.id_orcamento,
+  //       cliente,
+  //       function () {
+  //         ajaxAprovarOrcamento(dadosParaEnviar, cliente.id);
+  //       }
+  //     );
+  //   }
+  // } else {
+  // }
+  ajaxAprovarOrcamento(dadosParaEnviar);
 }
 
-function editarClienteOrcamento(id_orcamento, cliente, callback) {
-  $.ajax({
-    url: baselink + "/ajax/editarClienteOrcamento/" + id_orcamento,
-    type: "POST",
-    data: cliente,
-    dataType: "json",
-    success: callback
-  });
-}
+// function editarClienteOrcamento(id_orcamento, cliente, callback) {
+//   $.ajax({
+//     url: baselink + "/ajax/editarClienteOrcamento/" + id_orcamento,
+//     type: "POST",
+//     data: cliente,
+//     dataType: "json",
+//     success: callback
+//   });
+// }
 
-function ajaxAprovarOrcamento(dadosParaEnviar, id_cliente) {
-  if (id_cliente) {
-    dadosParaEnviar.id_cliente = id_cliente;
-  }
+function ajaxAprovarOrcamento(dadosParaEnviar) {
 
   $.ajax({
     url: baselink + "/ajax/aprovarOrcamento",
