@@ -369,7 +369,7 @@ class orcamentosController extends controller{
             
             $htmlRows .='
             <tr>
-                <td colspan="2"><b>'.$infos["itens"][$k]["nome"].' </b></td>
+                <td colspan="4"><b>'.$infos["itens"][$k]["nome"].' </b></td>
                 <td></td>
                 <td></td>
                 <td></td>
