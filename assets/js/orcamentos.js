@@ -1850,6 +1850,8 @@ function habilitaBotaoOrcamento() {
         console.log('putz entrou aqui', $this, dataAnterior, valorAtual)
         temAlteracao = true;
       }
+    } else {
+      console.log('ufaaaaaa')
     }
   });
 
