@@ -102,7 +102,7 @@ $(function () {
             var data = rowData[i][indexColumns.data_aprov];            
             
             //#baile
-            // tem que mostrar apenas as linhas que tenham alguma data na coluna de data_aprovacao;
+            // tem que mostrar apenas as linhas que tenham alguma data na coluna de data_aprovacao;git
             if (data) {
                 valor = valor.replace('R$  ', '');
                 valor = floatParaPadraoInternacional(valor);
