@@ -52,11 +52,33 @@ $(function () {
     
     // exibir tudo
     dataTable.page.len(-1).draw();
-    //dataTable.columns(indexColumns.data).search("\\/").draw();
+
+    $.fn.dataTable.ext.search.push(
+        function( settings, data, dataIndex ) {
+            if (data==''||data==null||data=='00/00/0000') {
+                var retorno = false;
+            }else{
+                var retorno = true;
+            }
+            return retorno;
+        }
+    );
+    
+    dataTable.draw();
 
     function resumo () {  
-        //dataTable.columns(indexColumns.data).search("\\/").draw();
+        $.fn.dataTable.ext.search.push(
+            function( settings, data, dataIndex ) {
+                if (data==''||data==null||data=='00/00/0000') {
+                    var retorno = true;
+                }else{
+                    var retorno = false;
+                }
+                return retorno;
+            }
+        );
         
+        dataTable.draw();        
         var rowData = dataTable.rows().data(),
         quantidadeProdutos = 0,
         quantidadeServicos = 0,
@@ -78,27 +100,23 @@ $(function () {
             var data = rowData[i][indexColumns.data];
             console.log(data);
 
-            if (data== null || data=='' || data=='00/00/0000') {
-                console.log(data);
-                console.log("sem data memo");
-            }else{
-                valor = valor.replace('R$  ', '');
-                valor = floatParaPadraoInternacional(valor);
+            valor = valor.replace('R$  ', '');
+            valor = floatParaPadraoInternacional(valor);
 
-                valor = valor * quantidade;
+            valor = valor * quantidade;
 
-                if(tipo=="Produtos"){
-                    totalProdutos += parseFloat(valor);
-                    quantidadeProdutos += parseInt(quantidade);
-                }else if(tipo=="Servicos"){
-                    totalServicos += parseFloat(valor);
-                    quantidadeServicos += parseInt(quantidade);
-                }else if(tipo=="Servicoscomplementares"){
-                    totalServicosCompl += parseFloat(valor);
-                    quantidadeServicosCompl += parseInt(quantidade);
-                }
-                i++;
+            if(tipo=="Produtos"){
+                totalProdutos += parseFloat(valor);
+                quantidadeProdutos += parseInt(quantidade);
+            }else if(tipo=="Servicos"){
+                totalServicos += parseFloat(valor);
+                quantidadeServicos += parseInt(quantidade);
+            }else if(tipo=="Servicoscomplementares"){
+                totalServicosCompl += parseFloat(valor);
+                quantidadeServicosCompl += parseInt(quantidade);
             }
+            i++;
+    
         });
 
         totalItens = parseFloat(totalProdutos) + parseFloat(totalServicos) + parseFloat(totalServicosCompl);
