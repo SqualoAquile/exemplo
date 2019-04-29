@@ -937,7 +937,7 @@ $(function () {
     habilitaBotaoOrcamento();
   });
 
-  $("#esquerda input").on("change", () => {
+  $('#esquerda').find("input, select").on("change", function() {
     habilitaBotaoOrcamento();
   });
 
