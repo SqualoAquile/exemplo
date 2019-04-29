@@ -184,6 +184,7 @@ $(function () {
                 if ($this.attr('data-anterior') != $this.val()) {
                     console.log($this.attr('data-unico'))
                     if ($this.attr('data-unico')) {
+                        console.log('if')
                         $this.unico(function (json) {
                             if (!json.length) {
                                 // Não existe, pode seguir
