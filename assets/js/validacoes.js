@@ -182,6 +182,7 @@ $(function () {
 
             if ($this.val()) {
                 if ($this.attr('data-anterior') != $this.val()) {
+                    console.log($this.attr('data-unico'))
                     if ($this.attr('data-unico')) {
                         $this.unico(function (json) {
                             if (!json.length) {
