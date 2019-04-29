@@ -712,7 +712,7 @@ $(function () {
           $this.val().startsWith("Contato - ")
         ) {
           $this.parent(".form-group").parent("[class^=col]").after(`
-            <div class="column-quem-indicou col-xl-12" style="order:12;">
+            <div class="column-quem-indicou col-xl-12">
               <div class="form-group">
                 <label class="font-weight-bold" for="quem_indicou">
                   <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Campo Obrigatório">*</i>
