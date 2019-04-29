@@ -264,13 +264,24 @@ $(function() {
           tdUnidade = par.children("td:nth-child(11)"),
           tdCusto = par.children("td:nth-child(12)"),
           tdPreco = par.children("td:nth-child(13)"),
-          tdObservacao = par.children("td:nth-child(14)"),
-          quantidade = floatParaPadraoInternacional(tdQuant.text()),
-          comprimento = floatParaPadraoInternacional(tdComprimento.text()),
-          largura = floatParaPadraoInternacional(tdLargura.text()),
+          tdObservacao = par.children("td:nth-child(14)");
+
+        let larguraText = tdLargura.text(),
+          comprimentoText = tdComprimento.text(),
+          quantidadeUsadaText = tdQuantUsada.text();
+          
+        if (tdUnidade != 'M²' || tdUnidade != 'ML') {
+          if (larguraText == '') larguraText = '0.00';
+          if (comprimentoText == '') comprimentoText = '0.00';
+          if (quantidadeUsadaText == '') quantidadeUsadaText = '0.00';
+        }
+
+        let quantidade = floatParaPadraoInternacional(tdQuant.text()),
+          comprimento = floatParaPadraoInternacional(comprimentoText),
+          largura = floatParaPadraoInternacional(larguraText),
           custo = floatParaPadraoInternacional(tdCusto.text()),
           preco = floatParaPadraoInternacional(tdPreco.text()),
-          quantidadeUsada = floatParaPadraoInternacional(tdQuantUsada.text());
+          quantidadeUsada = floatParaPadraoInternacional(quantidadeUsadaText);
 
         content += "[" + 
           tdItem.text() + " * " + 
