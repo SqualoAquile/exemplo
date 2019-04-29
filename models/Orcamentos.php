@@ -266,10 +266,6 @@ class Orcamentos extends model {
 
             $request = $this->shared->formataDadosParaBD($request);
 
-            echo "<pre>";
-            print_r($request);
-            echo "</pre>";
-
             // Cria a estrutura key = 'valor' para preparar a query do sql
             $output = implode(', ', array_map(
                 function ($value, $key) {
