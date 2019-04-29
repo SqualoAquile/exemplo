@@ -685,6 +685,16 @@ class ajaxController extends controller{
     echo json_encode($dados);
   }
 
+  public function top5produtos(){
+    
+    if(isset($_POST) && !empty($_POST)){
+      $shared = new Shared($_POST['modulo']);
+      $dados = $shared->top5produtos($_POST);
+    }
+    
+    echo json_encode($dados);
+  }
+
   
 
 }   
