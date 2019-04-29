@@ -458,7 +458,6 @@ $(function () {
         $esquerda.find("[name=email]").val($this.attr("data-email"));
 
         $esquerda.find("[name=id_cliente]").val($this.attr("data-id"));
-        console.log('aqui talvez?')
 
         $esquerda
           .find("[name=como_conheceu]")
@@ -558,7 +557,6 @@ $(function () {
       changeRequiredsPfPj();
     })
     .on("change", '[name="id_cliente"]', function () {
-      console.log('vish')
       checarClienteCadastrado();
     });
 
