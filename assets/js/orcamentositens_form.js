@@ -4,10 +4,10 @@ $(function() {
     lastInsertId = 0,
     botoes = `
       <td class="text-truncate">
-        <a href="javascript:void(0)" class="editar-item btn btn-sm btn-primary">
+        <a href="javascript:void(0)" class="editar-item btn btn-sm btn-primary" tabindex="-1">
           <i class="fas fa-edit"></i>
         </a>
-        <a href="javascript:void(0)" class="excluir-item btn btn-sm btn-danger">
+        <a href="javascript:void(0)" class="excluir-item btn btn-sm btn-danger" tabindex="-1">
           <i class="fas fa-trash-alt"></i>
         </a>
       </td>
