@@ -14,62 +14,69 @@ require "_header_browser_relatorios.php";
 ?>
 
 <div class="collapse mb-5" id="collapseFluxocaixaResumo">
-    <div class="row" id="somasResumo">
-        <div class="col-lg">
-            <div class="row">
+    <div class="row">
+        
+    </div>
 
-                <div class="col-lg">
-                    <div class="card card-body py-1 text-black text-center my-3 py-3 shadow">
-                        <p class="m-0">Quantidade de Produtos</p>
-                        <h5 id="quantidadeProdutos"></h5>
+
+        <div>
+        <div class="row" id="somasResumo">
+            <div class="col-lg">
+                <div class="row">
+
+                    <div class="col-lg">
+                        <div class="card card-body py-1 text-black text-center my-3 py-3 shadow">
+                            <p class="m-0">Quantidade de Produtos</p>
+                            <h5 id="quantidadeProdutos"></h5>
+                        </div>
+
+                        <div class="card card-body py-1 text-success text-center my-3 py-3 shadow">
+                            <p class="m-0">Valor Total de Produtos</p>
+                            <h5 id="totalProdutos"></h5>
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-lg">
-                    <div class="card card-body py-1 text-black text-center my-3 py-3 shadow">
-                        <p class="m-0">Quantidade de Serviços</p>
-                        <h5 id="quantidadeServicos"></h5>
+                    <div class="col-lg">
+                        <div class="card card-body py-1 text-black text-center my-3 py-3 shadow">
+                            <p class="m-0">Quantidade de Serviços</p>
+                            <h5 id="quantidadeServicos"></h5>
+                        </div>
+                        <div class="card card-body py-1 text-success text-center my-3 py-3 shadow">
+                            <p class="m-0">Valor Total de Serviços</p>
+                            <h5 id="totalServicos"></h5>
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-lg">
-                    <div class="card card-body py-1 text-black text-center my-3 py-3 shadow">
-                        <p class="m-0">Quantidade de Serviços Compl.</p>
-                        <h5 id="quantidadeServicosCompl"></h5>
+                    <div class="col-lg">
+                        <div class="card card-body py-1 text-black text-center my-3 py-3 shadow">
+                            <p class="m-0">Quantidade de Serviços Compl.</p>
+                            <h5 id="quantidadeServicosCompl"></h5>
+                        </div>
+                        <div class="card card-body py-1 text-success text-center my-3 py-3 shadow">
+                            <p class="m-0">Valor Total de Serviços Compl</p>
+                            <h5 id="totalServicosCompl"></h5>
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-lg">
-                    <div class="card card-body py-1 text-success text-center my-3 py-3 shadow">
-                        <p class="m-0">Valor Total de Produtos</p>
-                        <h5 id="totalProdutos"></h5>
+                    <!-- <div class="col-lg">
+                        <div class="card card-body py-1 text-success text-center my-3 py-3 shadow">
+                            <p class="m-0">Valor Total</p>
+                            <h5 id="totalItens"></h5>
+                        </div>
+                    </div> -->
+
+                    <div class="col-lg">
+                        <div class="card card-body py-1 text-black text-center my-3 py-3 shadow" >
+                            <canvas id="chart-div"></canvas>
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-lg">
-                    <div class="card card-body py-1 text-success text-center my-3 py-3 shadow">
-                        <p class="m-0">Valor Total de Serviços</p>
-                        <h5 id="totalServicos"></h5>
-                    </div>
-                </div>
+                    
 
-                <div class="col-lg">
-                    <div class="card card-body py-1 text-success text-center my-3 py-3 shadow">
-                        <p class="m-0">Valor Total de Serviços Compl</p>
-                        <h5 id="totalServicosCompl"></h5>
-                    </div>
                 </div>
-
-                <div class="col-lg">
-                    <div class="card card-body py-1 text-success text-center my-3 py-3 shadow">
-                        <p class="m-0">Valor Total</p>
-                        <h5 id="totalItens"></h5>
-                    </div>
-                </div>
-
             </div>
         </div>
-    </div>
+    </div>  
 </div>
 
 

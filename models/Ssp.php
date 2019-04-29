@@ -515,6 +515,50 @@ class SSP {
 		return $data;
 	}
 
+	static function complex_graficoTop5Produtos ( $request, $conn, $table, $primaryKey, $columns, $whereResult=null, $whereAll=null)
+	{
+		$bindings = array();
+		$db = self::db( $conn );
+		$localWhereResult = array();
+		$localWhereAll = array();
+		$whereAllSql = '';
+		$groupby = '';
+
+		// Build the SQL query string from the request
+
+		$where = self::filter( $request, $columns, $bindings );
+		$whereResult = self::_flatten( $whereResult );
+		$whereAll = self::_flatten( $whereAll );
+
+		if ( $whereResult ) {
+			$where = $where ?
+				$where .' AND '.$whereResult :
+				'WHERE '.$whereResult;
+		}
+		if ( $whereAll ) {
+			$where = $where ?
+				$where .' AND '.$whereAll :
+				'WHERE '.$whereAll;
+			$whereAllSql = 'WHERE '.$whereAll;
+		}
+
+		print_r($whereResult);exit;
+		
+		// Main query to actually get the data
+		$data = self::sql_exec( $db, $bindings,
+
+			"SELECT `material_servico`, SUM(quant) FROM `orcamentositens`
+			WHERE situacao='ativo' AND tipo_servico_produto='produtos' 
+			GROUP BY `material_servico`
+			ORDER BY SUM(quant) DESC
+			"
+		);
+		//print_r($data);exit;
+		return $data;
+	}
+
+	
+
 	static function complex_graficosSaldos ( $request, $conn, $table, $primaryKey, $columns, $whereResult=null, $whereAll=null,  $coluna=null, $dt1 = null, $dt2 = null )
 	{
 
