@@ -24,7 +24,10 @@
             </div>
         </div>        
     </div>
-    <div class="card-body">
+</div>
+
+
+    <div class="card card-body my-3">
         <div class="row">
             <div class="col-lg-5">
                 <div class="row">
@@ -32,8 +35,8 @@
                     <div class="col-lg-6">
                         <div class="card text-center mb-3">
                             <div class="card-body">
-                                <h6 class="card-title"><i class="fas fa-angle-double-up"></i> Receita Realizada</h6>
-                                <h2 class="card-text" id="receita_realizada">R$ 0,00</h2>
+                                <small class="card-title"><i class="fas fa-angle-double-up"></i> Receita Realizada</small>
+                                <h5 class="card-text" id="receita_realizada">R$ 0,00</h5>
                             </div>
                             
                         </div>
@@ -42,8 +45,8 @@
                     <div class="col-lg-6">
                         <div class="card text-center mb-3">
                             <div class="card-body">
-                                <h6 class="card-title"><i class="fas fa-angle-double-down"></i> Despesa Realizada</h6>
-                                <h2 class="card-text" id="despesa_realizada">R$ 0,00</h2>
+                                <small class="card-title"><i class="fas fa-angle-double-down"></i> Despesa Realizada</small>
+                                <h5 class="card-text" id="despesa_realizada">R$ 0,00</h5>
                             </div>
                             
                         </div>
@@ -52,8 +55,8 @@
                     <div class="col-lg-6">
                         <div class="card text-center">
                             <div class="card-body">
-                                <h6 class="card-title"><i class="fas fa-dollar-sign"></i> Lucro</h6>
-                                <h2 class="card-text" id="lucro_realizado">R$ 0,00</h2>
+                                <small class="card-title"><i class="fas fa-dollar-sign"></i> Lucro</small>
+                                <h5 class="card-text" id="lucro_realizado">R$ 0,00</h5>
                             </div>
                             
                         </div>
@@ -62,8 +65,8 @@
                     <div class="col-lg-6">
                         <div class="card text-center">
                             <div class="card-body">
-                                <h6 class="card-title"><i class="fas fa-percent"></i> Lucratividade</h6>
-                                <h2 class="card-text" id="lucratividade_realizada"> 0%</h2>
+                                <small class="card-title"><i class="fas fa-percent"></i> Lucratividade</small>
+                                <h5 class="card-text" id="lucratividade_realizada"> 0%</h5>
                             </div>
                         
                         </div>
@@ -75,59 +78,58 @@
             </div>
         </div>
     </div>
-</div>
 
-<div class="card card-body my-3">
-    <div class="row">
-        <div class="col-lg-5">
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="card text-center mb-3">
-                        <div class="card-body">
-                            <h6 class="card-title"><i class="fas fa-angle-double-up"></i> Receita Prevista</h6>
-                            <h2 class="card-text" id="receita_prevista">R$ 0,00</h2>
+    <div class="card card-body my-3">
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card text-center mb-3">
+                            <div class="card-body">
+                                <small class="card-title"><i class="fas fa-angle-double-up"></i> Receita Prevista</small>
+                                <h5 class="card-text" id="receita_prevista">R$ 0,00</h5>
+                            </div>
+                            
                         </div>
-                        
                     </div>
-                </div>
-                
-                <div class="col-lg-6">
-                    <div class="card text-center mb-3">
-                        <div class="card-body">
-                            <h6 class="card-title"><i class="fas fa-angle-double-down"></i> Despesa Prevista</h6>
-                            <h2 class="card-text" id="despesa_prevista">R$ 0,00</h2>
-                        </div>
-                        
-                    </div>
-                </div>
-
-                <div class="col-lg-6">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h6 class="card-title"><i class="fas fa-dollar-sign"></i> Lucro Previsto</h6>
-                            <h2 class="card-text" id="lucro_previsto">R$ 0,00</h2>
-                        </div>
-                        
                     
-                    </div>
-                </div>
-
-                <div class="col-lg-6">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h6 class="card-title"><i class="fas fa-percent"></i> Lucratividade Prevista</h6>
-                            <h2 class="card-text" id="lucratividade_prevista"> 30%</h2>
+                    <div class="col-lg-6">
+                        <div class="card text-center mb-3">
+                            <div class="card-body">
+                                <small class="card-title"><i class="fas fa-angle-double-down"></i> Despesa Prevista</small>
+                                <h5 class="card-text" id="despesa_prevista">R$ 0,00</h5>
+                            </div>
+                            
                         </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <small class="card-title"><i class="fas fa-dollar-sign"></i> Lucro Previsto</small>
+                                <h5 class="card-text" id="lucro_previsto">R$ 0,00</h5>
+                            </div>
+                            
                         
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <small class="card-title"><i class="fas fa-percent"></i> Lucrativ. Prevista</small>
+                                <h5 class="card-text" id="lucratividade_prevista"> 30%</h5>
+                            </div>
+                            
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-7">
-            <canvas id="chart-div3"></canvas>
+            <div class="col-lg-7">
+                <canvas id="chart-div3"></canvas>
+            </div>
         </div>
     </div>
-</div>
 
 <div class="card card-body my-3">
     <div class="row">
@@ -142,3 +144,21 @@
         </div>
     </div>
 </div>
+
+<div class="card card-body my-3">
+    <div class="row">
+        <div class="col-lg">
+            <canvas id="graf_saldosAno"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="card card-body my-3">
+    <div class="row">
+        <div class="col-lg">
+            //tabela de registros vencidos e próximos de vencer
+        </div>
+    </div>
+</div>
+
+
