@@ -110,6 +110,7 @@ $(function () {
         $("#custo_deslocamento").attr("data-custodesloc", custodesloc);
 
         valorTotal();
+        habilitaBotaoOrcamento();
       }
     }
   });
