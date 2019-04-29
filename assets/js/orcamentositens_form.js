@@ -172,6 +172,8 @@ $(function() {
             let dadoItemAux = dadoItem;
             if (!isNaN(dadoItemAux) && dadoItemAux.toString().indexOf('.') != -1) {
               dadoItemAux = floatParaPadraoBrasileiro(dadoItemAux);
+            } else if(dadoItemAux == 'NaN') {
+              dadoItemAux = '';
             }
             return dadoItemAux;
           });
@@ -270,13 +272,6 @@ $(function() {
           preco = floatParaPadraoInternacional(tdPreco.text()),
           quantidadeUsada = floatParaPadraoInternacional(tdQuantUsada.text());
 
-        if (quantidade == 'NaN') quantidade = 0.00;
-        if (comprimento == 'NaN') comprimento = 0.00;
-        if (largura == 'NaN') largura = 0.00;
-        if (custo == 'NaN') custo = 0.00;
-        if (preco == 'NaN') preco = 0.00;
-        if (quantidadeUsada == 'NaN') quantidadeUsada = 0.00;
-
         content += "[" + 
           tdItem.text() + " * " + 
           tdSubItem.text() + " * " + 
@@ -361,18 +356,18 @@ $(function() {
 
     } else {
 
-        quantAux = parseFloat(floatParaPadraoInternacional(tdQuant));
+      quantAux = parseFloat(floatParaPadraoInternacional(tdQuant));
 
-        custoUnit = parseFloat(
-          parseFloat(floatParaPadraoInternacional(tdCusto)) / tdQuant
-        );
+      custoUnit = parseFloat(
+        parseFloat(floatParaPadraoInternacional(tdCusto)) / quantAux
+      );
 
-        custoUnit = floatParaPadraoBrasileiro(parseFloat(custoUnit).toFixed(2));
+      custoUnit = floatParaPadraoBrasileiro(parseFloat(custoUnit).toFixed(2));
 
-        precoUnit = parseFloat(
-          parseFloat(floatParaPadraoInternacional(tdPreco)) / tdQuant
-        );
-        precoUnit = floatParaPadraoBrasileiro(parseFloat(precoUnit).toFixed(2));
+      precoUnit = parseFloat(
+        parseFloat(floatParaPadraoInternacional(tdPreco)) / quantAux
+      );
+      precoUnit = floatParaPadraoBrasileiro(parseFloat(precoUnit).toFixed(2));
 
     }
 
@@ -458,6 +453,13 @@ $(function() {
     toggleTipoMaterial(tdUnidade);
 
     $("input[name=preco_tot_subitem]").change();
+
+    if (tdUnidade != "ML" || tdUnidade != "M²") {
+      $('#camposOrc')
+        .find('#largura, #comprimento')
+        .attr('disabled', 'disabled')
+        .removeClass('is-valid is-invalid');
+    }
     
   }
 

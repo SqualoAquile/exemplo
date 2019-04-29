@@ -49,6 +49,21 @@ class Orcamentos extends model {
                 if (trim($tipoProdutoServico) != "produtos") {
                     $tipoMaterial = "";
                 }
+
+                if (trim($tipoProdutoServico) == "servicoscomplementares") {
+                    // Largura
+                    if ($explodedItem[3] == "NaN") {
+                        $explodedItem[3] = 0.00;
+                    }
+                    // Comprimento
+                    if ($explodedItem[4] == "NaN") {
+                        $explodedItem[4] = 0.00;
+                    }
+                    // Quantidade Usada
+                    if ($explodedItem[5] == "NaN") {
+                        $explodedItem[5] = 0.00;
+                    }
+                }
     
                 $sqlItens = "INSERT INTO orcamentositens 
                 (
@@ -251,6 +266,10 @@ class Orcamentos extends model {
             }
 
             $request = $this->shared->formataDadosParaBD($request);
+
+            echo "<pre>";
+            print_r($request);
+            echo "</pre>";
 
             // Cria a estrutura key = 'valor' para preparar a query do sql
             $output = implode(', ', array_map(
