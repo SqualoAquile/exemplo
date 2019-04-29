@@ -50,19 +50,18 @@ class Orcamentos extends model {
                     $tipoMaterial = "";
                 }
 
-                if (trim($tipoProdutoServico) == "servicoscomplementares") {
-                    // Largura
-                    if ($explodedItem[3] == "NaN") {
-                        $explodedItem[3] = "0.00";
-                    }
-                    // Comprimento
-                    if ($explodedItem[4] == "NaN") {
-                        $explodedItem[4] = "0.00";
-                    }
-                    // Quantidade Usada
-                    if ($explodedItem[5] == "NaN") {
-                        $explodedItem[5] = "0.00";
-                    }
+                
+                // Largura
+                if ($explodedItem[3] == "NaN") {
+                    $explodedItem[3] = "0.00";
+                }
+                // Comprimento
+                if ($explodedItem[4] == "NaN") {
+                    $explodedItem[4] = "0.00";
+                }
+                // Quantidade Usada
+                if ($explodedItem[5] == "NaN") {
+                    $explodedItem[5] = "0.00";
                 }
     
                 $sqlItens = "INSERT INTO orcamentositens 
