@@ -457,6 +457,7 @@ $(function () {
         $esquerda.find("[name=email]").val($this.attr("data-email"));
 
         $esquerda.find("[name=id_cliente]").val($this.attr("data-id"));
+        console.log('aqui talvez?')
 
         $esquerda
           .find("[name=como_conheceu]")
@@ -556,6 +557,7 @@ $(function () {
       changeRequiredsPfPj();
     })
     .on("change", '[name="id_cliente"]', function () {
+      console.log('vish')
       checarClienteCadastrado();
     });
 
@@ -870,7 +872,7 @@ $(function () {
   });
 
   $("#nome_cliente")
-    .on("blur change", function (e, ignorar) {
+    .on("change", function () {
       
       let $this = $(this),
         $elements = $this
@@ -890,7 +892,7 @@ $(function () {
 
       // Se não encontrar nenhum cliente com mesmo nome, tira o valor do id_cliente
       // Dizendo para o software que não tem nenhum cliente cadastrado naquele orçamento
-      if (!$filtereds.length && !ignorar) {
+      if (!$filtereds.length) {
         $("[name=id_cliente]").val("0");
       }
 
@@ -1783,6 +1785,7 @@ function setarClienteCadastrado(cliente) {
   let $form = $("#form-principal"),
     $idCliente = $form.find('[name="id_cliente"]'),
     $nome = $form.find("#nome_cliente"),
+    $faturadoPara = $form.find("#faturado_para"),
     $telefone = $form.find("#telefone"),
     $celular = $form.find("#celular"),
     $email = $form.find("#email"),
@@ -1797,11 +1800,8 @@ function setarClienteCadastrado(cliente) {
       .prop("checked", true)
       .change();
 
-    $nome
-      .val(cliente.nome)
-      .trigger('change', [true])
-      .removeClass("is-valid");
-
+    $nome.val(cliente.nome);
+    $faturadoPara.val(cliente.nome);;
     $telefone.val(cliente.telefone);
     $celular.val(cliente.celular);
     $email.val(cliente.email);

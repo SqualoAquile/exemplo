@@ -16,7 +16,7 @@ require "_modal_configuracoes_impressao.php";
         dataTable.on('draw', function() {
             $('table.dataTable').each(function() {
                 $(this).find('tbody tr').each(function() {
-                    let status = $(this).find('td:eq(16)').text();
+                    let status = $(this).find('td:eq(15)').text();
                     if (status) {
                         status = status.toLowerCase();
                         if (status == 'aprovado') {

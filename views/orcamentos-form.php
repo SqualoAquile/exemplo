@@ -3,9 +3,6 @@
     $modulo = str_replace("-form", "", basename(__FILE__, ".php"));
     $colunasOrcamentosEsquerda = array_slice($colunasOrcamentos, 0, 18);
     $colunasOrcamentosBaixo = array_slice($colunasOrcamentos, 18);
-    $tabIndexEsquerda = 0;
-    $tabIndexDireita = 15;
-    $tabIndexEmbaixo = 28;
 ?>
 
 <script type="text/javascript">
@@ -57,8 +54,7 @@
                                 <?php echo $value["Null"] == "NO" ? "required" : "" ?>
                             />
                         <?php else: ?>
-                            <div class="col-xl-<?php echo isset($value["Comment"]["column"]) ? $value["Comment"]["column"] : "12" ?>" 
-                                    style="order:<?php echo isset($value["Comment"]["ordem_form"]) ? $value["Comment"]["ordem_form"] : 100 ?>;">
+                            <div class="col-xl-<?php echo isset($value["Comment"]["column"]) ? $value["Comment"]["column"] : "12" ?>">
                                 <div class="form-group form-group-foreach">
                                     <!-- Label Geral -->
                                     <label class="<?php echo $value["Null"] == "NO" ? "font-weight-bold" : "" ?>" for="<?php echo $value['Field'] ?>">
@@ -75,7 +71,6 @@
                                         <select id="<?php echo lcfirst($value['Field']);?>" 
                                                 name="<?php echo lcfirst($value['Field']);?>"
                                                 class="form-control"
-                                                tabindex="<?php echo $tabIndexDireita ?>"
                                                 data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                                 <?php echo $value['Null'] == "NO" ? "required" : "" ?>
                                                 >
@@ -115,7 +110,6 @@
                                                         <input 
                                                             id="<?php echo $value["Comment"]['info_relacional']['resultado'][$j];?>" 
                                                             type="checkbox" 
-                                                            tabindex="<?php echo $tabIndexDireita ?>"
                                                             class="form-check-input" 
                                                             data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>" 
                                                             <?php
@@ -142,7 +136,6 @@
                                         
                                         <textarea
                                             class="form-control" 
-                                            tabindex="<?php echo $tabIndexDireita ?>"
                                             name="<?php echo lcfirst($value['Field']);?>" 
                                             id="<?php echo lcfirst($value['Field']);?>"
                                             data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
@@ -152,7 +145,7 @@
                                     <!-- CAMPOS DO TIPO RADIO -->
                                     <?php elseif(array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "radio"): ?>
                                         <?php $indexRadio = 0 ?>
-                                        <div class="form-check-wrapper form-radio d-table position-relative pr-4" tabindex="<?php echo $tabIndexDireita ?>">
+                                        <div class="form-check-wrapper form-radio d-table position-relative pr-4">
                                             <?php foreach ($value["Comment"]["options"] as $valueRadio => $label): ?>
                                                 <div class="form-check form-check-inline position-static">
                                                     <input 
@@ -186,7 +179,6 @@
                                             id="<?php echo $value['Field'] ?>" 
                                             name="<?php echo $value['Field'] ?>" 
                                             type="text" 
-                                            tabindex="<?php echo $tabIndexDireita ?>"
                                             class="dropdown-toggle form-control relacional-dropdown-input-orcamento" 
                                             data-toggle="dropdown" 
                                             aria-haspopup="true" 
@@ -216,7 +208,6 @@
                                         <input 
                                             type="text" 
                                             class="form-control" 
-                                            tabindex="<?php echo $tabIndexDireita ?>"
                                             name="<?php echo lcfirst($value["Field"]) ?>" 
                                             data-unico="<?php echo array_key_exists("unico", $value["Comment"]) && $value["Comment"]["unico"]  == true ? "unico" : "" ?>"
                                             id="<?php echo $value['Field'] ?>"
@@ -231,14 +222,13 @@
                                     <?php endif ?>
                                 </div>
                             </div>
-                            <?php $tabIndexDireita++ ?>
                         <?php endif ?>
                     <?php endif ?>
                 <?php endforeach ?>
-                <div class="col-lg-4" style="order: 14;">
+                <div class="col-lg-4">
                     <button id="btn_incluir" class="btn btn-primary btn-block">Incluir</button>
                 </div>
-                <div id="col-cancelar_edicao" class="col-lg-4 d-none" style="order: 14;">
+                <div id="col-cancelar_edicao" class="col-lg-4 d-none">
                     <button id="cancelar_edicao" type="reset" class="btn btn-primary btn-light btn-block">Cancelar Edição</button>
                 </div>
             </form>
@@ -287,8 +277,7 @@
                                     <?php echo $value["Null"] == "NO" ? "required" : "" ?>
                                 />
                             <?php else: ?>
-                                <div    class="col-xl-<?php echo isset($value["Comment"]["column"]) ? $value["Comment"]["column"] : "12" ?>" 
-                                        style="order:<?php echo isset($value["Comment"]["ordem_form"]) ? $value["Comment"]["ordem_form"] : 100 ?>;">
+                                <div class="col-xl-<?php echo isset($value["Comment"]["column"]) ? $value["Comment"]["column"] : "12" ?>">
                                     <div class="form-group form-group-foreach">
 
                                         <!-- Label Geral -->
@@ -305,7 +294,6 @@
                                             <select id="<?php echo lcfirst($value['Field']);?>" 
                                                     name="<?php echo lcfirst($value['Field']);?>"
                                                     class="form-control"
-                                                    tabindex="<?php echo $tabIndexEsquerda ?>"
                                                     data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
                                                     data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                                     <?php echo $value['Null'] == "NO" ? "required" : "" ?>
@@ -340,7 +328,7 @@
                                                         $checados =  array_map('trim', $checados);
                                                     }
                                                 ?>
-                                                <div class="form-check-wrapper position-relative form-checkbox pr-4" tabindex="<?php echo $tabIndexEsquerda ?>">
+                                                <div class="form-check-wrapper position-relative form-checkbox pr-4">
                                                     <?php for($j = 0; $j < count($opcoes); $j++):?>
                                                         <div class="form-check form-check-inline">
                                                             <input 
@@ -376,7 +364,6 @@
                                             <textarea
                                                 class="form-control" 
                                                 name="<?php echo lcfirst($value['Field']);?>" 
-                                                tabindex="<?php echo $tabIndexEsquerda ?>"
                                                 data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
                                                 id="<?php echo lcfirst($value['Field']);?>"
                                                 data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
@@ -386,7 +373,7 @@
                                         <!-- CAMPOS DO TIPO RADIO -->
                                         <?php elseif(array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "radio"): ?>
                                             <?php $indexRadio = 0 ?>
-                                            <div class="form-check-wrapper form-radio d-table position-relative pr-4" tabindex="<?php echo $tabIndexEsquerda ?>">
+                                            <div class="form-check-wrapper form-radio d-table position-relative pr-4">
                                                 <?php foreach ($value["Comment"]["options"] as $valueRadio => $label): ?>
                                                     <div class="form-check form-check-inline position-static">
                                                         <input 
@@ -422,7 +409,6 @@
                                                 id="<?php echo $value['Field'] ?>" 
                                                 name="<?php echo $value['Field'] ?>" 
                                                 type="text" 
-                                                tabindex="<?php echo $tabIndexEsquerda ?>"
                                                 class="dropdown-toggle form-control relacional-dropdown-input-cliente" 
                                                 data-toggle="dropdown" 
                                                 aria-haspopup="true" 
@@ -455,7 +441,6 @@
                                             <input 
                                                 type="text" 
                                                 class="form-control" 
-                                                tabindex="<?php echo $tabIndexEsquerda ?>"
                                                 name="<?php echo lcfirst($value["Field"]) ?>" 
                                                 value="<?php echo isset($item) && !empty($item) ? $item[$value["Field"]] : "" ?>"
                                                 data-unico="<?php echo array_key_exists("unico", $value["Comment"]) && $value["Comment"]["unico"]  == true ? "unico" : "" ?>"
@@ -472,7 +457,6 @@
                                         <?php endif ?>
                                     </div>
                                 </div>
-                                <?php $tabIndexEsquerda++ ?>
                             <?php endif ?>
                         <?php endif ?>
                     <?php endforeach ?>
@@ -523,7 +507,7 @@
                                         <?php echo $value["Null"] == "NO" ? "required" : "" ?>
                                     />
                                 <?php else: ?>
-                                    <div class="col-lg" style="order:<?php echo isset($value["Comment"]["ordem_form"]) ? $value["Comment"]["ordem_form"] : 100 ?>;">
+                                    <div class="col-lg">
                                         <div class="form-group form-group-foreach">
 
                                             <!-- Label Geral -->
@@ -540,7 +524,6 @@
                                                 <select id="<?php echo lcfirst($value['Field']);?>" 
                                                     name="<?php echo lcfirst($value['Field']);?>"
                                                     class="form-control"
-                                                    tabindex="<?php echo $tabIndexEmbaixo ?>"
                                                     data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
                                                     data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                                     <?php echo $value['Null'] == "NO" ? "required" : "" ?>
@@ -575,7 +558,7 @@
                                                         $checados =  array_map('trim', $checados);
                                                     }
                                                 ?>
-                                                <div class="form-check-wrapper position-relative form-checkbox pr-4" tabindex="<?php echo $tabIndexEmbaixo ?>">
+                                                <div class="form-check-wrapper position-relative form-checkbox pr-4">
                                                     <?php for($j = 0; $j < count($opcoes); $j++):?>
                                                         <div class="form-check form-check-inline">
                                                             <input 
@@ -612,7 +595,6 @@
                                                     class="form-control" 
                                                     name="<?php echo lcfirst($value['Field']);?>" 
                                                     data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
-                                                    tabindex="<?php echo $tabIndexEmbaixo ?>"
                                                     id="<?php echo lcfirst($value['Field']);?>"
                                                     data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                                     <?php echo $value['Null'] == "NO" ? "required" : "" ?>
@@ -621,7 +603,7 @@
                                             <!-- CAMPOS DO TIPO RADIO -->
                                             <?php elseif(array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "radio"): ?>
                                                 <?php $indexRadio = 0 ?>
-                                                <div class="form-check-wrapper form-radio d-table position-relative pr-4" tabindex="<?php echo $tabIndexEmbaixo ?>">
+                                                <div class="form-check-wrapper form-radio d-table position-relative pr-4">
                                                     <?php foreach ($value["Comment"]["options"] as $valueRadio => $label): ?>
                                                         <div class="form-check form-check-inline position-static">
                                                             <input 
@@ -659,7 +641,6 @@
                                                     type="text" 
                                                     class="dropdown-toggle form-control relacional-dropdown-input" 
                                                     data-toggle="dropdown" 
-                                                    tabindex="<?php echo $tabIndexEmbaixo ?>"
                                                     aria-haspopup="true" 
                                                     aria-expanded="false"
                                                     maxlength="<?php echo $value["tamanhoMax"] ?>"
@@ -693,7 +674,6 @@
                                                     name="<?php echo lcfirst($value["Field"]) ?>" 
                                                     value="<?php echo isset($item) && !empty($item) ? $item[$value["Field"]] : "" ?>"
                                                     data-unico="<?php echo array_key_exists("unico", $value["Comment"]) && $value["Comment"]["unico"]  == true ? "unico" : "" ?>"
-                                                    tabindex="<?php echo $tabIndexEmbaixo ?>"
                                                     data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
                                                     id="<?php echo $value['Field'] ?>"
                                                     <?php echo $value['Null'] == "NO" ? "required" : "" ?>
@@ -707,7 +687,6 @@
                                             <?php endif ?>
                                         </div>
                                     </div>
-                                    <?php $tabIndexEmbaixo++ ?>
                                 <?php endif ?>
                             <?php endif ?>
                         <?php endforeach ?>
