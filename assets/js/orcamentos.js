@@ -103,6 +103,11 @@ $(function () {
         segop = floatParaPadraoInternacional(data["taxa_seg_op"]);
         $("#preco_tot_subitem").attr("data-seg_op", segop);
       }
+
+      if (data["desconto_max"]) {
+        $('#desconto_porcent').attr('data-descontomax', data["desconto_max"]);
+      }
+
       if (data["custo_deslocamento"]) {
         custodesloc = floatParaPadraoInternacional(
           data["custo_deslocamento"]
@@ -328,6 +333,18 @@ $(function () {
     }
 
     calculaMaterialCustoPreco();
+  });
+
+  $('#desconto_porcent').on('change', function() {
+
+    let $this = $(this),
+      descontoMax = $this.attr('data-descontomax');
+
+    if (descontoMax && parseFloat($this.val()) > parseFloat(descontoMax)) {
+      $this.val('0%');
+      alert('O desconto máximo é de ' + descontoMax + '.');
+    }
+
   });
 
   $("#recontato").on("click", function () {
@@ -1600,7 +1617,7 @@ function calculaDesconto() {
         );
 
         $descontoPorcent.val(
-          $descontoPorcent.attr("data-anterior") || 0
+          $descontoPorcent.attr("data-anterior") || '0%'
         );
         $descontoReais.val($descontoReais.attr("data-anterior") || 0);
       } else {
@@ -1610,7 +1627,7 @@ function calculaDesconto() {
 
         $descontoReais.val($descontoReais.attr("data-anterior") || 0);
         $descontoPorcent.val(
-          $descontoPorcent.attr("data-anterior") || 0
+          $descontoPorcent.attr("data-anterior") || '0%'
         );
       }
     }
