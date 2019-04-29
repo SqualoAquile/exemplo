@@ -8,19 +8,21 @@ $(function () {
         id2 = "#chart-div3",
         id3 = "#graf_despesa_analitica",
         id4 = "#graf_receita_analitica",
+        id5 = "#graf_saldos",
+        id6 = "#graf_saldosAno",
         tipo = "bar",
         ctx = document.getElementById(id1.substr(1)).getContext('2d');
 
     $selectGrafTemporal
         .val(7)
         .on('change', function() {
-            drawChart();
+            fluxoCaixa_Realizado_Previsto();
             receita_despesa_analitica();
             grafico_saldos();
         })
         .change();
 
-    function drawChart() {
+    function fluxoCaixa_Realizado_Previsto() {
         var titulo, titulo2, intervalo = [], intervalo2 = [];
         var $receitaRealizada = $("#receita_realizada");
         var $despesaRealizada = $("#despesa_realizada");
@@ -366,8 +368,8 @@ $(function () {
             };
 
             //// DESPESAS ANALÍTICAS REALIZADAS
-            titulo = 'Saldo do mês + resultado de ' + $selectGrafTemporal.children("option:selected").text().trim() +' até hoje.';
-            titulo2 = 'Fluxo de Caixa do Ano '
+            titulo = 'Saldo Atual do Mês';
+            titulo2 = 'Saldos do Ano'
             intervaloDiasMesAtual = intervaloDatasRealizado($selectGrafTemporal.val());
             intervaloMesesAno = intervaloDatasSaldos(dataAtual());
             // intervaloMesesAno = intervaloDatasSaldos('13/12/2019');
@@ -383,93 +385,98 @@ $(function () {
                 dataType: 'json', 
                 success: function (resultado) { 
                     if (resultado){   
+                        console.log(resultado);
 
-                        var labelsDespesa = [], valoresDespesa = [], coresDespesa = [];
-                        var labelsReceita = [], valoresReceita = [], coresReceita = [];
-                        var receitaAux = parseFloat(0), saldoAux = parseFloat(0), saldo = parseFloat(0);
+                        var labelSaldos = [], valoresSaldos = [], coresSaldos = [];
+                        var labelSaldosAno = [], valoresSaldosAno = [];
                     
-                        labelsDespesa = Object.keys( resultado[0] );
-                        valoresDespesa = Object.values( resultado[0] );
-                        coresDespesa = ['#022346','#359db5','#0b7bff','#1e43af','#17bae8'];
-                        
-                        labelsReceita = Object.keys( resultado[1] );
-                        valoresReceita = Object.values( resultado[1] );
-                        coresReceita = ['#022346','#0b7bff'];
+                        labelSaldos = ['Saldo Ant.', 'Result. Atual', 'Saldo Atual'];
+                        valoresSaldos = Object.values( resultado[1] );
+                        coresSaldos = ['#359db5','#0b7bff','#022346'];                   
 
-                        for ( var i = 0; i < valoresReceita.length; i++ ){
-                            receitaAux = receitaAux + parseFloat( valoresReceita[i] );
-                        }
-
-                        
                         var config = {
-                            type: 'doughnut',
+                            type: 'bar',
                             data: {
+                                labels: labelSaldos,
                                 datasets: [{
-                                    data: valoresDespesa,
-                                    backgroundColor: coresDespesa,
-                                }],
-                                labels: labelsDespesa
+                                    type: 'bar',
+                                    label: '',
+                                    backgroundColor: coresSaldos,
+                                    data: valoresSaldos,
+                                    borderColor: 'white',
+                                    borderWidth: 1
+                                }]
                             },
                             options: {
                                 responsive: true,
-                                legend: {
-                                    position: 'right',
-                                },
+                                maintainAspectRatio: false,
                                 title: {
                                     display: true,
-                                    text: titulo
+                                    text: titulo,
+                                    position: "top"
                                 },
-                                animation: {
-                                    animateScale: true,
-                                    animateRotate: true
-                                }
+                                legend: {
+                                    display: false,
+                                    position: "top"
+                                },
                             }
-                        };
+                        }
     
-                        if(typeof charts[id3] == "undefined") {   
-                            charts[id3]= new (function(){
-                            this.ctx=$(id3); 
+                        if(typeof charts[id5] == "undefined") {   
+                            charts[id5]= new (function(){
+                            this.ctx=$(id5); 
                             this.chart=new Chart(this.ctx, config);
                             })();     
                         } else {
-                            charts[id3].chart.destroy();
-                            charts[id3].chart=new Chart(charts[id3].ctx, config); 
+                            charts[id5].chart.destroy();
+                            charts[id5].chart=new Chart(charts[id5].ctx, config); 
                         }
 
+                        var dtAtual = dataAtual();
+                            dtAtual = dtAtual.split('/');
+                            
+                        labelSaldosAno = ['Jan/'+dtAtual[2], 'Fev/'+dtAtual[2], 'Mar/'+dtAtual[2], 'Abr/'+dtAtual[2],'Mai/'+dtAtual[2], 'Jun/'+dtAtual[2], 'Jul/'+dtAtual[2], 'Ago/'+dtAtual[2], 'Set/'+dtAtual[2], 'Out/'+dtAtual[2], 'Nov/'+dtAtual[2], 'Dez/'+dtAtual[2]];
+
+                        valoresSaldosAno = Object.values( resultado[0] );
+
                         var config = {
-                            type: 'doughnut',
+                            type: 'bar',
                             data: {
+                                labels: labelSaldosAno,
                                 datasets: [{
-                                    data: valoresReceita,
-                                    backgroundColor: coresReceita,
-                                }],
-                                labels: labelsReceita
+                                    type: 'bar',
+                                    label: '',
+                                    backgroundColor: '#022346',
+                                    data: valoresSaldosAno,
+                                    borderColor: 'white',
+                                    borderWidth: 2
+                                }]
                             },
                             options: {
                                 responsive: true,
-                                legend: {
-                                    position: 'right',
-                                },
+                                maintainAspectRatio: false,
                                 title: {
                                     display: true,
-                                    text: titulo2
+                                    text: titulo2,
+                                    position: "top"
                                 },
-                                animation: {
-                                    animateScale: true,
-                                    animateRotate: true
-                                }
+                                legend: {
+                                    display: false,
+                                    position: "top"
+                                },
                             }
-                        };
-    
-                        if(typeof charts[id4] == "undefined") {   
-                            charts[id4]= new (function(){
-                            this.ctx=$(id4); 
+                        }
+
+                        if(typeof charts[id6] == "undefined") {   
+                            charts[id6]= new (function(){
+                            this.ctx=$(id6); 
                             this.chart=new Chart(this.ctx, config);
                             })();     
                         } else {
-                            charts[id4].chart.destroy();
-                            charts[id4].chart=new Chart(charts[id4].ctx, config); 
+                            charts[id6].chart.destroy();
+                            charts[id6].chart=new Chart(charts[id6].ctx, config); 
                         }
+
                     }
                 }
             });            

@@ -233,7 +233,7 @@ class Relatoriosaldos extends model {
         }
 
         // até aqui o vetor de saldos está OK - pode ser enviado pro gráfico
-        print_r($saldos);
+        // print_r($saldos);
         $p = count($saldos);
         foreach ($saldos as $key => $value) {
             if($p > 1){
@@ -246,11 +246,11 @@ class Relatoriosaldos extends model {
         $dt1 = $dt2;
         $dt2 = date('Y-m-d');
 
-        echo $saldoTotalMesAnterior . ' ----- ' . $dt1 . ' ------- '. $dt2; ;
+        // echo $saldoTotalMesAnterior . ' ----- ' . $dt1 . ' ------- '. $dt2; ;
 
         $sql2 = "SELECT SUM(valor_total) as total FROM `fluxocaixa` WHERE situacao='ativo' AND despesa_receita = 'Despesa' AND status = 'Quitado' AND data_quitacao BETWEEN '$dt1' AND '$dt2' ";
         
-        echo $sql2;
+        // echo $sql2;
         $sql2 = self::db()->query($sql2);
         
         if($sql2->rowCount()>0){
@@ -271,16 +271,16 @@ class Relatoriosaldos extends model {
             $receitaRealizada = floatval(0);
         }
         
-
+        
         $resultadoMes = $receitaRealizada - $despesaRealizada;
         $saldoAtualizado = $saldoTotalMesAnterior + $resultadoMes;
 
-        echo 'receita: '.$receitaRealizada. ' ---------- despesa:  '.$despesaRealizada. ' -------- resultado:  '.$resultadoMes;
+        // echo 'receita: '.$receitaRealizada. ' ---------- despesa:  '.$despesaRealizada. ' -------- resultado:  '.$resultadoMes;
 		$data = array();
 		$data[0] = $saldos;
-        $data[1] = $saldoAtualizado;
+        $data[1] = array("saldoAnterior"=>$saldoTotalMesAnterior, "resultadoMesAtual"=>$resultadoMes,  "saldoAtual" =>  $saldoAtualizado);
         
-        print_r($data); exit;
+        //  print_r($data); exit;
 		return $data; 
 		
     }
