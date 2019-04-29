@@ -110,8 +110,6 @@ class Orcamentos extends model {
     
             }
 
-            exit;
-
         }
 
 
