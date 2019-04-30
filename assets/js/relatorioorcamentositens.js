@@ -319,6 +319,7 @@ $(function () {
 
     $('#botaoRelatorio').on('click', function(){
 
+        dataTable.page.len(-1).draw();
 
         let pesquisar = false;
 
