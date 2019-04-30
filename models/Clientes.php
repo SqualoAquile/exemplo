@@ -174,4 +174,37 @@ class Clientes extends model {
             }
         }
     }
+
+    public function buscaAniversariantes($interval_datas){
+        
+        $array = array();
+        if(!empty($interval_datas) && isset($interval_datas)){
+            
+            if(count($interval_datas) == 1){
+                $dt1 = 	$interval_datas[0];
+                $dt2 =  $interval_datas[0];
+            }else{
+                $dt1 = $interval_datas[0];
+                $dt2 = $interval_datas[count($interval_datas)-1];
+            }
+
+            
+            $dt1 = explode('-', $dt1);
+            $dt2 = explode('-', $dt2);
+
+            // busca as despesas relacionadas a O.S. lançadas no fluxo de caixa
+            $sql1 = "SELECT `id`, `nome`, `data_nascimento`, `celular`, `email` FROM `clientes` WHERE situacao = 'ativo' AND MONTH(data_nascimento) IN('$dt1[1]', '$dt2[1]') ORDER BY data_nascimento ASC";
+
+            $sql1 = self::db()->query($sql1);
+            $anivers = array();
+
+            if($sql1->rowCount() > 0){  
+                $anivers = $sql1->fetchAll(PDO::FETCH_ASSOC);
+            }
+           
+            $array['anivers'] = $anivers;
+        }      
+
+       return $array;
+    }
 }
