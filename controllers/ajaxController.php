@@ -690,6 +690,17 @@ class ajaxController extends controller{
     echo json_encode($dados);
   }
 
+  public function buscaVencidos(){
+    
+    if(isset($_POST) && !empty($_POST)){
+      
+      $fc = new Fluxocaixa();
+      $dados = $fc->buscaVencidos($_POST['intervalo']);
+    }
+    echo json_encode($dados);
+  }
+  
+
   public function top5produtos(){
     
     if(isset($_POST) && !empty($_POST)){

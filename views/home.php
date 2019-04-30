@@ -26,110 +26,109 @@
     </div>
 </div>
 
+<div class="card card-body my-3">
+    <div class="row">
+        <div class="col-lg-5">
+            <div class="row">
 
-    <div class="card card-body my-3">
-        <div class="row">
-            <div class="col-lg-5">
-                <div class="row">
-
-                    <div class="col-lg-6">
-                        <div class="card text-center mb-3">
-                            <div class="card-body">
-                                <small class="card-title"><i class="fas fa-angle-double-up"></i> Receita Realizada</small>
-                                <h5 class="card-text" id="receita_realizada">R$ 0,00</h5>
-                            </div>
-                            
+                <div class="col-lg-6">
+                    <div class="card text-center mb-3">
+                        <div class="card-body">
+                            <small class="card-title"><i class="fas fa-angle-double-up"></i> Receita Realizada</small>
+                            <h5 class="card-text" id="receita_realizada">R$ 0,00</h5>
                         </div>
-                    </div>
-                    
-                    <div class="col-lg-6">
-                        <div class="card text-center mb-3">
-                            <div class="card-body">
-                                <small class="card-title"><i class="fas fa-angle-double-down"></i> Despesa Realizada</small>
-                                <h5 class="card-text" id="despesa_realizada">R$ 0,00</h5>
-                            </div>
-                            
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <div class="card text-center">
-                            <div class="card-body">
-                                <small class="card-title"><i class="fas fa-dollar-sign"></i> Lucro</small>
-                                <h5 class="card-text" id="lucro_realizado">R$ 0,00</h5>
-                            </div>
-                            
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <div class="card text-center">
-                            <div class="card-body">
-                                <small class="card-title"><i class="fas fa-percent"></i> Lucratividade</small>
-                                <h5 class="card-text" id="lucratividade_realizada"> 0%</h5>
-                            </div>
                         
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="card text-center mb-3">
+                        <div class="card-body">
+                            <small class="card-title"><i class="fas fa-angle-double-down"></i> Despesa Realizada</small>
+                            <h5 class="card-text" id="despesa_realizada">R$ 0,00</h5>
                         </div>
+                        
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <small class="card-title"><i class="fas fa-dollar-sign"></i> Lucro</small>
+                            <h5 class="card-text" id="lucro_realizado">R$ 0,00</h5>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <small class="card-title"><i class="fas fa-percent"></i> Lucratividade</small>
+                            <h5 class="card-text" id="lucratividade_realizada"> 0%</h5>
+                        </div>
+                    
                     </div>
                 </div>
             </div>
-            <div class="col-lg-7">
-                <canvas id="chart-div2"></canvas>
-            </div>
+        </div>
+        <div class="col-lg-7">
+            <canvas id="chart-div2"></canvas>
         </div>
     </div>
+</div>
 
-    <div class="card card-body my-3">
-        <div class="row">
-            <div class="col-lg-5">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="card text-center mb-3">
-                            <div class="card-body">
-                                <small class="card-title"><i class="fas fa-angle-double-up"></i> Receita Prevista</small>
-                                <h5 class="card-text" id="receita_prevista">R$ 0,00</h5>
-                            </div>
-                            
+<div class="card card-body my-3">
+    <div class="row">
+        <div class="col-lg-5">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card text-center mb-3">
+                        <div class="card-body">
+                            <small class="card-title"><i class="fas fa-angle-double-up"></i> Receita Prevista</small>
+                            <h5 class="card-text" id="receita_prevista">R$ 0,00</h5>
                         </div>
-                    </div>
-                    
-                    <div class="col-lg-6">
-                        <div class="card text-center mb-3">
-                            <div class="card-body">
-                                <small class="card-title"><i class="fas fa-angle-double-down"></i> Despesa Prevista</small>
-                                <h5 class="card-text" id="despesa_prevista">R$ 0,00</h5>
-                            </div>
-                            
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <div class="card text-center">
-                            <div class="card-body">
-                                <small class="card-title"><i class="fas fa-dollar-sign"></i> Lucro Previsto</small>
-                                <h5 class="card-text" id="lucro_previsto">R$ 0,00</h5>
-                            </div>
-                            
                         
-                        </div>
                     </div>
-
-                    <div class="col-lg-6">
-                        <div class="card text-center">
-                            <div class="card-body">
-                                <small class="card-title"><i class="fas fa-percent"></i> Lucrativ. Prevista</small>
-                                <h5 class="card-text" id="lucratividade_prevista"> 30%</h5>
-                            </div>
-                            
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="card text-center mb-3">
+                        <div class="card-body">
+                            <small class="card-title"><i class="fas fa-angle-double-down"></i> Despesa Prevista</small>
+                            <h5 class="card-text" id="despesa_prevista">R$ 0,00</h5>
                         </div>
+                        
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <small class="card-title"><i class="fas fa-dollar-sign"></i> Lucro Previsto</small>
+                            <h5 class="card-text" id="lucro_previsto">R$ 0,00</h5>
+                        </div>
+                        
+                    
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <small class="card-title"><i class="fas fa-percent"></i> Lucrativ. Prevista</small>
+                            <h5 class="card-text" id="lucratividade_prevista"> 30%</h5>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
-            <div class="col-lg-7">
-                <canvas id="chart-div3"></canvas>
-            </div>
+        </div>
+        <div class="col-lg-7">
+            <canvas id="chart-div3"></canvas>
         </div>
     </div>
+</div>
 
 <div class="card card-body my-3">
     <div class="row">
@@ -155,10 +154,49 @@
 
 <div class="card card-body my-3">
     <div class="row">
-        <div class="col-lg">
-            //tabela de registros vencidos e próximos de vencer
+        <div class="col">
+            <div class="card card-body">
+                <div class="card-header text-center"><h6 class="text-weight-bold text-dark">Lançamento Vencidos</h6></div>
+                <div class="card-body" >
+                    <div class="table-responsive tableFixHead" style="max-height: 300px; overflow-y: auto; overflow-x: auto;">
+                        <table id="lancamentos_vencidos" class="table table-striped table-hover bg-white table-nowrap" >
+                            <thead>
+                                <tr>
+                                    <th class="border-top-0">Movimentação</th>
+                                    <th class="border-top-0">Conta Analítica </th>
+                                    <th class="border-top-0">Detalhe </th>
+                                    <th class="border-top-0">Data de Vencimento </th>
+                                    <th class="border-top-0">Valor </th>
+                                </tr>
+                            </thead>
+                            <tbody >
+                            </tbody>                                            
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card card-body">
+                <div class="card-header text-center"><h6 id="titulo_proxVenc" class="text-weight-bold text-dark">Lançamento Com Vencimento Próximo</h6></div>
+                <div class="card-body" >
+                    <div class="table-responsive tableFixHead" style="max-height: 300px; overflow-y: auto; overflow-x: auto;">
+                        <table id="lancamentos_vencProximo" class="table table-striped table-hover bg-white table-nowrap" >
+                            <thead>
+                                <tr>
+                                    <th class="border-top-0">Movimentação</th>
+                                    <th class="border-top-0">Conta Analítica </th>
+                                    <th class="border-top-0">Detalhe </th>
+                                    <th class="border-top-0">Data de Vencimento </th>
+                                    <th class="border-top-0">Valor </th>
+                                </tr>
+                            </thead>
+                            <tbody >
+                            </tbody>                                            
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
-

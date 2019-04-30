@@ -338,7 +338,12 @@ class Relatoriofluxocaixa extends model {
         $retorno[2] = $metaAtingida;            //porcentagem da meta atingida
         $retorno[3] = number_format(($meta - $atingido),2,",",".");        //diferença
         $retorno[4] = date("t") - date("j");    //dias que faltam pra acabar o mês
-        $retorno[5] = number_format((($meta - $atingido)/$retorno[4]),2,",",".");  //faturamento médio para atingir a média
+        if ( $retorno[4] > 0  ){
+            $retorno[5] = number_format((($meta - $atingido)/$retorno[4]),2,",",".");  //faturamento médio para atingir a média
+        }else{
+            $retorno[5] = number_format((($meta - $atingido)),2,",",".");  //faturamento médio para 
+        }
+        
         return $retorno;
     }
 
