@@ -177,6 +177,8 @@ $(function () {
     $('#relatorioorcamentoitens-section').addClass('d-none');
 
     function resumo () {
+
+        $('.filtros-wrapper .form-control').blur();
         
         dataTable.page.len(-1).draw();
         dataTable.draw();
