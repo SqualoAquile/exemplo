@@ -38,10 +38,10 @@ $(function () {
                 $(el)
                     .mask('0#');
                     
-            } else if (mask == 'numero') {
+            } else if (mask == 'porcentagem') {
         
                 $(el)
-                    .mask('0#');
+                    .mask('00,00%');
             }
         });
     }
