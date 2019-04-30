@@ -343,6 +343,11 @@ class ajaxController extends controller{
       );
       //print_r($shared->montaDataTable() );exit;
   }
+  
+  public function dataTableAjaxRelatorioOrcamentosItens(){
+      $relatorioorcamentositens = new Relatorioorcamentositens;
+      echo json_encode($relatorioorcamentositens->montaDataTable());
+  }
 
   public function chart() {
       if(isset($_POST['get_chart'])) {

@@ -1,11 +1,14 @@
 <?php
 class Relatorioorcamentositens extends model {
 
+    protected $config;
     protected $table = "orcamentositens";
     protected $permissoes;
     protected $shared;
 
     public function __construct() {
+        global $config;
+        $this->config = $config;
         $this->permissoes = new Permissoes();
         $this->shared = new Shared($this->table);
     }
@@ -24,6 +27,120 @@ class Relatorioorcamentositens extends model {
         }
         
         return $array; 
+    }
+
+    public function montaDataTable() {
+
+        $index = 0;
+
+        foreach ($this->shared->nomeDasColunas() as $key => $value) {
+            if(isset($value["Comment"]) && array_key_exists("ver", $value["Comment"]) && $value["Comment"]["ver"] != "false") {
+                if(array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "acoes") {
+
+                    $columns[] = [
+                        "db" => $value["Field"],
+                        "dt" => $index,
+                        "formatter" => function($id, $row) {
+                            return $this->shared->formataacoes($id, $row);
+                        }
+                    ];
+                    
+                // FORMATAÇÃO DE NÚMEROS E DATAS NA TABELA
+                } elseif (array_key_exists("mascara_validacao", $value["Comment"]) && $value["Comment"]["mascara_validacao"] == "data") {
+                    $columns[] = [
+                        "db" => $value["Field"],
+                        "dt" => $index,
+                        "formatter" => function($d,$row) {
+                            if(empty(strtotime($d)) || $d == "0000-00-00"){
+                                return '';
+                            }else{
+                                return date( 'd/m/Y', strtotime($d));
+                            }
+                        }
+                    ];    
+                } elseif (array_key_exists("mascara_validacao", $value["Comment"]) && $value["Comment"]["mascara_validacao"] == "monetario") {
+                    $columns[] = [
+                        "db" => $value["Field"],
+                        "dt" => $index,
+                        "formatter" => function($d,$row) {
+                            return "R$  " .number_format($d,2,",",".");
+                        }
+                    ];
+                } elseif (array_key_exists("mascara_validacao", $value["Comment"]) && $value["Comment"]["mascara_validacao"] == "porcentagem") {
+                    $columns[] = [
+                        "db" => $value["Field"],
+                        "dt" => $index,
+                        "formatter" => function($d,$row) {
+                            return number_format($d, 2, ",", ".") . "%";
+                        }
+                    ]; 
+                } elseif (array_key_exists("type", $value["Comment"]) && $value["Comment"]["type"] == "table") {
+                    
+                    $columns[] = [
+                        "db" => $value["Field"],
+                        "dt" => $index,
+                        "formatter" => function($d,$row) {
+
+                            $return_contatos = "";
+
+                            if (strlen($d)) {
+
+                                $format_contato = str_replace("][", "|", $d);
+                                $format_contato = str_replace(" *", ",", $format_contato);
+                                $format_contato = str_replace("[", "", $format_contato);
+                                $format_contato = str_replace("]", "", $format_contato);
+    
+                                $contatos = explode("|", $format_contato);
+    
+                                $first_contato = $contatos[0];
+                                $resto_contatos = array_slice($contatos, 1);
+
+                                if (count($contatos) > 1) {
+
+                                    // Coloca cada contato que ficará escondido, em volta de uma div
+                                    // Usaremos isso para depois filtrar a busca e deixar visível os contatos que o usuario esta filtrando
+                                    $resto_contatos = implode('', array_map(
+                                        function ($resto_contato) {
+                                            return sprintf("<div class='contatos-escondidos'>%s</div>", $resto_contato);
+                                        },
+                                        $resto_contatos
+                                    ));
+
+                                    $return_contatos = '
+                                        <div class="contatos-filtrados d-flex">
+                                            <button class="btn btn-sm btn-link text-info" type="button" data-toggle="collapse" data-target="#collapseContato' . $row["id"] . '" aria-expanded="false" aria-controls="collapseContato' . $row["id"] . '">
+                                                <i class="fas fa-chevron-circle-down"></i>
+                                            </button>
+                                            <div>
+                                                <span>' . $first_contato . '</span>
+                                                <div class="collapse" id="collapseContato' . $row["id"] . '">
+                                                    ' . $resto_contatos . '
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ';
+                                } else {
+                                    $return_contatos = '<div class="ml-3 pl-3">' . $first_contato . '</div>';
+                                }
+                            }
+                            return $return_contatos;
+                        }
+                    ]; 
+                } else {
+                    $columns[] = [
+                        "db" => ucwords( $value["Field"] ),
+                        "dt" => $index,
+                        "formatter" => function($d,$row) {
+                            return ucwords($d);
+                        }
+                    ]; 
+                }
+                $index++;
+            }
+            
+        };
+
+        return Ssp::complex($_POST, $this->config, $this->table, "id", $columns, null, "situacao='ativo' AND data_aprovacao<>''");
     }
 
     public function adicionar($request) {
