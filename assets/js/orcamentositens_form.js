@@ -447,7 +447,7 @@ $(function() {
       .val(tdQuantUsada)
       .attr("data-anterior", tdQuantUsada);
 
-    $("input[name=observacao_subitem]")
+    $("textarea[name=observacao_subitem]")
       .val(tdObservacao)
       .attr("data-anterior", tdObservacao);
 

@@ -562,9 +562,14 @@ class Orcamentos extends model {
 
                         $valueSelectItens["id_orcamento"] = $id_orcamento_copia;
                         
-                        if ($valueSelectItens["id"]) {
+                        if (isset($valueSelectItens["id"])) {
                             unset($valueSelectItens["id"]);
                         }
+                        
+                        if (isset($valueSelectItens["data_aprovacao"]) || empty($valueSelectItens["data_aprovacao"])) {
+                            unset($valueSelectItens["data_aprovacao"]);
+                        }
+
 
                         $keysSelectItens = implode(",", array_keys($valueSelectItens));
                         $valuesSelectItens = "'" . implode("','", array_values($valueSelectItens)) . "'";

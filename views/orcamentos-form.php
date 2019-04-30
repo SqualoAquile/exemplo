@@ -461,10 +461,10 @@
                         <?php endif ?>
                     <?php endforeach ?>
                 </div>
-                <div class="observacao_cliente_wrapper d-none">
+                <div class="observacao_cliente_wrapper">
                     <button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapseObsCliente" aria-expanded="false" aria-controls="collapseObsCliente">Observações</button>
                     <div class="collapse mt-3" id="collapseObsCliente">
-                        <textarea id="observacao_cliente" readonly name="observacao_cliente" data-anterior="" tabindex="-1" class="form-control" placeholder="Observações do Cliente"></textarea>
+                        <textarea id="observacao_cliente" readonly disabled name="observacao_cliente" data-anterior="" tabindex="-1" class="form-control"></textarea>
                     </div>
                 </div>
             </div>

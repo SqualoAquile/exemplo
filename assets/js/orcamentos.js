@@ -50,7 +50,7 @@ $(function () {
   $tipoMaterialBody.find("#tipo_material").remove();
 
   $tipoMaterialBody.append(`
-    <div>
+    <div class="form-check-wrapper">
       <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="tipo_material" id="tipo_material1" value="principal" checked>
         <label class="form-check-label" for="tipo_material1">Principal</label>
@@ -409,6 +409,7 @@ $(function () {
           var htmlDropdown = "";
 
           data.forEach(element => {
+
             htmlDropdown +=
               `
               <div class="list-group-item list-group-item-action relacional-dropdown-element-cliente"
@@ -437,6 +438,15 @@ $(function () {
               element["nome"] +
               `</div>
             `;
+
+            if ($('[name="id_cliente"]').val() == element["id"]) {
+              if (element["observacao"]) {
+                $('#observacao_cliente')
+                  .attr('data-anterior', element["observacao"])
+                  .val(element["observacao"]);
+              }
+            }
+
           });
 
           $(
@@ -563,8 +573,6 @@ $(function () {
       $elements.removeClass("filtered active").hide();
 
       $filtereds.addClass("filtered").show();
-
-      $(".observacao_cliente_wrapper").addClass("d-none");
 
       $(
         '[name="nome_cliente"], [name=faturado_para], [name=telefone], [name=celular], [name=email], #observacao_cliente'
@@ -1851,13 +1859,9 @@ function collapseObsCliente(observacao) {
   if (observacao) {
     $("#collapseObsCliente").collapse("hide");
 
-    $esquerda.find(".observacao_cliente_wrapper").removeClass("d-none");
-
     $esquerda
       .find("#observacao_cliente[name=observacao_cliente]")
       .val(observacao);
-  } else {
-    $esquerda.find(".observacao_cliente_wrapper").addClass("d-none");
   }
 
   tabindex();
