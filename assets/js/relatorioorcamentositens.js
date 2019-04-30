@@ -314,37 +314,14 @@ $(function () {
 
     $('#botaoRelatorio').on('click', function(){
 
-        var selectFaixa = $('.input-filtro-faixa');
-        var selectF = selectFaixa.siblings('input');
-        var faixa = false;
-       
-        selectF.each(function(){
-            if($(this).val()){
-                faixa = true;
-            }
-        });
-
-        var selectTexto = $('.input-filtro-texto');
-        var selectT = selectTexto.siblings('input');
-        var texto = false;                                                                                                                                                                                                                                                  
-
-        selectT.each(function(){
-            if($(this).val()){
-                texto = true;
-            }
-        });
-    
-        if(!faixa && !texto) {
-            alert("Aplique um filtro para emitir um relatório!");
-            event.stopPropagation();
-        }else{
+        if (($('select.input-filtro-faixa').val() && ($('input.input-filtro-faixa.min').val() || $('input.input-filtro-faixa.min').val())) || $('select.input-filtro-texto').val() && $('input.input-filtro-texto').val()) {
             resumo();
             $('#relatorioorcamentoitens-section').removeClass('d-none');
+        } else {
+            alert("Aplique um filtro para emitir um relatório!");
+            event.stopPropagation();
         }
-
-        if ($('select.input-filtro-faixa').val() && ($('.input-filtro-faixa.min').val() || $('.input-filtro-faixa.min').val())) {
-            console.log('ihaaaaaa')
-        }
+        
     });
 
     function drawChart(id) {
