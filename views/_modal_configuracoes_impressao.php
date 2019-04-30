@@ -94,7 +94,7 @@
                             <label for="avisos`+ element["id"]+ `" class="list-group-item list-group-item-action relacional-dropdown-element-avisos">
                                 <div class="d-flex align-items-center">
                                     <input class="lista-itens mr-3" type="checkbox" id="avisos`+ element["id"]+ `" name="avisos[]" value="`+ element["id"]+ `">
-                                    <div>
+                                    <div class="body-content-avisos">
                                         <div class="titulo-avisos">`+ element["titulo"] + `</div>
                                         <small>` + element["mensagem"] + `</small>
                                     </div>
@@ -156,23 +156,22 @@
             })
             .on('click', '.relacional-dropdown-element-avisos', function () {
 
-                // console.log('click aqui')
+                console.log('click aqui')
 
                 var $this = $(this),
-                    $input = $this.parents('.relacional-dropdown-wrapper').find('.relacional-dropdown-input-avisos'),
-                    concatTitleAvisos = '';
+                    $father = $this.parents('.relacional-dropdown-wrapper'),
+                    $input = $father.find('.relacional-dropdown-input-avisos'),
+                    $opcoes = $father.find('.dropdown-menu-wrapper'),
+                    concatTitleAvisos = [];
 
-                if ($input.val()) {
-                    // console.log('if')
-                    concatTitleAvisos = $input.val() + ', ' + $this.find('.titulo-avisos').text();
-                } else {
-                    // console.log('else')
-                    concatTitleAvisos = $this.find('.titulo-avisos').text();
-                }
-
+                $opcoes.find('.lista-itens:checked').each(function() {
+                    concatTitleAvisos.push($(this).siblings('.body-content-avisos').find('.titulo-avisos').text());
+                });
+                
                 $input
-                    .val(concatTitleAvisos)
+                    .val(concatTitleAvisos.join(', '))
                     .change();
+
             })
             .on('keyup', '.relacional-dropdown-input-avisos', function (event) {
 
@@ -270,7 +269,7 @@
 <style>
 #collapseAvisos .relacional-dropdown-input-avisos {
     background-image: none;
-    padding-right: 0.75rem;
+    padding-right: 2.2rem;
     border-color: #ced4da;
 }
 #collapseAvisos .relacional-dropdown-input-avisos:focus {
