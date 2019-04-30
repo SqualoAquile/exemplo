@@ -191,7 +191,7 @@
                                             data-unico="<?php echo array_key_exists("unico", $value["Comment"]) && $value["Comment"]["unico"]  == true ? "unico" : "" ?>"
                                             <?php echo $value['Null'] == "NO" ? "required" : "" ?>
                                             <?php if( array_key_exists("mascara_validacao", $value["Comment"]) && 
-                                                    ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" )):?>
+                                                    ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" || $value["Comment"]["mascara_validacao"] == "numero" )):?>
                                                 data-podeZero="<?php echo array_key_exists("pode_zero", $value["Comment"]) && $value["Comment"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
                                             <?php endif?> 
                                             />
@@ -215,7 +215,7 @@
                                             maxlength="<?php echo $value["tamanhoMax"] ?>"
                                             data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                             <?php if( array_key_exists("mascara_validacao", $value["Comment"]) && 
-                                                    ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" )):?>
+                                                    ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" || $value["Comment"]["mascara_validacao"] == "numero" )):?>
                                                 data-podeZero="<?php echo array_key_exists("pode_zero", $value["Comment"]) && $value["Comment"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
                                             <?php endif?>                                        
                                         />
@@ -423,7 +423,7 @@
                                                 data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
                                                 <?php echo $value['Null'] == "NO" ? "required" : "" ?>
                                                 <?php if( array_key_exists("mascara_validacao", $value["Comment"]) && 
-                                                        ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" )):?>
+                                                        ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" || $value["Comment"]["mascara_validacao"] == "numero" )):?>
                                                     data-podeZero="<?php echo array_key_exists("pode_zero", $value["Comment"]) && $value["Comment"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
                                                 <?php endif?> 
                                                 />
@@ -450,7 +450,7 @@
                                                 maxlength="<?php echo $value["tamanhoMax"] ?>"
                                                 data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                                 <?php if( array_key_exists("mascara_validacao", $value["Comment"]) && 
-                                                        ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" )):?>
+                                                        ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" || $value["Comment"]["mascara_validacao"] == "numero" )):?>
                                                     data-podeZero="<?php echo array_key_exists("pode_zero", $value["Comment"]) && $value["Comment"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
                                                 <?php endif?>                                        
                                             />
@@ -653,7 +653,7 @@
                                                     data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
                                                     <?php echo $value['Null'] == "NO" ? "required" : "" ?>
                                                     <?php if( array_key_exists("mascara_validacao", $value["Comment"]) && 
-                                                            ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" )):?>
+                                                            ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" || $value["Comment"]["mascara_validacao"] == "numero" )):?>
                                                         data-podeZero="<?php echo array_key_exists("pode_zero", $value["Comment"]) && $value["Comment"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
                                                     <?php endif?> 
                                                     />
@@ -680,7 +680,7 @@
                                                     maxlength="<?php echo $value["tamanhoMax"] ?>"
                                                     data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                                     <?php if( array_key_exists("mascara_validacao", $value["Comment"]) && 
-                                                            ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" )):?>
+                                                            ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" || $value["Comment"]["mascara_validacao"] == "numero" )):?>
                                                         data-podeZero="<?php echo array_key_exists("pode_zero", $value["Comment"]) && $value["Comment"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
                                                     <?php endif?>                                        
                                                 />
