@@ -313,7 +313,7 @@ $(function () {
 
     // fazer para o campo de input também
 
-    $('#Relatorio').on('click', function(){
+    $('#botaoRelatorio').on('click', function(){
 
         let pesquisar = false;
 
