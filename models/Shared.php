@@ -11,7 +11,7 @@ class Shared extends model {
         $this->table = $table; 
     }
 
-    private function formataacoes($id, $row){
+    public function formataacoes($id, $row){
 
         $stringBtn = '';
 

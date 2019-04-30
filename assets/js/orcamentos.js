@@ -103,6 +103,11 @@ $(function () {
         segop = floatParaPadraoInternacional(data["taxa_seg_op"]);
         $("#preco_tot_subitem").attr("data-seg_op", segop);
       }
+
+      if (data["desconto_max"]) {
+        $('#desconto_porcent').attr('data-descontomax', data["desconto_max"]);
+      }
+
       if (data["custo_deslocamento"]) {
         custodesloc = floatParaPadraoInternacional(
           data["custo_deslocamento"]
@@ -110,6 +115,7 @@ $(function () {
         $("#custo_deslocamento").attr("data-custodesloc", custodesloc);
 
         valorTotal();
+        habilitaBotaoOrcamento();
       }
     }
   });
@@ -329,6 +335,18 @@ $(function () {
     calculaMaterialCustoPreco();
   });
 
+  $('#desconto_porcent').on('change', function() {
+
+    let $this = $(this),
+      descontoMax = $this.attr('data-descontomax');
+
+    if (descontoMax && parseFloat($this.val()) > parseFloat(descontoMax)) {
+      $this.val('0%');
+      alert('O desconto máximo é de ' + descontoMax + '.');
+    }
+
+  });
+
   $("#recontato").on("click", function () {
     if (confirm("Tem Certeza?")) {
       $.ajax({
@@ -457,7 +475,6 @@ $(function () {
         $esquerda.find("[name=email]").val($this.attr("data-email"));
 
         $esquerda.find("[name=id_cliente]").val($this.attr("data-id"));
-        console.log('aqui talvez?')
 
         $esquerda
           .find("[name=como_conheceu]")
@@ -557,7 +574,6 @@ $(function () {
       changeRequiredsPfPj();
     })
     .on("change", '[name="id_cliente"]', function () {
-      console.log('vish')
       checarClienteCadastrado();
     });
 
@@ -711,7 +727,7 @@ $(function () {
           $this.val().startsWith("Contato - ")
         ) {
           $this.parent(".form-group").parent("[class^=col]").after(`
-            <div class="column-quem-indicou col-xl-12" style="order:12;">
+            <div class="column-quem-indicou col-xl-12">
               <div class="form-group">
                 <label class="font-weight-bold" for="quem_indicou">
                   <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Campo Obrigatório">*</i>
@@ -937,7 +953,7 @@ $(function () {
     habilitaBotaoOrcamento();
   });
 
-  $("#esquerda input").on("change", () => {
+  $("#esquerda input, #esquerda select").on("change", () => {
     habilitaBotaoOrcamento();
   });
 
@@ -1601,7 +1617,7 @@ function calculaDesconto() {
         );
 
         $descontoPorcent.val(
-          $descontoPorcent.attr("data-anterior") || 0
+          $descontoPorcent.attr("data-anterior") || '0%'
         );
         $descontoReais.val($descontoReais.attr("data-anterior") || 0);
       } else {
@@ -1611,7 +1627,7 @@ function calculaDesconto() {
 
         $descontoReais.val($descontoReais.attr("data-anterior") || 0);
         $descontoPorcent.val(
-          $descontoPorcent.attr("data-anterior") || 0
+          $descontoPorcent.attr("data-anterior") || '0%'
         );
       }
     }
@@ -1858,11 +1874,8 @@ function habilitaBotaoOrcamento() {
 
     if (dataAnterior != valorAtual) {
       if ($this.attr('name') != 'quem_indicou') {
-        // console.log('putz entrou aqui', $this, dataAnterior, valorAtual)
         temAlteracao = true;
       }
-    } else {
-      // console.log('ufaaaaaa')
     }
   });
 
