@@ -626,4 +626,46 @@ class Orcamentos extends model {
         }
 
     }
+
+    
+    public function buscaOrcamentos($interval_datas){
+        
+        $array = array();
+        if(!empty($interval_datas) && isset($interval_datas)){
+            
+            if(count($interval_datas) == 1){
+                $dt1 = 	$interval_datas[0];
+                $dt2 =  $interval_datas[0];
+            }else{
+                $dt1 = $interval_datas[0];
+                $dt2 = $interval_datas[count($interval_datas)-1];
+            }
+
+            // busca as despesas relacionadas a O.S. lançadas no fluxo de caixa
+            $sql1 = "SELECT `id`, `nome_cliente`, `email`, `titulo_orcamento`, `valor_total`,  `data_emissao` FROM `orcamentos` WHERE situacao = 'ativo' AND status IN('Em Espera', 'Recontato') ORDER BY `data_emissao`  ASC";
+
+            $sql1 = self::db()->query($sql1);
+            $orcamentos = array();
+
+            if($sql1->rowCount() > 0){  
+                $orcamentos = $sql1->fetchAll(PDO::FETCH_ASSOC);
+            }
+
+            // busca o custo total do orçamento
+            $sql2 = "SELECT `id`, `nome_cliente`, `email`, `titulo_orcamento`, `valor_total`, `data_emissao` FROM `orcamentos` WHERE situacao = 'ativo' AND status IN('Em Espera', 'Recontato') AND data_retorno BETWEEN '$dt1' AND '$dt2' ORDER BY `data_emissao` ASC";
+
+            $sql2 = self::db()->query($sql2);
+
+            $proximo = array();
+
+            if($sql2->rowCount() > 0){  
+                $proximo = $sql2->fetchAll(PDO::FETCH_ASSOC);
+            }
+            
+            $array['abertos'] = $orcamentos;
+            $array['retornar'] = $proximo;
+        }      
+
+       return $array;
+    }
 }
