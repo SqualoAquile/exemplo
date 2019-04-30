@@ -62,7 +62,7 @@ $(function () {
     });
 
     function resumo () {
-        
+
         var rowData = dataTable.rows().data(),
         somasDespesasQ = 0,
         somasReceitasQ = 0,

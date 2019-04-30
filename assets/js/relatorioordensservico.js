@@ -55,7 +55,7 @@ $(function () {
     dataTable.page.len(-1).draw();
     dataTable.draw();
     $('#DataTables_Table_0_length').addClass('d-none');
-    
+
     dataTable.on( 'draw.dt', function () {
         resumo();
     });

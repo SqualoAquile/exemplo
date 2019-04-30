@@ -60,7 +60,7 @@ $(function () {
     });
 
     function resumo () {
-        
+
         var rowData = dataTable.rows().data(),
         quantidadeOrcamentos = 0,
         totalOrcado = 0;
