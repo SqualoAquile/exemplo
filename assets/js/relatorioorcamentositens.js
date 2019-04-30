@@ -174,7 +174,7 @@ $(function () {
 
     // exibir tudo
     dataTable.page.len(-1).draw();
-    console.log('draw 1')
+
     $('#relatorioorcamentoitens-section').addClass('d-none');
 
     dataTable.on( 'draw.dt', function () {
@@ -182,11 +182,6 @@ $(function () {
     });
 
     function resumo () {
-        
-        // dataTable.page.len(-1).draw();
-        console.log('draw 2')
-        // dataTable.draw();
-        console.log('draw 3')
         
         var rowData = dataTable.rows().data(),
         quantidadeProdutos = 0,
@@ -202,7 +197,7 @@ $(function () {
 
         i = 0;
         k = 0;
-        console.log('rowData', rowData)
+
         rowData.each(function () {
             var valor = rowData[i][indexColumns.valor];
             var quantidade = parseInt(rowData[i][indexColumns.quantidade]);
@@ -288,11 +283,8 @@ $(function () {
 
     $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
         resumo();
-        console.log('resumo();')
         dataTable.page.len(10).draw();
-        console.log('draw 4')
         dataTable.draw();
-        console.log('draw 5')
         $('#relatorioorcamentoitens-section').removeClass('d-none');
         drawChart(id);
       });
@@ -300,9 +292,7 @@ $(function () {
     $('#collapseFluxocaixaResumo').on('hide.bs.collapse', function () {
         $('#relatorioorcamentoitens-section').addClass('d-none');
         dataTable.page.len(-1).draw();
-        console.log('draw 6')
         dataTable.draw();
-        console.log('draw 7')
     });
 
 
@@ -321,7 +311,6 @@ $(function () {
         $('#collapseFluxocaixaResumo').collapse('hide');
         $('#relatorioorcamentoitens-section').addClass('d-none');
         resumo();
-        console.log('resumo(); 2')
     });
 
 
@@ -340,7 +329,6 @@ $(function () {
 
         if (pesquisar) {
             resumo();
-            console.log('resumo(); 3')
             $('#relatorioorcamentoitens-section').removeClass('d-none');
         } else {
             alert("Aplique um filtro para emitir um relatório!");
@@ -433,7 +421,6 @@ $(function () {
                         .columns(indexAnterior)
                         .search('')
                         .draw();
-                        console.log('draw 8')
                 }
 
                 $max[0].setCustomValidity('');
@@ -455,7 +442,6 @@ $(function () {
                         $min.val('');
 
                         dataTable.columns().search('').draw();
-                        console.log('draw 9')
 
                         return false;
                     }
@@ -477,7 +463,6 @@ $(function () {
                         .columns(selectVal)
                         .search(stringSearch)
                         .draw();
-                        console.log('draw 10')
 
                     $select.attr('data-index-anterior', selectVal);
                 }
@@ -502,7 +487,6 @@ $(function () {
                         .columns(indexAnterior)
                         .search('')
                         .draw();
-                        console.log('draw 11')
                 }
 
                 if (selectVal) {
@@ -511,7 +495,6 @@ $(function () {
                         .columns(selectVal)
                         .search(value)
                         .draw();
-                        console.log('draw 12')
 
                     $select.attr('data-index-anterior', selectVal);
                 }
@@ -541,10 +524,8 @@ $(function () {
                 .columns()
                 .search('')
                 .draw();
-                console.log('draw 13')
 
             dataTable.search('').draw();
-            console.log('draw 14')
             
         })
         .on('change', '[name=movimentacao]', function () {
@@ -562,6 +543,6 @@ $(function () {
                 .columns(indexColumn)
                 .search(search)
                 .draw();
-                console.log('draw 15')
+
         });
 });
