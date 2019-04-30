@@ -272,6 +272,10 @@ $(function () {
 
     });
 
+    $('#selectMesesMin, #selectMesesMax').on('change', function(){
+        $('#collapseGraficos2').collapse('hide');
+    });
+
     $('#graficos').on('click', function(){
 
         var selectMin = $('#selectMesesMin').val();
