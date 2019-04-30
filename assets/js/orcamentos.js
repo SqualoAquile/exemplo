@@ -144,6 +144,9 @@ $(function () {
       $("#unidade, #custo_tot_subitem, #preco_tot_subitem")
         .removeClass("is-valid is-invalid")
         .val("");
+
+      $('#camposOrc').find('#largura, #comprimento').removeAttr('disabled');
+      
     });
 
   //
@@ -1911,7 +1914,7 @@ function habilitaBotaoOrcamento() {
 
 function tabindex() {
 
-  let $camposEsquerda = $('#esquerda').find('.form-check-wrapper:visible, .form-control:visible, .btn:visible'),
+  let $camposEsquerda = $('#esquerda').find('.form-check-wrapper:visible, .form-control:visible, button.btn:visible'),
     $camposDireita = $('#direita #camposOrc').find('.form-check-wrapper:visible, .form-control:visible, button.btn:visible'),
     $camposEmbaixo = $('#embaixo').find('.form-control:visible');
 

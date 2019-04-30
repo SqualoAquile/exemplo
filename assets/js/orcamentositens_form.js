@@ -235,6 +235,8 @@ $(function() {
 
     $('#camposOrc').find('.is-valid, .is-invalid').removeClass('is-valid is-invalid');
 
+    $('#camposOrc').find('#largura, #comprimento').removeAttr('disabled');
+
     let $trs = $tableItensOrcamento.find('tr.disabled');
 
     $trs.removeClass('disabled');
@@ -467,11 +469,15 @@ $(function() {
 
     $("input[name=preco_tot_subitem]").change();
 
-    if (tdUnidade != "ML" || tdUnidade != "M²") {
+    if (tdUnidade != "ML" && tdUnidade != "M²") {
       $('#camposOrc')
         .find('#largura, #comprimento')
         .attr('disabled', 'disabled')
         .removeClass('is-valid is-invalid');
+    } else {
+      $('#camposOrc')
+        .find('#largura, #comprimento')
+        .removeAttr('disabled');
     }
     
   }
