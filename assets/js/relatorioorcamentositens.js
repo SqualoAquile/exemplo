@@ -314,14 +314,22 @@ $(function () {
 
     $('#botaoRelatorio').on('click', function(){
 
-        if (($('select.input-filtro-faixa').val() && ($('input.input-filtro-faixa.min').val() || $('input.input-filtro-faixa.min').val())) || $('select.input-filtro-texto').val() && $('input.input-filtro-texto').val()) {
+        let pesquisar = false;
+
+        $('.filtros').each(function() {
+            if (($(this).find('select.input-filtro-faixa').val() && ($(this).find('input.input-filtro-faixa.min').val() || $(this).find('input.input-filtro-faixa.min').val())) || $(this).find('select.input-filtro-texto').val() && $(this).find('input.input-filtro-texto').val()) {
+                pesquisar = true;
+            }
+        });
+
+        if (pesquisar) {
             resumo();
             $('#relatorioorcamentoitens-section').removeClass('d-none');
         } else {
             alert("Aplique um filtro para emitir um relatório!");
             event.stopPropagation();
         }
-        
+
     });
 
     function drawChart(id) {
