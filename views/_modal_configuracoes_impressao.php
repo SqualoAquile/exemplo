@@ -156,8 +156,6 @@
             })
             .on('click', '.relacional-dropdown-element-avisos', function () {
 
-                console.log('click aqui')
-
                 var $this = $(this),
                     $father = $this.parents('.relacional-dropdown-wrapper'),
                     $input = $father.find('.relacional-dropdown-input-avisos'),
@@ -271,6 +269,9 @@
     background-image: none;
     padding-right: 2.2rem;
     border-color: #ced4da;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 #collapseAvisos .relacional-dropdown-input-avisos:focus {
     box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
