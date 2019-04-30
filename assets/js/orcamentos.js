@@ -50,7 +50,7 @@ $(function () {
   $tipoMaterialBody.find("#tipo_material").remove();
 
   $tipoMaterialBody.append(`
-    <div>
+    <div class="form-check-wrapper">
       <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="tipo_material" id="tipo_material1" value="principal" checked>
         <label class="form-check-label" for="tipo_material1">Principal</label>
@@ -116,6 +116,7 @@ $(function () {
 
         valorTotal();
         habilitaBotaoOrcamento();
+        tabindex();
       }
     }
   });
@@ -408,6 +409,7 @@ $(function () {
           var htmlDropdown = "";
 
           data.forEach(element => {
+
             htmlDropdown +=
               `
               <div class="list-group-item list-group-item-action relacional-dropdown-element-cliente"
@@ -436,6 +438,15 @@ $(function () {
               element["nome"] +
               `</div>
             `;
+
+            if ($('[name="id_cliente"]').val() == element["id"]) {
+              if (element["observacao"]) {
+                $('#observacao_cliente')
+                  .attr('data-anterior', element["observacao"])
+                  .val(element["observacao"]);
+              }
+            }
+
           });
 
           $(
@@ -562,8 +573,6 @@ $(function () {
       $elements.removeClass("filtered active").hide();
 
       $filtereds.addClass("filtered").show();
-
-      $(".observacao_cliente_wrapper").addClass("d-none");
 
       $(
         '[name="nome_cliente"], [name=faturado_para], [name=telefone], [name=celular], [name=email], #observacao_cliente'
@@ -741,12 +750,12 @@ $(function () {
           var $quemIndicou = $("#quem_indicou");
 
           if ($this.attr("data-anterior").startsWith("Contato - ")) {
+
+            let valContatoReplace = $this.attr("data-anterior").replace("Contato - ", "");
+
             $quemIndicou
-              .val(
-                $this
-                  .attr("data-anterior")
-                  .replace("Contato - ", "")
-              )
+              .val(valContatoReplace)
+              .attr('data-anterior', valContatoReplace)
               .blur();
           }
 
@@ -768,6 +777,9 @@ $(function () {
             .attr("value", "Contato");
         }
       }
+
+      tabindex();
+
     })
     .change();
 
@@ -786,6 +798,8 @@ $(function () {
         $comoConhec
           .children("option:contains(" + textOptSelc + ")")
           .attr("value", camposConcat);
+
+        $this.attr('data-anterior', value);
 
         $this.addClass("is-valid");
         $this[0].setCustomValidity("");
@@ -865,6 +879,7 @@ $(function () {
 
     valorTotal();
     habilitaBotaoOrcamento();
+    tabindex();
 
   });
 
@@ -984,6 +999,9 @@ $(function () {
         .parent()
         .addClass("d-none");
     }
+
+    tabindex();
+
   });
 
   $("#btn_cancelamentoOrc").click(function () {
@@ -1176,6 +1194,7 @@ $(function () {
 
 window.onload = function() {
   habilitaBotaoOrcamento();
+  tabindex();
 };
 
 function dataAtual() {
@@ -1433,6 +1452,9 @@ function toggleTipoMaterial(unidade) {
       $colTipoServico.removeClass("col-xl-6").addClass("col-xl-4");
     }
   }
+
+  tabindex();
+
 }
 
 function changeTipoServicoProduto(setValueSuccess) {
@@ -1839,14 +1861,13 @@ function collapseObsCliente(observacao) {
   if (observacao) {
     $("#collapseObsCliente").collapse("hide");
 
-    $esquerda.find(".observacao_cliente_wrapper").removeClass("d-none");
-
     $esquerda
       .find("#observacao_cliente[name=observacao_cliente]")
       .val(observacao);
-  } else {
-    $esquerda.find(".observacao_cliente_wrapper").addClass("d-none");
   }
+
+  tabindex();
+
 }
 
 function habilitaBotaoOrcamento() {
@@ -1886,4 +1907,28 @@ function habilitaBotaoOrcamento() {
     $("#main-form").attr("disabled", "disabled");
     $('#aprovar-orcamento').removeAttr('disabled');
   }
+}
+
+function tabindex() {
+
+  let $camposEsquerda = $('#esquerda').find('.form-check-wrapper:visible, .form-control:visible, .btn:visible'),
+    $camposDireita = $('#direita #camposOrc').find('.form-check-wrapper:visible, .form-control:visible, button.btn:visible'),
+    $camposEmbaixo = $('#embaixo').find('.form-control:visible');
+
+  $camposEsquerda.each(function(index) {
+    $(this).attr('tabindex', index + 1);
+  });
+
+  $camposDireita.each(function(index) {
+    $(this).attr('tabindex', $camposEsquerda.length + (index + 1));
+  });
+
+  $camposEmbaixo.each(function(index) {
+    $(this).attr('tabindex', ($camposDireita.length + $camposEsquerda.length) + (index + 1));
+  });
+  
+  $('#acoes-orcamento').find('.btn:visible').each(function(index) {
+    $(this).attr('tabindex', ($camposDireita.length + $camposEsquerda.length + $camposEmbaixo.length) + (index + 1));
+  });
+
 }

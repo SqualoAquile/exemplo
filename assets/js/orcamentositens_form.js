@@ -233,6 +233,8 @@ $(function() {
     $('#col-cancelar_edicao').addClass('d-none');
     $('#btn_incluir').text('Incluir');
 
+    $('#camposOrc').find('.is-valid, .is-invalid').removeClass('is-valid is-invalid');
+
     let $trs = $tableItensOrcamento.find('tr.disabled');
 
     $trs.removeClass('disabled');
@@ -447,7 +449,7 @@ $(function() {
       .val(tdQuantUsada)
       .attr("data-anterior", tdQuantUsada);
 
-    $("input[name=observacao_subitem]")
+    $("textarea[name=observacao_subitem]")
       .val(tdObservacao)
       .attr("data-anterior", tdObservacao);
 
