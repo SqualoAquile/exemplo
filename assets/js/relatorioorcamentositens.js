@@ -221,6 +221,8 @@ $(function () {
     });
 
 
+    // fazer para o campo de input também
+
     $('#botaoRelatorio').on('click', function(){
 
         var selectFaixa = $('.input-filtro-faixa');
@@ -235,7 +237,7 @@ $(function () {
 
         var selectTexto = $('.input-filtro-texto');
         var selectT = selectTexto.siblings('input');
-        var texto = false;
+        var texto = false;                                                                                                                                                                                                                                                  
 
         selectT.each(function(){
             if($(this).val()){
@@ -282,7 +284,7 @@ $(function () {
                 },
                 legend: {
                     display: true,
-                    position: "top"
+                    position: "right"
                 },
             }
         };

@@ -14,7 +14,7 @@ require "_header_browser_relatorios.php";
 ?>
 
 <div class="collapse mb-5" id="collapseFluxocaixaResumo">
-    <div class="row">
+    <div class="row" height="100px">
         
     </div>
 
@@ -26,7 +26,7 @@ require "_header_browser_relatorios.php";
 
                     <div class="col-lg">
                         <div class="card card-body py-1 text-black text-center my-3 py-3 shadow">
-                            <p class="m-0">Quantidade de Produtos</p>
+                            <p class="m-0">Qtd. de Produtos</p>
                             <h5 id="quantidadeProdutos"></h5>
                         </div>
 
@@ -38,7 +38,7 @@ require "_header_browser_relatorios.php";
 
                     <div class="col-lg">
                         <div class="card card-body py-1 text-black text-center my-3 py-3 shadow">
-                            <p class="m-0">Quantidade de Serviços</p>
+                            <p class="m-0">Qtd. de Serviços</p>
                             <h5 id="quantidadeServicos"></h5>
                         </div>
                         <div class="card card-body py-1 text-success text-center my-3 py-3 shadow">
@@ -49,7 +49,7 @@ require "_header_browser_relatorios.php";
 
                     <div class="col-lg">
                         <div class="card card-body py-1 text-black text-center my-3 py-3 shadow">
-                            <p class="m-0">Quantidade de Serviços Compl.</p>
+                            <p class="m-0">Qtd. de Serviços Compl.</p>
                             <h5 id="quantidadeServicosCompl"></h5>
                         </div>
                         <div class="card card-body py-1 text-success text-center my-3 py-3 shadow">
@@ -65,7 +65,7 @@ require "_header_browser_relatorios.php";
                         </div>
                     </div> -->
 
-                    <div class="col-lg">
+                    <div class="col-lg-4">
                         <div class="card card-body py-1 text-black text-center my-3 py-3 shadow" >
                             <canvas id="chart-div"></canvas>
                         </div>
