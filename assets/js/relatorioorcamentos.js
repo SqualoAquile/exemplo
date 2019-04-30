@@ -55,10 +55,11 @@ $(function () {
     dataTable.draw();
     $('#DataTables_Table_0_length').addClass('d-none');
 
-    function resumo () {
+    dataTable.on( 'draw.dt', function () {
+        resumo();
+    });
 
-        dataTable.page.len(-1).draw();
-        dataTable.draw();
+    function resumo () {
         
         var rowData = dataTable.rows().data(),
         quantidadeOrcamentos = 0,
