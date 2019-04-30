@@ -155,7 +155,6 @@ $(function () {
     var id = "#chart-div";
     var ctx = document.getElementById(id.substr(1)).getContext('2d');
 
-
     var $collapse = $('#collapseFluxocaixaResumo'),
         $cardBodyFiltros = $('#card-body-filtros'),
         indexColumns = {
@@ -176,9 +175,28 @@ $(function () {
     dataTable.page.len(-1).draw();
     $('#relatorioorcamentoitens-section').addClass('d-none');
 
-    function resumo () {
+    $('#botaoRelatorio').on('click', function(){
 
-        $('.filtros-wrapper .form-control').blur();
+
+        let pesquisar = false;
+
+        $('.filtros').each(function() {
+            if (($(this).find('select.input-filtro-faixa').val() && ($(this).find('input.input-filtro-faixa.min').val() || $(this).find('input.input-filtro-faixa.max').val())) || $(this).find('select.input-filtro-texto').val() && $(this).find('input.input-filtro-texto').val()) {
+                pesquisar = true;
+            }
+        });
+
+        if (pesquisar) {
+            resumo();
+            $('#relatorioorcamentoitens-section').removeClass('d-none');
+        } else {
+            alert("Aplique um filtro para emitir um relatório!");
+            event.stopPropagation();
+        }
+
+    });
+
+    function resumo () {
         
         dataTable.page.len(-1).draw();
         dataTable.draw();
@@ -312,30 +330,6 @@ $(function () {
         $('#collapseFluxocaixaResumo').collapse('hide');
         $('#relatorioorcamentoitens-section').addClass('d-none');
         resumo();
-    });
-
-
-    // fazer para o campo de input também
-
-    $('#botaoRelatorio').on('click', function(){
-
-
-        let pesquisar = false;
-
-        $('.filtros').each(function() {
-            if (($(this).find('select.input-filtro-faixa').val() && ($(this).find('input.input-filtro-faixa.min').val() || $(this).find('input.input-filtro-faixa.max').val())) || $(this).find('select.input-filtro-texto').val() && $(this).find('input.input-filtro-texto').val()) {
-                pesquisar = true;
-            }
-        });
-
-        if (pesquisar) {
-            resumo();
-            $('#relatorioorcamentoitens-section').removeClass('d-none');
-        } else {
-            alert("Aplique um filtro para emitir um relatório!");
-            event.stopPropagation();
-        }
-
     });
     
     function drawChart(id) {
