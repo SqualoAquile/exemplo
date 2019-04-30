@@ -1914,7 +1914,7 @@ function habilitaBotaoOrcamento() {
 
 function tabindex() {
 
-  let $camposEsquerda = $('#esquerda').find('.form-check-wrapper:visible, .form-control:visible, .btn:visible'),
+  let $camposEsquerda = $('#esquerda').find('.form-check-wrapper:visible, .form-control:visible, button.btn:visible'),
     $camposDireita = $('#direita #camposOrc').find('.form-check-wrapper:visible, .form-control:visible, button.btn:visible'),
     $camposEmbaixo = $('#embaixo').find('.form-control:visible');
 
