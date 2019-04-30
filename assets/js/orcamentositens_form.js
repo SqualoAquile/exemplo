@@ -233,6 +233,8 @@ $(function() {
     $('#col-cancelar_edicao').addClass('d-none');
     $('#btn_incluir').text('Incluir');
 
+    $('#camposOrc').find('.is-valid, .is-invalid').removeClass('is-valid is-invalid');
+
     let $trs = $tableItensOrcamento.find('tr.disabled');
 
     $trs.removeClass('disabled');
