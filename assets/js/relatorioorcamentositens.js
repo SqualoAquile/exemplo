@@ -177,6 +177,7 @@ $(function () {
 
     $('#botaoRelatorio').on('click', function(){
 
+        document.getElementById('cardFiltros').click();
 
         let pesquisar = false;
 
@@ -197,7 +198,6 @@ $(function () {
     });
 
     function resumo () {
-        
         dataTable.page.len(-1).draw();
         dataTable.draw();
         
@@ -309,6 +309,7 @@ $(function () {
       });
 
     $('#collapseFluxocaixaResumo').on('hide.bs.collapse', function () {
+        document.getElementById('cardFiltros').click();
         $('#relatorioorcamentoitens-section').addClass('d-none');
         dataTable.page.len(-1).draw();
         dataTable.draw();
