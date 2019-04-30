@@ -60,13 +60,16 @@ $(function () {
     
     
     dataTable.page.len(-1).draw();
+    dataTable.draw();
     dataTable.order( [ 1, "asc" ] ).draw();
+    $('#DataTables_Table_0_length').addClass('d-none');
 
     function resumo () {
 
         dataTable.page.len(-1).draw();
-       
+        dataTable.draw();
         dataTable.order( [ 1, "asc" ] ).draw();
+
         var rowData = dataTable.rows().data();
 
         var lastRow = 0;
@@ -172,8 +175,6 @@ $(function () {
         }else{
             $('#diferenca').addClass('text-warning');
         }
-
-
     };
 
     $('#DataTables_Table_0_length').addClass('d-none');
@@ -186,9 +187,10 @@ $(function () {
 
     $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
         resumo();
+        dataTable.page.len(10).draw();
+        dataTable.draw();
         $('#DataTables_Table_0_wrapper').removeClass('d-none');
         $('#collapseGraficos2').collapse('hide');
-
       });
 
     $('#collapseFluxocaixaResumo').on('hide.bs.collapse', function () {

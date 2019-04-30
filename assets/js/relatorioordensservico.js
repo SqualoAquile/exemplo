@@ -53,11 +53,13 @@ $(function () {
         }
         
     dataTable.page.len(-1).draw();
-    
+    dataTable.draw();
+    $('#DataTables_Table_0_length').addClass('d-none');
 
     function resumo () {
 
         dataTable.page.len(-1).draw();
+        dataTable.draw();
         
         var rowData = dataTable.rows().data(),
         somasSubtotal = 0,
@@ -95,8 +97,8 @@ $(function () {
         $('#quantidadeOperacoes').text(parseInt(quantidadeOperacoes));
         $('#estimativaTaxa').text(floatParaPadraoBrasileiro(somasValor * taxa));            
 
-        dataTable.page.len(10).draw();
-        $('#DataTables_Table_0_length').removeClass('d-none');
+        // dataTable.page.len(10).draw();
+        // $('#DataTables_Table_0_length').removeClass('d-none');
   
     };
 
@@ -105,8 +107,10 @@ $(function () {
     $('#graficos').addClass('d-none');
 
     $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
-        $('#DataTables_Table_0_wrapper').removeClass('d-none');
         resumo();
+        dataTable.page.len(10).draw();
+        dataTable.draw();
+        $('#DataTables_Table_0_wrapper').removeClass('d-none');
       });
 
     $('#collapseFluxocaixaResumo').on('hide.bs.collapse', function () {
