@@ -298,7 +298,7 @@
                                                     data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                                     <?php echo $value['Null'] == "NO" ? "required" : "" ?>
                                                     >
-                                                    <option value="" selected disabled>Selecione</option>
+                                                    <option value="" selected>Selecione</option>
                                                     <?php for($j = 0; $j < count($value["Comment"]['info_relacional']['resultado']); $j++):?>
                                                         
                                                         <option value="<?php echo $value["Comment"]['info_relacional']['resultado'][$j][$value["Comment"]['info_relacional']['campo']];?>"
@@ -528,7 +528,7 @@
                                                     data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                                     <?php echo $value['Null'] == "NO" ? "required" : "" ?>
                                                     >
-                                                    <option value="" selected disabled>Selecione</option>
+                                                    <option value="" selected>Selecione</option>
                                                     <?php for($j = 0; $j < count($value["Comment"]['info_relacional']['resultado']); $j++):?>
                                                         
                                                         <option value="<?php echo $value["Comment"]['info_relacional']['resultado'][$j][$value["Comment"]['info_relacional']['campo']];?>"
