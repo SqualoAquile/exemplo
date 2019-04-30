@@ -71,6 +71,13 @@ $(function () {
                                 legend: {
                                     display: true,
                                     position: "top"
+                                },
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true
+                                        }
+                                    }]
                                 }
                             }
                         }
