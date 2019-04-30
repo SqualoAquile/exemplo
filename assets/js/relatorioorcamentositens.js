@@ -341,6 +341,10 @@ $(function () {
             resumo();
             $('#relatorioorcamentoitens-section').removeClass('d-none');
         }
+
+        if ($('select.input-filtro-faixa').val() && ($('.input-filtro-faixa.min').val() || $('.input-filtro-faixa.min').val())) {
+            console.log('ihaaaaaa')
+        }
     });
 
     function drawChart(id) {
