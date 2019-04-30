@@ -107,8 +107,6 @@ $(function () {
     $('#graficos').addClass('d-none');
 
     $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
-        $('.form-control .input-filtro-faixa .min').focus();
-        $('.form-control .input-filtro-faixa .max').focus();
         resumo();
         dataTable.page.len(10).draw();
         dataTable.draw();
@@ -143,8 +141,6 @@ $(function () {
         });
 
         if (pesquisar) {
-            $('.form-control .input-filtro-faixa .min').focus();
-            $('.form-control .input-filtro-faixa .max').focus();
             resumo();
             $('#relatorioorcamentoitens-section').removeClass('d-none');
         } else {

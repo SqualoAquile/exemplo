@@ -69,7 +69,9 @@ $(function () {
     });
 
     function resumo () {
-        
+
+        dataTable.page.len(-1).draw();
+        dataTable.draw();
         dataTable.order( [ 1, "asc" ] ).draw();
 
         var rowData = dataTable.rows().data();
