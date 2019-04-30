@@ -1855,6 +1855,8 @@ function setarClienteCadastrado(cliente) {
       collapseObsCliente(cliente.observacao);
     }
 
+    habilitaBotaoOrcamento();
+
   }
 }
 
@@ -1874,6 +1876,7 @@ function collapseObsCliente(observacao) {
 }
 
 function habilitaBotaoOrcamento() {
+
   var temAlteracao = false;
 
   $('#form-principal .form-control:visible, #form-principal .form-check-input').each(function (i, el) {
