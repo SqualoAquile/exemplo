@@ -290,6 +290,7 @@ $(function () {
     $('#collapseFluxocaixaResumo').on('hide.bs.collapse', function () {
         $('#relatorioorcamentoitens-section').addClass('d-none');
         dataTable.page.len(-1).draw();
+        dataTable.draw();
     });
 
 
@@ -312,7 +313,7 @@ $(function () {
 
     // fazer para o campo de input também
 
-    $('#botaoRelatorio').on('click', function(){
+    $('#Relatorio').on('click', function(){
 
         let pesquisar = false;
 
