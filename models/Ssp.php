@@ -605,7 +605,7 @@ class SSP {
 
 		$where1 = "mes_ano BETWEEN '$dt1' AND '$dt2' AND situacao='ativo' ";
 		$sql = self::sql_exec( $db, $bindings,
-			"SELECT mes_ref,entradas,saidas
+			"SELECT mes_ref,saldo_total_final
 			FROM `controlesaldos`
 			WHERE $where1
 			$groupby
@@ -619,7 +619,6 @@ class SSP {
 		foreach ($sql as $key => $value) {
 			$retorno[$i][0] = $value[0];
 			$retorno[$i][1] = $value[1];
-			$retorno[$i][2] = $value[2];
 			$i++;
 		}	
 		return $retorno; 

@@ -203,7 +203,6 @@ $(function () {
             
             //#baile
             // tem que mostrar apenas as linhas que tenham alguma data na coluna de data_aprovacao
-            if (data) {
                 valor = valor.replace('R$  ', '');
                 valor = floatParaPadraoInternacional(valor);
     
@@ -237,7 +236,6 @@ $(function () {
                     totalServicosCompl += parseFloat(valor);
                     quantidadeServicosCompl += parseInt(quantidade);
                 }
-            }
             i++;
         });
 
@@ -261,6 +259,7 @@ $(function () {
 
         labelProdutosGlobal = labelProdutos;
         dataProdutosGlobal = dataProdutos;
+        console.log(labelProdutosGlobal.length);
 
         totalItens = parseFloat(totalProdutos) + parseFloat(totalServicos) + parseFloat(totalServicosCompl);
        
@@ -335,11 +334,11 @@ $(function () {
         }
 
     });
-
+    
     function drawChart(id) {
         var titulo;
 
-        titulo = '5 Produtos mais vendidos';
+        titulo = labelProdutosGlobal.length +' Produtos mais vendidos';
             
         var config = {
             type: 'doughnut',

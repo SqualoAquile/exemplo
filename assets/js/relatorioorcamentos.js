@@ -54,7 +54,7 @@ $(function () {
     dataTable.page.len(-1).draw();
 
     function resumo () {
-        
+
         dataTable.page.len(-1).draw();
         
         var rowData = dataTable.rows().data(),
@@ -76,11 +76,9 @@ $(function () {
         });
 
         i = 0;
-       
 
         $('#quantidadeOrcamentos').text(parseInt(quantidadeOrcamentos));
         $('#totalOrcado').text(floatParaPadraoBrasileiro(totalOrcado));
-
 
         dataTable.page.len(10).draw();
         $('#DataTables_Table_0_length').removeClass('d-none');
