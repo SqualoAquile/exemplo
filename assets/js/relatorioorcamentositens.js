@@ -177,11 +177,10 @@ $(function () {
 
     $('#relatorioorcamentoitens-section').addClass('d-none');
 
-    dataTable.on( 'draw.dt', function () {
-        resumo();
-    });
-
     function resumo () {
+        
+        dataTable.page.len(-1).draw();
+        dataTable.draw();
         
         var rowData = dataTable.rows().data(),
         quantidadeProdutos = 0,
@@ -282,6 +281,8 @@ $(function () {
     $('#graficos').addClass('d-none');
 
     $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
+        $('.form-control .input-filtro-faixa .min').focus();
+        $('.form-control .input-filtro-faixa .max').focus();
         resumo();
         dataTable.page.len(10).draw();
         dataTable.draw();
@@ -311,6 +312,8 @@ $(function () {
     $('#card-body-filtros').on('change', function () {
         $('#collapseFluxocaixaResumo').collapse('hide');
         $('#relatorioorcamentoitens-section').addClass('d-none');
+        $('.form-control .input-filtro-faixa .min').focus();
+        $('.form-control .input-filtro-faixa .max').focus();
         resumo();
     });
 
@@ -330,6 +333,8 @@ $(function () {
         });
 
         if (pesquisar) {
+            $('.form-control .input-filtro-faixa .min').focus();
+            $('.form-control .input-filtro-faixa .max').focus();
             resumo();
             $('#relatorioorcamentoitens-section').removeClass('d-none');
         } else {
