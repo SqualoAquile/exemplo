@@ -198,6 +198,8 @@ $(function () {
         i = 0;
         k = 0;
 
+        console.log('rowData', rowData)
+
         rowData.each(function () {
             var valor = rowData[i][indexColumns.valor];
             var quantidade = parseInt(rowData[i][indexColumns.quantidade]);
@@ -239,7 +241,6 @@ $(function () {
                 }
             i++;
         });
-
 
         listaProdutos = listaProdutos.sort(function(a,b) {
             return b[1]-a[1];
