@@ -660,4 +660,73 @@ $mpdf->Output('OrdemServico.pdf','I');
 
     }
 
+
+    public function buscaOrdens($interval_datas){
+        
+        $array = array();
+        if(!empty($interval_datas) && isset($interval_datas)){
+            
+            if(count($interval_datas) == 1){
+                $dt1 = 	$interval_datas[0];
+                $dt2 =  $interval_datas[0];
+            }else{
+                $dt1 = $interval_datas[0];
+                $dt2 = $interval_datas[count($interval_datas)-1];
+            }
+
+            // busca as despesas relacionadas a O.S. lançadas no fluxo de caixa
+            $sql1 = "SELECT `id`, `data_aprovacao`, `titulo_orcamento`, `nome_razao_social`, `tec_responsavel`, `valor_final` FROM `ordemservico` WHERE situacao = 'ativo' AND status = 'Em Produção' ORDER BY data_aprovacao ASC";
+
+            $sql1 = self::db()->query($sql1);
+            $emproducao = array();
+
+            if($sql1->rowCount() > 0){  
+                $emproducao = $sql1->fetchAll(PDO::FETCH_ASSOC);
+            }
+
+            $revisoes = array();
+
+            // busca o custo total do orçamento
+            $sql2 = "SELECT * FROM ordemservico WHERE status = 'Finalizada' AND situacao = 'ativo' AND data_revisao_1 = '0000-00-00' AND data_revisao_2 = '0000-00-00' AND data_revisao_3 = '0000-00-00' AND DATE_ADD(data_fim, INTERVAL 15 DAY) BETWEEN '$dt1' AND '$dt2'  ORDER BY `data_fim` ASC ";
+
+            $sql2 = self::db()->query($sql2);
+
+            $rev15dias = array();
+
+            if($sql2->rowCount() > 0){  
+                $rev15dias = $sql2->fetchAll(PDO::FETCH_ASSOC);
+            }
+            
+            // busca o custo total do orçamento
+            $sql3 = "SELECT * FROM ordemservico WHERE status = 'Finalizada' AND situacao = 'ativo' AND data_revisao_1 <> '0000-00-00' AND data_revisao_2 = '0000-00-00' AND data_revisao_3 = '0000-00-00' AND DATE_ADD(data_fim, INTERVAL 30 DAY) BETWEEN '$dt1' AND '$dt2'  ORDER BY `data_fim` ASC ";
+
+            $sql3 = self::db()->query($sql3);
+
+            $rev30dias = array();
+
+            if($sql3->rowCount() > 0){  
+                $rev30dias = $sql3->fetchAll(PDO::FETCH_ASSOC);
+            }
+
+
+            // busca o custo total do orçamento
+            $sql4 = "SELECT * FROM ordemservico WHERE status = 'Finalizada' AND situacao = 'ativo' AND data_revisao_1 <> '0000-00-00' AND data_revisao_2 <> '0000-00-00' AND data_revisao_3 = '0000-00-00' AND DATE_ADD(data_fim, INTERVAL 6 MONTH) BETWEEN '$dt1' AND '$dt2'  ORDER BY `data_fim` ASC ";
+
+            $sql4 = self::db()->query($sql4);
+
+            $rev6meses = array();
+
+            if($sql4->rowCount() > 0){  
+                $rev6meses = $sql4->fetchAll(PDO::FETCH_ASSOC);
+            }
+
+            $array['emproducao'] = $emproducao;
+            $array['rev15dias'] = $rev15dias;
+            $array['rev30dias'] = $rev30dias;
+            $array['rev6meses'] = $rev6meses;
+        }      
+
+       return $array;
+    }
+
 }

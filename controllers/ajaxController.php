@@ -699,8 +699,36 @@ class ajaxController extends controller{
     }
     echo json_encode($dados);
   }
+
+  public function buscaOrcamentos(){
+    
+    if(isset($_POST) && !empty($_POST)){
+      $orc = new Orcamentos();
+      $dados = $orc->buscaOrcamentos($_POST['intervalo']);
+    }
+    echo json_encode($dados);
+  }
+  
+  public function buscaOrdensServicos(){
+    
+    if(isset($_POST) && !empty($_POST)){
+      $os = new Ordemservico();
+      $dados = $os->buscaOrdens($_POST['intervalo']);
+    }
+    echo json_encode($dados);
+  }
+  
+  public function buscaAniversariantes(){
+    
+    if(isset($_POST) && !empty($_POST)){
+      $cl = new Clientes();
+      $dados = $cl->buscaAniversariantes($_POST['intervalo']);
+    }
+    echo json_encode($dados);
+  }
   
 
+  
   public function top5produtos(){
     
     if(isset($_POST) && !empty($_POST)){

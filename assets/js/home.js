@@ -3,14 +3,13 @@ var charts = [];
 $(function () {
    
     var $selectGrafTemporal = $('#selectGraficosTemporais'),
-        modo = "agrupar", // agrupar (doughnut, bar, horizontalBar), temporal(line, bar, combo)
+        $selectGrafVendas = $('#selectGraficosVendas'),
         id1 = "#chart-div2",
         id2 = "#chart-div3",
         id3 = "#graf_despesa_analitica",
         id4 = "#graf_receita_analitica",
         id5 = "#graf_saldos",
         id6 = "#graf_saldosAno",
-        tipo = "bar",
         ctx = document.getElementById(id1.substr(1)).getContext('2d');
 
     $selectGrafTemporal
@@ -421,6 +420,13 @@ $(function () {
                                     display: false,
                                     position: "top"
                                 },
+                                scales:{
+                                    yAxes:[{
+                                        ticks:{
+                                            beginAtZero: true
+                                        }
+                                    }]
+                                }
                             }
                         }
     
@@ -465,7 +471,13 @@ $(function () {
                                 legend: {
                                     display: false,
                                     position: "top"
-                                },
+                                },scales:{
+                                    yAxes:[{
+                                        ticks:{
+                                            beginAtZero: true
+                                        }
+                                    }]
+                                }
                             }
                         }
 
@@ -553,6 +565,266 @@ $(function () {
 
 
                 }
+            }
+        });            
+    }
+
+    $selectGrafVendas
+        .val(7)
+        .on('change', function() {
+            orcamentos();
+            ordenServicos();
+            aniversarios();
+        })
+        .change();
+
+    function orcamentos() {
+        var intervalo = intervaloDatasAQuitar($selectGrafVendas.val());
+        var $tabela = $('#orcamentos_abertos'), $tabela2 = $('#orcamentos_retornar');        
+        var dtTit = intervalo[ intervalo.length - 1].split('-')
+            dtTit = dtTit[2] + '/' + dtTit[1] + '/' + dtTit[0];
+            
+        var $tituloProx = $('#titulo_proxOrc');
+            $tituloProx.text('Orçamentos com data de retorno dentro dos próximos ' +  $selectGrafVendas
+            .val() + ' dias');
+
+        // console.log('interv vencidos:', intervalo);
+        $.ajax({ 
+            url: baselink + '/ajax/buscaOrcamentos', 
+            type: 'POST', 
+            data: {
+                intervalo: intervalo,
+            },
+            dataType: 'json', 
+            success: function (resultado) { 
+                if (resultado){   
+                    if(resultado){
+                        var dataAux, vencidas = [], proximo = [];
+
+                            vencidas = Object.values(resultado['abertos']);
+
+                        $tabela.find('tbody tr').remove();
+                        for(var i = 0; i < vencidas.length; i++ ){
+                            linha = "<tr>";
+                            linha += "<td><a class='btn btn-primary btn-sm ml-1' href="+baselink+"/orcamentos/editar/"+vencidas[i]['id']+"><i class='fas fa-edit'></i></a></td>";
+                            linha += "<td>" + vencidas[i]['titulo_orcamento'] + "</td>";
+                            linha += "<td>" + floatParaPadraoBrasileiro( vencidas[i]['valor_total'] )  + "</td>";
+                            linha += "<td>" + vencidas[i]['nome_cliente'] + "</td>";
+                            linha += "<td>" + vencidas[i]['email'] + "</td>";
+                            
+                            dataAux = '';
+                            dataAux = vencidas[i]['data_emissao'];
+                            dataAux = dataAux.split('-');
+                            dataAux = dataAux[2] + '/' + dataAux[1] + '/' + dataAux[0];
+                            linha += "<td>" + dataAux + "</td>";
+                            linha += "<tr>";
+
+                            $tabela.find('tbody').append(linha);
+                        }
+
+                        proximo = Object.values(resultado['retornar']);
+
+                        $tabela2.find('tbody tr').remove();
+                        for(var i = 0; i < proximo.length; i++ ){
+                            linha = "<tr>";
+                            linha += "<td><a class='btn btn-primary btn-sm ml-1' href="+baselink+"/orcamentos/editar/"+proximo[i]['id']+" ><i class='fas fa-edit'></i></a></td>";
+                            linha += "<td>" + proximo[i]['titulo_orcamento'] + "</td>";
+                            linha += "<td>" + floatParaPadraoBrasileiro( proximo[i]['valor_total'] )  + "</td>";
+                            linha += "<td>" + proximo[i]['nome_cliente'] + "</td>";
+                            linha += "<td>" + proximo[i]['email'] + "</td>";
+                            
+                            dataAux = '';
+                            dataAux = proximo[i]['data_emissao'];
+                            dataAux = dataAux.split('-');
+                            dataAux = dataAux[2] + '/' + dataAux[1] + '/' + dataAux[0];
+                            linha += "<td>" + dataAux + "</td>";
+                            linha += "<tr>";
+                            linha += "<tr>"; 
+
+                            $tabela2.find('tbody').append(linha);
+                        }
+                    }
+
+                    
+
+
+                }
+            }
+        });            
+    }
+
+    function ordenServicos() {
+        var intervalo = intervaloDatasAQuitar($selectGrafVendas.val());
+        var $tabela = $('#os_emproducao'), $tabela2 = $('#revisoes');        
+        var dtTit = intervalo[ intervalo.length - 1].split('-')
+            dtTit = dtTit[2] + '/' + dtTit[1] + '/' + dtTit[0];
+            
+        var $tituloOS = $('#titulo_proxRev');
+            $tituloOS.text('O.S. com data de revisão dentro dos próximos ' +  $selectGrafVendas
+            .val() + ' dias');
+
+        // console.log('interv vencidos:', intervalo);
+        $.ajax({ 
+            url: baselink + '/ajax/buscaOrdensServicos', 
+            type: 'POST', 
+            data: {
+                intervalo: intervalo,
+            },
+            dataType: 'json', 
+            success: function (resultado) { 
+                if(resultado){
+                    // console.log(resultado);
+                    var dataAux, emprod = [];
+
+                    emprod = Object.values(resultado['emproducao']);
+
+                    $tabela.find('tbody tr').remove();
+                    for(var i = 0; i < emprod.length; i++ ){
+                        linha = "<tr>";
+                        linha += "<td><a class='btn btn-primary btn-sm ml-1' href="+baselink+"/ordemservico/editar/"+emprod[i]['id']+"><i class='fas fa-edit'></i></a></td>";
+                        
+                        dataAux = '';
+                        dataAux = emprod[i]['data_aprovacao'];
+                        dataAux = dataAux.split('-');
+                        dataAux = dataAux[2] + '/' + dataAux[1] + '/' + dataAux[0];
+                        linha += "<td>" + dataAux + "</td>";
+
+                        linha += "<td>" + emprod[i]['titulo_orcamento'] + "</td>";
+
+                        linha += "<td>" + floatParaPadraoBrasileiro( emprod[i]['valor_final'] )  + "</td>";
+
+                        linha += "<td>" + emprod[i]['nome_razao_social'] + "</td>";
+                        linha += "<td>" + emprod[i]['tec_responsavel'] + "</td>";
+                        linha += "<tr>";
+
+                        $tabela.find('tbody').append(linha);
+                    }
+
+                    var rev15dias = [], rev30dias = [], rev6meses = [];
+
+                    rev15dias = Object.values(resultado['rev15dias']);
+                    rev30dias = Object.values(resultado['rev30dias']);
+                    rev6meses = Object.values(resultado['rev6meses']);
+
+                    $tabela2.find('tbody tr').remove();
+
+                    for(var i = 0; i < rev15dias.length; i++ ){
+                        linha = "<tr>";
+                        linha += "<td><a class='btn btn-primary btn-sm ml-1' href="+baselink+"/ordemservico/editar/"+rev15dias[i]['id']+"><i class='fas fa-edit'></i></a></td>";
+                        
+                        dataAux = '';
+                        dataAux = rev15dias[i]['data_aprovacao'];
+                        dataAux = dataAux.split('-');
+                        dataAux = dataAux[2] + '/' + dataAux[1] + '/' + dataAux[0];
+                        linha += "<td>" + dataAux + "</td>";
+
+                        linha += "<td>" + rev15dias[i]['titulo_orcamento'] + "</td>";
+
+                        linha += "<td>" + floatParaPadraoBrasileiro( rev15dias[i]['valor_final'] )  + "</td>";
+
+                        linha += "<td>" + rev15dias[i]['nome_razao_social'] + "</td>";
+                        linha += "<td>" + rev15dias[i]['tec_responsavel'] + "</td>";
+                        linha += "<td> Primeira Revisão </td>";
+                        linha += "<tr>";
+
+                        // console.log('15 dias: ',linha);
+                        $tabela2.find('tbody').append(linha);
+                    }
+
+                    for(var i = 0; i < rev30dias.length; i++ ){
+                        linha = "<tr>";
+                        linha += "<td><a class='btn btn-primary btn-sm ml-1' href="+baselink+"/ordemservico/editar/"+rev30dias[i]['id']+"><i class='fas fa-edit'></i></a></td>";
+                        
+                        dataAux = '';
+                        dataAux = rev30dias[i]['data_aprovacao'];
+                        dataAux = dataAux.split('-');
+                        dataAux = dataAux[2] + '/' + dataAux[1] + '/' + dataAux[0];
+                        linha += "<td>" + dataAux + "</td>";
+
+                        linha += "<td>" + rev30dias[i]['titulo_orcamento'] + "</td>";
+
+                        linha += "<td>" + floatParaPadraoBrasileiro( rev30dias[i]['valor_final'] )  + "</td>";
+
+                        linha += "<td>" + rev30dias[i]['nome_razao_social'] + "</td>";
+                        linha += "<td>" + rev30dias[i]['tec_responsavel'] + "</td>";
+                        linha += "<td> Segunda Revisão </td>";
+                        linha += "<tr>";
+
+                        // console.log('30 dias: ',linha);
+                        $tabela2.find('tbody').append(linha);
+                    }
+
+                    for(var i = 0; i < rev6meses.length; i++ ){
+                        linha = "<tr>";
+                        linha += "<td><a class='btn btn-primary btn-sm ml-1' href="+baselink+"/ordemservico/editar/"+rev6meses[i]['id']+"><i class='fas fa-edit'></i></a></td>";
+                        
+                        dataAux = '';
+                        dataAux = rev6meses[i]['data_aprovacao'];
+                        dataAux = dataAux.split('-');
+                        dataAux = dataAux[2] + '/' + dataAux[1] + '/' + dataAux[0];
+                        linha += "<td>" + dataAux + "</td>";
+
+                        linha += "<td>" + rev6meses[i]['titulo_orcamento'] + "</td>";
+
+                        linha += "<td>" + floatParaPadraoBrasileiro( rev6meses[i]['valor_final'] )  + "</td>";
+
+                        linha += "<td>" + rev6meses[i]['nome_razao_social'] + "</td>";
+                        linha += "<td>" + rev6meses[i]['tec_responsavel'] + "</td>";
+                        linha += "<td> Terceira Revisão </td>";
+                        linha += "<tr>";
+
+                        // console.log('6 meses: ',linha);
+                        $tabela2.find('tbody').append(linha);
+                    }
+                }
+
+            }
+        });            
+    }
+
+    function aniversarios() {
+        var intervalo = intervaloDatasAQuitar($selectGrafVendas.val());
+        var $tabela = $('#anivers');        
+        var dtTit = intervalo[ intervalo.length - 1].split('-')
+            dtTit = dtTit[2] + '/' + dtTit[1] + '/' + dtTit[0];
+            
+        var $tituloOS = $('#tit_aniver');
+            $tituloOS.text('Clientes de aniversário no mês');
+
+        // console.log('interv vencidos:', intervalo);
+        $.ajax({ 
+            url: baselink + '/ajax/buscaAniversariantes', 
+            type: 'POST', 
+            data: {
+                intervalo: intervalo,
+            },
+            dataType: 'json', 
+            success: function (resultado) { 
+                if(resultado){
+                    // console.log(resultado);
+                    var dataAux, anivers = [];
+
+                    anivers = Object.values(resultado['anivers']);
+
+                    $tabela.find('tbody tr').remove();
+                    for(var i = 0; i < anivers.length; i++ ){
+                        linha = "<tr>";
+                        linha += "<td>" + anivers[i]['nome'] + "</td>";
+
+                        dataAux = '';
+                        dataAux = anivers[i]['data_nascimento'];
+                        dataAux = dataAux.split('-');
+                        dataAux = dataAux[2] + '/' + dataAux[1] + '/' + dataAux[0];
+                        linha += "<td>" + dataAux + "</td>";
+
+                        linha += "<td>" + anivers[i]['celular'] + "</td>";
+                        linha += "<td>" + anivers[i]['email'] + "</td>";
+                        linha += "<tr>";
+
+                        $tabela.find('tbody').append(linha);
+                    }
+                }
+
             }
         });            
     }
