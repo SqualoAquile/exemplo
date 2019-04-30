@@ -167,15 +167,21 @@ $(function () {
             data_aprov:14
         }
     
-    // exibir tudo
-    dataTable.page.len(-1).draw();
-    
+        
     function exists(arr, search) {
         return arr.some(row => row.includes(search));
     }
-         
 
-    function resumo () { 
+    // exibir tudo
+    dataTable.page.len(-1).draw();
+
+    $('#relatorioorcamentoitens-section').addClass('d-none');
+
+    dataTable.on( 'draw.dt', function () {
+        resumo();
+    });
+
+    function resumo () {
         
         var rowData = dataTable.rows().data(),
         quantidadeProdutos = 0,
@@ -190,17 +196,14 @@ $(function () {
         listaProdutos =[];
 
         i = 0;
-        k=0;
+        k = 0;
+
         rowData.each(function () {
             var valor = rowData[i][indexColumns.valor];
             var quantidade = parseInt(rowData[i][indexColumns.quantidade]);
             var tipo = rowData[i][indexColumns.tipo];
-            var data = rowData[i][indexColumns.data_aprov];
             var produto = rowData[i][indexColumns.material_servico];          
             
-            //#baile
-            // tem que mostrar apenas as linhas que tenham alguma data na coluna de data_aprovacao
-            if (data) {
                 valor = valor.replace('R$  ', '');
                 valor = floatParaPadraoInternacional(valor);
     
@@ -234,7 +237,6 @@ $(function () {
                     totalServicosCompl += parseFloat(valor);
                     quantidadeServicosCompl += parseInt(quantidade);
                 }
-            }
             i++;
         });
 
@@ -273,8 +275,6 @@ $(function () {
         $('#quantidadeProdutos').text(parseInt(quantidadeProdutos));
         $('#totalProdutos').text(floatParaPadraoBrasileiro(totalProdutos));
 
-        dataTable.page.len(10).draw();
-        $('#relatorioorcamentoitens-section').removeClass('d-none');
     };
 
     $('#relatorioorcamentoitens-section').addClass('d-none');
@@ -282,14 +282,18 @@ $(function () {
     $('#graficos').addClass('d-none');
 
     $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
-        $('#relatorioorcamentoitens-section').removeClass('d-none');
         resumo();
+        dataTable.page.len(10).draw();
+        dataTable.draw();
+        $('#relatorioorcamentoitens-section').removeClass('d-none');
         drawChart(id);
       });
 
     $('#collapseFluxocaixaResumo').on('hide.bs.collapse', function () {
+        document.getElementById('cardFiltros').click();
         $('#relatorioorcamentoitens-section').addClass('d-none');
         dataTable.page.len(-1).draw();
+        dataTable.draw();
     });
 
 
@@ -307,6 +311,7 @@ $(function () {
     $('#card-body-filtros').on('change', function () {
         $('#collapseFluxocaixaResumo').collapse('hide');
         $('#relatorioorcamentoitens-section').addClass('d-none');
+        resumo();
     });
 
 
@@ -314,10 +319,12 @@ $(function () {
 
     $('#botaoRelatorio').on('click', function(){
 
+        dataTable.page.len(-1).draw();
+
         let pesquisar = false;
 
         $('.filtros').each(function() {
-            if (($(this).find('select.input-filtro-faixa').val() && ($(this).find('input.input-filtro-faixa.min').val() || $(this).find('input.input-filtro-faixa.min').val())) || $(this).find('select.input-filtro-texto').val() && $(this).find('input.input-filtro-texto').val()) {
+            if (($(this).find('select.input-filtro-faixa').val() && ($(this).find('input.input-filtro-faixa.min').val() || $(this).find('input.input-filtro-faixa.max').val())) || $(this).find('select.input-filtro-texto').val() && $(this).find('input.input-filtro-texto').val()) {
                 pesquisar = true;
             }
         });
@@ -331,11 +338,11 @@ $(function () {
         }
 
     });
-
+    
     function drawChart(id) {
         var titulo;
 
-        titulo = '5 Produtos mais vendidos';
+        titulo = labelProdutosGlobal.length +' Produtos mais vendidos';
             
         var config = {
             type: 'doughnut',
@@ -538,5 +545,6 @@ $(function () {
                 .columns(indexColumn)
                 .search(search)
                 .draw();
+
         });
 });

@@ -191,11 +191,11 @@
                                             data-unico="<?php echo array_key_exists("unico", $value["Comment"]) && $value["Comment"]["unico"]  == true ? "unico" : "" ?>"
                                             <?php echo $value['Null'] == "NO" ? "required" : "" ?>
                                             <?php if( array_key_exists("mascara_validacao", $value["Comment"]) && 
-                                                    ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" )):?>
+                                                    ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" || $value["Comment"]["mascara_validacao"] == "numero" )):?>
                                                 data-podeZero="<?php echo array_key_exists("pode_zero", $value["Comment"]) && $value["Comment"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
                                             <?php endif?> 
                                             />
-                                            <label data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent" for="<?php echo $value['Field'] ?>" class="btn btn-sm text-secondary icon-dropdown m-0 toggle-btn dropdown-toggle">
+                                            <label data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent" for="<?php echo $value['Field'] ?>" class="btn btn-sm text-secondary icon-dropdown m-0 toggle-btn dropdown-toggle" tabindex="-1">
                                                 <i class="fas fa-caret-down"></i>
                                             </label>
                                             <div class="dropdown-menu w-100 p-0 list-group-flush relacional-dropdown" aria-labelledby="<?php echo $value["Field"] ?>">
@@ -215,7 +215,7 @@
                                             maxlength="<?php echo $value["tamanhoMax"] ?>"
                                             data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                             <?php if( array_key_exists("mascara_validacao", $value["Comment"]) && 
-                                                    ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" )):?>
+                                                    ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" || $value["Comment"]["mascara_validacao"] == "numero" )):?>
                                                 data-podeZero="<?php echo array_key_exists("pode_zero", $value["Comment"]) && $value["Comment"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
                                             <?php endif?>                                        
                                         />
@@ -298,7 +298,7 @@
                                                     data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                                     <?php echo $value['Null'] == "NO" ? "required" : "" ?>
                                                     >
-                                                    <option value="" selected disabled>Selecione</option>
+                                                    <option value="" selected>Selecione</option>
                                                     <?php for($j = 0; $j < count($value["Comment"]['info_relacional']['resultado']); $j++):?>
                                                         
                                                         <option value="<?php echo $value["Comment"]['info_relacional']['resultado'][$j][$value["Comment"]['info_relacional']['campo']];?>"
@@ -423,11 +423,11 @@
                                                 data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
                                                 <?php echo $value['Null'] == "NO" ? "required" : "" ?>
                                                 <?php if( array_key_exists("mascara_validacao", $value["Comment"]) && 
-                                                        ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" )):?>
+                                                        ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" || $value["Comment"]["mascara_validacao"] == "numero" )):?>
                                                     data-podeZero="<?php echo array_key_exists("pode_zero", $value["Comment"]) && $value["Comment"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
                                                 <?php endif?> 
                                                 />
-                                                <label data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent" for="<?php echo $value['Field'] ?>" class="btn btn-sm text-secondary icon-dropdown m-0 toggle-btn dropdown-toggle">
+                                                <label data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent" for="<?php echo $value['Field'] ?>" class="btn btn-sm text-secondary icon-dropdown m-0 toggle-btn dropdown-toggle" tabindex="-1">
                                                     <i class="fas fa-caret-down"></i>
                                                 </label>
                                                 <div class="dropdown-menu w-100 p-0 list-group-flush relacional-dropdown" aria-labelledby="<?php echo $value["Field"] ?>">
@@ -450,7 +450,7 @@
                                                 maxlength="<?php echo $value["tamanhoMax"] ?>"
                                                 data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                                 <?php if( array_key_exists("mascara_validacao", $value["Comment"]) && 
-                                                        ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" )):?>
+                                                        ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" || $value["Comment"]["mascara_validacao"] == "numero" )):?>
                                                     data-podeZero="<?php echo array_key_exists("pode_zero", $value["Comment"]) && $value["Comment"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
                                                 <?php endif?>                                        
                                             />
@@ -528,7 +528,7 @@
                                                     data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                                     <?php echo $value['Null'] == "NO" ? "required" : "" ?>
                                                     >
-                                                    <option value="" selected disabled>Selecione</option>
+                                                    <option value="" selected>Selecione</option>
                                                     <?php for($j = 0; $j < count($value["Comment"]['info_relacional']['resultado']); $j++):?>
                                                         
                                                         <option value="<?php echo $value["Comment"]['info_relacional']['resultado'][$j][$value["Comment"]['info_relacional']['campo']];?>"
@@ -653,11 +653,11 @@
                                                     data-anterior="<?php echo isset($item) ? $item[$value["Field"]] : "" ?>"
                                                     <?php echo $value['Null'] == "NO" ? "required" : "" ?>
                                                     <?php if( array_key_exists("mascara_validacao", $value["Comment"]) && 
-                                                            ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" )):?>
+                                                            ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" || $value["Comment"]["mascara_validacao"] == "numero" )):?>
                                                         data-podeZero="<?php echo array_key_exists("pode_zero", $value["Comment"]) && $value["Comment"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
                                                     <?php endif?> 
                                                     />
-                                                    <label data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent" for="<?php echo $value['Field'] ?>" class="btn btn-sm text-secondary icon-dropdown m-0 toggle-btn dropdown-toggle">
+                                                    <label data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent" for="<?php echo $value['Field'] ?>" class="btn btn-sm text-secondary icon-dropdown m-0 toggle-btn dropdown-toggle" tabindex="-1">
                                                         <i class="fas fa-caret-down"></i>
                                                     </label>
                                                     <div class="dropdown-menu w-100 p-0 list-group-flush relacional-dropdown" aria-labelledby="<?php echo $value["Field"] ?>">
@@ -680,7 +680,7 @@
                                                     maxlength="<?php echo $value["tamanhoMax"] ?>"
                                                     data-mascara_validacao = "<?php echo array_key_exists("mascara_validacao", $value["Comment"]) ? $value["Comment"]["mascara_validacao"] : "false" ?>"
                                                     <?php if( array_key_exists("mascara_validacao", $value["Comment"]) && 
-                                                            ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" )):?>
+                                                            ( $value["Comment"]["mascara_validacao"] == "monetario" || $value["Comment"]["mascara_validacao"] == "porcentagem" || $value["Comment"]["mascara_validacao"] == "numero" )):?>
                                                         data-podeZero="<?php echo array_key_exists("pode_zero", $value["Comment"]) && $value["Comment"]["pode_zero"]  == 'true' ? 'true' : 'false' ?>"
                                                     <?php endif?>                                        
                                                 />

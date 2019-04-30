@@ -177,11 +177,11 @@ class orcamentosController extends controller{
                 $infos["itens"][$k-1]["subitens"][$j]["medidas"] ='';
             }
             $infos["itens"][$k-1]["subitens"][$j]["unidade"] = $itens[$i]['unidade'];
-            if (empty($itens[$i]['quant_usada'])) {
-                $infos["itens"][$k-1]["subitens"][$j]["preco_unitario"] = floatval($itens[$i]['preco_tot_subitem']) / floatval($itens[$i]['quant']);
-            }else{
-                $infos["itens"][$k-1]["subitens"][$j]["preco_unitario"] = floatval($itens[$i]['preco_tot_subitem']) / floatval(floatval($itens[$i]['quant'])*floatval($itens[$i]['quant_usada']));
-            }
+            // if (empty($itens[$i]['quant_usada'])) {
+            //     $infos["itens"][$k-1]["subitens"][$j]["preco_unitario"] = floatval($itens[$i]['preco_tot_subitem']) / floatval($itens[$i]['quant']);
+            // }else{
+            //     $infos["itens"][$k-1]["subitens"][$j]["preco_unitario"] = floatval($itens[$i]['preco_tot_subitem']) / floatval(floatval($itens[$i]['quant'])*floatval($itens[$i]['quant_usada']));
+            // }
             $infos["itens"][$k-1]["subitens"][$j]["preco_total"] =  $itens[$i]['preco_tot_subitem'];
 
             $j++;
@@ -245,10 +245,10 @@ class orcamentosController extends controller{
             $infos["deslocamento"] = number_format($infos["deslocamento"],2,",",".");
 
             for ($j=0; $j < sizeof($infos["itens"][$p]["subitens"]) ; $j++) {
-                $precoUnitFormat = $infos["itens"][$p]["subitens"][$j]["preco_unitario"];
+                // $precoUnitFormat = $infos["itens"][$p]["subitens"][$j]["preco_unitario"];
                 $precoTotalFormat =  $infos["itens"][$p]["subitens"][$j]["preco_total"];
                 
-                $infos["itens"][$p]["subitens"][$j]["preco_unitario"] = number_format($precoUnitFormat,2,",",".");
+                // $infos["itens"][$p]["subitens"][$j]["preco_unitario"] = number_format($precoUnitFormat,2,",",".");
                 $infos["itens"][$p]["subitens"][$j]["preco_total"] = number_format($precoTotalFormat,2,",",".");
             }
         }
@@ -347,16 +347,15 @@ class orcamentosController extends controller{
                     <th scope="col"><b>Item</b></th>
                     <th scope="col"><b>Quantidade</b></th>
                     <th scope="col"><b>Produto/Serviço</b></th>
-                    <th scope="col" ><b>Unidade</b></th>
+                    <th scope="col" align="right" ><b>Unidade</b></th>
                     ';
 
                     if ($mostraMedidas==true) {
-                        $html.='<th scope="col"><b>Medidas</b></th>';
+                        $html.='<th scope="col" align="right"><b>Medidas</b></th>';
                     }
 
                     if ($mostraPrecos==true) {
                         $html.='
-                            <th scope="col" class="preco" align="right"><b>Preço Unit.</b></th>
                             <th scope="col" class="preco" align="right"><b>Preço Total</b> </th>
                             ';
                     }
@@ -408,16 +407,15 @@ class orcamentosController extends controller{
                         <td></td>                
                         <td height="10px" align="center" '.$cor.'>'. $infos["itens"][$k]["subitens"][$j]["quantidade"].'</td>
                         <td height="10px" align="center" '.$cor.'> '.$infos["itens"][$k]["subitens"][$j]["produto_servico"].'</td>
-                        <td height="10px" align="center" '.$cor.'>'. $infos["itens"][$k]["subitens"][$j]["unidade"].'</td>
+                        <td height="10px" align="right" '.$cor.'>'. $infos["itens"][$k]["subitens"][$j]["unidade"].'</td>
                         ';
 
                     if ($mostraMedidas==true) {
-                        $htmlRows.='<td height="10px" align="center" '.$cor.'>'.$infos["itens"][$k]["subitens"][$j]["medidas"].' </td>';
+                        $htmlRows.='<td height="10px" align="right" '.$cor.'>'.$infos["itens"][$k]["subitens"][$j]["medidas"].' </td>';
                     }
 
                     if ($mostraPrecos==true) {
                         $htmlRows.='
-                            <td height="10px" align="right" '.$cor.'> R$ '.$infos["itens"][$k]["subitens"][$j]["preco_unitario"].'</td>
                             <td height="10px" align="right" '.$cor.'> R$ '.$infos["itens"][$k]["subitens"][$j]["preco_total"].'</td>
                         ';
                     }
@@ -434,10 +432,10 @@ class orcamentosController extends controller{
                 <tr>
                     <td> </td>
                     <td> </td>
-                    <td> </td>
+ 
                     ';
-                    if ($mostraMedidas==true) { $htmlRows.='<td></td>';}     
-                    if ($mostraPrecos==true) { $htmlRows.='<td></td>';}
+                    if ($mostraMedidas==true) { $htmlRows.='<td></td>';}   
+                    if ($mostraPrecos==true) { $htmlRows.='<td></td>';}  
                 $htmlRows.='
                     <td style="color:red" align="right"><b>Preço Alternativo: </b> </td>
                     <td style="color:red" align="right">R$ '.$infos["itens"][$k]["total_alternativo"].'</td>
@@ -449,7 +447,8 @@ class orcamentosController extends controller{
             <tr style="border-bottom-style:thin solid;">
                 <td> </td>
                 <td> </td>
-                <td> </td>';
+
+                ';
                 if ($mostraMedidas==true) { $htmlRows.='<td></td>';}     
                 if ($mostraPrecos==true) { $htmlRows.='<td></td>';}
             $htmlRows.='

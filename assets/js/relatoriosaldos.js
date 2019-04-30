@@ -60,11 +60,18 @@ $(function () {
     
     
     dataTable.page.len(-1).draw();
+    dataTable.draw();
     dataTable.order( [ 1, "asc" ] ).draw();
+    $('#DataTables_Table_0_length').addClass('d-none');
+
+    dataTable.on( 'draw.dt', function () {
+        resumo();
+    });
 
     function resumo () {
-       
+        
         dataTable.order( [ 1, "asc" ] ).draw();
+
         var rowData = dataTable.rows().data();
 
         var lastRow = 0;
@@ -170,8 +177,6 @@ $(function () {
         }else{
             $('#diferenca').addClass('text-warning');
         }
-
-
     };
 
     $('#DataTables_Table_0_length').addClass('d-none');
@@ -184,13 +189,16 @@ $(function () {
 
     $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
         resumo();
+        dataTable.page.len(10).draw();
+        dataTable.draw();
         $('#DataTables_Table_0_wrapper').removeClass('d-none');
         $('#collapseGraficos2').collapse('hide');
-
       });
 
     $('#collapseFluxocaixaResumo').on('hide.bs.collapse', function () {
         $('#DataTables_Table_0_wrapper').addClass('d-none');
+        dataTable.page.len(-1).draw();
+        dataTable.draw();
     });
 
     $('#collapseGraficos2').on('show.bs.collapse', function () {
@@ -251,7 +259,7 @@ $(function () {
         let pesquisar = false;
 
         $('.filtros').each(function() {
-            if (($(this).find('select.input-filtro-faixa').val() && ($(this).find('input.input-filtro-faixa.min').val() || $(this).find('input.input-filtro-faixa.min').val())) || $(this).find('select.input-filtro-texto').val() && $(this).find('input.input-filtro-texto').val()) {
+            if (($(this).find('select.input-filtro-faixa').val() && ($(this).find('input.input-filtro-faixa.min').val() || $(this).find('input.input-filtro-faixa.max').val())) || $(this).find('select.input-filtro-texto').val() && $(this).find('input.input-filtro-texto').val()) {
                 pesquisar = true;
             }
         });
@@ -266,35 +274,51 @@ $(function () {
 
     });
 
+    $('#selectMesesMin, #selectMesesMax').on('change', function(){
+        $('#collapseGraficos2').collapse('hide');
+    });
+
     $('#graficos').on('click', function(){
 
-        var selectFaixa = $('.input-filtro-faixa');
-        var selectF = selectFaixa.siblings('input');
-        var faixa = false;
-       
-        selectF.each(function(){
-            if($(this).val()){
-                faixa = true;
-            }
-        });
+        var selectMin = $('#selectMesesMin').val();
+        var selectMax = $('#selectMesesMax').val();
 
-        var selectTexto = $('.input-filtro-texto');
-        var selectT = selectTexto.siblings('input');
-        var texto = false;
+        if (!selectMin || !selectMax){
 
-        selectT.each(function(){
-            if($(this).val()){
-                texto = true;
-            }
-        });
-    
-        if(!faixa && !texto) {
-            alert("Aplique um filtro para gerar um gráfico!");
+            alert("Selecione um período de meses para gerar um gráfico!");
             event.stopPropagation();
         }else{
             resumo();
             $('#collapseGraficos2').collapse('show');
         }
-    });
 
+        // var selectFaixa = $('.input-filtro-faixa');
+        // var selectF = selectFaixa.siblings('input');
+        // var faixa = false;
+       
+        // selectF.each(function(){
+        //     if($(this).val()){
+        //         faixa = true;
+        //     }
+        // });
+
+        // var selectTexto = $('.input-filtro-texto');
+        // var selectT = selectTexto.siblings('input');
+        // var texto = false;
+
+        // selectT.each(function(){
+        //     if($(this).val()){
+        //         texto = true;
+        //     }
+        // });
+    
+        // if(!faixa && !texto) {
+        //     alert("Aplique um filtro para gerar um gráfico!");
+        //     event.stopPropagation();
+        // }else{
+        //     resumo();
+        //     $('#collapseGraficos2').collapse('show');
+        // }
+
+    });
 });

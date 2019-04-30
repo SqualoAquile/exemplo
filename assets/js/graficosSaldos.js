@@ -40,52 +40,22 @@ $(function () {
                 dataType: 'json', 
                 success: function (resultado) { 
                     if (resultado){
-                        var eixoDatas = [], entradas = [], saidas = [], result = [], resultAcul = [];
+                        var eixoDatas = [], saldo_total_final = [];
 
                         for (var i = 0; i < resultado.length; i++) {
                             eixoDatas[i] = resultado[i][0];
-                            entradas[i] =  parseFloat(parseFloat(resultado[i][1]));
-                            saidas[i] = parseFloat(parseFloat(-1) * resultado[i][2]);
-                            result[i] = parseFloat(parseFloat(entradas[i] - saidas[i]));
-                            if(i == 0){
-                                resultAcul[i] = parseFloat(result[i]).toFixed(2);    
-                            }else{
-                                resultAcul[i] = parseFloat(parseFloat(resultAcul[i-1]) + parseFloat(result[i])).toFixed(2);      
-                            }   
+                            saldo_total_final[i] =  parseFloat(parseFloat(resultado[i][1])); 
                         }
                         
                         var config = {
                             type: 'bar',
                             data: {
                                 labels: eixoDatas,
-                                datasets: [{
-                                    type: 'line',
-                                    label: 'Resultado Acumulado',
-                                    backgroundColor: 'black',
-                                    fill:false,
-                                    data: resultAcul,
-                                    borderColor: 'black',
-                                    borderWidth: 3
-                                },{
-                                    type: 'line',
-                                    label: 'Resultado',
-                                    backgroundColor: 'blue',
-                                    fill:false,
-                                    data: result,
-                                    borderColor: 'blue',
-                                    borderWidth: 2
-                                }, {
+                                datasets: [  {
                                     type: 'bar',
-                                    label: 'Saídas',
-                                    backgroundColor: 'red',
-                                    data: saidas,
-                                    borderColor: 'white',
-                                    borderWidth: 1
-                                }, {
-                                    type: 'bar',
-                                    label: 'Entradas',
+                                    label: 'Saldo Final',
                                     backgroundColor: 'green',
-                                    data: entradas,
+                                    data: saldo_total_final,
                                     borderColor: 'white',
                                     borderWidth: 1
                                 }]
@@ -102,6 +72,13 @@ $(function () {
                                     display: true,
                                     position: "top"
                                 },
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true
+                                        }
+                                    }]
+                                }
                             }
                         }
     

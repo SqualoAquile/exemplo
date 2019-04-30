@@ -37,6 +37,11 @@ $(function () {
     
                 $(el)
                     .mask('0#');
+                    
+            } else if (mask == 'porcentagem') {
+        
+                $(el)
+                    .mask('00,00%');
             }
         });
     }

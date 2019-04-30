@@ -54,7 +54,12 @@ $(function () {
     
     
     dataTable.page.len(-1).draw();
-    
+    dataTable.draw();
+    $('#DataTables_Table_0_length').addClass('d-none');
+
+    dataTable.on( 'draw.dt', function () {
+        resumo();
+    });
 
     function resumo () {
         
@@ -165,8 +170,8 @@ $(function () {
         $('[data-id=totalQ]').text(parseInt(totalQ));
         $('[data-id=totalAQ]').text(parseInt(totalAQ));
 
-        dataTable.page.len(10).draw();
-        $('#DataTables_Table_0_length').removeClass('d-none');
+        // dataTable.page.len(10).draw();
+        // $('#DataTables_Table_0_length').removeClass('d-none');
   
     };
 
@@ -174,8 +179,10 @@ $(function () {
     $('#DataTables_Table_0_wrapper').addClass('d-none');
 
     $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
-        $('#DataTables_Table_0_wrapper').removeClass('d-none');
         resumo();
+        dataTable.page.len(10).draw();
+        dataTable.draw();
+        $('#DataTables_Table_0_wrapper').removeClass('d-none');
         $('#collapseMeta').removeClass('show').addClass('hide');
         $('#collapseGraficos2').removeClass('show').addClass('hide');
       });
@@ -183,6 +190,7 @@ $(function () {
     $('#collapseFluxocaixaResumo').on('hide.bs.collapse', function () {
         $('#DataTables_Table_0_wrapper').addClass('d-none');
         dataTable.page.len(-1).draw();
+        dataTable.draw();
         $('#collapseMeta').removeClass('hide').addClass('show');
     });
 
@@ -220,7 +228,7 @@ $(function () {
         let pesquisar = false;
 
         $('.filtros').each(function() {
-            if (($(this).find('select.input-filtro-faixa').val() && ($(this).find('input.input-filtro-faixa.min').val() || $(this).find('input.input-filtro-faixa.min').val())) || $(this).find('select.input-filtro-texto').val() && $(this).find('input.input-filtro-texto').val()) {
+            if (($(this).find('select.input-filtro-faixa').val() && ($(this).find('input.input-filtro-faixa.min').val() || $(this).find('input.input-filtro-faixa.max').val())) || $(this).find('select.input-filtro-texto').val() && $(this).find('input.input-filtro-texto').val()) {
                 pesquisar = true;
             }
         });

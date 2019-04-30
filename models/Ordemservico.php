@@ -365,11 +365,11 @@ class Ordemservico extends model {
                     $infos["itens"][$k-1]["subitens"][$j]["medidas"] ='';
                 }
                 $infos["itens"][$k-1]["subitens"][$j]["unidade"] = $itens[$i]['unidade'];
-                if (empty($itens[$i]['quant_usada'])) {
-                    $infos["itens"][$k-1]["subitens"][$j]["preco_unitario"] = floatval($itens[$i]['preco_tot_subitem']) / floatval($itens[$i]['quant']);
-                }else{
-                    $infos["itens"][$k-1]["subitens"][$j]["preco_unitario"] = floatval($itens[$i]['preco_tot_subitem']) / floatval(floatval($itens[$i]['quant'])*floatval($itens[$i]['quant_usada']));
-                }
+                // if (empty($itens[$i]['quant_usada'])) {
+                //     $infos["itens"][$k-1]["subitens"][$j]["preco_unitario"] = floatval($itens[$i]['preco_tot_subitem']) / floatval($itens[$i]['quant']);
+                // }else{
+                //     $infos["itens"][$k-1]["subitens"][$j]["preco_unitario"] = floatval($itens[$i]['preco_tot_subitem']) / floatval(floatval($itens[$i]['quant'])*floatval($itens[$i]['quant_usada']));
+                // }
                 $infos["itens"][$k-1]["subitens"][$j]["preco_total"] =  $itens[$i]['preco_tot_subitem'];
     
                 $j++;
@@ -418,10 +418,10 @@ class Ordemservico extends model {
                 $infos["deslocamento"] = number_format($infos["deslocamento"],2,",",".");
 
                 for ($j=0; $j < sizeof($infos["itens"][$p]["subitens"]) ; $j++) {
-                    $precoUnitFormat = $infos["itens"][$p]["subitens"][$j]["preco_unitario"];
+                    // $precoUnitFormat = $infos["itens"][$p]["subitens"][$j]["preco_unitario"];
                     $precoTotalFormat =  $infos["itens"][$p]["subitens"][$j]["preco_total"];
                     
-                    $infos["itens"][$p]["subitens"][$j]["preco_unitario"] = number_format($precoUnitFormat,2,",",".");
+                    // $infos["itens"][$p]["subitens"][$j]["preco_unitario"] = number_format($precoUnitFormat,2,",",".");
                     $infos["itens"][$p]["subitens"][$j]["preco_total"] = number_format($precoTotalFormat,2,",",".");
                 }
             }
@@ -596,7 +596,6 @@ class Ordemservico extends model {
     
                         if ($mostraPrecos==true) {
                             $htmlRows.='
-                                <td height="10px" align="right" '.$cor.'> R$ '.$infos["itens"][$k]["subitens"][$j]["preco_unitario"].'</td>
                                 <td height="10px" align="right" '.$cor.'> R$ '.$infos["itens"][$k]["subitens"][$j]["preco_total"].'</td>
                             ';
                         }
@@ -621,11 +620,8 @@ class Ordemservico extends model {
     
         <tr>
             <td>
-                <br></br>
-                <br></br>
                 <p>_________________________________</p>
                 <p>Assinatura do técnico responsável</p>
-                <br></br>
                 <br></br>
                 <br></br>
                 <br></br>
