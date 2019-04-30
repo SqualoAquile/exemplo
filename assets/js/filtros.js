@@ -37,6 +37,11 @@ $(function () {
     
                 $(el)
                     .mask('0#');
+                    
+            } else if (mask == 'numero') {
+        
+                $(el)
+                    .mask('0#');
             }
         });
     }

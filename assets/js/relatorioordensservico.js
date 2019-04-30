@@ -56,6 +56,8 @@ $(function () {
     
 
     function resumo () {
+
+        dataTable.page.len(-1).draw();
         
         var rowData = dataTable.rows().data(),
         somasSubtotal = 0,

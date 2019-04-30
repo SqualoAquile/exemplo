@@ -63,6 +63,8 @@ $(function () {
     dataTable.order( [ 1, "asc" ] ).draw();
 
     function resumo () {
+
+        dataTable.page.len(-1).draw();
        
         dataTable.order( [ 1, "asc" ] ).draw();
         var rowData = dataTable.rows().data();
@@ -191,6 +193,8 @@ $(function () {
 
     $('#collapseFluxocaixaResumo').on('hide.bs.collapse', function () {
         $('#DataTables_Table_0_wrapper').addClass('d-none');
+        dataTable.page.len(-1).draw();
+        dataTable.draw();
     });
 
     $('#collapseGraficos2').on('show.bs.collapse', function () {
