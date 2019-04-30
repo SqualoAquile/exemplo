@@ -115,3 +115,13 @@
             $('#collapseAvisos').collapse('toggle');
         });
 </script>
+<style>
+#collapseAvisos .relacional-dropdown-input {
+    background-image: none;
+    padding-right: 0.75rem;
+    border-color: #ced4da;
+}
+#collapseAvisos .relacional-dropdown-input:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+}
+</style>
