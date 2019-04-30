@@ -167,13 +167,14 @@ $(function () {
             data_aprov:14
         }
     
-    // exibir tudo
-    dataTable.page.len(-1).draw();
-    
+        
     function exists(arr, search) {
         return arr.some(row => row.includes(search));
     }
-         
+
+    // exibir tudo
+    dataTable.page.len(-1).draw();
+    $('#relatorioorcamentoitens-section').addClass('d-none');
 
     function resumo () {
         
@@ -193,16 +194,13 @@ $(function () {
         listaProdutos =[];
 
         i = 0;
-        k=0;
+        k = 0;
         rowData.each(function () {
             var valor = rowData[i][indexColumns.valor];
             var quantidade = parseInt(rowData[i][indexColumns.quantidade]);
             var tipo = rowData[i][indexColumns.tipo];
-            var data = rowData[i][indexColumns.data_aprov];
             var produto = rowData[i][indexColumns.material_servico];          
             
-            //#baile
-            // tem que mostrar apenas as linhas que tenham alguma data na coluna de data_aprovacao
                 valor = valor.replace('R$  ', '');
                 valor = floatParaPadraoInternacional(valor);
     
@@ -259,7 +257,6 @@ $(function () {
 
         labelProdutosGlobal = labelProdutos;
         dataProdutosGlobal = dataProdutos;
-        console.log(labelProdutosGlobal.length);
 
         totalItens = parseFloat(totalProdutos) + parseFloat(totalServicos) + parseFloat(totalServicosCompl);
        
@@ -275,8 +272,8 @@ $(function () {
         $('#quantidadeProdutos').text(parseInt(quantidadeProdutos));
         $('#totalProdutos').text(floatParaPadraoBrasileiro(totalProdutos));
 
-        dataTable.page.len(10).draw();
-        $('#relatorioorcamentoitens-section').removeClass('d-none');
+        // dataTable.page.len(10).draw();
+        // $('#relatorioorcamentoitens-section').removeClass('d-none');
     };
 
     $('#relatorioorcamentoitens-section').addClass('d-none');
@@ -284,8 +281,10 @@ $(function () {
     $('#graficos').addClass('d-none');
 
     $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
-        $('#relatorioorcamentoitens-section').removeClass('d-none');
         resumo();
+        dataTable.page.len(10).draw();
+        dataTable.draw();
+        $('#relatorioorcamentoitens-section').removeClass('d-none');
         drawChart(id);
       });
 
@@ -310,12 +309,14 @@ $(function () {
     $('#card-body-filtros').on('change', function () {
         $('#collapseFluxocaixaResumo').collapse('hide');
         $('#relatorioorcamentoitens-section').addClass('d-none');
+        resumo();
     });
 
 
     // fazer para o campo de input também
 
     $('#botaoRelatorio').on('click', function(){
+
 
         let pesquisar = false;
 
