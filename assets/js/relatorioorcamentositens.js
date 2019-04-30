@@ -175,7 +175,10 @@ $(function () {
     }
          
 
-    function resumo () { 
+    function resumo () {
+        
+        dataTable.page.len(-1).draw();
+        dataTable.draw();
         
         var rowData = dataTable.rows().data(),
         quantidadeProdutos = 0,

@@ -110,6 +110,7 @@ $(function () {
     $('#collapseFluxocaixaResumo').on('hide.bs.collapse', function () {
         $('#DataTables_Table_0_wrapper').addClass('d-none');
         dataTable.page.len(-1).draw();
+        dataTable.draw();
     });
 
    
