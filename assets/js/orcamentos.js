@@ -928,6 +928,7 @@ $(function () {
       // Dizendo para o software que não tem nenhum cliente cadastrado naquele orçamento
       if (!$filtereds.length) {
         $("[name=id_cliente]").val("0");
+        limparDadosCliente();
       }
 
       // Toda vez que usuario sai do campo nome do cliente
@@ -1937,4 +1938,14 @@ function tabindex() {
     $(this).attr('tabindex', ($camposDireita.length + $camposEsquerda.length + $camposEmbaixo.length) + (index + 1));
   });
 
+}
+
+function limparDadosCliente() {
+  // Telefone
+  // Celular
+  // Email
+  // Como Conheceu
+  // Quem Indicou
+  // Observação do Cliente
+  $('#esquerda').find('#telefone, #celular, #email, #como_conheceu, #quem_indicou, #observacao_cliente').val('');
 }
