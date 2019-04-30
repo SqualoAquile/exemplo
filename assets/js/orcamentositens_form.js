@@ -4,10 +4,10 @@ $(function() {
     lastInsertId = 0,
     botoes = `
       <td class="text-truncate">
-        <a href="javascript:void(0)" class="editar-item btn btn-sm btn-primary">
+        <a href="javascript:void(0)" class="editar-item btn btn-sm btn-primary" tabindex="-1">
           <i class="fas fa-edit"></i>
         </a>
-        <a href="javascript:void(0)" class="excluir-item btn btn-sm btn-danger">
+        <a href="javascript:void(0)" class="excluir-item btn btn-sm btn-danger" tabindex="-1">
           <i class="fas fa-trash-alt"></i>
         </a>
       </td>
@@ -233,6 +233,8 @@ $(function() {
     $('#col-cancelar_edicao').addClass('d-none');
     $('#btn_incluir').text('Incluir');
 
+    $('#camposOrc').find('.is-valid, .is-invalid').removeClass('is-valid is-invalid');
+
     let $trs = $tableItensOrcamento.find('tr.disabled');
 
     $trs.removeClass('disabled');
@@ -264,13 +266,24 @@ $(function() {
           tdUnidade = par.children("td:nth-child(11)"),
           tdCusto = par.children("td:nth-child(12)"),
           tdPreco = par.children("td:nth-child(13)"),
-          tdObservacao = par.children("td:nth-child(14)"),
-          quantidade = floatParaPadraoInternacional(tdQuant.text()),
-          comprimento = floatParaPadraoInternacional(tdComprimento.text()),
-          largura = floatParaPadraoInternacional(tdLargura.text()),
+          tdObservacao = par.children("td:nth-child(14)");
+
+        let larguraText = tdLargura.text(),
+          comprimentoText = tdComprimento.text(),
+          quantidadeUsadaText = tdQuantUsada.text();
+          
+        if (tdUnidade != 'M²' || tdUnidade != 'ML') {
+          if (larguraText == '') larguraText = '0.00';
+          if (comprimentoText == '') comprimentoText = '0.00';
+          if (quantidadeUsadaText == '') quantidadeUsadaText = '0.00';
+        }
+
+        let quantidade = floatParaPadraoInternacional(tdQuant.text()),
+          comprimento = floatParaPadraoInternacional(comprimentoText),
+          largura = floatParaPadraoInternacional(larguraText),
           custo = floatParaPadraoInternacional(tdCusto.text()),
           preco = floatParaPadraoInternacional(tdPreco.text()),
-          quantidadeUsada = floatParaPadraoInternacional(tdQuantUsada.text());
+          quantidadeUsada = floatParaPadraoInternacional(quantidadeUsadaText);
 
         content += "[" + 
           tdItem.text() + " * " + 
@@ -436,7 +449,7 @@ $(function() {
       .val(tdQuantUsada)
       .attr("data-anterior", tdQuantUsada);
 
-    $("input[name=observacao_subitem]")
+    $("textarea[name=observacao_subitem]")
       .val(tdObservacao)
       .attr("data-anterior", tdObservacao);
 

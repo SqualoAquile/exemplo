@@ -248,33 +248,22 @@ $(function () {
 
     $('#botaoRelatorio').on('click', function(){
 
-        var selectFaixa = $('.input-filtro-faixa');
-        var selectF = selectFaixa.siblings('input');
-        var faixa = false;
-       
-        selectF.each(function(){
-            if($(this).val()){
-                faixa = true;
+        let pesquisar = false;
+
+        $('.filtros').each(function() {
+            if (($(this).find('select.input-filtro-faixa').val() && ($(this).find('input.input-filtro-faixa.min').val() || $(this).find('input.input-filtro-faixa.min').val())) || $(this).find('select.input-filtro-texto').val() && $(this).find('input.input-filtro-texto').val()) {
+                pesquisar = true;
             }
         });
 
-        var selectTexto = $('.input-filtro-texto');
-        var selectT = selectTexto.siblings('input');
-        var texto = false;
-
-        selectT.each(function(){
-            if($(this).val()){
-                texto = true;
-            }
-        });
-    
-        if(!faixa && !texto) {
+        if (pesquisar) {
+            resumo();
+            $('#relatorioorcamentoitens-section').removeClass('d-none');
+        } else {
             alert("Aplique um filtro para emitir um relatório!");
             event.stopPropagation();
-        }else{
-            resumo();
-            $('#DataTables_Table_0_wrapper').removeClass('d-none');
         }
+
     });
 
     $('#graficos').on('click', function(){

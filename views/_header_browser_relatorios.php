@@ -31,7 +31,7 @@
         <div class="card mt-4" id="cardFiltros">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="m-0 h5" id="tituloHeader">
-                    <span>
+                    <span class="cursor-pointer">
                         <i class="fas fa-minus text-secondary mr-3" id="botaoCardFiltros" data-toggle="collapse" data-target="#collapseFiltros"></i>
                     </span>
                 Filtros</h5>

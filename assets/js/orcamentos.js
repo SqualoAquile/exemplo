@@ -50,7 +50,7 @@ $(function () {
   $tipoMaterialBody.find("#tipo_material").remove();
 
   $tipoMaterialBody.append(`
-    <div>
+    <div class="form-check-wrapper">
       <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="tipo_material" id="tipo_material1" value="principal" checked>
         <label class="form-check-label" for="tipo_material1">Principal</label>
@@ -103,6 +103,11 @@ $(function () {
         segop = floatParaPadraoInternacional(data["taxa_seg_op"]);
         $("#preco_tot_subitem").attr("data-seg_op", segop);
       }
+
+      if (data["desconto_max"]) {
+        $('#desconto_porcent').attr('data-descontomax', data["desconto_max"]);
+      }
+
       if (data["custo_deslocamento"]) {
         custodesloc = floatParaPadraoInternacional(
           data["custo_deslocamento"]
@@ -110,6 +115,8 @@ $(function () {
         $("#custo_deslocamento").attr("data-custodesloc", custodesloc);
 
         valorTotal();
+        habilitaBotaoOrcamento();
+        tabindex();
       }
     }
   });
@@ -329,6 +336,18 @@ $(function () {
     calculaMaterialCustoPreco();
   });
 
+  $('#desconto_porcent').on('change', function() {
+
+    let $this = $(this),
+      descontoMax = $this.attr('data-descontomax');
+
+    if (descontoMax && parseFloat($this.val()) > parseFloat(descontoMax)) {
+      $this.val('0%');
+      alert('O desconto máximo é de ' + descontoMax + '.');
+    }
+
+  });
+
   $("#recontato").on("click", function () {
     if (confirm("Tem Certeza?")) {
       $.ajax({
@@ -390,6 +409,7 @@ $(function () {
           var htmlDropdown = "";
 
           data.forEach(element => {
+
             htmlDropdown +=
               `
               <div class="list-group-item list-group-item-action relacional-dropdown-element-cliente"
@@ -418,6 +438,15 @@ $(function () {
               element["nome"] +
               `</div>
             `;
+
+            if ($('[name="id_cliente"]').val() == element["id"]) {
+              if (element["observacao"]) {
+                $('#observacao_cliente')
+                  .attr('data-anterior', element["observacao"])
+                  .val(element["observacao"]);
+              }
+            }
+
           });
 
           $(
@@ -457,7 +486,6 @@ $(function () {
         $esquerda.find("[name=email]").val($this.attr("data-email"));
 
         $esquerda.find("[name=id_cliente]").val($this.attr("data-id"));
-        console.log('aqui talvez?')
 
         $esquerda
           .find("[name=como_conheceu]")
@@ -546,8 +574,6 @@ $(function () {
 
       $filtereds.addClass("filtered").show();
 
-      $(".observacao_cliente_wrapper").addClass("d-none");
-
       $(
         '[name="nome_cliente"], [name=faturado_para], [name=telefone], [name=celular], [name=email], #observacao_cliente'
       )
@@ -557,7 +583,6 @@ $(function () {
       changeRequiredsPfPj();
     })
     .on("change", '[name="id_cliente"]', function () {
-      console.log('vish')
       checarClienteCadastrado();
     });
 
@@ -711,7 +736,7 @@ $(function () {
           $this.val().startsWith("Contato - ")
         ) {
           $this.parent(".form-group").parent("[class^=col]").after(`
-            <div class="column-quem-indicou col-xl-12" style="order:12;">
+            <div class="column-quem-indicou col-xl-12">
               <div class="form-group">
                 <label class="font-weight-bold" for="quem_indicou">
                   <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Campo Obrigatório">*</i>
@@ -725,12 +750,12 @@ $(function () {
           var $quemIndicou = $("#quem_indicou");
 
           if ($this.attr("data-anterior").startsWith("Contato - ")) {
+
+            let valContatoReplace = $this.attr("data-anterior").replace("Contato - ", "");
+
             $quemIndicou
-              .val(
-                $this
-                  .attr("data-anterior")
-                  .replace("Contato - ", "")
-              )
+              .val(valContatoReplace)
+              .attr('data-anterior', valContatoReplace)
               .blur();
           }
 
@@ -752,6 +777,9 @@ $(function () {
             .attr("value", "Contato");
         }
       }
+
+      tabindex();
+
     })
     .change();
 
@@ -770,6 +798,8 @@ $(function () {
         $comoConhec
           .children("option:contains(" + textOptSelc + ")")
           .attr("value", camposConcat);
+
+        $this.attr('data-anterior', value);
 
         $this.addClass("is-valid");
         $this[0].setCustomValidity("");
@@ -849,6 +879,7 @@ $(function () {
 
     valorTotal();
     habilitaBotaoOrcamento();
+    tabindex();
 
   });
 
@@ -937,7 +968,7 @@ $(function () {
     habilitaBotaoOrcamento();
   });
 
-  $("#esquerda input").on("change", () => {
+  $("#esquerda input, #esquerda select").on("change", () => {
     habilitaBotaoOrcamento();
   });
 
@@ -968,6 +999,9 @@ $(function () {
         .parent()
         .addClass("d-none");
     }
+
+    tabindex();
+
   });
 
   $("#btn_cancelamentoOrc").click(function () {
@@ -1160,6 +1194,7 @@ $(function () {
 
 window.onload = function() {
   habilitaBotaoOrcamento();
+  tabindex();
 };
 
 function dataAtual() {
@@ -1417,6 +1452,9 @@ function toggleTipoMaterial(unidade) {
       $colTipoServico.removeClass("col-xl-6").addClass("col-xl-4");
     }
   }
+
+  tabindex();
+
 }
 
 function changeTipoServicoProduto(setValueSuccess) {
@@ -1601,7 +1639,7 @@ function calculaDesconto() {
         );
 
         $descontoPorcent.val(
-          $descontoPorcent.attr("data-anterior") || 0
+          $descontoPorcent.attr("data-anterior") || '0%'
         );
         $descontoReais.val($descontoReais.attr("data-anterior") || 0);
       } else {
@@ -1611,7 +1649,7 @@ function calculaDesconto() {
 
         $descontoReais.val($descontoReais.attr("data-anterior") || 0);
         $descontoPorcent.val(
-          $descontoPorcent.attr("data-anterior") || 0
+          $descontoPorcent.attr("data-anterior") || '0%'
         );
       }
     }
@@ -1823,14 +1861,13 @@ function collapseObsCliente(observacao) {
   if (observacao) {
     $("#collapseObsCliente").collapse("hide");
 
-    $esquerda.find(".observacao_cliente_wrapper").removeClass("d-none");
-
     $esquerda
       .find("#observacao_cliente[name=observacao_cliente]")
       .val(observacao);
-  } else {
-    $esquerda.find(".observacao_cliente_wrapper").addClass("d-none");
   }
+
+  tabindex();
+
 }
 
 function habilitaBotaoOrcamento() {
@@ -1858,11 +1895,8 @@ function habilitaBotaoOrcamento() {
 
     if (dataAnterior != valorAtual) {
       if ($this.attr('name') != 'quem_indicou') {
-        // console.log('putz entrou aqui', $this, dataAnterior, valorAtual)
         temAlteracao = true;
       }
-    } else {
-      // console.log('ufaaaaaa')
     }
   });
 
@@ -1873,4 +1907,28 @@ function habilitaBotaoOrcamento() {
     $("#main-form").attr("disabled", "disabled");
     $('#aprovar-orcamento').removeAttr('disabled');
   }
+}
+
+function tabindex() {
+
+  let $camposEsquerda = $('#esquerda').find('.form-check-wrapper:visible, .form-control:visible, .btn:visible'),
+    $camposDireita = $('#direita #camposOrc').find('.form-check-wrapper:visible, .form-control:visible, button.btn:visible'),
+    $camposEmbaixo = $('#embaixo').find('.form-control:visible');
+
+  $camposEsquerda.each(function(index) {
+    $(this).attr('tabindex', index + 1);
+  });
+
+  $camposDireita.each(function(index) {
+    $(this).attr('tabindex', $camposEsquerda.length + (index + 1));
+  });
+
+  $camposEmbaixo.each(function(index) {
+    $(this).attr('tabindex', ($camposDireita.length + $camposEsquerda.length) + (index + 1));
+  });
+  
+  $('#acoes-orcamento').find('.btn:visible').each(function(index) {
+    $(this).attr('tabindex', ($camposDireita.length + $camposEsquerda.length + $camposEmbaixo.length) + (index + 1));
+  });
+
 }

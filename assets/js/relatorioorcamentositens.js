@@ -4,7 +4,66 @@ var charts = [];
 var labelProdutosGlobal = [];
 var dataProdutosGlobal = [];
 
+function floatPadraoInternacional(valor1){
+    valor = valor1;
 
+    if(valor != ""){
+        valor = valor.replace(".","").replace(".","").replace(".","").replace(".","");
+        valor = valor.replace(",",".");
+        valor = parseFloat(valor);
+        return valor;
+    }else{
+        valor = '';
+        return valor;
+    }
+}
+
+function addMask (mask, $els) {
+
+    $els.forEach(function (el) {
+
+        if (mask == 'data') {
+
+            $(el)
+                .mask('00/00/0000', {maxlength: false})
+                .datepicker();
+
+        } else if (mask == 'monetario') {
+            
+            $(el)
+                .mask('#.##0,00', {
+                    reverse: true
+                });
+                
+        } else if (mask == 'numero') {
+
+            $(el)
+                .mask('0#');
+        }
+    });
+}
+
+function removeMask ($removeMask) {
+
+    $elements = $removeMask ? $removeMask : $('#card-body-filtros input[type=text]');
+    
+    $elements.each(function () {
+
+        var $this = $(this);
+
+        $this
+            .val('')
+            .removeClass('is-invalid is-valid')
+            .siblings('.invalid-feedback').remove();
+
+        $this[0]
+            .setCustomValidity('');
+        
+        $this
+            .datepicker('destroy')
+            .unmask();
+    });
+}
 
 function floatParaPadraoBrasileiro(valor){
     var valortotal = valor;
@@ -47,13 +106,58 @@ function number_format( numero, decimal, decimal_separador, milhar_separador ){
 
 $(function () {
 
+    var dataTable = $('.dataTableRelatorioOrcamentosItens').DataTable(
+        {
+            scrollX: true,
+            responsive: true,
+            processing: true,
+            serverSide: true,
+            autoWidth: false,
+            scrollCollapse: true,
+            searchHighlight: true,
+            conditionalPaging: true,
+            aLengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, "Mostrar Todos"]
+            ],
+            order: [0, 'desc'],
+            ajax: {
+                url: baselink + '/ajax/dataTableAjaxRelatorioOrcamentosItens',
+                type: 'POST',
+                data: {
+                    module: currentModule
+                }
+            },
+            language: {
+                'decimal': ',',
+                'thousands': '.',
+                'sEmptyTable': 'Nenhum registro encontrado',
+                'sInfo': 'Mostrando de _START_ até _END_ do total de _TOTAL_ registros',
+                'sInfoEmpty': 'Mostrando 0 até 0 do total de 0 registros',
+                'sInfoFiltered': '(Filtrados de _MAX_ registros)',
+                'sInfoPostFix': '',
+                'sInfoThousands': '.',
+                'sLengthMenu': '_MENU_ Resultados por página',
+                'sLoadingRecords': 'Carregando...',
+                'sProcessing': 'Processando...',
+                'sZeroRecords': 'Nenhum registro encontrado',
+                'oPaginate': {
+                    'sNext': 'Próximo',
+                    'sPrevious': 'Anterior',
+                    'sFirst': 'Primeiro',
+                    'sLast': 'Último'
+                }
+            },
+            dom: '<"limit-header-browser"l><t><p><r><i>'
+        }
+    );
+
     var id = "#chart-div";
     var ctx = document.getElementById(id.substr(1)).getContext('2d');
 
 
     var $collapse = $('#collapseFluxocaixaResumo'),
         $cardBodyFiltros = $('#card-body-filtros'),
-        dataTable = window.dataTable,
         indexColumns = {
             acoes: 0,
             tipo:3,
@@ -65,21 +169,6 @@ $(function () {
     
     // exibir tudo
     dataTable.page.len(-1).draw();
-
-    // filtrar pra exibir apenas itens com data de aprovacao - nao tá funcionando essa merda
-    // $.fn.dataTable.ext.search.push(
-    //     function( settings, data, dataIndex ) {
-    //         if (parseInt(data[14])>0) {
-    //             var retorno = false;
-    //         }else{
-    //             var retorno = true;
-    //         }
-            
-    //         return retorno;
-    //     }
-    // );
-        
-    // dataTable.draw();
     
     function exists(arr, search) {
         return arr.some(row => row.includes(search));
@@ -102,7 +191,7 @@ $(function () {
 
         i = 0;
         k=0;
-        rowData.each(function () {                                              
+        rowData.each(function () {
             var valor = rowData[i][indexColumns.valor];
             var quantidade = parseInt(rowData[i][indexColumns.quantidade]);
             var tipo = rowData[i][indexColumns.tipo];
@@ -185,71 +274,62 @@ $(function () {
         $('#totalProdutos').text(floatParaPadraoBrasileiro(totalProdutos));
 
         dataTable.page.len(10).draw();
-        $('#DataTables_Table_0_length').removeClass('d-none');
+        $('#relatorioorcamentoitens-section').removeClass('d-none');
     };
 
-    $('#DataTables_Table_0_length').addClass('d-none');
-    $('#DataTables_Table_0_wrapper').addClass('d-none');
+    $('#relatorioorcamentoitens-section').addClass('d-none');
+    $('#relatorioorcamentoitens-section').addClass('d-none');
     $('#graficos').addClass('d-none');
 
     $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
-        $('#DataTables_Table_0_wrapper').removeClass('d-none');
+        $('#relatorioorcamentoitens-section').removeClass('d-none');
         resumo();
         drawChart(id);
       });
 
     $('#collapseFluxocaixaResumo').on('hide.bs.collapse', function () {
-        $('#DataTables_Table_0_wrapper').addClass('d-none');
+        $('#relatorioorcamentoitens-section').addClass('d-none');
         dataTable.page.len(-1).draw();
     });
 
 
     $('#limpar-filtro').on('click', function () {
         $('#collapseFluxocaixaResumo').collapse('hide');
-        $('#DataTables_Table_0_wrapper').addClass('d-none');
+        $('#relatorioorcamentoitens-section').addClass('d-none');
     });
 
     $('#graficos').on('click', function () {
         $('#collapseFiltros').collapse('hide');
         $('#collapseFluxocaixaResumo').collapse('hide');
-        $('#DataTables_Table_0_wrapper').addClass('d-none');
+        $('#relatorioorcamentoitens-section').addClass('d-none');
     });
 
     $('#card-body-filtros').on('change', function () {
         $('#collapseFluxocaixaResumo').collapse('hide');
-        $('#DataTables_Table_0_wrapper').addClass('d-none');
+        $('#relatorioorcamentoitens-section').addClass('d-none');
     });
 
 
+    // fazer para o campo de input também
+
     $('#botaoRelatorio').on('click', function(){
 
-        var selectFaixa = $('.input-filtro-faixa');
-        var selectF = selectFaixa.siblings('input');
-        var faixa = false;
-       
-        selectF.each(function(){
-            if($(this).val()){
-                faixa = true;
+        let pesquisar = false;
+
+        $('.filtros').each(function() {
+            if (($(this).find('select.input-filtro-faixa').val() && ($(this).find('input.input-filtro-faixa.min').val() || $(this).find('input.input-filtro-faixa.min').val())) || $(this).find('select.input-filtro-texto').val() && $(this).find('input.input-filtro-texto').val()) {
+                pesquisar = true;
             }
         });
 
-        var selectTexto = $('.input-filtro-texto');
-        var selectT = selectTexto.siblings('input');
-        var texto = false;
-
-        selectT.each(function(){
-            if($(this).val()){
-                texto = true;
-            }
-        });
-    
-        if(!faixa && !texto) {
+        if (pesquisar) {
+            resumo();
+            $('#relatorioorcamentoitens-section').removeClass('d-none');
+        } else {
             alert("Aplique um filtro para emitir um relatório!");
             event.stopPropagation();
-        }else{
-            resumo();
-            $('#DataTables_Table_0_wrapper').removeClass('d-none');
         }
+
     });
 
     function drawChart(id) {
@@ -282,7 +362,7 @@ $(function () {
                 },
                 legend: {
                     display: true,
-                    position: "top"
+                    position: "right"
                 },
             }
         };
@@ -297,84 +377,166 @@ $(function () {
             charts[id].chart.destroy();
             charts[id].chart=new Chart(charts[id].ctx, config); 
         }
-        
-        console.log("até aqui ok");
-    };
-
-
-
-    // function drawChart(id) {
-    //     var coluna, titulo, intervalo = [];
-
-    //         titulo = '5 Produtos mais vendidos';
-            
-    //         $.ajax({ 
-    //             url: baselink + '/ajax/top5produtos', 
-    //             type: 'POST', 
-    //             data: {
-    //                 columns: dataTable.ajax.params(), 
-    //                 modulo: currentModule
-    //             },
-    //             dataType: 'json', 
-    //             success: function (resultado) { 
-    //                 if (resultado){
-    //                     var itens = [], quantidades = [];
-    //                     var tamanho = resultado.length;
-
-    //                     // pra pegar só o top 5
-    //                     if (tamanho>5) {
-    //                         tamanho = 5;
-    //                     }
-
-    //                     for (var i = 0; i < tamanho; i++) {
-    //                         itens[i] = resultado[i][0];
-    //                         quantidades[i] = resultado[i][1]; 
-    //                     }
+    };    
     
+    $(this)
+        .on('change blur', '.filtros-faixa .input-filtro-faixa', function () {
+
+            // Filtros Faixa
+
+            $('.filtros-faixa .input-group').each(function () {
+
+                var $this = $(this),
+                    $select = $this.find('select'),
+                    $selected = $select.find(':selected'),
+                    type = $selected.attr('data-tipo'),
+                    selectVal = $select.val(),
+                    $min = $this.find('.min'),
+                    min = $min.val(),
+                    $max = $this.find('.max'),
+                    max = $max.val(),
+                    mascara = $selected.attr('data-mascara'),
+                    stringSearch = '',
+                    indexAnterior = $select.attr('data-index-anterior');
+
+                addMask(mascara, [$min, $max]);
+
+                if (mascara == 'monetario'){
+                    min = floatPadraoInternacional(min);
+                    max = floatPadraoInternacional(max);
+                }
+
+                if(mascara == 'data'){
+                    min = min.split('/').reverse().join('-');
+                    max = max.split('/').reverse().join('-');
+                } 
+
+                if (indexAnterior && indexAnterior != selectVal) {
+                    dataTable
+                        .columns(indexAnterior)
+                        .search('')
+                        .draw();
+                }
+
+                $max[0].setCustomValidity('');
+                
+                if (min && max) {
+                    
+                    $max.removeClass('is-invalid');
+                    $max[0].setCustomValidity('');
+                    $max.siblings('.invalid-feedback').remove();
+
+                    if (min > max) {
+
+                        $max.addClass('is-invalid');
+
+                        $max[0].setCustomValidity('invalid');
+                        $max.after('<div class="invalid-feedback col-lg-4 m-0">O valor deste campo deve ser maior que o campo anterior.</div>');
                         
-    //                     var config = {
-    //                         type: 'doughnut',
-    //                         data: {
-    //                             labels: itens,
-    //                             datasets: [{
-    //                                 data: quantidades,
-    //                                 backgroundColor: [
-    //                                     '#2a4c6b',
-    //                                     '#4a85b8',
-    //                                     '#adcbe6',
-    //                                     '#e7eff7',
-    //                                     '#62abea'
-    //                                 ]
-    //                             }]
-    //                         },
-    //                         options: {
-    //                             responsive: true,
-    //                             maintainAspectRatio: false,
-    //                             title: {
-    //                                 display: true,
-    //                                 text: titulo,
-    //                                 position: "top"
-    //                             },
-    //                             legend: {
-    //                                 display: true,
-    //                                 position: "right"
-    //                             },
-    //                         }
-    //                     };
-    
-    //                     if(typeof charts[id] == "undefined") {   
-    //                         charts[id]= new (function(){
-    //                         this.ctx=$(id); 
-    //                         this.chart=new Chart(this.ctx, config);
-    //                         })();     
-    //                     } else {
-    //                         charts[id].chart.destroy();
-    //                         charts[id].chart=new Chart(charts[id].ctx, config); 
-    //                     }
-    //                 }
-    //             }
-    //         });
+                        $max.val('');
+                        $min.val('');
 
-    // }
-      
+                        dataTable.columns().search('').draw();
+
+                        return false;
+                    }
+                }
+
+                if (selectVal) {
+
+                    if (min || max) {
+
+                        if(mascara == 'data'){
+                            min = min.split('-').reverse().join('/');
+                            max = max.split('-').reverse().join('/');
+                        } 
+
+                        stringSearch = type + ':' + min + '<>' + max;
+                    }
+
+                    dataTable
+                        .columns(selectVal)
+                        .search(stringSearch)
+                        .draw();
+
+                    $select.attr('data-index-anterior', selectVal);
+                }
+            });
+        })
+        .on('change blur', '.filtros-texto .input-filtro-texto', function () {
+
+            // Filtros Texto
+
+            $('.filtros-texto .input-group').each(function () {
+
+                var $this = $(this),
+                    $select = $this.find('select'),
+                    $input = $this.find('.texto'),
+                    inputVal = $input.val(),
+                    selectVal = $select.val(),
+                    value = inputVal ? inputVal : '',
+                    indexAnterior = $select.attr('data-index-anterior');
+
+                if (indexAnterior) {
+                    dataTable
+                        .columns(indexAnterior)
+                        .search('')
+                        .draw();
+                }
+
+                if (selectVal) {
+                    
+                    dataTable
+                        .columns(selectVal)
+                        .search(value)
+                        .draw();
+
+                    $select.attr('data-index-anterior', selectVal);
+                }
+            });
+        })
+        .on('click', '#limpar-filtro', function () {
+
+            // Limpar Filtros
+
+            var $cardBodyFiltros = $('#card-body-filtros'),
+            $select = $cardBodyFiltros.find('select'),
+            $searchDataTable = $('#searchDataTable');
+            
+            removeMask();
+
+            $select
+                .val('');
+
+            $searchDataTable
+                .val('');
+
+            $cardBodyFiltros
+                .find('[type=checkbox]')
+                .prop('checked', false);
+
+            dataTable
+                .columns()
+                .search('')
+                .draw();
+
+            dataTable.search('').draw();
+            
+        })
+        .on('change', '[name=movimentacao]', function () {
+
+            // Checkbox
+
+            var $this = $(this),
+                $fieldset = $this.parents('fieldset'),
+                $checkeds = $fieldset.find(':checked'),
+                indexColumn = $this.attr('data-index'),
+                lenght = $checkeds.length,
+                search = lenght == 2 || lenght == 0 ? '' : $checkeds.val();
+
+            dataTable
+                .columns(indexColumn)
+                .search(search)
+                .draw();
+        });
 });
