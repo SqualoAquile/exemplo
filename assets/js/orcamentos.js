@@ -144,6 +144,9 @@ $(function () {
       $("#unidade, #custo_tot_subitem, #preco_tot_subitem")
         .removeClass("is-valid is-invalid")
         .val("");
+
+      $('#camposOrc').find('#largura, #comprimento').removeAttr('disabled');
+      
     });
 
   //
