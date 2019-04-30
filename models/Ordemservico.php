@@ -621,11 +621,8 @@ class Ordemservico extends model {
     
         <tr>
             <td>
-                <br></br>
-                <br></br>
                 <p>_________________________________</p>
                 <p>Assinatura do técnico responsável</p>
-                <br></br>
                 <br></br>
                 <br></br>
                 <br></br>
