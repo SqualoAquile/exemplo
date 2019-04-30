@@ -287,6 +287,6 @@ $(function () {
             })
             .on('show.bs.collapse', function () {
                 $('#tituloHeader .fas').removeClass('fa-plus').addClass('fa-minus');
-            }
+            });
           
 });
