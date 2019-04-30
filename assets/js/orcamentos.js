@@ -750,12 +750,12 @@ $(function () {
           var $quemIndicou = $("#quem_indicou");
 
           if ($this.attr("data-anterior").startsWith("Contato - ")) {
+
+            let valContatoReplace = $this.attr("data-anterior").replace("Contato - ", "");
+
             $quemIndicou
-              .val(
-                $this
-                  .attr("data-anterior")
-                  .replace("Contato - ", "")
-              )
+              .val(valContatoReplace)
+              .attr('data-anterior', valContatoReplace)
               .blur();
           }
 
@@ -798,6 +798,8 @@ $(function () {
         $comoConhec
           .children("option:contains(" + textOptSelc + ")")
           .attr("value", camposConcat);
+
+        $this.attr('data-anterior', value);
 
         $this.addClass("is-valid");
         $this[0].setCustomValidity("");
