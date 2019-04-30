@@ -116,6 +116,7 @@ $(function () {
 
         valorTotal();
         habilitaBotaoOrcamento();
+        tabindex();
       }
     }
   });
@@ -768,6 +769,9 @@ $(function () {
             .attr("value", "Contato");
         }
       }
+
+      tabindex();
+
     })
     .change();
 
@@ -865,6 +869,7 @@ $(function () {
 
     valorTotal();
     habilitaBotaoOrcamento();
+    tabindex();
 
   });
 
@@ -984,6 +989,9 @@ $(function () {
         .parent()
         .addClass("d-none");
     }
+
+    tabindex();
+
   });
 
   $("#btn_cancelamentoOrc").click(function () {
@@ -1176,6 +1184,7 @@ $(function () {
 
 window.onload = function() {
   habilitaBotaoOrcamento();
+  tabindex();
 };
 
 function dataAtual() {
@@ -1433,6 +1442,9 @@ function toggleTipoMaterial(unidade) {
       $colTipoServico.removeClass("col-xl-6").addClass("col-xl-4");
     }
   }
+
+  tabindex();
+
 }
 
 function changeTipoServicoProduto(setValueSuccess) {
@@ -1847,6 +1859,9 @@ function collapseObsCliente(observacao) {
   } else {
     $esquerda.find(".observacao_cliente_wrapper").addClass("d-none");
   }
+
+  tabindex();
+
 }
 
 function habilitaBotaoOrcamento() {
@@ -1886,4 +1901,28 @@ function habilitaBotaoOrcamento() {
     $("#main-form").attr("disabled", "disabled");
     $('#aprovar-orcamento').removeAttr('disabled');
   }
+}
+
+function tabindex() {
+
+  let $camposEsquerda = $('#esquerda').find('.form-check-wrapper:visible, .form-control:visible, .btn:visible'),
+    $camposDireita = $('#direita #camposOrc').find('.form-check-wrapper:visible, .form-control:visible, button.btn:visible'),
+    $camposEmbaixo = $('#embaixo').find('.form-control:visible');
+
+  $camposEsquerda.each(function(index) {
+    $(this).attr('tabindex', index + 1);
+  });
+
+  $camposDireita.each(function(index) {
+    $(this).attr('tabindex', $camposEsquerda.length + (index + 1));
+  });
+
+  $camposEmbaixo.each(function(index) {
+    $(this).attr('tabindex', ($camposDireita.length + $camposEsquerda.length) + (index + 1));
+  });
+  
+  $('#acoes-orcamento').find('.btn:visible').each(function(index) {
+    $(this).attr('tabindex', ($camposDireita.length + $camposEsquerda.length + $camposEmbaixo.length) + (index + 1));
+  });
+
 }
