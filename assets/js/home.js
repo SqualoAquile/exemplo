@@ -19,8 +19,10 @@ $(function () {
             fluxoCaixa_Realizado_Previsto();
             receita_despesa_analitica();
             grafico_saldos();
+            lancamentos_vencidos();
         })
         .change();
+    
 
     function fluxoCaixa_Realizado_Previsto() {
         var titulo, titulo2, intervalo = [], intervalo2 = [];
@@ -385,7 +387,7 @@ $(function () {
                 dataType: 'json', 
                 success: function (resultado) { 
                     if (resultado){   
-                        console.log(resultado);
+                        // console.log(resultado);
 
                         var labelSaldos = [], valoresSaldos = [], coresSaldos = [];
                         var labelSaldosAno = [], valoresSaldosAno = [];
@@ -481,6 +483,80 @@ $(function () {
                 }
             });            
     }
+
+    function lancamentos_vencidos() {
+        var intervalo = [], dtTit;
+        var $tituloVenc = $('#titulo_proxVenc');
+            intervalo = intervaloDatasAQuitar($selectGrafTemporal.val());
+            dtTit = intervalo[ intervalo.length - 1].split('-')
+            dtTit = dtTit[2] + '/' + dtTit[1] + '/' + dtTit[0];
+            $tituloVenc.text('Lançamentos com vencimento a partir de hoje até ' + dtTit );
+
+        // console.log('interv vencidos:', intervalo);
+        $.ajax({ 
+            url: baselink + '/ajax/buscaVencidos', 
+            type: 'POST', 
+            data: {
+                intervalo: intervalo,
+            },
+            dataType: 'json', 
+            success: function (resultado) { 
+                if (resultado){   
+                    // console.log(resultado);
+                    if(resultado){
+                        var dataAux, vencidas = [], proximo = [];
+                        var $tabela = $('#lancamentos_vencidos'), $tabela2 = $('#lancamentos_vencProximo');
+                            vencidas = Object.values(resultado['vencidas']);
+
+                        $tabela.find('tbody tr').remove();
+                        for(var i = 0; i < vencidas.length; i++ ){
+                            linha = "<tr>";
+                            linha += "<td>" + vencidas[i]['despesa_receita'] + "</td>";
+                            linha += "<td>" + vencidas[i]['conta_analitica'] + "</td>";
+                            linha += "<td>" + vencidas[i]['detalhe'] + "</td>";
+                            
+                            dataAux = '';
+                            dataAux = vencidas[i]['data_vencimento'];
+                            dataAux = dataAux.split('-');
+                            dataAux = dataAux[2] + '/' + dataAux[1] + '/' + dataAux[0];
+                            linha += "<td>" + dataAux + "</td>";
+
+                            linha += "<td>" + floatParaPadraoBrasileiro( vencidas[i]['valor_total'] )  + "</td>";
+                            linha += "<tr>" 
+
+                            $tabela.find('tbody').append(linha);
+                        }
+
+                        proximo = Object.values(resultado['proximo']);
+                        // console.log('proximo: ', proximo);
+                        $tabela2.find('tbody tr').remove();
+                        for(var i = 0; i < proximo.length; i++ ){
+                            linha = "<tr>";
+                            linha += "<td>" + proximo[i]['despesa_receita'] + "</td>";
+                            linha += "<td>" + proximo[i]['conta_analitica'] + "</td>";
+                            linha += "<td>" + proximo[i]['detalhe'] + "</td>";
+                            
+                            dataAux = '';
+                            dataAux = proximo[i]['data_vencimento'];
+                            dataAux = dataAux.split('-');
+                            dataAux = dataAux[2] + '/' + dataAux[1] + '/' + dataAux[0];
+                            linha += "<td>" + dataAux + "</td>";
+
+                            linha += "<td>" + floatParaPadraoBrasileiro( proximo[i]['valor_total'] )  + "</td>";
+                            linha += "<tr>" 
+
+                            $tabela2.find('tbody').append(linha);
+                        }
+                    }
+
+                    
+
+
+                }
+            }
+        });            
+    }
+
 
 });
 
@@ -687,8 +763,8 @@ function intervaloDatasSaldos(dtAtual) {
         mesAtual = dtAtual[1];
         anoAtual = dtAtual[2];
 
-        console.log('mesatual: ', mesAtual, 'anoatual: ', anoAtual);
-        console.log(parseInt(mesAtual));
+        // console.log('mesatual: ', mesAtual, 'anoatual: ', anoAtual);
+        // console.log(parseInt(mesAtual));
         // criando o array de DATAS
 
         if(parseInt(mesAtual) > parseInt(0)){

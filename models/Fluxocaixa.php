@@ -403,4 +403,45 @@ class Fluxocaixa extends model {
         }        
         return $array;
     }
+
+    public function buscaVencidos($interval_datas){
+        
+        $array = array();
+        if(!empty($interval_datas) && isset($interval_datas)){
+            
+            if(count($interval_datas) == 1){
+                $dt1 = 	$interval_datas[0];
+                $dt2 =  $interval_datas[0];
+            }else{
+                $dt1 = $interval_datas[0];
+                $dt2 = $interval_datas[count($interval_datas)-1];
+            }
+            // busca as despesas relacionadas a O.S. lançadas no fluxo de caixa
+            $sql1 = "SELECT `despesa_receita`, `conta_analitica`, `detalhe`, `valor_total`, `data_vencimento` FROM `fluxocaixa` WHERE `situacao` = 'ativo' AND `status` = 'A Quitar' AND `data_vencimento` < NOW() ORDER BY `data_vencimento`  ASC";
+
+            $sql1 = self::db()->query($sql1);
+            $vencidas = array();
+
+            if($sql1->rowCount() > 0){  
+                $vencidas = $sql1->fetchAll(PDO::FETCH_ASSOC);
+            }
+            
+            // busca o custo total do orçamento
+            $sql2 = "SELECT `despesa_receita`, `conta_analitica`, `detalhe`, `valor_total`, `data_vencimento` FROM `fluxocaixa` WHERE `situacao` = 'ativo' AND `status` = 'A Quitar' AND `data_vencimento` BETWEEN '$dt1' AND '$dt2' ORDER BY `data_vencimento`  ASC";
+
+            $sql2 = self::db()->query($sql2);
+
+            $proximo = array();
+
+            if($sql2->rowCount() > 0){  
+                $proximo = $sql2->fetchAll(PDO::FETCH_ASSOC);
+            }
+
+        }
+
+        $array['vencidas'] = $vencidas;
+        $array['proximo'] = $proximo;
+
+       return $array;
+    }
 }
