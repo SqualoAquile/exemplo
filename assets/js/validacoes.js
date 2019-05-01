@@ -159,9 +159,9 @@ $(function () {
 
     window.dataTable = dataTable;
 
-    $('[name=searchDataTable]').on('keyup', function () {
+    $('[name=searchDataTable]').on('keyup', function() {
         dataTable.search(this.value).draw();
-    });
+    }, 500);
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ///                                                                     
