@@ -426,8 +426,24 @@ class Ordemservico extends model {
                 }
             }
 
+            $request["tabela"] = "avisos";
+            $avisosDb = $this->getRelacionalDropdown($request);
+
+            if (isset($request["avisos"])) {
+                foreach ($request["avisos"] as $keyAvisos => $valueAvisos) {
+                    if ($avisosDb) {
+                        foreach ($avisosDb as $keyAvisosDb => $valueAvisosDb) {
+                            if ($valueAvisosDb["id"] == $valueAvisos) {
+                                $avisos[$valueAvisosDb["id"]] = $valueAvisosDb["mensagem"];
+                            }
+                        }
+                    }
+                }
+            }
+
             $mostraMedidas = true;
-            $mostraPrecos = false;
+            $mostraPrecos = isset($request["checkUnitario"]) ? true : false;
+            $mostraAvisos = isset($request["checkAvisos"]) ? true : false;
             
             require_once __DIR__ . '/../vendor/vendor/autoload.php';
             
@@ -532,12 +548,12 @@ class Ordemservico extends model {
                             $html.='<th scope="col"><b>Medidas</b></th>';
                         }
     
-                        if ($mostraPrecos==true) {
-                            $html.='
-                                <th scope="col" class="preco"><b>Preço Unit.</b></th>
-                                <th scope="col" class="preco"><b>Preço Total</b> </th>
-                                ';
-                        }
+                        // if ($mostraPrecos==true) {
+                        //     $html.='
+                        //         <th scope="col" class="preco"><b>Preço Unit.</b></th>
+                        //         <th scope="col" class="preco"><b>Preço Total</b> </th>
+                        //         ';
+                        // }
     
                         $html.='
                         
@@ -564,7 +580,7 @@ class Ordemservico extends model {
                     <td></td>
                     ';
                     if ($mostraMedidas==true) { $htmlRows.='<td></td>';}
-                    if ($mostraPrecos==true) { $htmlRows.='<td></td> <td></td>';}
+                    // if ($mostraPrecos==true) { $htmlRows.='<td></td> <td></td>';}
                 $htmlRows.='
                 </tr>
                 ';
@@ -594,11 +610,11 @@ class Ordemservico extends model {
                             $htmlRows.='<td height="10px" align="center" '.$cor.'>'.$infos["itens"][$k]["subitens"][$j]["medidas"].' </td>';
                         }
     
-                        if ($mostraPrecos==true) {
-                            $htmlRows.='
-                                <td height="10px" align="right" '.$cor.'> R$ '.$infos["itens"][$k]["subitens"][$j]["preco_total"].'</td>
-                            ';
-                        }
+                        // if ($mostraPrecos==true) {
+                        //     $htmlRows.='
+                        //         <td height="10px" align="right" '.$cor.'> R$ '.$infos["itens"][$k]["subitens"][$j]["preco_total"].'</td>
+                        //     ';
+                        // }
     
                         $htmlRows.='
                         </tr>
@@ -612,6 +628,59 @@ class Ordemservico extends model {
             </table>
             <br></br>
             ';
+
+
+            // BLOCO COM PREÇO TOTAL
+
+            if(isset($mostraPrecos) && $mostraPrecos==true ){
+            
+            $html.='
+            <table style="border:1px solid #000000; font-size:9pt; padding-top:5px; padding-bottom:5px; line-height:10%" width="800" cellPadding="5">
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td align="right"><b>Preço Final:  </b></td>
+                    <td align="left"><b>R$ '.$infos["preco_final"].' </b> </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+            <br></br>
+                ';
+            }
+
+            // BLOCO COM AVISOS
+
+        if ($mostraAvisos==true) {
+            $html .='
+            <table style="border:1px solid #000000; line-height:120%; font-size:10pt" width="800" cellPadding="9">
+                <thead>
+                    <tr>
+                        <td align="center">
+                            <h3>AVISOS</h3>
+                        </td>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <tr>
+                        <td>';
+
+                        foreach ($avisos as $key => $value) {
+                            $html.='
+                                <p id='.$key.'> - '. $value.'</p>
+                            ';
+                        }
+
+            $html.='
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br></br>
+            ';
+
+        }
 
     // BLOCO COM NOTIFICAÇÕES
 
