@@ -341,7 +341,7 @@ class orcamentosController extends controller{
 
         // CABEÇALHO DA TABELA DE ITENS --------------------------------------------------------
         $html .='
-        <table style=" page-break-inside:avoid; border:1px solid #000000; line-height:10%; font-size:9pt; padding-top:10px; padding-bottom:10px" width="800" cellPadding="8">
+        <table style="page-break-inside:avoid; border:1px solid #000000; line-height:10%; font-size:9pt; padding-top:10px; padding-bottom:10px" width="800" cellPadding="8">
             <thead>
                 <tr>
                     <th scope="col"><b>Item</b></th>
@@ -584,9 +584,7 @@ class orcamentosController extends controller{
 
 
         //arranjar outro jeito de direcionar o require
-        $mpdf->shrink_tables_to_fit = 1;
         $mpdf->WriteHTML($html);
-
         $mpdf->Output('Orcamento.pdf','I');
     
     }

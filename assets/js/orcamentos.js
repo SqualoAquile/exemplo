@@ -1324,10 +1324,10 @@ function calculaMaterialCustoPreco() {
     $custo.val() != "" &&
     $preco.val() != ""
   ) {
-    // console.log('teste', $qtdUsada.val())
-    if ($qtdUsada.val() == "") {
 
-      //material ou serviço que não tem unidade em m², o que interessa é o preço e a quantidade
+    if ($unidade.val() != "ML" && $unidade.val() != "M²") {
+
+      //material ou serviço que não tem unidade em m² ou ml, o que interessa é o preço e a quantidade
       quantTotalMaterial = parseFloat(0);
 
       custoaux = parseFloat(
@@ -1344,7 +1344,7 @@ function calculaMaterialCustoPreco() {
       
     } else {
 
-      //material ou serviço que a unidade é m², o que interessa é o preço e a quantidade e quantUsada
+      //material ou serviço que a unidade é m² ou ml, o que interessa é o preço e a quantidade e quantUsada
       quantTotalMaterial = parseFloat(
         parseFloat($qtd.val()) *
         parseFloat(
