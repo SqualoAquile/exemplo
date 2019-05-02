@@ -10,6 +10,7 @@ $(function () {
         id4 = "#graf_receita_analitica",
         id5 = "#graf_saldos",
         id6 = "#graf_saldosAno",
+        id7 = "#orcVendas",
         ctx = document.getElementById(id1.substr(1)).getContext('2d');
 
     $selectGrafTemporal
@@ -572,6 +573,7 @@ $(function () {
     $selectGrafVendas
         .val(7)
         .on('change', function() {
+            orcamentosXvendas();
             orcamentos();
             ordenServicos();
             aniversarios();
@@ -827,6 +829,105 @@ $(function () {
 
             }
         });            
+    }
+
+    function orcamentosXvendas() {
+        var titulo, intervalo = [];
+        var $qtdOrc = $("#qtd_orc");
+        var $valorOrc = $("#valor_orc");
+        var $qtdVenda = $("#qtd_venda");
+        var $valorVenda = $("#valor_venda");
+
+
+            if (!$selectGrafVendas.val() ) {
+                $selectGrafVendas.val($selectGrafVendas.find('option:not([disabled])').first().val()).change();
+            };
+
+            //// FLUXO DE CAIXA REALIZADO
+            titulo = 'Orçamento X Vendas dos últimos ' + $selectGrafVendas.children("option:selected").text().trim() +' dias até hoje.';
+
+            intervalo = intervaloDatasRealizado($selectGrafVendas.val());
+
+            ///// GRÁFICO FLUXO CAIXA REALIZADO
+            $.ajax({ 
+                url: baselink + '/ajax/graficoOrcamentosXvendas', 
+                type: 'POST', 
+                data: {
+                    intervalo: intervalo,
+                },
+                dataType: 'json', 
+                success: function (resultado) { 
+                    if (resultado){   
+                         console.log(resultado)
+                        var eixoDatas = [], orcamentos = [], vendas = [], qtdorcamentos = [], qtdvendas = [];
+                        var valorOrcado = parseFloat(0), valorVendido = parseFloat(0), qtdOrcs = parseInt(0), qtdVnd = parseInt(0);
+
+                        eixoDatas = Object.keys(resultado[0]);
+                        orcamentos = Object.values(resultado[0]);
+                        qtdorcamentos = Object.values(resultado[1])
+                        vendas = Object.values(resultado[2]);
+                        qtdvendas = Object.values(resultado[3]);
+
+                        for (var i = 0; i < orcamentos.length; i++) {
+                            valorOrcado = valorOrcado + parseFloat( orcamentos[i] );
+                            valorVendido = valorVendido + parseFloat( vendas[i] );
+                            qtdOrcs = qtdOrcs + parseInt( qtdorcamentos[i] );
+                            qtdVnd = qtdVnd + parseInt( qtdvendas[i] );                         
+                        }
+
+                        $qtdOrc.text( qtdOrcs );
+                        $valorOrc.text( 'R$ ' + floatParaPadraoBrasileiro(valorOrcado) );
+                        $qtdVenda.text( qtdVnd );
+                        $valorVenda.text( 'R$ ' + floatParaPadraoBrasileiro(valorVendido) );                      
+
+                        var config = {
+                            type: 'bar',
+                            data: {
+                                labels: eixoDatas,
+                                datasets: [{
+                                    type: 'bar',
+                                    label: 'Orçamentos',
+                                    backgroundColor: '#418fe2',
+                                    data: orcamentos,
+                                    borderColor: 'white',
+                                    borderWidth: 1
+                                }, {
+                                    type: 'bar',
+                                    label: 'Vendas',
+                                    backgroundColor: '#064c92',
+                                    data: vendas,
+                                    borderColor: 'white',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                title: {
+                                    display: true,
+                                    text: titulo,
+                                    position: "top"
+                                },
+                                legend: {
+                                    display: true,
+                                    position: "top"
+                                },
+                            }
+                        }
+                        
+                        if(typeof charts[id7] == "undefined") {
+                            charts[id7]= new (function(){
+                            this.ctx=$(id7); 
+                            this.chart=new Chart(this.ctx, config);
+                            })();     
+                        } else {
+                            charts[id7].chart.destroy();
+                            charts[id7].chart=new Chart(charts[id7].ctx, config); 
+                        }
+                    }
+                }
+            });
+
     }
 
 

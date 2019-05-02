@@ -60,15 +60,12 @@ $(function () {
     
     
     dataTable.page.len(-1).draw();
-    console.log("chamei draw na entrada da página");
     dataTable.order( [ 1, "asc" ] ).draw();
     $('#DataTables_Table_0_length').addClass('d-none');
 
     function resumo () {
         dataTable.page.len(-1).draw();
-        console.log("chamei draw no resumo");
         dataTable.order( [ 1, "asc" ] ).draw();
-        console.log("chamei draw pra ordenar");
 
         var rowData = dataTable.rows().data();
 
@@ -188,7 +185,6 @@ $(function () {
     $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
         resumo();
         dataTable.page.len(10).draw();
-        console.log("chamei draw no show do collapse");
         $('#DataTables_Table_0_wrapper').removeClass('d-none');
         $('#collapseGraficos2').collapse('hide');
       });
@@ -196,7 +192,6 @@ $(function () {
     $('#collapseFluxocaixaResumo').on('hide.bs.collapse', function () {
         $('#DataTables_Table_0_wrapper').addClass('d-none');
         dataTable.page.len(-1).draw();
-        console.log("chamei draw no hide");
     });
 
     $('#collapseGraficos2').on('show.bs.collapse', function () {
@@ -239,7 +234,6 @@ $(function () {
                 $min.val('').change();
 
                 dataTable.columns().search('').draw();
-                console.log("chamei draw no search");
                 $('#collapseGraficos2').removeClass('show').addClass('hide');
 
                 return false;

@@ -161,6 +161,27 @@ $(function () {
 
     $('[name=searchDataTable]').on('keyup', function() {
         dataTable.search(this.value).draw();
+
+        var searchValue = $(this).val();
+
+        $('.contatos-filtrados').each(function () {
+            var $display = $(this).find('span');
+            $(this).find('.contatos-escondidos:contains("' + searchValue + '")').each(function () {
+                var $filtered = $(this),
+                    textFiltered = $filtered.text(),
+                    textDisplay = $display.text();
+
+                $display.text(textFiltered);
+                $filtered.text(textDisplay);
+            });
+        });
+
+        var body = $(dataTable.table().body());
+
+        body.unhighlight();
+        body.highlight(searchValue);
+
+
     }, 500);
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -1002,28 +1023,28 @@ $(function () {
     });
 
     // Filtrar contatos pela busca
-    $('#searchDataTable').on('keyup', function () {
+    // $('#searchDataTable').on('keyup', function () {
 
-        var searchValue = $(this).val();
+    //     var searchValue = $(this).val();
 
-        $('.contatos-filtrados').each(function () {
-            var $display = $(this).find('span');
-            $(this).find('.contatos-escondidos:contains("' + searchValue + '")').each(function () {
-                var $filtered = $(this),
-                    textFiltered = $filtered.text(),
-                    textDisplay = $display.text();
+    //     $('.contatos-filtrados').each(function () {
+    //         var $display = $(this).find('span');
+    //         $(this).find('.contatos-escondidos:contains("' + searchValue + '")').each(function () {
+    //             var $filtered = $(this),
+    //                 textFiltered = $filtered.text(),
+    //                 textDisplay = $display.text();
 
-                $display.text(textFiltered);
-                $filtered.text(textDisplay);
-            });
-        });
+    //             $display.text(textFiltered);
+    //             $filtered.text(textDisplay);
+    //         });
+    //     });
 
-        var body = $(dataTable.table().body());
+    //     var body = $(dataTable.table().body());
 
-        body.unhighlight();
-        body.highlight(searchValue);
+    //     body.unhighlight();
+    //     body.highlight(searchValue);
 
-    });
+    // });
 
     $('[type=checkbox]').on('blur touchstart', function () {
 
