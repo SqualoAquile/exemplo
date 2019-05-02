@@ -116,6 +116,7 @@ $(function () {
 
         valorTotal();
         habilitaBotaoOrcamento();
+        checarAlternativo();
         tabindex();
       }
     }
@@ -892,6 +893,7 @@ $(function () {
 
     valorTotal();
     habilitaBotaoOrcamento();
+    checarAlternativo();
     tabindex();
 
   });
@@ -980,10 +982,12 @@ $(function () {
   $("#embaixo input").on("change", function () {
     valorTotal();
     habilitaBotaoOrcamento();
+    checarAlternativo();
   });
 
   $("#esquerda input, #esquerda select").on("change", () => {
     habilitaBotaoOrcamento();
+    checarAlternativo();
   });
 
   $("#chk_cancelamentoOrc").click(function () {
@@ -1208,6 +1212,7 @@ $(function () {
 
 window.onload = function() {
   habilitaBotaoOrcamento();
+  checarAlternativo();
   tabindex();
 };
 
@@ -1878,6 +1883,7 @@ function setarClienteCadastrado(cliente) {
     }
 
     habilitaBotaoOrcamento();
+    checarAlternativo();
 
   }
 }
@@ -1903,7 +1909,8 @@ function habilitaBotaoOrcamento() {
   $btnMainForm = $("#main-form"),
   $btnAprovar = $('#aprovar-orcamento');
 
-  $('#form-principal .form-control:visible, #form-principal .form-check-input').each(function () {
+  $('#form-principal').find('.form-control:visible, .form-check-input, input[type="hidden"][name="itens"]').each(function () {
+
     var $this = $(this);
 
     if ($this.attr("type") == "radio") {
@@ -1936,7 +1943,6 @@ function habilitaBotaoOrcamento() {
   } else {
     $btnMainForm.attr("disabled", "disabled");
     $btnAprovar.removeAttr('disabled');
-    checarAlternativo();
   }
 }
 
@@ -1999,7 +2005,7 @@ function checarAlternativo() {
           <div class="alert alert-warning" role="alert">
             <h4 class="alert-heading">Atenção!</h4>
             <hr>
-            <p>Não é possível aprovar um orçamento com materias alternativos.</p>
+            <p>Não é possível <b>aprovar</b> um orçamento com materias alternativos.</p>
             <p class="mb-0">Exclua-os ou transforme-os em principais.</p>
           </div>
         </div>
@@ -2007,6 +2013,8 @@ function checarAlternativo() {
     `);
 
   } else {
-    $btnAprovar.removeAttr('disabled');
+    
+    habilitaBotaoOrcamento();
+
   }
 }
