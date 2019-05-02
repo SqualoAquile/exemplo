@@ -170,7 +170,7 @@ class orcamentosController extends controller{
             
             $infos["itens"][$k-1]["subitens"][$j]["produto_servico"] = ucfirst(str_replace("_"," ",$itens[$i]['material_servico']));
             $infos["itens"][$k-1]["subitens"][$j]["tipo_material"] = $itens[$i]['tipo_material'];
-            $infos["itens"][$k-1]["subitens"][$j]["quantidade"] = str_replace(".",",",$itens[$i]['quant']);
+            $infos["itens"][$k-1]["subitens"][$j]["quantidade"] = intval($itens[$i]['quant']);
             if ($itens[$i]['largura']!=0 && $itens[$i]['comprimento']!=0  ) {
                 $infos["itens"][$k-1]["subitens"][$j]["medidas"] = "L: ".str_replace(".",",",$itens[$i]['largura']). " x C: ".str_replace(".",",",$itens[$i]['comprimento']);
             }else{
