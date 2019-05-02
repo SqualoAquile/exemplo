@@ -524,8 +524,9 @@ class ajaxController extends controller{
     $dados = array();
     $fc = new Fluxocaixa();
     if(isset($_POST) && !empty($_POST)){
+      
       $fc->adicionar($_POST);
-      // print_r($_SESSION["returnMessage"]); exit;
+      
       if( $_SESSION["returnMessage"]["mensagem"] == "Registro inserido com sucesso!" ){
         unset($_SESSION["returnMessage"]);
         echo json_encode(true);
@@ -535,7 +536,7 @@ class ajaxController extends controller{
         echo json_encode(false);
 
       }
-      // echo json_encode($_SESSION["returnMessage"]);
+      
     }
   }
 
@@ -545,7 +546,7 @@ class ajaxController extends controller{
       $os = new Ordemservico();
 
       if(isset($_POST) && !empty($_POST)){
-
+        
         $id = array_shift($_POST);
 
         $os->editar($id, $_POST);

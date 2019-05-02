@@ -100,7 +100,7 @@ class Fluxocaixa extends model {
     }
 
     public function adicionar($request) {
-
+        // print_r($request); exit;
         $ipcliente = $this->permissoes->pegaIPcliente();
 
         $sql = '';
@@ -114,11 +114,11 @@ class Fluxocaixa extends model {
             
             $sql .= "INSERT INTO " . $this->table . " (" . $keys . ") VALUES (" . $values . ");";               
         }
-        
+        // echo $sql; exit;
         self::db()->query($sql);
 
         $erro = self::db()->errorInfo();
-
+        
         if (empty($erro[2])){
 
             $_SESSION["returnMessage"] = [
