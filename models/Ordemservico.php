@@ -358,7 +358,7 @@ class Ordemservico extends model {
                 
                 $infos["itens"][$k-1]["subitens"][$j]["produto_servico"] = ucfirst(str_replace("_"," ",$itens[$i]['material_servico']));
                 $infos["itens"][$k-1]["subitens"][$j]["tipo_material"] = $itens[$i]['tipo_material'];
-                $infos["itens"][$k-1]["subitens"][$j]["quantidade"] = str_replace(".",",",$itens[$i]['quant']);
+                $infos["itens"][$k-1]["subitens"][$j]["quantidade"] = intval($itens[$i]['quant']);
                 if ($itens[$i]['largura']!=0 && $itens[$i]['comprimento']!=0  ) {
                     $infos["itens"][$k-1]["subitens"][$j]["medidas"] = "L: ".str_replace(".",",",$itens[$i]['largura']). " x C: ".str_replace(".",",",$itens[$i]['comprimento']);
                 }else{
@@ -540,18 +540,17 @@ class Ordemservico extends model {
                     <tr>
                         <th scope="col"><b>Item</b></th>
                         <th scope="col"><b>Quantidade</b></th>
-                        <th scope="col"><b>Produto/Serviço</b></th>
-                        <th scope="col" ><b>Unidade</b></th>
+                        <th scope="col" align="right"><b>Produto/Serviço</b></th>
+                        <th scope="col" align="right" ><b>Unidade</b></th>
                         ';
     
                         if ($mostraMedidas==true) {
-                            $html.='<th scope="col"><b>Medidas</b></th>';
+                            $html.='<th scope="col" align="right"><b>Medidas</b></th>';
                         }
     
                         // if ($mostraPrecos==true) {
                         //     $html.='
-                        //         <th scope="col" class="preco"><b>Preço Unit.</b></th>
-                        //         <th scope="col" class="preco"><b>Preço Total</b> </th>
+                        //         <th scope="col" class="preco" align="right"><b>Preço Total</b> </th>
                         //         ';
                         // }
     
@@ -602,12 +601,12 @@ class Ordemservico extends model {
                         <tr>
                             <td></td>                
                             <td height="10px" align="center" '.$cor.'>'. $infos["itens"][$k]["subitens"][$j]["quantidade"].'</td>
-                            <td height="10px" align="center" '.$cor.'> '.$infos["itens"][$k]["subitens"][$j]["produto_servico"].'</td>
-                            <td height="10px" align="center" '.$cor.'>'. $infos["itens"][$k]["subitens"][$j]["unidade"].'</td>
+                            <td height="10px" align="right" '.$cor.'> '.$infos["itens"][$k]["subitens"][$j]["produto_servico"].'</td>
+                            <td height="10px" align="right" '.$cor.'>'. $infos["itens"][$k]["subitens"][$j]["unidade"].'</td>
                             ';
     
                         if ($mostraMedidas==true) {
-                            $htmlRows.='<td height="10px" align="center" '.$cor.'>'.$infos["itens"][$k]["subitens"][$j]["medidas"].' </td>';
+                            $htmlRows.='<td height="10px" align="right" '.$cor.'>'.$infos["itens"][$k]["subitens"][$j]["medidas"].' </td>';
                         }
     
                         // if ($mostraPrecos==true) {
