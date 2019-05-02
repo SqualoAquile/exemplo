@@ -57,12 +57,12 @@ $(function () {
     dataTable.draw();
     $('#DataTables_Table_0_length').addClass('d-none');
 
-    dataTable.on( 'draw.dt', function () {
-        resumo();
-    });
 
     function resumo () {
-        
+
+        dataTable.page.len(-1).draw();
+        dataTable.draw();
+
         var rowData = dataTable.rows().data(),
         somasDespesasQ = 0,
         somasReceitasQ = 0,

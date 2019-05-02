@@ -177,12 +177,11 @@ $(function () {
 
     $('#relatorioorcamentoitens-section').addClass('d-none');
 
-    dataTable.on( 'draw.dt', function () {
-        resumo();
-    });
-
     function resumo () {
         
+        dataTable.page.len(-1).draw();
+        dataTable.draw();
+
         var rowData = dataTable.rows().data(),
         quantidadeProdutos = 0,
         quantidadeServicos = 0,
@@ -239,7 +238,6 @@ $(function () {
                 }
             i++;
         });
-
 
         listaProdutos = listaProdutos.sort(function(a,b) {
             return b[1]-a[1];
@@ -318,8 +316,6 @@ $(function () {
     // fazer para o campo de input também
 
     $('#botaoRelatorio').on('click', function(){
-
-        dataTable.page.len(-1).draw();
 
         let pesquisar = false;
 

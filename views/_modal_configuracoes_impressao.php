@@ -10,16 +10,16 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" checked="checked" name="checkMedidas" id="checkMedidas" value="medidas">
-                            <label class="form-check-label" for="checkMedidas">Medidas</label>
-                        </div>
                         <?php if ($modulo !='ordemservico'): ?>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" checked="checked" name="checkUnitario" id="checkUnitario" value="unitario">
-                                <label class="form-check-label" for="checkUnitario">Preço Unitário e Subtotais</label>
+                                <input class="form-check-input" type="checkbox" checked="checked" name="checkMedidas" id="checkMedidas" value="medidas">
+                                <label class="form-check-label" for="checkMedidas">Medidas</label>
                             </div>
                         <?php endif; ?>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" checked="checked" name="checkUnitario" id="checkUnitario" value="unitario">
+                            <label class="form-check-label" for="checkUnitario">Preços</label>
+                        </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" name="checkAvisos" id="checkAvisos" value="avisos">
                             <label class="form-check-label" for="checkAvisos">Avisos</label>

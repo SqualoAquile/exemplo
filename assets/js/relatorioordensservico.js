@@ -55,13 +55,12 @@ $(function () {
     dataTable.page.len(-1).draw();
     dataTable.draw();
     $('#DataTables_Table_0_length').addClass('d-none');
-    
-    dataTable.on( 'draw.dt', function () {
-        resumo();
-    });
 
     function resumo () {
 
+        dataTable.page.len(-1).draw();
+        dataTable.draw();
+        
         var rowData = dataTable.rows().data(),
         somasSubtotal = 0,
         somasDesconto = 0,

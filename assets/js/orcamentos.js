@@ -458,11 +458,12 @@ $(function () {
         }
       });
 
+      $('[name="tipo_servico_produto"]').change();
+
       acoesByStatus();
       changeRequiredsPfPj();
       checarClienteCadastrado();
 
-      $('[name="tipo_servico_produto"]').change();
     })
     .on(
       "click",
@@ -1350,7 +1351,9 @@ function calculaMaterialCustoPreco() {
       );
       valorTotalSubitem = floatParaPadraoBrasileiro(precoaux);
     }
+    console.log('if')
   } else {
+    console.log('else')
     quantTotalMaterial = parseFloat(0);
     custoTotalSubitem = parseFloat(0);
     valorTotalSubitem = parseFloat(0);
@@ -1784,25 +1787,28 @@ function changeRequiredsPfPj() {
 }
 
 function acoesByStatus() {
+
   let $status = $("#status"),
-    $tabela = $("#itensOrcamento"),
-    statusLowTxt = $status.val().toLowerCase();
+    $tabela = $("#itensOrcamento");
+  
+  if ($status.val()) {
 
-  if (
-    $status.val() &&
-    (statusLowTxt == "cancelado" || statusLowTxt == "aprovado")
-  ) {
-    $tabela
-      .find("thead > tr > th:first-child, tbody > tr > td:first-child")
-      .hide();
+    let statusLowTxt = $status.val().toLowerCase();
 
-    $("#btn_incluir")
-      .parent()
-      .hide();
-    $('.form-control, [type="radio"]').attr("disabled", "disabled");
-  }
+    if (statusLowTxt == "cancelado" || statusLowTxt == "aprovado") {
 
-  if (!$status.val()) {
+      $tabela
+        .find("thead > tr > th:first-child, tbody > tr > td:first-child")
+        .hide();
+  
+      $("#btn_incluir")
+        .parent()
+        .hide();
+
+      $('.form-control, .form-check-input').attr("disabled", "disabled");
+    }
+
+  } else {
     $status
       .parent(".form-group")
       .parent()

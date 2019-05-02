@@ -41,7 +41,7 @@ class Shared extends model {
             }
 
             if(($this->table == "ordemservico") && in_array( $this->table.'_ver' , $_SESSION["permissoesUsuario"]) ){
-                $stringBtn .=  '<a href="' . BASE_URL . '/' . $this->table . '/imprimir/' . $id . '" class="btn btn-warning btn-sm mx-1" target="_blank"><i class="fas fa-print"></i></a>';
+                $stringBtn .=  '<button type="button" class="btn btn-warning btn-sm mx-1" data-id="' . $id . '" data-toggle="modal" data-target="#modalConfImp"><i class="fas fa-print"></i></button>';
             }      
             
             $stringBtn .= '</form>';
