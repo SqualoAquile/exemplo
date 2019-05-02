@@ -11,13 +11,11 @@ $(function () {
 
     $('.dataTable') 
         .on('draw.dt', function() {
-            drawChart(id);
-            console.log("chamei o drawChart no draw do datatable");
+            drawChart(id); 
         });
     
     $('.input-filtro-faixa').on('change',function(){
-        drawChart(id);
-        console.log("chamei o draw no change do filtro faixa")
+        drawChart(id); 
     });
 
 
