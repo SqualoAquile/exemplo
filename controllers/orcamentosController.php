@@ -346,7 +346,7 @@ class orcamentosController extends controller{
                 <tr>
                     <th scope="col"><b>Item</b></th>
                     <th scope="col"><b>Quantidade</b></th>
-                    <th scope="col"><b>Produto/Serviço</b></th>
+                    <th scope="col" align="right"><b>Produto/Serviço</b></th>
                     <th scope="col" align="right" ><b>Unidade</b></th>
                     ';
 
@@ -406,7 +406,7 @@ class orcamentosController extends controller{
                     <tr>
                         <td></td>                
                         <td height="10px" align="center" '.$cor.'>'. $infos["itens"][$k]["subitens"][$j]["quantidade"].'</td>
-                        <td height="10px" align="center" '.$cor.'> '.$infos["itens"][$k]["subitens"][$j]["produto_servico"].'</td>
+                        <td height="10px" align="right" '.$cor.'> '.$infos["itens"][$k]["subitens"][$j]["produto_servico"].'</td>
                         <td height="10px" align="right" '.$cor.'>'. $infos["itens"][$k]["subitens"][$j]["unidade"].'</td>
                         ';
 
