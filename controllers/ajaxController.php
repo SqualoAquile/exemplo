@@ -672,6 +672,16 @@ class ajaxController extends controller{
     echo json_encode($dados);
   }
 
+  public function graficoOrcamentosXvendas(){
+    
+    if(isset($_POST) && !empty($_POST)){
+      $relatOS = new Relatorioordensservico();
+      $dados = $relatOS->graficoOrcamentosXvendas($_POST['intervalo']);
+    }
+    echo json_encode($dados);
+  }
+
+  
   public function graficoReceitaDespesaAnalitica(){
     
     if(isset($_POST) && !empty($_POST)){

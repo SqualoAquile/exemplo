@@ -47,8 +47,6 @@ class Relatorioordensservico extends model {
         }
     }
 
-
-
     public function adicionar($request) {
 
         $ipcliente = $this->permissoes->pegaIPcliente();
@@ -191,22 +189,144 @@ class Relatorioordensservico extends model {
         return $taxa;
     }
 
-    // public function taxaSeguroOperacional($requisicao){
-    //     $result = array();
-
-    //     $this->table = "parametros";
+    public function graficoOrcamentosXvendas($interval_datas){
         
-    //     $sql = "SELECT valor as taxa FROM " . $this->table . " WHERE situacao = 'ativo'";
-    //     $sql = self::db()->query($sql);
+        if(count($interval_datas) == 1){
+			$dt1 = 	$interval_datas[0];
+			$dt2 =  $interval_datas[0];
+		}else{
+			$dt1 = $interval_datas[0];
+			$dt2 = $interval_datas[count($interval_datas)-1];
+		}
+     
+        $sql1 = "SELECT data_emissao , SUM(valor_total) as total, COUNT(data_emissao) as qtd FROM `orcamentos` WHERE situacao='ativo' AND data_emissao BETWEEN '$dt1' AND '$dt2' GROUP BY data_emissao";
+        
+        $sql1 = self::db()->query($sql1);
+        
+        if($sql1->rowCount()>0){
+            $orcamentos = $sql1->fetchAll();
+        }else{
+            $orcamentos = array();
+        }
 
-    //     if ($sql->rowCount() > 0) {
-    //         $sql = $sql->fetchAll(PDO::FETCH_ASSOC);         
-    //         foreach ($sql as $key => $value) {
-    //             $result = $value['valor'];
-    //         }
-    //     }
-    //     return $result;
+        $orcs = array();
+        $qtdorcs = array();
+        if (count($orcamentos) > 0 ){
+            for($i = 0; $i < count($orcamentos); $i++){
+                for($j = 0; $j < count($interval_datas); $j++ ){
+                    if($interval_datas[$j] == $orcamentos[$i][0]){
+                        
+                        $orcs[$interval_datas[$j]] = floatval($orcamentos[$i][1]);
+                        $qtdorcs[$interval_datas[$j]] = intval($orcamentos[$i][2]);
+                    }
+                }
+            }
 
-    // }
+        }else{
+
+            for($j = 0; $j < count($interval_datas); $j++ ){
+                $orcs[$interval_datas[$j]] = floatval(0);
+                $qtdorcs[$interval_datas[$j]] = intval(0);
+            }
+        }
+
+		// Verifica se as datas do $interval_datas existem no array $orcs
+		for($j = 0; $j < count($interval_datas); $j++ ){
+			if (array_key_exists($interval_datas[$j],$orcs) == 0){
+                $orcs[$interval_datas[$j]] = 0;
+                $qtdorcs[$interval_datas[$j]] = 0;
+			}
+        }
+
+		// Ordena o array pela ordem das keys
+        ksort($orcs);
+        ksort($qtdorcs);
+
+		//reescreve as chave do array , para datas no padrão brasileiro
+		foreach ($orcs as $key => $value) {
+			$aux = explode('-',$key);
+			$aux = $aux[2].'/'.$aux[1].'/'.$aux[0];
+			unset($orcs[$key]);
+			$orcs[$aux] = $value;
+        }
+
+        foreach ($qtdorcs as $key => $value) {
+			$aux = explode('-',$key);
+			$aux = $aux[2].'/'.$aux[1].'/'.$aux[0];
+			unset($qtdorcs[$key]);
+			$qtdorcs[$aux] = $value;
+        }
+
+        ///// RECEITAS
+
+        $sql2 = "SELECT data_aprovacao , SUM(valor_final) as total, COUNT(data_aprovacao) as qtd FROM `ordemservico` WHERE situacao='ativo' AND data_aprovacao BETWEEN '$dt1' AND '$dt2' GROUP BY data_aprovacao";
+        
+        $sql2 = self::db()->query($sql2);
+        
+        if($sql2->rowCount()>0){
+            $ordensserv = $sql2->fetchAll();
+        }else{
+            $ordensserv = array();
+        }
+
+        $os = array();
+        $qtdos = array();
+        if (count($ordensserv) > 0 ){
+            for($i = 0; $i < count($ordensserv); $i++){
+                for($j = 0; $j < count($interval_datas); $j++ ){
+                    if($interval_datas[$j] == $ordensserv[$i][0]){
+                        
+                        $os[$interval_datas[$j]] = floatval($ordensserv[$i][1]);
+                        $qtdos[$interval_datas[$j]] = intval($ordensserv[$i][2]);
+                    }
+                }
+            }
+
+        }else{
+
+            for($j = 0; $j < count($interval_datas); $j++ ){
+                $os[$interval_datas[$j]] = floatval(0);
+                $qtdos[$interval_datas[$j]] = intval(0);
+            }
+        }
+
+		// Verifica se as datas do $interval_datas existem no array $despesas
+		for($j = 0; $j < count($interval_datas); $j++ ){
+			if (array_key_exists($interval_datas[$j],$os) == 0){
+                $os[$interval_datas[$j]] = 0;
+                $qtdos[$interval_datas[$j]] = 0;
+			}
+        }
+
+		// Ordena o array pela ordem das keys
+        ksort($os);
+        ksort($qtdos);
+
+		//reescreve as chave do array , para datas no padrão brasileiro
+		foreach ($os as $key => $value) {
+			$aux = explode('-',$key);
+			$aux = $aux[2].'/'.$aux[1].'/'.$aux[0];
+			unset($os[$key]);
+			$os[$aux] = $value;
+			
+        }
+
+        foreach ($qtdos as $key => $value) {
+			$aux = explode('-',$key);
+			$aux = $aux[2].'/'.$aux[1].'/'.$aux[0];
+			unset($qtdos[$key]);
+			$qtdos[$aux] = $value;
+			
+        }
+
+		$data = array();
+		$data[0] = $orcs;
+        $data[1] = $qtdorcs;
+        $data[2] = $os;
+        $data[3] = $qtdos;
+        
+		return $data; 
+		
+    }
     
 }

@@ -309,8 +309,9 @@ $(function () {
     });
 
     // busca as despesas do ID da OS pra completar o custo
+    
     if( $('#custo_total').attr('data-anterior') != '' && 
-        $('#status').val() != 'Cancelada' && $('#data_revisao_3').val() == '00/00/0000' ){ //significa que o formulário está sendo editado e a OS está em produção ou Finalizada
+        $('#status').val() != 'Cancelada' && $('#data_revisao_3').val() == '' ){ //significa que o formulário está sendo editado e a OS está em produção ou Finalizada
         
         var $idOS = $("#id");
         var $idOrc = $("#id_orcamento");

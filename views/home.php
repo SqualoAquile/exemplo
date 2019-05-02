@@ -244,6 +244,58 @@
         </div>
     </div>
 
+    <!-- Orçamento e Vendas -->
+    <div class="card card-body my-3">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="card text-center mb-3">
+                            <div class="card-body">
+                                <small class="card-title"><i class="fas fa-book"></i>  Qtd. Orçamentos</small>
+                                <h5 class="card-text" id="qtd_orc">0</h5>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3">
+                        <div class="card text-center mb-3">
+                            <div class="card-body">
+                                <small class="card-title"><i class="fas fa-chevron-circle-up"></i> Valor Orçado</small>
+                                <h5 class="card-text" id="valor_orc">R$ 0,00</h5>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <small class="card-title"><i class="fas fa-cart-arrow-down"></i>  Qtd Vendas</small>
+                                <h5 class="card-text" id="qtd_venda">0</h5>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <small class="card-title"><i class="fas fa-chevron-circle-up"></i>  Valor Vendido</small>
+                                <h5 class="card-text" id="valor_venda"> R$ 0,00</h5>
+                            </div>
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12" style="height: 300px;">
+                <canvas id="orcVendas"  style="height: 300px;"></canvas>
+            </div>
+        </div>
+    </div>
+
     <!-- Tabelas de lançamentos vencidos e por vencer -->
     <div class="card card-body my-3">
         <div class="row">
