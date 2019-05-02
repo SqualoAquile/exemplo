@@ -60,18 +60,12 @@ $(function () {
     
     
     dataTable.page.len(-1).draw();
-    dataTable.draw();
     dataTable.order( [ 1, "asc" ] ).draw();
     $('#DataTables_Table_0_length').addClass('d-none');
-
-    dataTable.on( 'draw.dt', function () {
-        resumo();
-    });
 
     function resumo () {
 
         dataTable.page.len(-1).draw();
-        dataTable.draw();
         dataTable.order( [ 1, "asc" ] ).draw();
 
         var rowData = dataTable.rows().data();
@@ -192,7 +186,6 @@ $(function () {
     $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
         resumo();
         dataTable.page.len(10).draw();
-        dataTable.draw();
         $('#DataTables_Table_0_wrapper').removeClass('d-none');
         $('#collapseGraficos2').collapse('hide');
       });
@@ -200,7 +193,6 @@ $(function () {
     $('#collapseFluxocaixaResumo').on('hide.bs.collapse', function () {
         $('#DataTables_Table_0_wrapper').addClass('d-none');
         dataTable.page.len(-1).draw();
-        dataTable.draw();
     });
 
     $('#collapseGraficos2').on('show.bs.collapse', function () {
