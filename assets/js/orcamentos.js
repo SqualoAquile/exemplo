@@ -1995,22 +1995,26 @@ function checarAlternativo() {
   $('#material-alternativo-aprovar').remove();
 
   if ($alternativos.length) {
-    
-    // Não deixar aprovar
-    $btnAprovar.attr('disabled', 'disabled');
 
-    $('#col-aprovar').parent('.row').before(`
-      <div id="material-alternativo-aprovar" class="row">
-        <div class="col-lg-12">
-          <div class="alert alert-warning" role="alert">
-            <h4 class="alert-heading">Atenção!</h4>
-            <hr>
-            <p>Não é possível <b>aprovar</b> um orçamento com materias alternativos.</p>
-            <p class="mb-0">Exclua-os ou transforme-os em principais.</p>
+    if ($('[name="id_cliente"]').val() != '0') {
+      
+      // Não deixar aprovar
+      $btnAprovar.attr('disabled', 'disabled');
+  
+      $('#col-aprovar').parent('.row').before(`
+        <div id="material-alternativo-aprovar" class="row">
+          <div class="col-lg-12">
+            <div class="alert alert-warning" role="alert">
+              <h4 class="alert-heading">Atenção!</h4>
+              <hr>
+              <p>Não é possível <b>aprovar</b> um orçamento com materias alternativos.</p>
+              <p class="mb-0">Exclua-os ou transforme-os em principais.</p>
+            </div>
           </div>
         </div>
-      </div>
-    `);
+      `);
+
+    }
 
   } else {
     
