@@ -314,6 +314,7 @@ $(function () {
           parseFloat(floatParaPadraoInternacional($custo.val())) >=
           parseFloat(floatParaPadraoInternacional($preco.val()))
         ) {
+
           let dataPreco = $material.attr("data-preco");
 
           if (!$material.attr("data-preco")) {
@@ -327,6 +328,7 @@ $(function () {
 
           $preco.val(floatParaPadraoBrasileiro(precoaux));
         } else {
+
           precoaux = parseFloat(
             parseFloat(floatParaPadraoInternacional($preco.val())) *
             parseFloat(parseFloat(1) + tx_segop)
@@ -562,6 +564,13 @@ $(function () {
             .blur()
             .attr("disabled", "disabled")
             .removeClass("is-valid is-invalid");
+
+          $('#quant_usada')
+            .val("")
+            .blur()
+            .attr("disabled", "disabled")
+            .removeClass("is-valid is-invalid");
+
         }
       }
     )
@@ -1315,7 +1324,9 @@ function calculaMaterialCustoPreco() {
     $custo.val() != "" &&
     $preco.val() != ""
   ) {
+    // console.log('teste', $qtdUsada.val())
     if ($qtdUsada.val() == "") {
+
       //material ou serviço que não tem unidade em m², o que interessa é o preço e a quantidade
       quantTotalMaterial = parseFloat(0);
 
@@ -1330,13 +1341,15 @@ function calculaMaterialCustoPreco() {
         parseFloat(floatParaPadraoInternacional($preco.val()))
       );
       valorTotalSubitem = floatParaPadraoBrasileiro(precoaux);
+      
     } else {
+
       //material ou serviço que a unidade é m², o que interessa é o preço e a quantidade e quantUsada
       quantTotalMaterial = parseFloat(
         parseFloat($qtd.val()) *
         parseFloat(
           floatParaPadraoInternacional($qtdUsada.val())
-        ).toFixed(0)
+        ).toFixed(2)
       );
 
       custoaux = parseFloat(
@@ -1351,9 +1364,7 @@ function calculaMaterialCustoPreco() {
       );
       valorTotalSubitem = floatParaPadraoBrasileiro(precoaux);
     }
-    console.log('if')
   } else {
-    console.log('else')
     quantTotalMaterial = parseFloat(0);
     custoTotalSubitem = parseFloat(0);
     valorTotalSubitem = parseFloat(0);
@@ -1706,8 +1717,12 @@ function aprovarOrcamento() {
     nro_nf: "",
     data_emissao_nf: "",
     data_revisao_1: "",
+    presenca_rev1: "",
     data_revisao_2: "",
+    presenca_rev2: "",
     data_revisao_3: "",
+    presenca_rev3: "",
+    garantia_vitalicia: "",
     status: "Em Produção",
     observacao: "",
     motivo_cancelamento: ""
