@@ -12,10 +12,12 @@ $(function () {
     $('.dataTable') 
         .on('draw.dt', function() {
             drawChart(id);
+            console.log("chamei o drawChart no draw do datatable");
         });
     
     $('.input-filtro-faixa').on('change',function(){
         drawChart(id);
+        console.log("chamei o draw no change do filtro faixa")
     });
 
 
@@ -61,6 +63,7 @@ $(function () {
                                 }]
                             },
                             options: {
+                                animation: false,
                                 responsive: true,
                                 maintainAspectRatio: false,
                                 title: {
