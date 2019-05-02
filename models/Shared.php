@@ -767,7 +767,8 @@ class Shared extends model {
             // busca o nome dos campos das colunas para ver qual o tipo a ser formatado
             $primeiroElemento = array_shift($nomeColunas); // usado só para retirar o primeiro elemento do array que é o ID
             $i=0;
-            
+            // print_r($nomeColunas);
+            // print_r($registro); 
             foreach ($registro as $chave => $valor) {
                 //testo se é o valor referente ao mesmo campo do nome das colunas
                 if($nomeColunas[$i]['Field'] == $chave){ 
@@ -801,7 +802,7 @@ class Shared extends model {
                 }
                 $i++;
             }
-            
+            // print_r($array); exit;
             return $array;
         }
     }

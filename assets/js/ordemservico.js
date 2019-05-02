@@ -11,11 +11,15 @@ $(function () {
     $('#valor_final').attr('disabled', 'disabled');
     $('#status').attr('disabled', 'disabled');
     $('#id_orcamento').attr('disabled', 'disabled').parent().parent().hide();
-    $('#motivo_cancelamento').attr('disabled', 'disabled').parent().parent().hide();
+    $('#garantia_vitalicia').attr('disabled', 'disabled').parent().parent().hide();
+    $('#motivo_cancelamento').parent().parent().hide();
     $('#btn_cancelamentoVenda').parent().hide();
 
     $('#id').attr('disabled', 'disabled').parent().parent().css('order','1').show();
     $('#id').siblings('label').text('* Número do Pedido');
+
+    
+
 
     if( $('#data_revisao_1').attr('data-anterior') == '00/00/0000'){
         $('#data_revisao_1').attr('data-anterior','');
@@ -38,6 +42,8 @@ $(function () {
     }else{
         if( $('#status').val() == 'Em Produção' ){
             $('#data_inicio').val($('#data_aprovacao').val()).datepicker('update');
+        }else if( $('#status').val() == 'Cancelada' ){
+            $('#data_inicio').val('');
         }
         
     }
@@ -54,8 +60,13 @@ $(function () {
     if($('#status').val() == 'Em Produção'){ 
 
         $('#data_revisao_1').val('').attr('disabled', 'disabled').parent().parent().hide();
+        $('#presenca_rev1').val('').attr('disabled', 'disabled').parent().parent().hide();
+
         $('#data_revisao_2').val('').attr('disabled', 'disabled').parent().parent().hide();
+        $('#presenca_rev2').val('').attr('disabled', 'disabled').parent().parent().hide();
+
         $('#data_revisao_3').val('').attr('disabled', 'disabled').parent().parent().hide();
+        $('#presenca_rev3').val('').attr('disabled', 'disabled').parent().parent().hide();
 
         $('#btn_salvarOS').parent().hide();
         $('#btn_historicoOS').parent().hide();
@@ -71,33 +82,77 @@ $(function () {
         $('#btn_lancamentoVenda').parent().hide();
         $('#chk_cancelamentoVenda').parent().parent().hide();
         
-        if( $('#data_revisao_1').val() == '00/00/0000'){
+        if( $('#presenca_rev1').attr('data-anterior') == '' &&
+            $('#presenca_rev2').attr('data-anterior') == '' &&
+            $('#presenca_rev3').attr('data-anterior') == '' ){
+
+            $('#presenca_rev1').empty()
+            .append('<option value="" selected  >Selecione</option>')
+            .append('<option value="SIM" >Sim</option>')
+            .append('<option value="NAO" >Não</option>');
+            
+
             $('#btn_salvarOS').parent().show();
             
-            $('#data_revisao_1').val('').datepicker('update').removeAttr('disabled').focus();
-            $('#data_revisao_2').val('').attr('disabled', 'disabled');
-            $('#data_revisao_3').val('').attr('disabled', 'disabled');
+            // $('#data_revisao_1').attr('disabled','disabled').datepicker('update');
+            if( maiorData( $('#data_revisao_1').val(), dataAtual() ) == dataAtual() ){
+                $('#presenca_rev1').val('').removeAttr('disabled').focus();
+            }
             
-        }else if ( $('#data_revisao_1').val() != '00/00/0000' && $('#data_revisao_2').val() == '00/00/0000' ){
+
+            
+        }else if (  $('#presenca_rev1').attr('data-anterior') == 'SIM' && 
+                    $('#presenca_rev2').attr('data-anterior') == '' && 
+                    $('#presenca_rev3').attr('data-anterior') == '' ){
+            
+            $('#presenca_rev1, #presenca_rev2').empty()
+            .append('<option value="" selected  >Selecione</option>')
+            .append('<option value="SIM" >Sim</option>')
+            .append('<option value="NAO" >Não</option>');
+
+            $('#presenca_rev1').val($('#presenca_rev1').attr('data-anterior'));
+
+            $('#btn_salvarOS').parent().show();
+            
+            // $('#data_revisao_2').attr('disabled','disabled').datepicker('update');
+            if( maiorData( $('#data_revisao_2').val(), dataAtual() ) == dataAtual() ){
+                $('#presenca_rev2').val('').removeAttr('disabled').focus();
+            }
+            // $('#presenca_rev2').val('').removeAttr('disabled').focus();
+
+
+        }else if (  $('#presenca_rev1').attr('data-anterior') == 'SIM' && 
+                    $('#presenca_rev2').attr('data-anterior') == 'SIM' && 
+                    $('#presenca_rev3').attr('data-anterior') == '' ){
+
+            $('#presenca_rev1, #presenca_rev2, #presenca_rev3').empty()
+            .append('<option value="" selected  >Selecione</option>')
+            .append('<option value="SIM" >Sim</option>')
+            .append('<option value="NAO" >Não</option>');
+
+            $('#presenca_rev1').val($('#presenca_rev1').attr('data-anterior'));
+            $('#presenca_rev2').val($('#presenca_rev2').attr('data-anterior'));
+
             $('#btn_salvarOS').parent().show();
 
-            $('#data_revisao_1').attr('disabled', 'disabled');
-            $('#data_revisao_2').val('').datepicker('update').removeAttr('disabled').focus();
-            $('#data_revisao_3').val('').attr('disabled', 'disabled');
-
-        }else if ( $('#data_revisao_1').val() != '00/00/0000' && $('#data_revisao_2').val() != '00/00/0000' && $('#data_revisao_3').val() == '00/00/0000' ){
-            $('#btn_salvarOS').parent().show();
-
-            $('#data_revisao_1').attr('disabled', 'disabled');
-            $('#data_revisao_2').attr('disabled', 'disabled');
-            $('#data_revisao_3').val('').datepicker('update').removeAttr('disabled').focus();
+            // $('#data_revisao_3').attr('disabled','disabled').datepicker('update');
+            // $('#presenca_rev3').val('').removeAttr('disabled').focus();
+            if( maiorData( $('#data_revisao_3').val(), dataAtual() ) == dataAtual() ){
+                $('#presenca_rev3').val('').removeAttr('disabled').focus();
+            }
+            
 
         }else{
             $('#btn_salvarOS').parent().hide();
+            
+            $('#presenca_rev1, #presenca_rev2, #presenca_rev3').empty()
+            .append('<option value="" selected  >Selecione</option>')
+            .append('<option value="SIM" >Sim</option>')
+            .append('<option value="NAO" >Não</option>');
 
-            $('#data_revisao_1').attr('disabled', 'disabled');
-            $('#data_revisao_2').attr('disabled', 'disabled');
-            $('#data_revisao_3').attr('disabled', 'disabled');
+            $('#presenca_rev1').val($('#presenca_rev1').attr('data-anterior'));
+            $('#presenca_rev2').val($('#presenca_rev2').attr('data-anterior'));
+            $('#presenca_rev3').val($('#presenca_rev3').attr('data-anterior'));
         }
     
     // inicialização dos campos status CANCELADO        
@@ -311,7 +366,10 @@ $(function () {
     // busca as despesas do ID da OS pra completar o custo
     
     if( $('#custo_total').attr('data-anterior') != '' && 
-        $('#status').val() != 'Cancelada' && $('#data_revisao_3').val() == '' ){ //significa que o formulário está sendo editado e a OS está em produção ou Finalizada
+        $('#status').val() != 'Cancelada' && 
+        $('#presenca_rev1').attr('data-anterior') != 'NAO' &&
+        $('#presenca_rev2').attr('data-anterior') != 'NAO' &&
+        $('#presenca_rev3').attr('data-anterior') == '' ){ //significa que o formulário está sendo editado e a OS está em produção ou Finalizada
         
         var $idOS = $("#id");
         var $idOrc = $("#id_orcamento");
@@ -362,14 +420,14 @@ $(function () {
             $('#btn_cancelamentoVenda').parent().show();
             $('#btn_lancamentoVenda').parent().hide();
 
-            $('#motivo_cancelamento').val('').removeAttr('disabled').parent().parent().show();
+            $('#motivo_cancelamento').val('').blur().parent().parent().show();
             $('#motivo_cancelamento').focus();
 
         }else{
 
             $('#btn_cancelamentoVenda').parent().hide();
             $('#btn_lancamentoVenda').parent().show();
-            $('#motivo_cancelamento').val('').attr('disabled', 'disabled').parent().parent().hide();
+            $('#motivo_cancelamento').val('').blur().parent().parent().hide();
         }
 
     });
@@ -446,6 +504,9 @@ $(function () {
 
         if ($alteracoes.val() != '') { // Editar
 
+            $('#data_revisao_1').val( proximoDiaUtil( dataAtual(), 15 ) );
+            $('#data_revisao_2').val( proximoDiaUtil( dataAtual(), 30 ) );
+            $('#data_revisao_3').val( proximoDiaUtil( dataAtual(), 185 ) );
             // Faz um foreach em todos os campos do formulário para ver os valores atuais e os valores anteiores
             var campos_alterados = '';
             $('#form-principal').find('input[type=text], input[type=hidden]:not([name=alteracoes]), input[type=radio]:checked, textarea, select').each(function (index, el) {
@@ -471,7 +532,7 @@ $(function () {
             if (campos_alterados != '') {
 
                 $alteracoes.val($alteracoes.val() + '##' + campos_alterados);
-
+                console.log('alterações: ',$alteracoes.val());
                 $('#modalLancamentoVenda').modal('show');
 
             } else {
@@ -502,10 +563,11 @@ $(function () {
           success: data => {
             // deu certo o lançamento no fluxo de caixa da receita da O.S.   
             if(data == true){
-                
+                // console.log('lançou no caixa');
                 $formOS.find('#status').val('Finalizada');
-                $formOS.find('input').removeAttr('disabled');
+                $formOS.find('input, select, textarea').removeAttr('disabled');
 
+                
                 // finaliza o Ordem de Serviço no banco
                 $.ajax({
                     url: baselink + "/ajax/finalizarOS",
@@ -515,10 +577,12 @@ $(function () {
                     success: data => {
                         
                         if(data == true){
+                            // console.log('finalizou a OS')
                             // deu certo a finalização da ordem de serviço
                             // vai ser redirecionado pro browser, não precisa fazer nada
                         }else{
                             // deu errado a finalização da ordem de serviço
+                            // console.log('erro finalização OS')
                             // apagar os lançamentos feitos no caixa
                             var $idOS = $("#id");
                             var $titOrc = $('#titulo_orcamento');
@@ -542,7 +606,7 @@ $(function () {
                      
                     }
                   });
-
+                
                   $("#modalLancamentoVenda").modal("hide");
                   window.location.href = baselink+"/ordemservico";
                 
@@ -682,6 +746,12 @@ $(function () {
     $('#form-principal').on('submit', function(e){
         if( $(this)[0].checkValidity() == true && confirm('Tem Certeza?') ==  true) {
             $(this).find('input, select, textarea').removeAttr('disabled');
+            if( $('#presenca_rev1').attr('data-anterior') == 'SIM' &&
+                $('#presenca_rev2').attr('data-anterior') == 'SIM' &&
+                $('#presenca_rev3').val() == 'SIM'
+            ){
+                $('#garantia_vitalicia').val('Garantia Vitalícia');
+            }
         }else{
             e.preventDefault();
             e.stopPropagation();
@@ -825,4 +895,25 @@ function receitaOK() {
 
         return resposta;
     } 
+}
+
+function maiorData(data1, data2){
+    if(data1 != '' && data1 != undefined && data2 != '' && data2 != undefined){
+        var dt1aux, dt2aux;
+        dt1aux = data1.split('/');
+        dt1aux = parseInt( dt1aux[2]+dt1aux[1]+dt1aux[0] );
+        
+        dt2aux = data2.split('/');
+        dt2aux = parseInt( dt2aux[2]+dt2aux[1]+dt2aux[0] );
+
+        if( dt1aux > dt2aux ){
+            return data1;
+        }else if( dt1aux < dt2aux ){
+            return data2;
+        }else{
+            return 'iguais';
+        }
+    }else{
+        return 'erro';
+    }
 }

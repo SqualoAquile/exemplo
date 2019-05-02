@@ -59,7 +59,6 @@ class Ordemservico extends model {
 
 
     public function aprovar($request) {
-
         $ipcliente = $this->permissoes->pegaIPcliente();
         $request["alteracoes"] = ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - CADASTRO";
         
@@ -88,7 +87,8 @@ class Ordemservico extends model {
             
             $ipcliente = $this->permissoes->pegaIPcliente();
             $hist = explode("##", addslashes($request['alteracoes']));
-
+            
+            // echo $hist[1]; exit;
             if(!empty($hist[1])){ 
                 $request['alteracoes'] = $hist[0]." | ".ucwords($_SESSION["nomeUsuario"])." - $ipcliente - ".date('d/m/Y H:i:s')." - ALTERAÇÃO >> ".$hist[1];
             }else{
@@ -99,11 +99,11 @@ class Ordemservico extends model {
                 return false;
             }
             
+            // print_r($request); 
             $sharedaux = new Shared('ordemservico');
             $colunas = $sharedaux->nomeDasColunas();
-            // print_r($request); exit;
+            // print_r($colunas); exit;
             $request = $sharedaux->formataDadosParaBD($request);
-
             // print_r($request); exit;
             // Cria a estrutura key = 'valor' para preparar a query do sql
             $output = implode(', ', array_map(
@@ -116,12 +116,10 @@ class Ordemservico extends model {
 
             $sql = "UPDATE " . $this->table . " SET " . $output . " WHERE id='" . $id . "'";
             
-            // echo $sql; exit;
             self::db()->query($sql);
 
             $erro = self::db()->errorInfo();
 
-            // print_r($erro); exit;
             if (empty($erro[2])){
 
                 $_SESSION["returnMessage"] = [
