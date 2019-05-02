@@ -254,6 +254,8 @@ $(function () {
         }
     });
 
+    // $('#desconto').after(' <div class="form-check"><input class="form-check-input position-static" type="radio" name="blankRadio" id="blankRadio1" value="option1"></div>');
+    // $('#desconto_porcent').after();
 
     $("#desconto_porcent").on('change blur',function(){
         var $custo = $("#custo_total");
