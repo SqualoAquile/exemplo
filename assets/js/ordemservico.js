@@ -53,9 +53,9 @@ $(function () {
     // inicialização dos campos status EM PRODUÇÃO
     if($('#status').val() == 'Em Produção'){ 
 
-        $('#data_revisao_1').val('').attr('disabled', 'disabled').parent().parent().hide();
-        $('#data_revisao_2').val('').attr('disabled', 'disabled').parent().parent().hide();
-        $('#data_revisao_3').val('').attr('disabled', 'disabled').parent().parent().hide();
+        // $('#data_revisao_1').val('').attr('disabled', 'disabled').parent().parent().hide();
+        // $('#data_revisao_2').val('').attr('disabled', 'disabled').parent().parent().hide();
+        // $('#data_revisao_3').val('').attr('disabled', 'disabled').parent().parent().hide();
 
         $('#btn_salvarOS').parent().hide();
         $('#btn_historicoOS').parent().hide();
