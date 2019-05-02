@@ -1592,7 +1592,7 @@ function calculaCustoDeslocamento() {
     );
 
   let multiplicacaoCustoDesloc =
-    valorDeslocamentoFormated * custoDeslocamentoParamFormated;
+    valorDeslocamentoFormated * 2* custoDeslocamentoParamFormated;
 
   $deslocamentoCusto.val(floatParaPadraoBrasileiro(multiplicacaoCustoDesloc));
 
