@@ -77,6 +77,8 @@ $(function () {
     }else if($('#status').val() == 'Finalizada'){
 
         $('input, select,  textarea').attr('disabled','disabled');
+        $('[name=radioDesconto]').attr('disabled',true);
+
         
         $('#btn_historicoOS').parent().show();
         $('#btn_lancamentoVenda').parent().hide();
@@ -753,8 +755,8 @@ $(function () {
 
 
     // Radio e Listener para desconto em porcentagem ou absoluto
-    $('#desconto_porcent').before('<div class="form-check form-check-inline"><input class="form-check-input position-static" type="radio" name="radioDesconto" id="radioPorcent" value="porcent"></div>');
-    $('#desconto').before('<div class="form-check form-check-inline"><input class="form-check-input position-static" type="radio" name="radioDesconto" id="radioAbsoluto" value="absoluto"></div>');
+    $('#desconto_porcent').before('<div class="form-check form-check-inline"><input class="form-check-input position-static" type="radio" name="radioDesconto" id="radioPorcent" value="porcent" readonly="readonly"></div>');
+    $('#desconto').before('<div class="form-check form-check-inline"><input class="form-check-input position-static" type="radio" name="radioDesconto" id="radioAbsoluto" value="absoluto" readonly="readonly"></div>');
 
     // PADRÃO: Desconto em porcentagem
     $('#radioPorcent').attr('checked',true);
