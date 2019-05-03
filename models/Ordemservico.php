@@ -252,9 +252,42 @@ class Ordemservico extends model {
 
     public function imprimir($id){
         if(!empty($id)){
+
             $id = addslashes(trim($id));
             $infos=[];
-            $request = $_POST;
+
+            if (empty($_POST) && strpos($_SERVER['REQUEST_URI'], "?") !== false) {
+                
+                $QueryString = explode("&", explode("?", urldecode($_SERVER['REQUEST_URI']))[1]);
+                $ArrQueryString = [];
+                $indexArray = 0;
+    
+                foreach ($QueryString as $keyQueryString => $valueQueryString) {
+                    
+                    $final_split = explode('=', $valueQueryString);
+                    
+                    $keyTransformed = $final_split[0];
+                    $valueTransformed = $final_split[1];
+    
+                    if (strpos($keyTransformed, "[]") !== false) {
+                        
+                        $rplcKeyTransformed = str_replace("[]", "", $keyTransformed);
+                        
+                        $ArrQueryString[$rplcKeyTransformed][$indexArray] = $valueTransformed;
+                        
+                        $indexArray++;
+    
+                    } else {
+                        
+                        $ArrQueryString[$keyTransformed] = $valueTransformed;
+                        
+                    }
+                    
+                }
+                $request = $ArrQueryString;
+            } else {
+                $request = $_POST;
+            }
             
             //---------------------------------------------------------------------------------------------
             // Pega algumas infos da OS

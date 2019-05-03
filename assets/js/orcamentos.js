@@ -979,13 +979,21 @@ $(function () {
     if ($("[name=id_cliente]").val() != "0") {
       // Cliente já é cadastrado
       if (confirm("Tem Certeza?")) {
-        aprovarOrcamento();
+        $("#modalConfImp")
+          .attr('data-model', 'ordemservico')
+          .modal("show");
       }
     } else {
       // Necessário cadastrar o cliente antes de aprovar um orçamento
       $("#modalCadastrarCliente").modal("show");
     }
   });
+
+  $(document)
+    .on('submit', '#modalConfImp[data-model="ordemservico"] #formModal', function(event) {
+      event.preventDefault();
+      aprovarOrcamento($(event.target).serialize());
+    });
 
   $("#embaixo input").on("change", function () {
     valorTotal();
@@ -1842,7 +1850,7 @@ function resumoItens() {
   }
 }
 
-function aprovarOrcamento() {
+function aprovarOrcamento(formOsSerialize) {
 
   let $id_cliente = $("[name=id_cliente]"),
     $id_orcamento = $("#form-principal"),
@@ -1883,12 +1891,11 @@ function aprovarOrcamento() {
     motivo_cancelamento: ""
   };
 
-  ajaxAprovarOrcamento(dadosParaEnviar);
+  ajaxAprovarOrcamento(dadosParaEnviar, formOsSerialize);
 
 }
 
-function ajaxAprovarOrcamento(dadosParaEnviar) {
-
+function ajaxAprovarOrcamento(dadosParaEnviar, formOsSerialize) {
   $.ajax({
     url: baselink + "/ajax/aprovarOrcamento",
     type: "POST",
@@ -1896,25 +1903,8 @@ function ajaxAprovarOrcamento(dadosParaEnviar) {
     dataType: "json",
     success: function (data) {
       if (data.message[0] == "00000") {
-        $.ajax({
-          url: baselink + "/ajax/getIdOrdemServico",
-          type: "POST",
-          data: {
-            id_orcamento: dadosParaEnviar.id_orcamento
-          },
-          dataType: "json",
-          success: function (data) {
-            if (data.message[0] == "00000") {
-              window.open(
-                baselink +
-                "/ordemservico/imprimir/" +
-                data.id_ordemservico,
-                "_blank"
-              );
-              window.location.href = baselink + "/orcamentos";
-            }
-          }
-        });
+        window.open(baselink + "/ordemservico/imprimir/" + data.id_ordemservico + "?" + formOsSerialize, "_blank");
+        window.location.href = baselink + "/orcamentos";
       }
     }
   });
