@@ -744,11 +744,8 @@ class Ordemservico extends model {
 
     ';
 
-
-//arranjar outro jeito de direcionar o require
-$mpdf->WriteHTML($html);
-
-$mpdf->Output('OrdemServico.pdf','I');
+    $mpdf->WriteHTML($html);
+    $mpdf->Output('OrdemServico.pdf','I');
     
 
         }
