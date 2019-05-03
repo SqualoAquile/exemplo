@@ -183,13 +183,16 @@ class Orcamentos extends model {
             unset($request['observacao_cliente']);
         }
 
+        
+        if (isset($request['radioDesconto'])) {
+            echo "if";
+            unset($request['radioDesconto']);
+        } else {
+            echo "else";
+        }
         echo "<pre>";
         print_r($request);
         echo "</pre>";
-
-        if (isset($request['radioDesconto'])) {
-            unset($request['radioDesconto']);
-        }
         exit;
 
         $keys = implode(",", array_keys($request));
