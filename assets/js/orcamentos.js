@@ -475,8 +475,8 @@ $(function () {
       changeRequiredsPfPj();
       checarClienteCadastrado();
 
-      $('#desconto_porcent').trigger('blur');
-      $('#desconto').trigger('blur');
+      $('#desconto_porcent').trigger('focus');
+      $('#desconto').trigger('focus');
 
     })
     .on(
