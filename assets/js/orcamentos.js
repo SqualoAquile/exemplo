@@ -116,6 +116,7 @@ $(function () {
 
         valorTotal();
         habilitaBotaoOrcamento();
+        checarAlternativo();
         tabindex();
       }
     }
@@ -892,6 +893,7 @@ $(function () {
 
     valorTotal();
     habilitaBotaoOrcamento();
+    checarAlternativo();
     tabindex();
 
   });
@@ -980,10 +982,12 @@ $(function () {
   $("#embaixo input").on("change", function () {
     valorTotal();
     habilitaBotaoOrcamento();
+    checarAlternativo();
   });
 
   $("#esquerda input, #esquerda select").on("change", () => {
     habilitaBotaoOrcamento();
+    checarAlternativo();
   });
 
   $("#chk_cancelamentoOrc").click(function () {
@@ -1208,6 +1212,7 @@ $(function () {
 
 window.onload = function() {
   habilitaBotaoOrcamento();
+  checarAlternativo();
   tabindex();
 };
 
@@ -1878,6 +1883,8 @@ function setarClienteCadastrado(cliente) {
     }
 
     habilitaBotaoOrcamento();
+    checarAlternativo();
+    checarAlternativo();
 
   }
 }
@@ -1899,10 +1906,13 @@ function collapseObsCliente(observacao) {
 
 function habilitaBotaoOrcamento() {
 
-  var temAlteracao = false;
+  var temAlteracao = false,
+  $btnMainForm = $("#main-form"),
+  $btnAprovar = $('#aprovar-orcamento');
 
-  $('#form-principal .form-control:visible, #form-principal .form-check-input').each(function (i, el) {
-    var $this = $(el);
+  $('#form-principal').find('.form-control:visible, .form-check-input, input[type="hidden"][name="itens"]').each(function () {
+
+    var $this = $(this);
 
     if ($this.attr("type") == "radio") {
       $this = $this
@@ -1929,11 +1939,11 @@ function habilitaBotaoOrcamento() {
   });
 
   if (temAlteracao) {
-    $("#main-form").removeAttr("disabled");
-    $('#aprovar-orcamento').attr('disabled', 'disabled');
+    $btnMainForm.removeAttr("disabled");
+    $btnAprovar.attr('disabled', 'disabled');
   } else {
-    $("#main-form").attr("disabled", "disabled");
-    $('#aprovar-orcamento').removeAttr('disabled');
+    $btnMainForm.attr("disabled", "disabled");
+    $btnAprovar.removeAttr('disabled');
   }
 }
 
@@ -1969,4 +1979,47 @@ function limparDadosCliente() {
   // Quem Indicou
   // Observação do Cliente
   $('#esquerda').find('#telefone, #celular, #email, #como_conheceu, #quem_indicou, #observacao_cliente').val('');
+}
+
+function checarAlternativo() {
+
+  let $alternativos = $('#itensOrcamento tbody tr').filter(function() {
+    let tdTipoMaterial = $(this).find('td:eq(9)').text();
+    if (tdTipoMaterial) {
+      if (tdTipoMaterial.toLowerCase() == 'alternativo') {
+        return this;
+      }
+    }
+  }),
+  $btnAprovar = $('#aprovar-orcamento');
+
+  $('#material-alternativo-aprovar').remove();
+
+  if ($alternativos.length) {
+
+    if ($('[name="id_cliente"]').val() != '0') {
+      
+      // Não deixar aprovar
+      $btnAprovar.attr('disabled', 'disabled');
+  
+      $('#col-aprovar').parent('.row').before(`
+        <div id="material-alternativo-aprovar" class="row">
+          <div class="col-lg-12">
+            <div class="alert alert-warning" role="alert">
+              <h4 class="alert-heading">Atenção!</h4>
+              <hr>
+              <p>Não é possível <b>aprovar</b> um orçamento com materias alternativos.</p>
+              <p class="mb-0">Exclua-os ou transforme-os em principais.</p>
+            </div>
+          </div>
+        </div>
+      `);
+
+    }
+
+  } else {
+    
+    habilitaBotaoOrcamento();
+
+  }
 }
