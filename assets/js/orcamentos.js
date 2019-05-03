@@ -778,13 +778,15 @@ $(function () {
       event.preventDefault();
 
       if (event.target.checkValidity()) {
-        $.ajax({
-          url: baselink + "/ajax/adicionarCliente",
-          type: "POST",
-          data: $(event.target).serialize(),
-          dataType: "json",
-          success: cliente => setarClienteCadastrado(cliente)
-        });
+        if (confirm('Tem Certeza?')) {
+          $.ajax({
+            url: baselink + "/ajax/adicionarCliente",
+            type: "POST",
+            data: $(event.target).serialize(),
+            dataType: "json",
+            success: cliente => setarClienteCadastrado(cliente)
+          });
+        }
       }
     });
 
@@ -2080,7 +2082,7 @@ function setarClienteCadastrado(cliente) {
         }
       });
 
-      $comoConheceu.val($optionContato.val());
+      $comoConheceu.val($optionContato.val()).change();
       
     } else {
       $comoConheceu.val(cliente.comoconheceu).change();
