@@ -453,8 +453,8 @@ $(function () {
             .change();
         }
 
-
         collapseObsCliente($this.attr("data-observacao"));
+
       }
     )
     .on(
@@ -2119,7 +2119,7 @@ function habilitaBotaoOrcamento() {
   $btnMainForm = $("#main-form"),
   $btnAprovar = $('#aprovar-orcamento');
 
-  $('#form-principal').find('.form-control:visible, .form-check-input, input[type="hidden"][name="itens"]').each(function () {
+  $('#form-principal').find('.form-control:visible, .form-check-input, input[type="hidden"]:not([name="alteracao"])').each(function () {
 
     var $this = $(this);
 
