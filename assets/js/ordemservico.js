@@ -541,7 +541,7 @@ $(function () {
             if (campos_alterados != '') {
 
                 $alteracoes.val($alteracoes.val() + '##' + campos_alterados);
-                console.log('alterações: ',$alteracoes.val());
+                // console.log('alterações: ',$alteracoes.val());
                 $('#modalLancamentoVenda').modal('show');
 
             } else {
@@ -854,13 +854,13 @@ $(function () {
             
                 if( $custo.val() != '' && $custo.val() != undefined && $subtotal.val() != '' && $subtotal.val() != undefined && $desconto.val() != undefined && $desconto.val() != '' ){
 
-                    console.log('subtotal ',floatParaPadraoInternacional( $subtotal.val()));
-                    console.log('desconto ', $desconto.val());
+                    // console.log('subtotal ',floatParaPadraoInternacional( $subtotal.val()));
+                    // console.log('desconto ', $desconto.val());
 
                     precoaux = parseFloat( parseFloat( parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) - parseFloat( parseFloat( floatParaPadraoInternacional( $desconto.val() ) ) ) ).toFixed(2) );
-                    console.log('precoaux', precoaux);
+                    // console.log('precoaux', precoaux);
                     custoaux = parseFloat( parseFloat( floatParaPadraoInternacional( $custo.val() ) ).toFixed(2) );
-                    console.log('custoaux' ,custoaux);
+                    // console.log('custoaux' ,custoaux);
 
                     if( precoaux < custoaux ){
                         alert( 'O desconto dado faz o valor final ser menor do que custo total.' );

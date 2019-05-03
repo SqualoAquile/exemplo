@@ -708,10 +708,6 @@ $(function () {
                     rev30dias = Object.values(resultado['rev30dias']);
                     rev6meses = Object.values(resultado['rev6meses']);
 
-                    console.log('rev 15 dias: ', rev15dias);
-                    console.log('rev 30 dias: ', rev30dias);
-                    console.log('rev 6 meses: ', rev6meses);
-
                     $tabela2.find('tbody tr').remove();
 
                     for(var i = 0; i < rev15dias.length; i++ ){
@@ -862,7 +858,7 @@ $(function () {
                 dataType: 'json', 
                 success: function (resultado) { 
                     if (resultado){   
-                         console.log(resultado)
+                        //  console.log(resultado)
                         var eixoDatas = [], orcamentos = [], vendas = [], qtdorcamentos = [], qtdvendas = [];
                         var valorOrcado = parseFloat(0), valorVendido = parseFloat(0), qtdOrcs = parseInt(0), qtdVnd = parseInt(0);
 
