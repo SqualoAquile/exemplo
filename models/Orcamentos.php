@@ -183,6 +183,10 @@ class Orcamentos extends model {
             unset($request['observacao_cliente']);
         }
 
+        if (isset($request['radioDesconto'])) {
+            unset($request['radioDesconto']);
+        }
+
         $keys = implode(",", array_keys($request));
 
         $values = "'" . implode("','", array_values($this->shared->formataDadosParaBD($request))) . "'";
