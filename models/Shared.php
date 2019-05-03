@@ -797,7 +797,6 @@ class Shared extends model {
                     } 
 
                 } else {
-                    echo $valor;
                     echo $nomeColunas[$i]['Field'] . "<br>";
                     echo $chave . "<br><br>";
                 }
