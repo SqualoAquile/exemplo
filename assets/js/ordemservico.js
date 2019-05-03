@@ -181,6 +181,13 @@ $(function () {
           if (data["desconto_max"]) {
             desconto_maximo = floatParaPadraoInternacional(data["desconto_max"]);
             $("#desconto_porcent").attr("data-desconto_maximo", desconto_maximo);
+
+            // setar desconto absoluto
+            var $desconPorcentagem = $("#desconto_porcent");
+            var subtotal = parseFloat(floatParaPadraoInternacional($("#subtotal").val()));
+            var desc_max_porcent = parseFloat($desconPorcentagem.attr('data-desconto_maximo'));
+            var desc_max_abs = parseFloat( parseFloat(subtotal) * parseFloat(parseFloat(desc_max_porcent)/parseFloat(100))).toFixed(2);
+            $('#desconto').attr('data-desconto_maximo',desc_max_abs);
           }
         }
       });
@@ -748,12 +755,15 @@ $(function () {
     // Radio e Listener para desconto em porcentagem ou absoluto
     $('#desconto_porcent').before('<div class="form-check form-check-inline"><input class="form-check-input position-static" type="radio" name="radioDesconto" id="radioPorcent" value="porcent"></div>');
     $('#desconto').before('<div class="form-check form-check-inline"><input class="form-check-input position-static" type="radio" name="radioDesconto" id="radioAbsoluto" value="absoluto"></div>');
-    
 
+    // PADRÃO: Desconto em porcentagem
     $('#radioPorcent').attr('checked',true);
 
     // PARA BLOQUEAR OU ABRIR UM CAMPO
     $('[name=radioDesconto]').on('change', function(){
+        $('#desconto_porcent').val('0,00%').blur();
+        $('#desconto').val('0,00').blur();
+
         var radioValue = $("input[name='radioDesconto']:checked").val();
         if(radioValue == 'porcent'){
             $('#desconto_porcent').attr('disabled',false);
@@ -765,7 +775,6 @@ $(function () {
     });
 
     // PARA CALCULAR O VALOR DO DESCONTO
-
     $('#desconto_porcent, #desconto').on('change', function(){
 
         var estadoAbsoluto = document.getElementById('radioAbsoluto').checked;
@@ -818,6 +827,58 @@ $(function () {
             }
 
         }else if(estadoAbsoluto){
+            var $custo   = $("#custo_total");
+            var $subtotal = $("#subtotal");
+            var subtotal = floatParaPadraoInternacional($("#subtotal").val());
+            var $desconPorcentagem = $("#desconto_porcent");
+            var $desconto = $("#desconto");
+            var $valorFinal = $("#valor_final");
+
+            var desc_max, precoaux, custoaux, descaux;
+      
+            desc_max = parseFloat( $desconto.attr('data-desconto_maximo'));
+
+            if($desconto.val() == ''){
+                $desconto.val('0,00').blur();
+            }
+
+            if( desc_max != undefined && desc_max != '' ){
+                
+                if( $desconto.val() != undefined && $desconto.val() != ''){
+                    if( parseFloat( floatParaPadraoInternacional( $desconto.val() ) ) > desc_max ){
+                        alert('O valor máximo de desconto é ' + floatParaPadraoBrasileiro(desc_max) + '%');
+                        $desconto.val('0,00').blur();
+                        return;
+                    }
+                }
+            
+                if( $custo.val() != '' && $custo.val() != undefined && $subtotal.val() != '' && $subtotal.val() != undefined && $desconto.val() != undefined && $desconto.val() != '' ){
+
+                    console.log('subtotal ',floatParaPadraoInternacional( $subtotal.val()));
+                    console.log('desconto ', $desconto.val());
+
+                    precoaux = parseFloat( parseFloat( parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) - parseFloat( parseFloat( floatParaPadraoInternacional( $desconto.val() ) ) ) ).toFixed(2) );
+                    console.log('precoaux', precoaux);
+                    custoaux = parseFloat( parseFloat( floatParaPadraoInternacional( $custo.val() ) ).toFixed(2) );
+                    console.log('custoaux' ,custoaux);
+
+                    if( precoaux < custoaux ){
+                        alert( 'O desconto dado faz o valor final ser menor do que custo total.' );
+                        $desconto.val('0,00').blur();
+                        return;
+                    }else if( precoaux == custoaux ){
+                        alert( 'O desconto dado faz o valor final ser igual custo total.' );
+                        $desconto.val('0,00').blur();
+                        return;
+                    }else{
+                        descaux =  parseFloat(parseFloat(100) - parseFloat(parseFloat(parseFloat(precoaux) / parseFloat(subtotal)) * parseFloat(100))).toFixed(2);  
+                        
+                        $desconPorcentagem.val( floatParaPadraoBrasileiro( descaux ) + '%' );
+                        
+                        $valorFinal.val( floatParaPadraoBrasileiro( precoaux ) );
+                    }
+                }
+            }
 
         }
     });
