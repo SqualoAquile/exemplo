@@ -404,7 +404,7 @@ $(function () {
   ////////////////////////// COMENTADO BEM ATÉ AQUI ////////////////////////////////
 
   $(document)
-    .ready(function () {
+    .ready(function () {    
       $.ajax({
         url: baselink + "/ajax/getRelacionalDropdownOrcamentos",
         type: "POST",
@@ -474,6 +474,16 @@ $(function () {
       acoesByStatus();
       changeRequiredsPfPj();
       checarClienteCadastrado();
+
+      $('#desconto_porcent').trigger('change');
+      $('#desconto').trigger('change');
+
+      var subtotal = floatParaPadraoInternacional($("#sub_total").val());
+      var deslocamento = floatParaPadraoInternacional($("#custo_deslocamento").val());
+      var desconto = floatParaPadraoInternacional($("#desconto").val());
+      var $valorFinal = $("#valor_total");
+
+      $valorFinal.val(floatParaPadraoBrasileiro( parseFloat(parseFloat(subtotal) + parseFloat(deslocamento) - parseFloat(desconto))));
 
     })
     .on(
@@ -1226,31 +1236,30 @@ $(function () {
 
     // BAILE  
 
-    $('#desconto').attr('disabled',true);
+    //$('#desconto').attr('readonly','readonly');
 
     // Radio e Listener para desconto em porcentagem ou absoluto
-  $('#desconto_porcent').before('<div class="form-check form-check-inline"><input class="form-check-input position-static" type="radio" name="radioDesconto" id="radioPorcent" value="porcent" readonly="readonly"></div>');
-  $('#desconto').before('<div class="form-check form-check-inline"><input class="form-check-input position-static" type="radio" name="radioDesconto" id="radioAbsoluto" value="absoluto" readonly="readonly"></div>');
+  //$('#desconto_porcent').before('<div class="form-check form-check-inline"><input class="form-check-input position-static" type="radio" name="radioDesconto" id="radioPorcent" value="porcent" readonly="readonly"></div>');
+  //$('#desconto').before('<div class="form-check form-check-inline"><input class="form-check-input position-static" type="radio" name="radioDesconto" id="radioAbsoluto" value="absoluto" readonly="readonly"></div>');
 
 // PADRÃO: Desconto em porcentagem
-$('#radioPorcent').attr('checked',true);
+//$('#radioPorcent').attr('checked',true);
 
 // PARA BLOQUEAR OU ABRIR UM CAMPO
-$('[name=radioDesconto]').on('change', function(){
-    var radioValue = $("input[name='radioDesconto']:checked").val();
-
-    if(radioValue == 'porcent'){
-        $('#desconto_porcent').val('0,00%');
-        $('#desconto').val('0,00');
-        $('#desconto_porcent').attr('readonly',false);
-        $('#desconto').attr('readonly','readonly');
-    }else if(radioValue == 'absoluto'){
-        $('#desconto_porcent').val('0,00%');
-        $('#desconto').val('0,00');
-        $('#desconto').attr('readonly',false);
-        $('#desconto_porcent').attr('readonly','readonly');
-    }
-});
+//$('[name=radioDesconto]').on('change', function(){
+    //var radioValue = $("input[name='radioDesconto']:checked").val();
+//     if(radioValue == 'porcent'){
+//         $('#desconto_porcent').val('0,00%');
+//         $('#desconto').val('0,00');
+//         $('#desconto_porcent').attr('readonly',false);
+//         $('#desconto').attr('readonly','readonly');
+//     }else if(radioValue == 'absoluto'){
+//         $('#desconto_porcent').val('0,00%');
+//         $('#desconto').val('0,00');
+//         $('#desconto').attr('readonly',false);
+//         $('#desconto_porcent').attr('readonly','readonly');
+//     }
+// });
 
 // Listener do change do SubTotal, pra atualizar o valor do desconto absoluto
 
@@ -1262,109 +1271,211 @@ $('#sub_total').on('change', function(){
   $('#desconto').attr('data-desconto_maximo',desc_max_abs);
 });
 
-// PARA CALCULAR O VALOR DO DESCONTO
-$('#desconto_porcent, #desconto').on('change', function(){
 
-    var estadoAbsoluto = document.getElementById('radioAbsoluto').checked;
-    var estadoPorcent = document.getElementById('radioPorcent').checked;
+$('#desconto').on('blur', function(){
+var $custo   = $("#custo_total");
+      var $subtotal = $("#sub_total");
+      var subtotal = floatParaPadraoInternacional($("#sub_total").val());
+      var deslocamento = floatParaPadraoInternacional($("#custo_deslocamento").val());
+      var $desconPorcentagem = $("#desconto_porcent");
+      var $desconto = $("#desconto");
+      var $valorFinal = $("#valor_total");
 
-    if(estadoPorcent){
-        var $custo   = $("#custo_total");
-        var $subtotal = $("#sub_total");
-        var $desconPorcentagem = $("#desconto_porcent");
-        var $desconto = $("#desconto");
-        var $valorFinal = $("#valor_final");
+      var desc_max, precoaux, custoaux, descaux;
 
-        var desc_max, precoaux, custoaux, descaux;
-  
-        desc_max = parseFloat( $desconPorcentagem.attr('data-desconto_maximo'));
+      desc_max = parseFloat( $desconto.attr('data-desconto_maximo'));
 
-        if($desconPorcentagem.val() == ''){
-            $desconPorcentagem.val('0,00%').blur();
-        }
+      if($desconto.val() == ''){
+          $desconto.val('0,00').blur();
+      }
 
-        if( desc_max != undefined && desc_max != '' ){
-            
-            if( $desconPorcentagem.val() != undefined && $desconPorcentagem.val() != ''){
-                if( parseFloat( floatParaPadraoInternacional( $desconPorcentagem.val() ) ) > desc_max ){
-                    alert('O valor máximo de desconto é ' + floatParaPadraoBrasileiro(desc_max) + '%');
-                    $desconPorcentagem.val('0,00%').blur();
-                    return;
-                }
-            }
-        
-            if( $custo.val() != '' && $custo.val() != undefined && $subtotal.val() != '' && $subtotal.val() != undefined && $desconPorcentagem.val() != undefined && $desconPorcentagem.val() != '' ){
+      if( desc_max != undefined && desc_max != '' ){
+          
+          if( $desconto.val() != undefined && $desconto.val() != ''){
+              if( parseFloat( floatParaPadraoInternacional( $desconto.val() ) ) > desc_max ){
+                  alert('O valor máximo de desconto é ' + floatParaPadraoBrasileiro(desc_max));
+                  $desconto.val('0,00').blur();
+                  return;
+              }
+          }
+      
+          if( $custo.val() != '' && $custo.val() != undefined && $subtotal.val() != '' && $subtotal.val() != undefined && $desconto.val() != undefined && $desconto.val() != '' ){
 
-                precoaux = parseFloat( parseFloat( parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) * parseFloat( parseFloat(1) - parseFloat( parseFloat( floatParaPadraoInternacional( $desconPorcentagem.val() ) ) / parseFloat( 100 ) ) ) ).toFixed(2) );
-                custoaux = parseFloat( parseFloat( floatParaPadraoInternacional( $custo.val() ) ).toFixed(2) );
+              precoaux = parseFloat( parseFloat( parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) - parseFloat( parseFloat( floatParaPadraoInternacional( $desconto.val() ) ) ) ).toFixed(2) );
+              custoaux = parseFloat( parseFloat( floatParaPadraoInternacional( $custo.val() ) ).toFixed(2) );
 
-                if( precoaux < custoaux ){
-                    alert( 'O desconto dado faz o valor final ser menor do que custo total.' );
-                    $desconPorcentagem.val('0,00%').blur();
-                    return;
-                }else if( precoaux == custoaux ){
-                    alert( 'O desconto dado faz o valor final ser igual custo total.' );
-                    $desconPorcentagem.val('0,00%').blur();
-                    return;
-                }else{
-                    descaux =  parseFloat( parseFloat( parseFloat( floatParaPadraoInternacional( $desconPorcentagem.val() ) ) / parseFloat(100) ) * parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) ).toFixed(2);
-                    $desconto.val( floatParaPadraoBrasileiro( descaux ) );
-                    $valorFinal.val( floatParaPadraoBrasileiro( precoaux ) );
-                }
-            }
-        }
+              if( precoaux < custoaux ){
+                  alert( 'O desconto dado faz o valor final ser menor do que custo total.' );
+                  $desconto.val('0,00').blur();
+                  return;
+              }else if( precoaux == custoaux ){
+                  alert( 'O desconto dado faz o valor final ser igual custo total.' );
+                  $desconto.val('0,00').blur();
+                  return;
+              }else{
+                  descaux =  parseFloat(parseFloat(100) - parseFloat(parseFloat(parseFloat(precoaux) / parseFloat(subtotal)) * parseFloat(100))).toFixed(2);  
+                  
+                  $desconPorcentagem.val( floatParaPadraoBrasileiro( descaux ) + '%' );
+                  
+                  $valorFinal.val( floatParaPadraoBrasileiro( parseFloat(parseFloat(precoaux) + parseFloat(deslocamento))) ) ;
+              }
+          }
+      }
+  });
 
-    }else if(estadoAbsoluto){
-        var $custo   = $("#custo_total");
-        var $subtotal = $("#sub_total");
-        var subtotal = floatParaPadraoInternacional($("#sub_total").val());
-        var $desconPorcentagem = $("#desconto_porcent");
-        var $desconto = $("#desconto");
-        var $valorFinal = $("#valor_final");
+$('#desconto_porcent').on('blur', function(){
 
-        var desc_max, precoaux, custoaux, descaux;
-  
-        desc_max = parseFloat( $desconto.attr('data-desconto_maximo'));
+      var $custo   = $("#custo_total");
+      var $subtotal = $("#sub_total");
+      var deslocamento = floatParaPadraoInternacional($("#custo_deslocamento").val());
+      var $desconPorcentagem = $("#desconto_porcent");
+      var $desconto = $("#desconto");
+      var $valorFinal = $("#valor_total");
 
-        if($desconto.val() == ''){
-            $desconto.val('0,00').blur();
-        }
+      var desc_max, precoaux, custoaux, descaux;
 
-        if( desc_max != undefined && desc_max != '' ){
-            
-            if( $desconto.val() != undefined && $desconto.val() != ''){
-                if( parseFloat( floatParaPadraoInternacional( $desconto.val() ) ) > desc_max ){
-                    alert('O valor máximo de desconto é ' + floatParaPadraoBrasileiro(desc_max));
-                    $desconto.val('0,00').blur();
-                    return;
-                }
-            }
-        
-            if( $custo.val() != '' && $custo.val() != undefined && $subtotal.val() != '' && $subtotal.val() != undefined && $desconto.val() != undefined && $desconto.val() != '' ){
+      desc_max = parseFloat( $desconPorcentagem.attr('data-desconto_maximo'));
 
-                precoaux = parseFloat( parseFloat( parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) - parseFloat( parseFloat( floatParaPadraoInternacional( $desconto.val() ) ) ) ).toFixed(2) );
-                custoaux = parseFloat( parseFloat( floatParaPadraoInternacional( $custo.val() ) ).toFixed(2) );
+      if($desconPorcentagem.val() == ''){
+          $desconPorcentagem.val('0,00%').blur();
+      }
 
-                if( precoaux < custoaux ){
-                    alert( 'O desconto dado faz o valor final ser menor do que custo total.' );
-                    $desconto.val('0,00').blur();
-                    return;
-                }else if( precoaux == custoaux ){
-                    alert( 'O desconto dado faz o valor final ser igual custo total.' );
-                    $desconto.val('0,00').blur();
-                    return;
-                }else{
-                    descaux =  parseFloat(parseFloat(100) - parseFloat(parseFloat(parseFloat(precoaux) / parseFloat(subtotal)) * parseFloat(100))).toFixed(2);  
-                    
-                    $desconPorcentagem.val( floatParaPadraoBrasileiro( descaux ) + '%' );
-                    
-                    $valorFinal.val( floatParaPadraoBrasileiro( precoaux ) );
-                }
-            }
-        }
+      if( desc_max != undefined && desc_max != '' ){
+          
+          if( $desconPorcentagem.val() != undefined && $desconPorcentagem.val() != ''){
+              if( parseFloat( floatParaPadraoInternacional( $desconPorcentagem.val() ) ) > desc_max ){
+                  alert('O valor máximo de desconto é ' + floatParaPadraoBrasileiro(desc_max) + '%');
+                  $desconPorcentagem.val('0,00%').blur();
+                  return;
+              }
+          }
+      
+          if( $custo.val() != '' && $custo.val() != undefined && $subtotal.val() != '' && $subtotal.val() != undefined && $desconPorcentagem.val() != undefined && $desconPorcentagem.val() != '' ){
 
-    }
+              precoaux = parseFloat( parseFloat( parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) * parseFloat( parseFloat(1) - parseFloat( parseFloat( floatParaPadraoInternacional( $desconPorcentagem.val() ) ) / parseFloat( 100 ) ) ) ).toFixed(2) );
+              custoaux = parseFloat( parseFloat( floatParaPadraoInternacional( $custo.val() ) ).toFixed(2) );
+
+              if( precoaux < custoaux ){
+                  alert( 'O desconto dado faz o valor final ser menor do que custo total.' );
+                  $desconPorcentagem.val('0,00%').blur();
+                  return;
+              }else if( precoaux == custoaux ){
+                  alert( 'O desconto dado faz o valor final ser igual custo total.' );
+                  $desconPorcentagem.val('0,00%').blur();
+                  return;
+              }else{
+                  descaux =  parseFloat( parseFloat( parseFloat( floatParaPadraoInternacional( $desconPorcentagem.val() ) ) / parseFloat(100) ) * parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) ).toFixed(2);
+                  $desconto.val( floatParaPadraoBrasileiro( descaux ) );
+                  $valorFinal.val( floatParaPadraoBrasileiro( parseFloat(parseFloat(precoaux) + parseFloat(deslocamento))) );
+              }
+          }
+      }
 });
+
+
+// PARA CALCULAR O VALOR DO DESCONTO
+// $('#desconto_porcent, #desconto').on('change', function(){
+
+//     //var estadoAbsoluto = document.getElementById('radioAbsoluto').checked;
+//     //var estadoPorcent = document.getElementById('radioPorcent').checked;
+
+//     if(estadoPorcent){
+//         var $custo   = $("#custo_total");
+//         var $subtotal = $("#sub_total");
+//         var $desconPorcentagem = $("#desconto_porcent");
+//         var $desconto = $("#desconto");
+//         var $valorFinal = $("#valor_final");
+
+//         var desc_max, precoaux, custoaux, descaux;
+  
+//         desc_max = parseFloat( $desconPorcentagem.attr('data-desconto_maximo'));
+
+//         if($desconPorcentagem.val() == ''){
+//             $desconPorcentagem.val('0,00%').blur();
+//         }
+
+//         if( desc_max != undefined && desc_max != '' ){
+            
+//             if( $desconPorcentagem.val() != undefined && $desconPorcentagem.val() != ''){
+//                 if( parseFloat( floatParaPadraoInternacional( $desconPorcentagem.val() ) ) > desc_max ){
+//                     alert('O valor máximo de desconto é ' + floatParaPadraoBrasileiro(desc_max) + '%');
+//                     $desconPorcentagem.val('0,00%').blur();
+//                     return;
+//                 }
+//             }
+        
+//             if( $custo.val() != '' && $custo.val() != undefined && $subtotal.val() != '' && $subtotal.val() != undefined && $desconPorcentagem.val() != undefined && $desconPorcentagem.val() != '' ){
+
+//                 precoaux = parseFloat( parseFloat( parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) * parseFloat( parseFloat(1) - parseFloat( parseFloat( floatParaPadraoInternacional( $desconPorcentagem.val() ) ) / parseFloat( 100 ) ) ) ).toFixed(2) );
+//                 custoaux = parseFloat( parseFloat( floatParaPadraoInternacional( $custo.val() ) ).toFixed(2) );
+
+//                 if( precoaux < custoaux ){
+//                     alert( 'O desconto dado faz o valor final ser menor do que custo total.' );
+//                     $desconPorcentagem.val('0,00%').blur();
+//                     return;
+//                 }else if( precoaux == custoaux ){
+//                     alert( 'O desconto dado faz o valor final ser igual custo total.' );
+//                     $desconPorcentagem.val('0,00%').blur();
+//                     return;
+//                 }else{
+//                     descaux =  parseFloat( parseFloat( parseFloat( floatParaPadraoInternacional( $desconPorcentagem.val() ) ) / parseFloat(100) ) * parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) ).toFixed(2);
+//                     $desconto.val( floatParaPadraoBrasileiro( descaux ) );
+//                     $valorFinal.val( floatParaPadraoBrasileiro( precoaux ) );
+//                 }
+//             }
+//         }
+
+//     }else if(estadoAbsoluto){
+//         var $custo   = $("#custo_total");
+//         var $subtotal = $("#sub_total");
+//         var subtotal = floatParaPadraoInternacional($("#sub_total").val());
+//         var $desconPorcentagem = $("#desconto_porcent");
+//         var $desconto = $("#desconto");
+//         var $valorFinal = $("#valor_final");
+
+//         var desc_max, precoaux, custoaux, descaux;
+  
+//         desc_max = parseFloat( $desconto.attr('data-desconto_maximo'));
+
+//         if($desconto.val() == ''){
+//             $desconto.val('0,00').blur();
+//         }
+
+//         if( desc_max != undefined && desc_max != '' ){
+            
+//             if( $desconto.val() != undefined && $desconto.val() != ''){
+//                 if( parseFloat( floatParaPadraoInternacional( $desconto.val() ) ) > desc_max ){
+//                     alert('O valor máximo de desconto é ' + floatParaPadraoBrasileiro(desc_max));
+//                     $desconto.val('0,00').blur();
+//                     return;
+//                 }
+//             }
+        
+//             if( $custo.val() != '' && $custo.val() != undefined && $subtotal.val() != '' && $subtotal.val() != undefined && $desconto.val() != undefined && $desconto.val() != '' ){
+
+//                 precoaux = parseFloat( parseFloat( parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) - parseFloat( parseFloat( floatParaPadraoInternacional( $desconto.val() ) ) ) ).toFixed(2) );
+//                 custoaux = parseFloat( parseFloat( floatParaPadraoInternacional( $custo.val() ) ).toFixed(2) );
+
+//                 if( precoaux < custoaux ){
+//                     alert( 'O desconto dado faz o valor final ser menor do que custo total.' );
+//                     $desconto.val('0,00').blur();
+//                     return;
+//                 }else if( precoaux == custoaux ){
+//                     alert( 'O desconto dado faz o valor final ser igual custo total.' );
+//                     $desconto.val('0,00').blur();
+//                     return;
+//                 }else{
+//                     descaux =  parseFloat(parseFloat(100) - parseFloat(parseFloat(parseFloat(precoaux) / parseFloat(subtotal)) * parseFloat(100))).toFixed(2);  
+                    
+//                     $desconPorcentagem.val( floatParaPadraoBrasileiro( descaux ) + '%' );
+                    
+//                     $valorFinal.val( floatParaPadraoBrasileiro( precoaux ) );
+//                 }
+//             }
+//         }
+
+//     }
+// });
 
 });
 
@@ -1757,6 +1868,7 @@ function calculaCustoDeslocamento() {
   let $deslocamentoKm = $("#deslocamento_km"),
     $deslocamentoCusto = $("#custo_deslocamento"),
     $valorTotal = $("#valor_total"),
+    desconto = floatParaPadraoInternacional($('#desconto').val()),
     $subTotal = $("#sub_total"),
     custoDeslocamentoParam = $deslocamentoCusto.attr("data-custodesloc"),
     custoDeslocamentoParamFormated = parseFloat(custoDeslocamentoParam),
@@ -1777,7 +1889,7 @@ function calculaCustoDeslocamento() {
         floatParaPadraoInternacional(valorTotal)
       ),
       somaValorTotalCustoDesloc =
-        multiplicacaoCustoDesloc + valorTotalFormated;
+        parseFloat(parseFloat(multiplicacaoCustoDesloc) + parseFloat(valorTotalFormated) - parseFloat(desconto));
 
     $valorTotal.val(
       floatParaPadraoBrasileiro(somaValorTotalCustoDesloc.toFixed(2))

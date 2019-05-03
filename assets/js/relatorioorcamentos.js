@@ -88,6 +88,7 @@ $(function () {
     $('#DataTables_Table_0_wrapper').addClass('d-none');
     $('#graficos').addClass('d-none');
 
+
     $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
         resumo();
         dataTable.page.len(10).draw();
@@ -100,7 +101,6 @@ $(function () {
         dataTable.page.len(-1).draw();
         dataTable.draw();
     });
-
 
     $('#limpar-filtro').on('click', function () {
         $('#collapseFluxocaixaResumo').collapse('hide');

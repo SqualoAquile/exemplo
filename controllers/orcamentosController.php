@@ -498,7 +498,7 @@ class orcamentosController extends controller{
                 <td></td>
             </tr>';
 
-            if(isset($infos["preco_alternativo"]) && $infos["preco_alternativo"] != 0 && $temAlternativoGlobal==true ){
+            if((isset($infos["preco_alternativo"]) && $infos["preco_alternativo"] != 0) && (isset($temAlternativoGlobal) && $temAlternativoGlobal==true)){
 
                 $html.='
                 <tr>
@@ -582,11 +582,18 @@ class orcamentosController extends controller{
 
         ';
 
-
         //arranjar outro jeito de direcionar o require
         $mpdf->WriteHTML($html);
         $mpdf->Output('Orcamento.pdf','I');
-    
+        
+        
+        // create Imagick object
+        // $imagick = new Imagick();
+        // // Reads image from PDF
+        // $converted = $imagick->readImage($mpdf->Output('Orcamento.pdf'));
+        // // Writes an image or image sequence Example- converted-0.jpg, converted-1.jpg
+        // $imagick->writeImages($converted, false);
+
     }
 }   
             
