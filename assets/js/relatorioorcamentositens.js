@@ -174,7 +174,7 @@ $(function () {
 
     // exibir tudo
     dataTable.page.len(-1).draw();
-
+    dataTable.draw();
     $('#relatorioorcamentoitens-section').addClass('d-none');
 
     function resumo () {
@@ -279,19 +279,18 @@ $(function () {
     $('#relatorioorcamentoitens-section').addClass('d-none');
     $('#graficos').addClass('d-none');
 
-    $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
-        resumo();
+    $('#collapseFluxocaixaResumo').on('shown.bs.collapse', function () {
+        //resumo();
         dataTable.page.len(10).draw();
         dataTable.draw();
         $('#relatorioorcamentoitens-section').removeClass('d-none');
         drawChart(id);
       });
 
-    $('#collapseFluxocaixaResumo').on('hide.bs.collapse', function () {
-        document.getElementById('cardFiltros').click();
+    $('#collapseFluxocaixaResumo').on('hidden.bs.collapse', function () {
         $('#relatorioorcamentoitens-section').addClass('d-none');
-        dataTable.page.len(-1).draw();
-        dataTable.draw();
+        // dataTable.page.len(-1).draw();
+        // dataTable.draw();
     });
 
 
@@ -326,10 +325,13 @@ $(function () {
         });
 
         if (pesquisar) {
-            resumo();
-            $('#relatorioorcamentoitens-section').removeClass('d-none');
+            setTimeout(function(){
+                resumo();
+            }, 500);
         } else {
-            alert("Aplique um filtro para emitir um relatório!");
+            setTimeout(function(){ 
+                alert("Aplique um filtro para emitir um relatório!");
+            }, 500);
             event.stopPropagation();
         }
 

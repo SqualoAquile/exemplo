@@ -181,17 +181,17 @@ $(function () {
     // Fixo o filtro em "data de referência" e só passo os valores das datas
     $('#cardFiltros').find('.custom-select').val("1");
 
-
-    $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
-        resumo();
+    $('#collapseFluxocaixaResumo').on('shown.bs.collapse', function () {
+        //resumo();
         dataTable.page.len(10).draw();
+        dataTable.draw();
         $('#DataTables_Table_0_wrapper').removeClass('d-none');
         $('#collapseGraficos2').collapse('hide');
       });
 
-    $('#collapseFluxocaixaResumo').on('hide.bs.collapse', function () {
+    $('#collapseFluxocaixaResumo').on('hidden.bs.collapse', function () {
         $('#DataTables_Table_0_wrapper').addClass('d-none');
-        dataTable.page.len(-1).draw();
+        // dataTable.page.len(-1).draw();
     });
 
     $('#collapseGraficos2').on('show.bs.collapse', function () {
@@ -258,11 +258,14 @@ $(function () {
         });
 
         if (pesquisar) {
-            resumo();
-            $('#relatorioorcamentoitens-section').removeClass('d-none');
+            setTimeout(function(){
+                resumo();
+            }, 500);         
         } else {
-            alert("Aplique um filtro para emitir um relatório!");
-            event.stopPropagation();
+            setTimeout(function(){ 
+                alert("Aplique um filtro para emitir um relatório!");
+            }, 500);
+                event.stopPropagation(); 
         }
 
     });

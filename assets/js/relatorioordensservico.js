@@ -97,26 +97,23 @@ $(function () {
         $('#quantidadeOperacoes').text(parseInt(quantidadeOperacoes));
         $('#estimativaTaxa').text(floatParaPadraoBrasileiro(somasValor * taxa));            
 
-        // dataTable.page.len(10).draw();
-        // $('#DataTables_Table_0_length').removeClass('d-none');
-  
     };
 
     $('#DataTables_Table_0_length').addClass('d-none');
     $('#DataTables_Table_0_wrapper').addClass('d-none');
     $('#graficos').addClass('d-none');
 
-    $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
-        resumo();
+    $('#collapseFluxocaixaResumo').on('shown.bs.collapse', function () {
+        //resumo();
         dataTable.page.len(10).draw();
         dataTable.draw();
         $('#DataTables_Table_0_wrapper').removeClass('d-none');
       });
 
-    $('#collapseFluxocaixaResumo').on('hide.bs.collapse', function () {
+    $('#collapseFluxocaixaResumo').on('hidden.bs.collapse', function () {
         $('#DataTables_Table_0_wrapper').addClass('d-none');
-        dataTable.page.len(-1).draw();
-        dataTable.draw();
+        // dataTable.page.len(-1).draw();
+        // dataTable.draw();
     });
 
    
@@ -141,11 +138,14 @@ $(function () {
         });
 
         if (pesquisar) {
-            resumo();
-            $('#relatorioorcamentoitens-section').removeClass('d-none');
+            setTimeout(function(){
+                resumo();
+            }, 500);         
         } else {
-            alert("Aplique um filtro para emitir um relatório!");
-            event.stopPropagation();
+            setTimeout(function(){ 
+                alert("Aplique um filtro para emitir um relatório!");
+            }, 500);
+                event.stopPropagation(); 
         }
 
     });
