@@ -748,9 +748,9 @@ $mpdf->Output('OrdemServico.pdf','I');
 
             $revisoes = array();
 
-            // busca o custo total do orçamento
-            $sql2 = "SELECT * FROM ordemservico WHERE status = 'Finalizada' AND situacao = 'ativo' AND data_revisao_1 = '0000-00-00' AND data_revisao_2 = '0000-00-00' AND data_revisao_3 = '0000-00-00' AND DATE_ADD(data_fim, INTERVAL 15 DAY) BETWEEN '$dt1' AND '$dt2'  ORDER BY `data_fim` ASC ";
-
+            // busca as revisoes com data_revisao_1 entre dt1 e dt2
+            $sql2 = "SELECT * FROM ordemservico WHERE status = 'Finalizada' AND situacao = 'ativo' AND presenca_rev1 = '' AND data_revisao_1 BETWEEN '$dt1' AND '$dt2'  ORDER BY `data_fim` ASC ";
+            
             $sql2 = self::db()->query($sql2);
 
             $rev15dias = array();
@@ -759,8 +759,8 @@ $mpdf->Output('OrdemServico.pdf','I');
                 $rev15dias = $sql2->fetchAll(PDO::FETCH_ASSOC);
             }
             
-            // busca o custo total do orçamento
-            $sql3 = "SELECT * FROM ordemservico WHERE status = 'Finalizada' AND situacao = 'ativo' AND data_revisao_1 <> '0000-00-00' AND data_revisao_2 = '0000-00-00' AND data_revisao_3 = '0000-00-00' AND DATE_ADD(data_fim, INTERVAL 30 DAY) BETWEEN '$dt1' AND '$dt2'  ORDER BY `data_fim` ASC ";
+            // busca as revisoes com data_revisao_2 entre dt1 e dt2
+            $sql3 = "SELECT * FROM ordemservico WHERE status = 'Finalizada' AND situacao = 'ativo' AND presenca_rev1 = 'SIM' AND presenca_rev2 = '' AND data_revisao_2 BETWEEN '$dt1' AND '$dt2'  ORDER BY `data_fim` ASC ";
 
             $sql3 = self::db()->query($sql3);
 
@@ -770,9 +770,8 @@ $mpdf->Output('OrdemServico.pdf','I');
                 $rev30dias = $sql3->fetchAll(PDO::FETCH_ASSOC);
             }
 
-
-            // busca o custo total do orçamento
-            $sql4 = "SELECT * FROM ordemservico WHERE status = 'Finalizada' AND situacao = 'ativo' AND data_revisao_1 <> '0000-00-00' AND data_revisao_2 <> '0000-00-00' AND data_revisao_3 = '0000-00-00' AND DATE_ADD(data_fim, INTERVAL 6 MONTH) BETWEEN '$dt1' AND '$dt2'  ORDER BY `data_fim` ASC ";
+            // busca as revisoes com data_revisao_3 entre dt1 e dt2
+            $sql4 = "SELECT * FROM ordemservico WHERE status = 'Finalizada' AND situacao = 'ativo' AND presenca_rev1 = 'SIM' AND presenca_rev2 = 'SIM' AND presenca_rev3 = '' AND data_revisao_3 BETWEEN '$dt1' AND '$dt2'  ORDER BY `data_fim` ASC ";
 
             $sql4 = self::db()->query($sql4);
 
