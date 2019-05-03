@@ -361,7 +361,7 @@ class Ordemservico extends model {
 
             //---------------------------------------------------------------------------------------------
             $custoDeslocamento = $this->custoDeslocamento();
-            $custoDeslocamento = str_replace(",",".",$custoDeslocamento);
+            $custoDeslocamento = floatval(2) * floatval(str_replace(",",".",$custoDeslocamento));
             //---------------------------------------------------------------------------------------------
             unset($sql);
             // Pega as informações dos itens de orçamento através do ID de orçamento
@@ -670,7 +670,7 @@ class Ordemservico extends model {
                     <td></td>
                     <td></td>
                     <td align="right"><b>Preço Final:  </b></td>
-                    <td align="left"><b>R$ '.$infos["preco_final"].' </b> </td>
+                    <td align="left"><b>R$ '.$infos['preco_final'].' </b> </td>
                     <td></td>
                     <td></td>
                 </tr>

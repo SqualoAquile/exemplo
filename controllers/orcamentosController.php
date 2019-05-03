@@ -148,7 +148,7 @@ class orcamentosController extends controller{
         $qtdItens = $this->model->qtdItensOrcamento($id);
         $precoItens = $this->model->precosItens($id);
         $custoDeslocamento = $this->model->custoDeslocamento();
-        $custoDeslocamento = str_replace(",",".",$custoDeslocamento);
+        $custoDeslocamento = floatval(2) * floatval(str_replace(",",".",$custoDeslocamento));
 
         $infos["deslocamento"] = floatval($custoDeslocamento) * floatval($informacoes[0]['deslocamento_km']);
 
