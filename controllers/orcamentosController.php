@@ -585,12 +585,13 @@ class orcamentosController extends controller{
         //arranjar outro jeito de direcionar o require
         $mpdf->WriteHTML($html);
         $mpdf->Output('Orcamento.pdf','I');
-        
+        //$pdfOutput = $mpdf->Output('Orcamento.pdf','S');
+        //print_r($pdfOutput);exit;
         
         // create Imagick object
         // $imagick = new Imagick();
         // // Reads image from PDF
-        // $converted = $imagick->readImage($mpdf->Output('Orcamento.pdf'));
+        // $converted = $imagick->readImage($mpdf->Output('Orcamento.pdf','S'));
         // // Writes an image or image sequence Example- converted-0.jpg, converted-1.jpg
         // $imagick->writeImages($converted, false);
 
