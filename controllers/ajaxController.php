@@ -5,6 +5,7 @@ class ajaxController extends controller{
   private $servicos;
   private $clientes;
   private $orcamentos;
+  private $ordemservico;
 
   public function __construct() {
 
@@ -14,6 +15,7 @@ class ajaxController extends controller{
     $this->servicos = new Servicos;
     $this->clientes = new Clientes;
     $this->orcamentos = new Orcamentos;
+    $this->ordemservico = new Ordemservico;
 
     //verifica se está logado
     if($user->isLogged() == false){
@@ -543,7 +545,7 @@ class ajaxController extends controller{
   public function finalizarOS() {
      
       $dados = array();
-      $os = new Ordemservico();
+      $os = $this->ordemservico;
 
       if(isset($_POST) && !empty($_POST)){
         
@@ -563,7 +565,7 @@ class ajaxController extends controller{
   public function cancelarOS() {
 
     $dados = array();
-    $os = new Ordemservico();
+    $os = $this->ordemservico;
 
     if(isset($_POST) && !empty($_POST)){
 
@@ -605,20 +607,13 @@ class ajaxController extends controller{
 
   public function aprovarOrcamento() {
 
-    $ordemServico = new Ordemservico();
+    $ordemServico = $this->ordemservico;
 
     if(isset($_POST) && !empty($_POST)){
       $returnAprovar = $ordemServico->aprovar($_POST);
       if ($returnAprovar["message"][0] == "00000") {
         echo json_encode($this->orcamentos->aprovar($returnAprovar["id_orcamento"], $returnAprovar["id_ordemservico"]));
       }
-    }
-  }
-
-  public function getIdOrdemServico() {
-
-    if(isset($_POST) && !empty($_POST)){
-        echo json_encode($this->orcamentos->getIdOrdemServico($_POST["id_orcamento"]));
     }
   }
 
@@ -714,7 +709,7 @@ class ajaxController extends controller{
   public function buscaOrcamentos(){
     
     if(isset($_POST) && !empty($_POST)){
-      $orc = new Orcamentos();
+      $orc = $this->orcamentos;
       $dados = $orc->buscaOrcamentos($_POST['intervalo']);
     }
     echo json_encode($dados);
@@ -723,7 +718,7 @@ class ajaxController extends controller{
   public function buscaOrdensServicos(){
     
     if(isset($_POST) && !empty($_POST)){
-      $os = new Ordemservico();
+      $os = $this->ordemservico;
       $dados = $os->buscaOrdens($_POST['intervalo']);
     }
     echo json_encode($dados);

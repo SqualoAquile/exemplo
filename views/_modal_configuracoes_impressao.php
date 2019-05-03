@@ -66,13 +66,43 @@
         $('#modalConfImp').modal('toggle'); 
     });
 
-    $('#modalConfImp').on('shown.bs.modal', function (event) {
-        let id = $(event.relatedTarget).attr('data-id'),
-            $form = $(this).find('form');
+    $('#modalConfImp')
+        .on('show.bs.modal', function (event) {
+            
+            if ($(this).attr('data-model') == 'ordemservico') {
+                
+                let $checkMedidas = $(this).find('#checkMedidas');
 
-        $form.attr('action', '<?php echo BASE_URL . "/" . $modulo . "/imprimir/" ?>' + id);
+                $checkMedidas.parent('.form-check').hide();
+                $checkMedidas.prop('checked', false);
 
-    });
+            } else {
+
+                let id = $(event.relatedTarget).attr('data-id'),
+                    $form = $(this).find('form');
+        
+                $form.attr('action', '<?php echo BASE_URL . "/" . $modulo . "/imprimir/" ?>' + id);
+
+            }
+
+        })
+        .on('hidden.bs.modal', function (event) {
+
+            let $this = $(this),
+                $checkMedidas = $this.find('#checkMedidas'),
+                $checkAvisos = $('#checkAvisos'),
+                $collAvisos = $('#collapseAvisos');
+            
+            $checkMedidas.parent('.form-check').show();
+            $checkMedidas.prop('checked', true);
+            
+            $checkAvisos.prop('checked', false);
+            $collAvisos.find('.relacional-dropdown-input-avisos').val('');
+            $collAvisos.find('.relacional-dropdown-element-avisos [name="avisos[]"]').prop('checked', false);
+            $collAvisos.collapse('hide');
+
+            $this.removeAttr('data-model');
+        });
 
     $(document)
         .ready(function() {

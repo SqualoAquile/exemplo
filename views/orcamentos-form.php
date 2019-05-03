@@ -23,7 +23,7 @@
     <h1 class="display-4 m-0 text-capitalize font-weight-bold"><?php echo $viewInfo["title"]." ".ucfirst($labelTabela["labelForm"]); ?></h1>
 </header>
 
-<section class="mb-5">
+<section id="orcamentos-form-section" class="mb-5">
     <div class="col-lg-7 pr-lg-0 pl-lg-3 px-0 float-lg-right">
         <div id="direita" class="card card-body my-4 my-lg-0">
             <form method="DELETE" class="row" id="camposOrc" novalidate autocomplete="off">
