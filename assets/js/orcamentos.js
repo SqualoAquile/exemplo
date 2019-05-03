@@ -475,8 +475,15 @@ $(function () {
       changeRequiredsPfPj();
       checarClienteCadastrado();
 
-      $('#desconto_porcent').trigger('focus');
-      $('#desconto').trigger('focus');
+      $('#desconto_porcent').trigger('change');
+      $('#desconto').trigger('change');
+
+      var subtotal = floatParaPadraoInternacional($("#sub_total").val());
+      var deslocamento = floatParaPadraoInternacional($("#custo_deslocamento").val());
+      var desconto = floatParaPadraoInternacional($("#desconto").val());
+      var $valorFinal = $("#valor_total");
+
+      $valorFinal.val(floatParaPadraoBrasileiro( parseFloat(parseFloat(subtotal) + parseFloat(deslocamento) - parseFloat(desconto))));
 
     })
     .on(
@@ -1861,6 +1868,7 @@ function calculaCustoDeslocamento() {
   let $deslocamentoKm = $("#deslocamento_km"),
     $deslocamentoCusto = $("#custo_deslocamento"),
     $valorTotal = $("#valor_total"),
+    desconto = floatParaPadraoInternacional($('#desconto').val()),
     $subTotal = $("#sub_total"),
     custoDeslocamentoParam = $deslocamentoCusto.attr("data-custodesloc"),
     custoDeslocamentoParamFormated = parseFloat(custoDeslocamentoParam),
@@ -1881,7 +1889,7 @@ function calculaCustoDeslocamento() {
         floatParaPadraoInternacional(valorTotal)
       ),
       somaValorTotalCustoDesloc =
-        multiplicacaoCustoDesloc + valorTotalFormated;
+        parseFloat(parseFloat(multiplicacaoCustoDesloc) + parseFloat(valorTotalFormated) - parseFloat(desconto));
 
     $valorTotal.val(
       floatParaPadraoBrasileiro(somaValorTotalCustoDesloc.toFixed(2))
