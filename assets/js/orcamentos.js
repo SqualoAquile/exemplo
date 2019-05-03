@@ -404,87 +404,8 @@ $(function () {
   ////////////////////////// COMENTADO BEM ATÉ AQUI ////////////////////////////////
 
   $(document)
-    .ready(function () {    
-      $.ajax({
-        url: baselink + "/ajax/getRelacionalDropdownOrcamentos",
-        type: "POST",
-        data: {
-          tabela: "clientes"
-        },
-        dataType: "json",
-        success: function (data) {
-          // JSON Response - Ordem Alfabética
-          data.sort(function (a, b) {
-            a = a.nome.toLowerCase();
-            b = b.nome.toLowerCase();
-            return a < b ? -1 : a > b ? 1 : 0;
-          });
-
-          var htmlDropdown = "";
-
-          data.forEach(element => {
-
-            htmlDropdown +=
-              `
-              <div class="list-group-item list-group-item-action relacional-dropdown-element-cliente"
-                data-id="` +
-              element["id"] +
-              `"
-                data-tipo_pessoa="` +
-              element["tipo_pessoa"] +
-              `"
-                data-telefone="` +
-              element["telefone"] +
-              `"
-                data-celular="` +
-              element["celular"] +
-              `"
-                data-email="` +
-              element["email"] +
-              `"
-                data-comoconheceu="` +
-              element["comoconheceu"] +
-              `"
-                data-observacao="` +
-              element["observacao"] +
-              `"
-              >` +
-              element["nome"] +
-              `</div>
-            `;
-
-            if ($('[name="id_cliente"]').val() == element["id"]) {
-              if (element["observacao"]) {
-                $('#observacao_cliente')
-                  .attr('data-anterior', element["observacao"])
-                  .val(element["observacao"]);
-              }
-            }
-
-          });
-
-          $(
-            "#esquerda .relacional-dropdown-wrapper .dropdown-menu .dropdown-menu-wrapper"
-          ).html(htmlDropdown);
-        }
-      });
-
-      $('[name="tipo_servico_produto"]').change();
-
-      acoesByStatus();
-      changeRequiredsPfPj();
-      checarClienteCadastrado();
-
-      $('#desconto_porcent').trigger('change');
-      $('#desconto').trigger('change');
-
-      var subtotal = floatParaPadraoInternacional($("#sub_total").val());
-      var deslocamento = floatParaPadraoInternacional($("#custo_deslocamento").val());
-      var desconto = floatParaPadraoInternacional($("#desconto").val());
-      var $valorFinal = $("#valor_total");
-
-      $valorFinal.val(floatParaPadraoBrasileiro( parseFloat(parseFloat(subtotal) + parseFloat(deslocamento) - parseFloat(desconto))));
-
+    .ready(function () {
+      ajaxPopulaClientes();
     })
     .on(
       "click",
@@ -512,10 +433,26 @@ $(function () {
 
         $esquerda.find("[name=id_cliente]").val($this.attr("data-id"));
 
-        $esquerda
-          .find("[name=como_conheceu]")
-          .val($this.attr("data-comoconheceu"))
-          .change();
+        if ($this.attr("data-comoconheceu") === 'Contato') {
+
+          let $optionContato = $esquerda.find("[name=como_conheceu]").find('option').filter(function() {
+            if ($(this).text() == 'Contato') {
+              return this;
+            }
+          });
+
+          $esquerda
+            .find("[name=como_conheceu]")
+            .val($optionContato.val())
+            .change();
+          
+        } else {
+          $esquerda
+            .find("[name=como_conheceu]")
+            .val($this.attr("data-comoconheceu"))
+            .change();
+        }
+
 
         collapseObsCliente($this.attr("data-observacao"));
       }
@@ -895,10 +832,17 @@ $(function () {
       .find("[name=email]")
       .val($formClienteEsquerda.find("[name=email]").val());
 
+    let comoConheceuVal = $formClienteEsquerda.find("[name=como_conheceu]").val();
+
+    if (comoConheceuVal && comoConheceuVal.startsWith('Contato - ')) {
+      comoConheceuVal = 'Contato';
+    }
+
     // Como Conheceu
     $formClienteModal
       .find("[name=comoconheceu]")
-      .val($formClienteEsquerda.find("[name=como_conheceu]").val());
+      .val(comoConheceuVal);
+
   });
 
   $("#itensOrcamento").on("alteracoes", function () {
@@ -2115,6 +2059,8 @@ function setarClienteCadastrado(cliente) {
     
     $("#modalCadastrarCliente").modal("hide");
 
+    ajaxPopulaClientes();
+
     $form
       .find('[name="pf_pj"]#' + cliente.tipo_pessoa)
       .prop("checked", true)
@@ -2126,7 +2072,19 @@ function setarClienteCadastrado(cliente) {
     $celular.val(cliente.celular);
     $email.val(cliente.email);
 
-    $comoConheceu.val(cliente.comoconheceu).change();
+    if (cliente.comoconheceu == 'Contato') {
+
+      let $optionContato = $comoConheceu.find('option').filter(function() {
+        if ($(this).text() == 'Contato') {
+          return this;
+        }
+      });
+
+      $comoConheceu.val($optionContato.val());
+      
+    } else {
+      $comoConheceu.val(cliente.comoconheceu).change();
+    }
 
     $idCliente.val(cliente.id).change();
 
@@ -2275,3 +2233,84 @@ function checarAlternativo() {
   }
 }
 
+function ajaxPopulaClientes() {
+  $.ajax({
+    url: baselink + "/ajax/getRelacionalDropdownOrcamentos",
+    type: "POST",
+    data: {
+      tabela: "clientes"
+    },
+    dataType: "json",
+    success: function (data) {
+      // JSON Response - Ordem Alfabética
+      data.sort(function (a, b) {
+        a = a.nome.toLowerCase();
+        b = b.nome.toLowerCase();
+        return a < b ? -1 : a > b ? 1 : 0;
+      });
+
+      var htmlDropdown = "";
+
+      data.forEach(element => {
+
+        htmlDropdown +=
+          `
+          <div class="list-group-item list-group-item-action relacional-dropdown-element-cliente"
+            data-id="` +
+          element["id"] +
+          `"
+            data-tipo_pessoa="` +
+          element["tipo_pessoa"] +
+          `"
+            data-telefone="` +
+          element["telefone"] +
+          `"
+            data-celular="` +
+          element["celular"] +
+          `"
+            data-email="` +
+          element["email"] +
+          `"
+            data-comoconheceu="` +
+          element["comoconheceu"] +
+          `"
+            data-observacao="` +
+          element["observacao"] +
+          `"
+          >` +
+          element["nome"] +
+          `</div>
+        `;
+
+        if ($('[name="id_cliente"]').val() == element["id"]) {
+          if (element["observacao"]) {
+            $('#observacao_cliente')
+              .attr('data-anterior', element["observacao"])
+              .val(element["observacao"]);
+          }
+        }
+
+      });
+
+      $(
+        "#esquerda .relacional-dropdown-wrapper .dropdown-menu .dropdown-menu-wrapper"
+      ).html(htmlDropdown);
+    }
+  });
+
+  $('[name="tipo_servico_produto"]').change();
+
+  acoesByStatus();
+  changeRequiredsPfPj();
+  checarClienteCadastrado();
+
+  $('#desconto_porcent').trigger('change');
+  $('#desconto').trigger('change');
+
+  var subtotal = floatParaPadraoInternacional($("#sub_total").val());
+  var deslocamento = floatParaPadraoInternacional($("#custo_deslocamento").val());
+  var desconto = floatParaPadraoInternacional($("#desconto").val());
+  var $valorFinal = $("#valor_total");
+
+  $valorFinal.val(floatParaPadraoBrasileiro( parseFloat(parseFloat(subtotal) + parseFloat(deslocamento) - parseFloat(desconto))));
+}
