@@ -754,7 +754,6 @@ $(function () {
         var $custo   = $("#custo_total");
               var $subtotal = $("#subtotal");
               var subtotal = floatParaPadraoInternacional($("#subtotal").val());
-              var deslocamento = floatParaPadraoInternacional($("#custo_deslocamento").val());
               var $desconPorcentagem = $("#desconto_porcent");
               var $desconto = $("#desconto");
               var $valorFinal = $("#valor_final");
@@ -795,7 +794,7 @@ $(function () {
                           
                           $desconPorcentagem.val( floatParaPadraoBrasileiro( descaux ) + '%' );
                           
-                          $valorFinal.val( floatParaPadraoBrasileiro( precoaux + deslocamento ) );
+                          $valorFinal.val( floatParaPadraoBrasileiro( precoaux ) );
                       }
                   }
               }
@@ -806,7 +805,6 @@ $(function () {
               var $custo   = $("#custo_total");
               var $subtotal = $("#subtotal");
               var subtotal = floatParaPadraoInternacional($("#subtotal").val());
-              var deslocamento = floatParaPadraoInternacional($("#custo_deslocamento").val());
               var $desconPorcentagem = $("#desconto_porcent");
               var $desconto = $("#desconto");
               var $valorFinal = $("#valor_final");
@@ -845,7 +843,7 @@ $(function () {
                       }else{
                           descaux =  parseFloat( parseFloat( parseFloat( floatParaPadraoInternacional( $desconPorcentagem.val() ) ) / parseFloat(100) ) * parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) ).toFixed(2);
                           $desconto.val( floatParaPadraoBrasileiro( descaux ) );
-                          $valorFinal.val( floatParaPadraoBrasileiro( precoaux + deslocamento ) );
+                          $valorFinal.val( floatParaPadraoBrasileiro( precoaux ) );
                       }
                   }
               }
