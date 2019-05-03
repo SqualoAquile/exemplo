@@ -1226,7 +1226,7 @@ $(function () {
 
     // BAILE  
 
-    $('#desconto').attr('disabled',true);
+    $('#desconto').attr('readonly','readonly');
 
     // Radio e Listener para desconto em porcentagem ou absoluto
   $('#desconto_porcent').before('<div class="form-check form-check-inline"><input class="form-check-input position-static" type="radio" name="radioDesconto" id="radioPorcent" value="porcent" readonly="readonly"></div>');

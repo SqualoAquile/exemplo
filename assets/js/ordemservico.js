@@ -77,9 +77,8 @@ $(function () {
     }else if($('#status').val() == 'Finalizada'){
 
         $('input, select,  textarea').attr('disabled','disabled');
-        $('[name=radioDesconto]').attr('disabled',true);
+        $('[name=radioDesconto]').attr('readonly','readonly');
 
-        
         $('#btn_historicoOS').parent().show();
         $('#btn_lancamentoVenda').parent().hide();
         $('#chk_cancelamentoVenda').parent().parent().hide();
