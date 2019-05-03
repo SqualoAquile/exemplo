@@ -45,7 +45,7 @@ $(function () {
             dataType: 'json',
             success: callback
         });
-    };
+    }, 500;
 
     //
     // Validação Padrão de Email
