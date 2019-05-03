@@ -884,7 +884,6 @@ $(function () {
     });
 
 
-
     // SALVAR AS EDIÇÕES DA OS
     $('#form-principal').on('submit', function(e){
         if( $(this)[0].checkValidity() == true && confirm('Tem Certeza?') ==  true) {
