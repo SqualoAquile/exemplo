@@ -1884,6 +1884,7 @@ function setarClienteCadastrado(cliente) {
 
     habilitaBotaoOrcamento();
     checarAlternativo();
+    checarAlternativo();
 
   }
 }
