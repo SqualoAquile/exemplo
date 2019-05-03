@@ -750,7 +750,7 @@ $(function () {
 
     });
 
-    $('#desconto').on('blur', function(){
+    $('#desconto').on('change', function(){
         var $custo   = $("#custo_total");
               var $subtotal = $("#subtotal");
               var subtotal = floatParaPadraoInternacional($("#subtotal").val());
@@ -800,7 +800,7 @@ $(function () {
               }
           });
         
-        $('#desconto_porcent').on('blur', function(){
+        $('#desconto_porcent').on('change', function(){
         
               var $custo   = $("#custo_total");
               var $subtotal = $("#subtotal");
