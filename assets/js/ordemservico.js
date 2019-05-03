@@ -761,14 +761,16 @@ $(function () {
 
     // PARA BLOQUEAR OU ABRIR UM CAMPO
     $('[name=radioDesconto]').on('change', function(){
-        $('#desconto_porcent').val('0,00%').blur();
-        $('#desconto').val('0,00').blur();
-
         var radioValue = $("input[name='radioDesconto']:checked").val();
+
         if(radioValue == 'porcent'){
+            $('#desconto_porcent').val('0,00%');
+            $('#desconto').val('0,00');
             $('#desconto_porcent').attr('disabled',false);
             $('#desconto').attr('disabled',true);
         }else if(radioValue == 'absoluto'){
+            $('#desconto_porcent').val('0,00%');
+            $('#desconto').val('0,00');
             $('#desconto').attr('disabled',false);
             $('#desconto_porcent').attr('disabled',true);
         }
@@ -846,7 +848,7 @@ $(function () {
                 
                 if( $desconto.val() != undefined && $desconto.val() != ''){
                     if( parseFloat( floatParaPadraoInternacional( $desconto.val() ) ) > desc_max ){
-                        alert('O valor máximo de desconto é ' + floatParaPadraoBrasileiro(desc_max) + '%');
+                        alert('O valor máximo de desconto é ' + floatParaPadraoBrasileiro(desc_max));
                         $desconto.val('0,00').blur();
                         return;
                     }
@@ -854,13 +856,8 @@ $(function () {
             
                 if( $custo.val() != '' && $custo.val() != undefined && $subtotal.val() != '' && $subtotal.val() != undefined && $desconto.val() != undefined && $desconto.val() != '' ){
 
-                    // console.log('subtotal ',floatParaPadraoInternacional( $subtotal.val()));
-                    // console.log('desconto ', $desconto.val());
-
                     precoaux = parseFloat( parseFloat( parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) - parseFloat( parseFloat( floatParaPadraoInternacional( $desconto.val() ) ) ) ).toFixed(2) );
-                    // console.log('precoaux', precoaux);
                     custoaux = parseFloat( parseFloat( floatParaPadraoInternacional( $custo.val() ) ).toFixed(2) );
-                    // console.log('custoaux' ,custoaux);
 
                     if( precoaux < custoaux ){
                         alert( 'O desconto dado faz o valor final ser menor do que custo total.' );
@@ -882,7 +879,6 @@ $(function () {
 
         }
     });
-
 
 
     // SALVAR AS EDIÇÕES DA OS

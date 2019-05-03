@@ -270,7 +270,7 @@
                     value=""
                     data-mascara_validacao = "false" 
                 />
-                <label class="form-check-label" for="chk_cancelamentoVenda" > Cancelar Ordem de Serviço </label>
+                <label class="form-check-label" for="chk_cancelamentoVenda">Cancelar Ordem de Serviço</label>
             </div>
             <!-- <div id="btn_cancelamentoVenda"  class="btn btn-danger btn-block">Cancelar Ordem de Serviço</div> -->
         </div>
