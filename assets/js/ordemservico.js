@@ -782,7 +782,7 @@ $(function () {
                       custoaux = parseFloat( parseFloat( floatParaPadraoInternacional( $custo.val() ) ).toFixed(2) );
         
                       if( precoaux < custoaux ){
-                          alert( 'O desconto dado faz o valor final ser menor do que custo total.' );
+                          alert( 'O desconto dado faz o valor final ser menor do que custo total.-#desconto' );
                           $desconto.val('0,00').blur();
                           return;
                       }else if( precoaux == custoaux ){
@@ -833,7 +833,7 @@ $(function () {
                       custoaux = parseFloat( parseFloat( floatParaPadraoInternacional( $custo.val() ) ).toFixed(2) );
         
                       if( precoaux < custoaux ){
-                          alert( 'O desconto dado faz o valor final ser menor do que custo total.' );
+                          alert( 'O desconto dado faz o valor final ser menor do que custo total.-#desconto_porcent' );
                           $desconPorcentagem.val('0,00%').blur();
                           return;
                       }else if( precoaux == custoaux ){
