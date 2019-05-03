@@ -538,7 +538,6 @@ class ajaxController extends controller{
         echo json_encode(false);
 
       }
-      
     }
   }
 

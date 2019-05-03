@@ -675,7 +675,7 @@ $(function () {
             dataType: 'json', 
             success: function (resultado) { 
                 if(resultado){
-                    // console.log(resultado);
+                    
                     var dataAux, emprod = [];
 
                     emprod = Object.values(resultado['emproducao']);
@@ -707,6 +707,10 @@ $(function () {
                     rev15dias = Object.values(resultado['rev15dias']);
                     rev30dias = Object.values(resultado['rev30dias']);
                     rev6meses = Object.values(resultado['rev6meses']);
+
+                    console.log('rev 15 dias: ', rev15dias);
+                    console.log('rev 30 dias: ', rev30dias);
+                    console.log('rev 6 meses: ', rev6meses);
 
                     $tabela2.find('tbody tr').remove();
 
@@ -912,6 +916,13 @@ $(function () {
                                     display: true,
                                     position: "top"
                                 },
+                                scales:{
+                                    yAxes:[{
+                                        ticks:{
+                                            beginAtZero: true
+                                        }
+                                    }]
+                                }
                             }
                         }
                         
