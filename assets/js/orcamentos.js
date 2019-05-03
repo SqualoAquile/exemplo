@@ -404,7 +404,7 @@ $(function () {
   ////////////////////////// COMENTADO BEM ATÉ AQUI ////////////////////////////////
 
   $(document)
-    .ready(function () {
+    .ready(function () {    
       $.ajax({
         url: baselink + "/ajax/getRelacionalDropdownOrcamentos",
         type: "POST",
@@ -474,6 +474,9 @@ $(function () {
       acoesByStatus();
       changeRequiredsPfPj();
       checarClienteCadastrado();
+
+      $('#desconto_porcent').trigger('blur');
+      $('#desconto').trigger('blur');
 
     })
     .on(
