@@ -184,8 +184,14 @@ class Orcamentos extends model {
         }
 
         if (isset($request['radioDesconto'])) {
+            echo "if";
             unset($request['radioDesconto']);
         }
+
+        echo "<pre>";
+        print_r($request);
+        echo "</pre>";
+        exit;
 
         $keys = implode(",", array_keys($request));
 
