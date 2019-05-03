@@ -1242,13 +1242,13 @@ $('[name=radioDesconto]').on('change', function(){
     if(radioValue == 'porcent'){
         $('#desconto_porcent').val('0,00%');
         $('#desconto').val('0,00');
-        $('#desconto_porcent').attr('disabled',false);
-        $('#desconto').attr('disabled',true);
+        $('#desconto_porcent').attr('readonly','false');
+        $('#desconto').attr('readonly','readonly');
     }else if(radioValue == 'absoluto'){
         $('#desconto_porcent').val('0,00%');
         $('#desconto').val('0,00');
-        $('#desconto').attr('disabled',false);
-        $('#desconto_porcent').attr('disabled',true);
+        $('#desconto').attr('readonly',false);
+        $('#desconto_porcent').attr('readonly','readonly');
     }
 });
 
