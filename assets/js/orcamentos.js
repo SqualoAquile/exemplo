@@ -1268,7 +1268,7 @@ var $custo   = $("#custo_total");
       var subtotal = floatParaPadraoInternacional($("#sub_total").val());
       var $desconPorcentagem = $("#desconto_porcent");
       var $desconto = $("#desconto");
-      var $valorFinal = $("#valor_final");
+      var $valorFinal = $("#valor_total");
 
       var desc_max, precoaux, custoaux, descaux;
 
@@ -1318,7 +1318,7 @@ $('#desconto_porcent').on('blur', function(){
       var $subtotal = $("#sub_total");
       var $desconPorcentagem = $("#desconto_porcent");
       var $desconto = $("#desconto");
-      var $valorFinal = $("#valor_final");
+      var $valorFinal = $("#valor_total");
 
       var desc_max, precoaux, custoaux, descaux;
 
