@@ -10,9 +10,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col">
-                        <?php $txtBtnImprimir = "Imprimir" ?>
                         <?php if ($modulo !='ordemservico'): ?>
-                            <?php $txtBtnImprimir = "Imprimir e Aprovar" ?>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="checkbox" checked="checked" name="checkMedidas" id="checkMedidas" value="medidas">
                                 <label class="form-check-label" for="checkMedidas">Medidas</label>
@@ -57,7 +55,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-warning"><?php echo $txtBtnImprimir ?></button>
+                <button type="submit" class="btn btn-warning">Imprimir</button>
             </div>
         </form>
     </div>
