@@ -222,6 +222,11 @@ $(function() {
     }
 
     calculaSubtotalCustotal();
+    var $desconPorcentagem = $("#desconto_porcent");
+    var subtotal = parseFloat(floatParaPadraoInternacional($("#sub_total").val()));
+    var desc_max_porcent = parseFloat($desconPorcentagem.attr('data-descontomax'));
+    var desc_max_abs = parseFloat( parseFloat(subtotal) * parseFloat(parseFloat(desc_max_porcent)/parseFloat(100))).toFixed(2);
+    $('#desconto').attr('data-desconto_maximo',desc_max_abs);
     agruparTabela();
 
   }
