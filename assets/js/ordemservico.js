@@ -7,7 +7,7 @@ $(function () {
     $('#nome_razao_social').attr('disabled', 'disabled');
     $('#custo_total').attr('disabled', 'disabled');
     $('#subtotal').attr('disabled', 'disabled');
-    // $('#desconto').attr('disabled', 'disabled');
+    $('#desconto_porcent').attr('disabled', 'disabled');
     $('#valor_final').attr('disabled', 'disabled');
     $('#status').attr('disabled', 'disabled');
     $('#id_orcamento').attr('disabled', 'disabled').parent().parent().hide();
@@ -791,7 +791,7 @@ $(function () {
                       custoaux = parseFloat( parseFloat( floatParaPadraoInternacional( $custo.val() ) ).toFixed(2) );
         
                       if( precoaux < custoaux ){
-                          alert( 'O desconto dado faz o valor final ser menor do que custo total.-#desconto' );
+                          alert( 'O desconto dado faz o valor final ser menor do que custo total.' );
                           $desconto.val('0,00').blur();
                           return;
                       }else if( precoaux == custoaux ){
