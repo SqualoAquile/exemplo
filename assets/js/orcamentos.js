@@ -1692,7 +1692,6 @@ function toggleTipoMaterial(unidade) {
   }
 
   tabindex();
-
 }
 
 function changeTipoServicoProduto(setValueSuccess) {
