@@ -350,19 +350,19 @@ $(function () {
     calculaMaterialCustoPreco();
   });
 
-  $('#desconto_porcent').on('change', function() {
+  // $('#desconto_porcent').on('change', function() {
 
-    let $this = $(this),
-      descontoMax = $this.attr('data-descontomax');
+  //   let $this = $(this),
+  //     descontoMax = $this.attr('data-descontomax');
 
-    if (descontoMax && parseFloat($this.val()) > parseFloat(descontoMax)) {
-      $this.val('0%');
-      alert('O desconto máximo é de ' + descontoMax + '.');
-    }
+  //   if (descontoMax && parseFloat($this.val()) > parseFloat(descontoMax)) {
+  //     $this.val('0%');
+  //     alert('O desconto máximo é de ' + descontoMax + '.');
+  //   }
 
-  });
+  // });
 
-  $('#desconto').on('change', function() {
+  $('#desconto').on('change blur', function() {
 
     let $this = $(this),
       descontoMax = $this.attr('data-desconto_maximo');
