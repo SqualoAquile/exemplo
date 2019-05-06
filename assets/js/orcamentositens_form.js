@@ -1,4 +1,6 @@
 $(function() {
+
+  calculaSubtotalCustotal();
   
   var $tableItensOrcamento = $('#itensOrcamento'),
     lastInsertId = 0,
@@ -577,11 +579,15 @@ $(function() {
 
       $custotot.val(custototal);
       $subtot.val(precototal);
+
     } else {
+
       $custotot.val("0,00");
       $subtot.val("0,00");
 
-      $('#desconto_porcent, #desconto').val("0,00");
+      if (!$('#desconto_porcent').attr('data-anterior') && !$('#desconto').attr('data-anterior')) {
+        $('#desconto_porcent, #desconto').val("0,00");
+      }
 
     }
 

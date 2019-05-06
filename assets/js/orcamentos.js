@@ -107,13 +107,11 @@ $(function () {
       if (data["desconto_max"]) {
         $('#desconto_porcent').attr('data-descontomax', data["desconto_max"]);
         // setar desconto absoluto
-        if($("#sub_total").val()){
-          var $desconPorcentagem = $("#desconto_porcent");
-          var subtotal = parseFloat(floatParaPadraoInternacional($("#sub_total").val()));
-          var desc_max_porcent = parseFloat($desconPorcentagem.attr('data-descontomax'));
-          var desc_max_abs = parseFloat( parseFloat(subtotal) * parseFloat(parseFloat(desc_max_porcent)/parseFloat(100))).toFixed(2);
-          $('#desconto').attr('data-desconto_maximo',desc_max_abs);
-        }
+        var $desconPorcentagem = $("#desconto_porcent");
+        var subtotal = parseFloat(floatParaPadraoInternacional($("#sub_total").val()));
+        var desc_max_porcent = parseFloat($desconPorcentagem.attr('data-descontomax'));
+        var desc_max_abs = parseFloat( parseFloat(subtotal) * parseFloat(parseFloat(desc_max_porcent)/parseFloat(100))).toFixed(2);
+        $('#desconto').attr('data-desconto_maximo',desc_max_abs);
       }
 
       if (data["custo_deslocamento"]) {
@@ -121,12 +119,12 @@ $(function () {
           data["custo_deslocamento"]
         );
         $("#custo_deslocamento").attr("data-custodesloc", custodesloc);
-
-        valorTotal();
-        habilitaBotaoOrcamento();
-        checarAlternativo();
-        tabindex();
       }
+
+      valorTotal();
+      habilitaBotaoOrcamento();
+      checarAlternativo();
+      tabindex();
     }
   });
 
@@ -350,18 +348,6 @@ $(function () {
     calculaMaterialCustoPreco();
   });
 
-  // $('#desconto_porcent').on('change', function() {
-
-  //   let $this = $(this),
-  //     descontoMax = $this.attr('data-descontomax');
-
-  //   if (descontoMax && parseFloat($this.val()) > parseFloat(descontoMax)) {
-  //     $this.val('0%');
-  //     alert('O desconto máximo é de ' + descontoMax + '.');
-  //   }
-
-  // });
-
   $('#desconto').on('change blur', function() {
 
     let $this = $(this),
@@ -369,6 +355,7 @@ $(function () {
 
     if (descontoMax && parseFloat($this.val()) > parseFloat(descontoMax)) {
       $this.val('0,00');
+      $('#desconto_porcent').val('0,00');
       alert('O desconto máximo é de ' + descontoMax + '.');
     }
 
@@ -861,12 +848,10 @@ $(function () {
 
   $("#itensOrcamento").on("alteracoes", function () {
 
-    console.log('alteracoes');
-
     let $msgAlert = $("#invalid-feedback-zero-itens");
 
     $msgAlert.addClass("d-none");
-    if (!$("[name=itens]").val().length) {
+    if (!$("[name=itens]").val().length && $('#form-principal').hasClass('was-validated')) {
       $msgAlert.removeClass("d-none");
     }
 
@@ -880,6 +865,8 @@ $(function () {
   $("#main-form").click(function (event) {
     let $msgAlert = $("#invalid-feedback-zero-itens"),
       $forms = $("#form-principal, #camposOrc");
+
+    $('#embaixo input').blur();
 
     $msgAlert.addClass("d-none");
 
@@ -1197,60 +1184,7 @@ $(function () {
 
 
   $('#desconto').on('blur', function(){
-
-    var $custo   = $("#custo_total");
-    var $subtotal = $("#sub_total");
-    var subtotal = floatParaPadraoInternacional($("#sub_total").val());
-    var deslocamento = floatParaPadraoInternacional($("#custo_deslocamento").val());
-    var $desconPorcentagem = $("#desconto_porcent");
-    var $desconto = $("#desconto");
-    var $valorFinal = $("#valor_total");
-
-    var desc_max, precoaux, custoaux, descaux;
-
-    // setar desconto absoluto
-    var desc_max_porcent = parseFloat($desconPorcentagem.attr('data-descontomax'));
-    var desc_max_abs = parseFloat( parseFloat(subtotal) * parseFloat(parseFloat(desc_max_porcent)/parseFloat(100))).toFixed(2);
-    $desconto.attr('data-desconto_maximo',desc_max_abs);
-
-    desc_max = parseFloat( $desconto.attr('data-desconto_maximo'));
-
-    if($desconto.val() == ''){
-      $desconto.val('0,00').blur();
-    }
-
-    if( desc_max != undefined && desc_max != '' ){
-        
-      if( $desconto.val() != undefined && $desconto.val() != ''){
-        if( parseFloat( floatParaPadraoInternacional( $desconto.val() ) ) > desc_max ){
-          alert('O valor máximo de desconto é ' + floatParaPadraoBrasileiro(desc_max));
-          $desconto.val('0,00').blur();
-          return;
-        }
-      }
-    
-      if( $custo.val() != '' && $custo.val() != undefined && $subtotal.val() != '' && $subtotal.val() != undefined && $desconto.val() != undefined && $desconto.val() != '' ){
-
-        precoaux = parseFloat( parseFloat( parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) - parseFloat( parseFloat( floatParaPadraoInternacional( $desconto.val() ) ) ) ).toFixed(2) );
-        custoaux = parseFloat( parseFloat( floatParaPadraoInternacional( $custo.val() ) ).toFixed(2) );
-
-        if( precoaux < custoaux ){
-          alert( 'O desconto dado faz o valor final ser menor do que custo total.' );
-          $desconto.val('0,00').blur();
-          return;
-        }else if( precoaux == custoaux ){
-          alert( 'O desconto dado faz o valor final ser igual custo total.' );
-          $desconto.val('0,00').blur();
-          return;
-        }else{
-          descaux =  parseFloat(parseFloat(100) - parseFloat(parseFloat(parseFloat(precoaux) / parseFloat(subtotal)) * parseFloat(100))).toFixed(2);  
-          
-          $desconPorcentagem.val( floatParaPadraoBrasileiro( descaux ) + '%' );
-          
-          $valorFinal.val( floatParaPadraoBrasileiro( parseFloat(parseFloat(precoaux) + parseFloat(deslocamento))) ) ;
-        }
-      }
-    }
+    calculaDesconto();
   });
 });
 
@@ -1261,6 +1195,64 @@ window.onload = function() {
 };
 
 function calculaDesconto() {
+  
+  var $custo   = $("#custo_total");
+  var $subtotal = $("#sub_total");
+  var subtotal = floatParaPadraoInternacional($("#sub_total").val());
+  var deslocamento = floatParaPadraoInternacional($("#custo_deslocamento").val());
+  var $desconPorcentagem = $("#desconto_porcent");
+  var $desconto = $("#desconto");
+  var $valorFinal = $("#valor_total");
+
+  var desc_max, precoaux, custoaux, descaux;
+
+  // setar desconto absoluto
+  var desc_max_porcent = parseFloat($desconPorcentagem.attr('data-descontomax'));
+  var desc_max_abs = parseFloat( parseFloat(subtotal) * parseFloat(parseFloat(desc_max_porcent)/parseFloat(100))).toFixed(2);
+  $desconto.attr('data-desconto_maximo',desc_max_abs);
+
+  desc_max = parseFloat( $desconto.attr('data-desconto_maximo'));
+
+  if( desc_max != undefined && desc_max != '' ){
+      
+    if( $desconto.val() != undefined && $desconto.val() != ''){
+      if( parseFloat( floatParaPadraoInternacional( $desconto.val() ) ) > desc_max ){
+        alert('O valor máximo de desconto é ' + floatParaPadraoBrasileiro(desc_max));
+        $desconPorcentagem.val('0,00');
+        $desconto.val('0,00');
+        return;
+      }
+    } else {
+      $desconPorcentagem.val('0,00');
+      $desconto.val('0,00');
+    }
+  
+    if( $custo.val() != '' && $custo.val() != undefined && $subtotal.val() != '' && $subtotal.val() != undefined){
+
+      precoaux = parseFloat( parseFloat( parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) - parseFloat( parseFloat( floatParaPadraoInternacional( $desconto.val() ) ) ) ).toFixed(2) );
+      custoaux = parseFloat( parseFloat( floatParaPadraoInternacional( $custo.val() ) ).toFixed(2) );
+
+      if( precoaux < custoaux ){
+        if (precoaux && custoaux) {
+            alert( 'O desconto dado faz o valor final ser menor do que custo total.' );
+            $desconto.val('0,00');
+        }
+      }else if( precoaux == custoaux ){
+        if (precoaux && custoaux) {
+          alert( 'O desconto dado faz o valor final ser igual custo total.' );
+        }
+        $desconto.val('0,00');
+      }else{
+
+        descaux =  parseFloat(parseFloat(100) - parseFloat(parseFloat(parseFloat(precoaux) / parseFloat(subtotal)) * parseFloat(100))).toFixed(2);  
+        
+        $desconPorcentagem.val( floatParaPadraoBrasileiro( descaux ) + '%' );
+        
+        $valorFinal.val( floatParaPadraoBrasileiro( parseFloat(parseFloat(precoaux) + parseFloat(deslocamento))) ) ;
+
+      }
+    }
+  }
 };
 
 function dataAtual() {
@@ -1616,8 +1608,6 @@ function changeTipoServicoProduto(setValueSuccess) {
 }
 
 function valorTotal() {
-  
-  console.log('function valorTotal')
 
   let somaTotal = 0;
   $("#itensOrcamento tbody tr").each(function () {
@@ -1633,20 +1623,15 @@ function valorTotal() {
     }
   });
 
-  console.log('somaTotal', somaTotal)
-
   $('[name="valor_total"]').val(floatParaPadraoBrasileiro(somaTotal));
 
-  if ($("#form-principal").hasClass("was-validated")) {
-    $('[name="valor_total"]').blur();
-  }
-
   calculaCustoDeslocamento();
-  // calculaDesconto();
+  calculaDesconto();
   resumoItens();
 }
 
 function calculaCustoDeslocamento() {
+
   let $deslocamentoKm = $("#deslocamento_km"),
     $deslocamentoCusto = $("#custo_deslocamento"),
     $valorTotal = $("#valor_total"),
@@ -1663,6 +1648,7 @@ function calculaCustoDeslocamento() {
     valorDeslocamentoFormated * 2* custoDeslocamentoParamFormated;
 
   $deslocamentoCusto.val(floatParaPadraoBrasileiro(multiplicacaoCustoDesloc));
+  $deslocamentoKm.val(valorDeslocamentoFormated);
 
   // Acrescentar valor de deslocamento ao valor total
   if ($subTotal.val()) {
