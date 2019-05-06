@@ -173,13 +173,13 @@
             </div>
 
             <!-- Tabelas de lançamentos vencidos e por vencer -->
-            <div class="card card-body my-3">
+            <div class="card card-body my-3" >
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-lg-6">
                         <div class="card card-body">
                             <div class="card-header text-center"><h6 class="text-weight-bold text-dark">Lançamento Vencidos</h6></div>
                             <div class="card-body" >
-                                <div class="table-responsive tableFixHead" style="max-height: 300px; overflow-y: auto; overflow-x: auto;">
+                                <div class="table-responsive tableFixHead" >
                                     <table id="lancamentos_vencidos" class="table  table-hover bg-white table-nowrap" >
                                         <thead>
                                             <tr>
@@ -197,11 +197,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-6">
+                    <div class="col-lg-6">
                         <div class="card card-body">
                             <div class="card-header text-center"><h6 id="titulo_proxVenc" class="text-weight-bold text-dark">Lançamento Com Vencimento Próximo</h6></div>
                             <div class="card-body" >
-                                <div class="table-responsive tableFixHead" style="max-height: 300px; overflow-y: auto; overflow-x: auto;">
+                                <div class="table-responsive tableFixHead" >
                                     <table id="lancamentos_vencProximo" class="table table-hover bg-white table-nowrap" >
                                         <thead>
                                             <tr>
@@ -301,7 +301,7 @@
             <!-- Tabelas de lançamentos vencidos e por vencer -->
             <div class="card card-body my-3">
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-lg-6">
                         <div class="card card-body">
                             <div class="card-header text-center"><h6 class="text-weight-bold text-dark">Orçamentos Em Aberto / Recontato</h6></div>
                             <div class="card-body" >
@@ -324,7 +324,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-6">
+                    <div class="col-lg-6">
                         <div class="card card-body">
                             <div class="card-header text-center"><h6 id="titulo_proxOrc" class="text-weight-bold text-dark">Orçamentos com data de retorno dentro dos próximos 5 dias</h6></div>
                             <div class="card-body" >
@@ -353,7 +353,7 @@
             <!-- Tabelas de ordens de serviço em produção e o.s. com revisões próximas -->
             <div class="card card-body my-3">
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-lg-6">
                         <div class="card card-body">
                             <div class="card-header text-center"><h6 class="text-weight-bold text-dark">O.S. Em Produção</h6></div>
                             <div class="card-body" >
@@ -376,7 +376,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-6">
+                    <div class="col-lg-6">
                         <div class="card card-body">
                             <div class="card-header text-center"><h6 id="titulo_proxRev" class="text-weight-bold text-dark">O.S. com revisão dentro dos próximos dias</h6></div>
                             <div class="card-body" >

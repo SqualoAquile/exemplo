@@ -14,6 +14,7 @@ $(function () {
     $('#garantia_vitalicia').attr('disabled', 'disabled').parent().parent().hide();
     $('#motivo_cancelamento').parent().parent().hide();
     $('#btn_cancelamentoVenda').parent().hide();
+    $('#desconto_porcent').attr('disabled', 'disabled');
 
     $('#id').attr('disabled', 'disabled').parent().parent().css('order','1').show();
     $('#id').siblings('label').text('* Número do Pedido');
@@ -35,6 +36,18 @@ $(function () {
         $('#data_emissao_nf').attr('data-anterior','');
     }
 
+    if( $('#data_inicio').val() == '00/00/0000'){
+        $('#data_inicio').attr('data-anterior','');
+        $('#data_inicio').attr('value','');
+        $('#data_inicio').val('').datepicker('update');
+    }
+
+    if( $('#data_fim').val() == '00/00/0000'){
+        $('#data_fim').attr('data-anterior','');
+        $('#data_fim').attr('value','');
+        $('#data_fim').val('').datepicker('update');
+    }
+
     if( $('#data_aprovacao').val() == '00/00/0000' || $('#data_aprovacao').val() == '' ){
         $('#data_inicio').val('');
     }else{
@@ -44,10 +57,6 @@ $(function () {
             $('#data_inicio').val('');
         }
         
-    }
-
-    if( $('#data_fim').val() == '00/00/0000'){
-        $('#data_fim').val('').datepicker('update');
     }
 
     if( $('#data_emissao_nf').val() == '00/00/0000'){
@@ -66,8 +75,8 @@ $(function () {
         $('#data_revisao_3').val('').attr('disabled', 'disabled').parent().parent().hide();
         $('#presenca_rev3').val('').attr('disabled', 'disabled').parent().parent().hide();
 
-        $('#btn_salvarOS').parent().hide();
-        $('#btn_historicoOS').parent().hide();
+        $('#btn_salvarOS').parent().show();
+        $('#btn_historicoOS').parent().show();
         $('#btn_lancamentoVenda').parent().show();
         $('#chk_cancelamentoVenda').parent().parent().show();
 
@@ -75,7 +84,7 @@ $(function () {
     }else if($('#status').val() == 'Finalizada'){
 
         $('input, select,  textarea').attr('disabled','disabled');
-        //$('[name=radioDesconto]').attr('readonly','readonly');
+        $('#observacao').removeAttr('disabled');
 
         $('#btn_historicoOS').parent().show();
         $('#btn_lancamentoVenda').parent().hide();
@@ -90,15 +99,10 @@ $(function () {
             .append('<option value="SIM" >Sim</option>')
             .append('<option value="NAO" >Não</option>');
             
-
-            $('#btn_salvarOS').parent().show();
-            
-            // $('#data_revisao_1').attr('disabled','disabled').datepicker('update');
-            if( maiorData( $('#data_revisao_1').val(), dataAtual() ) == dataAtual() ){
+            if( maiorData( $('#data_revisao_1').val(), dataAtual() ) == dataAtual() || 
+                maiorData( $('#data_revisao_1').val(), dataAtual() ) == 'iguais' ){
                 $('#presenca_rev1').val('').removeAttr('disabled').focus();
             }
-            
-
             
         }else if (  $('#presenca_rev1').attr('data-anterior') == 'SIM' && 
                     $('#presenca_rev2').attr('data-anterior') == '' && 
@@ -110,15 +114,11 @@ $(function () {
             .append('<option value="NAO" >Não</option>');
 
             $('#presenca_rev1').val($('#presenca_rev1').attr('data-anterior'));
-
-            $('#btn_salvarOS').parent().show();
             
-            // $('#data_revisao_2').attr('disabled','disabled').datepicker('update');
-            if( maiorData( $('#data_revisao_2').val(), dataAtual() ) == dataAtual() ){
+            if( maiorData( $('#data_revisao_2').val(), dataAtual() ) == dataAtual() ||
+                maiorData( $('#data_revisao_2').val(), dataAtual() ) == 'iguais' ){
                 $('#presenca_rev2').val('').removeAttr('disabled').focus();
             }
-            // $('#presenca_rev2').val('').removeAttr('disabled').focus();
-
 
         }else if (  $('#presenca_rev1').attr('data-anterior') == 'SIM' && 
                     $('#presenca_rev2').attr('data-anterior') == 'SIM' && 
@@ -132,11 +132,8 @@ $(function () {
             $('#presenca_rev1').val($('#presenca_rev1').attr('data-anterior'));
             $('#presenca_rev2').val($('#presenca_rev2').attr('data-anterior'));
 
-            $('#btn_salvarOS').parent().show();
-
-            // $('#data_revisao_3').attr('disabled','disabled').datepicker('update');
-            // $('#presenca_rev3').val('').removeAttr('disabled').focus();
-            if( maiorData( $('#data_revisao_3').val(), dataAtual() ) == dataAtual() ){
+            if( maiorData( $('#data_revisao_3').val(), dataAtual() ) == dataAtual() ||
+                maiorData( $('#data_revisao_3').val(), dataAtual() ) == 'iguais' ){
                 $('#presenca_rev3').val('').removeAttr('disabled').focus();
             }
             
@@ -227,7 +224,7 @@ $(function () {
                 }
             } 
         }else{
-            $('#data_inicio').val( $('#data_aprovacao').val() ).datepicker('update');
+            // $('#data_inicio').val( $('#data_aprovacao').val() ).datepicker('update');
         }
     });
 
@@ -483,27 +480,31 @@ $(function () {
 
     $('#btn_lancamentoVenda').click(function(){
         if( $('#vendedor').val() == '' ){
-            alert('Preencha todos os campos obrigatórios (*).');
+            alert('Preencha o campo Vendedor.');
             $('#vendedor').focus();
             return;
         } if( $('#tec_responsavel').val() == '' ){
-            alert('Preencha todos os campos obrigatórios (*).');
+            alert('Preencha o campo Técnico Responsável.');
             $('#tec_responsavel').focus();
             return;
         } if( $('#data_inicio').val() == '' ){
-            alert('Preencha todos os campos obrigatórios (*).');
+            alert('Preencha o campo Data de Início.');
             $('#data_inicio').focus();
             return;
         } if( $('#data_fim').val() == '' ){
-            alert('Preencha todos os campos obrigatórios (*).');
+            alert('Preencha o campo Data de Finalização.');
             $('#data_fim').focus();
             return;
         } if( $('#desconto_porcent').val() == '' ){
-            alert('Preencha todos os campos obrigatórios (*).');
+            alert('O campo Desconto (%) deve estra preenchido.');
+            $('#desconto_porcent').focus();
+            return;
+        }if( $('#desconto').val() == '' ){
+            alert('Preencha o campo Desconto (R$).');
             $('#desconto_porcent').focus();
             return;
         }if( $('#valor_final').val() == '' ){
-            alert('Preencha todos os campos obrigatórios (*).');
+            alert('Preencha o campo Valor Final.');
             $('#valor_final').focus();
             return;
         }
@@ -541,6 +542,9 @@ $(function () {
 
                 $alteracoes.val($alteracoes.val() + '##' + campos_alterados);
                 // console.log('alterações: ',$alteracoes.val());
+                if( $('#historico').is(':visible') == true ){
+                    $('#btn_historicoOS').click();
+                }
                 $('#modalLancamentoVenda').modal('show');
 
             } else {
@@ -736,7 +740,12 @@ $(function () {
         $formLancaFluxoModal
             .find('[name=valor_total]')
             // .attr('disabled','disabled')
-            .val($formOS.find('[name=valor_final]').val());        
+            .val($formOS.find('[name=valor_final]').val());
+            
+        // Observacao
+        $formLancaFluxoModal
+        .find('[name=observacao]')
+        .val('');
         
     });
 
@@ -800,54 +809,54 @@ $(function () {
               }
           });
         
-        $('#desconto_porcent').on('change', function(){
+        // $('#desconto_porcent').on('change', function(){
         
-              var $custo   = $("#custo_total");
-              var $subtotal = $("#subtotal");
-              var subtotal = floatParaPadraoInternacional($("#subtotal").val());
-              var $desconPorcentagem = $("#desconto_porcent");
-              var $desconto = $("#desconto");
-              var $valorFinal = $("#valor_final");
+        //       var $custo   = $("#custo_total");
+        //       var $subtotal = $("#subtotal");
+        //       var subtotal = floatParaPadraoInternacional($("#subtotal").val());
+        //       var $desconPorcentagem = $("#desconto_porcent");
+        //       var $desconto = $("#desconto");
+        //       var $valorFinal = $("#valor_final");
         
-              var desc_max, precoaux, custoaux, descaux;
+        //       var desc_max, precoaux, custoaux, descaux;
         
-              desc_max = parseFloat( $desconPorcentagem.attr('data-desconto_maximo'));
+        //       desc_max = parseFloat( $desconPorcentagem.attr('data-desconto_maximo'));
         
-              if($desconPorcentagem.val() == ''){
-                  $desconPorcentagem.val('0,00%').blur();
-              }
+        //       if($desconPorcentagem.val() == ''){
+        //           $desconPorcentagem.val('0,00%').blur();
+        //       }
         
-              if( desc_max != undefined && desc_max != '' ){
+        //       if( desc_max != undefined && desc_max != '' ){
                   
-                  if( $desconPorcentagem.val() != undefined && $desconPorcentagem.val() != ''){
-                      if( parseFloat( floatParaPadraoInternacional( $desconPorcentagem.val() ) ) > desc_max ){
-                          alert('O valor máximo de desconto é ' + floatParaPadraoBrasileiro(desc_max) + '%');
-                          $desconPorcentagem.val('0,00%').blur();
-                          return;
-                      }
-                  }
+        //           if( $desconPorcentagem.val() != undefined && $desconPorcentagem.val() != ''){
+        //               if( parseFloat( floatParaPadraoInternacional( $desconPorcentagem.val() ) ) > desc_max ){
+        //                   alert('O valor máximo de desconto é ' + floatParaPadraoBrasileiro(desc_max) + '%');
+        //                   $desconPorcentagem.val('0,00%').blur();
+        //                   return;
+        //               }
+        //           }
               
-                  if( $custo.val() != '' && $custo.val() != undefined && $subtotal.val() != '' && $subtotal.val() != undefined && $desconPorcentagem.val() != undefined && $desconPorcentagem.val() != '' ){
+        //           if( $custo.val() != '' && $custo.val() != undefined && $subtotal.val() != '' && $subtotal.val() != undefined && $desconPorcentagem.val() != undefined && $desconPorcentagem.val() != '' ){
         
-                      precoaux = parseFloat( parseFloat( parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) * parseFloat( parseFloat(1) - parseFloat( parseFloat( floatParaPadraoInternacional( $desconPorcentagem.val() ) ) / parseFloat( 100 ) ) ) ).toFixed(2) );
-                      custoaux = parseFloat( parseFloat( floatParaPadraoInternacional( $custo.val() ) ).toFixed(2) );
+        //               precoaux = parseFloat( parseFloat( parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) * parseFloat( parseFloat(1) - parseFloat( parseFloat( floatParaPadraoInternacional( $desconPorcentagem.val() ) ) / parseFloat( 100 ) ) ) ).toFixed(2) );
+        //               custoaux = parseFloat( parseFloat( floatParaPadraoInternacional( $custo.val() ) ).toFixed(2) );
         
-                      if( precoaux < custoaux ){
-                          alert( 'O desconto dado faz o valor final ser menor do que custo total.-#desconto_porcent' );
-                          $desconPorcentagem.val('0,00%').blur();
-                          return;
-                      }else if( precoaux == custoaux ){
-                          alert( 'O desconto dado faz o valor final ser igual custo total.' );
-                          $desconPorcentagem.val('0,00%').blur();
-                          return;
-                      }else{
-                          descaux =  parseFloat( parseFloat( parseFloat( floatParaPadraoInternacional( $desconPorcentagem.val() ) ) / parseFloat(100) ) * parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) ).toFixed(2);
-                          $desconto.val( floatParaPadraoBrasileiro( descaux ) );
-                          $valorFinal.val( floatParaPadraoBrasileiro( precoaux ) );
-                      }
-                  }
-              }
-        });
+        //               if( precoaux < custoaux ){
+        //                   alert( 'O desconto dado faz o valor final ser menor do que custo total.-#desconto_porcent' );
+        //                   $desconPorcentagem.val('0,00%').blur();
+        //                   return;
+        //               }else if( precoaux == custoaux ){
+        //                   alert( 'O desconto dado faz o valor final ser igual custo total.' );
+        //                   $desconPorcentagem.val('0,00%').blur();
+        //                   return;
+        //               }else{
+        //                   descaux =  parseFloat( parseFloat( parseFloat( floatParaPadraoInternacional( $desconPorcentagem.val() ) ) / parseFloat(100) ) * parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) ).toFixed(2);
+        //                   $desconto.val( floatParaPadraoBrasileiro( descaux ) );
+        //                   $valorFinal.val( floatParaPadraoBrasileiro( precoaux ) );
+        //               }
+        //           }
+        //       }
+        // });
 
 
     // Radio e Listener para desconto em porcentagem ou absoluto
