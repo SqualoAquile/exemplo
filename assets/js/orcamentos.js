@@ -940,6 +940,10 @@ $(function () {
         $("#modalConfImp")
           .attr('data-model', 'ordemservico')
           .modal("show");
+
+        if ($('#form-principal #esquerda #status').val() == 'Em Espera') {
+          $('#modalConfImp .modal-footer [type="submit"]').text('Aprovar e Imprimir');
+        }
       }
     } else {
       // Necessário cadastrar o cliente antes de aprovar um orçamento
@@ -1793,7 +1797,7 @@ function acoesByStatus() {
         .parent()
         .hide();
 
-      $('.form-control, .form-check-input').attr("disabled", "disabled");
+      $('#form-principal, #camposOrc').find('.form-control, .form-check-input').attr("disabled", "disabled");
     }
 
   } else {
