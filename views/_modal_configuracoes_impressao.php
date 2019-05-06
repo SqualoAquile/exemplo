@@ -55,7 +55,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-warning">Imprimir</button>
+                <button type="submit" class="btn btn-warning">Imprimir e Aprovar</button>
             </div>
         </form>
     </div>
