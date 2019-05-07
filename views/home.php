@@ -158,13 +158,13 @@
             <!-- Gráficos de Saldos e Fluxo de caixa agrupado por Conta Analitica -->
             <div class="card card-body my-3">
                 <div class="row">
-                    <div class="col-lg-4 col-charts">
+                    <div class="col-lg-4">
                         <canvas id="graf_saldos"></canvas>
                     </div>
-                    <div class="col-lg-4 col-charts">
+                    <div class="col-lg-4">
                         <canvas id="graf_receita_analitica"></canvas>
                     </div>
-                    <div class="col-lg-4 col-charts">
+                    <div class="col-lg-4">
                         <canvas id="graf_despesa_analitica"></canvas>
                     </div>
                 </div>
@@ -173,7 +173,7 @@
             <!-- Gráfico de saldos do Ano -->
             <div class="card card-body my-3">
                 <div class="row">
-                    <div class="col-lg col-charts">
+                    <div class="col-lg">
                         <canvas id="graf_saldosAno"></canvas>
                     </div>
                 </div>
@@ -299,7 +299,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-12" style="height: 300px; col-charts">
+                    <div class="col-lg-12" style="height: 300px;">
                         <canvas id="orcVendas"  style="height: 300px;"></canvas>
                     </div>
                 </div>
