@@ -475,7 +475,7 @@ $(function() {
 
     $('#col-cancelar_edicao').removeClass('d-none');
 
-    calculaSubtotalCustotal();
+    // calculaSubtotalCustotal();
     changeTipoServicoProduto(tdMaterialServico);
     toggleTipoMaterial(tdUnidade);
 
@@ -509,6 +509,11 @@ $(function() {
 
     }
 
+    let data = {zerarDesconto: true};
+    if (tipo_material == 'alternativo') {
+      data = undefined;
+    }
+
     Popula([
       $("[name=descricao_item]").val(),
       $("[name=descricao_subitem]").val(),
@@ -526,7 +531,7 @@ $(function() {
     ]);
 
     SetInput();
-    calculaSubtotalCustotal({zerarDesconto: true});
+    calculaSubtotalCustotal(data);
 
     $('#btn_incluir').html('<i class="fas fa-check"></i>');
       
@@ -572,8 +577,6 @@ $(function() {
         if (tdTipoMaterial != 'alternativo') {
           custototal = custototal + custoaux;
           precototal = precototal + precoaux;
-        } else {
-          zerarDesconto = undefined;
         }
 
       });

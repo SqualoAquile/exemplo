@@ -855,8 +855,6 @@ $(function () {
       $msgAlert.removeClass("d-none");
     }
 
-    console.log('alteracoes data', data);
-
     if (data && data.zerarDesconto) {
       $('#desconto, #desconto_porcent').val(0);
     }
