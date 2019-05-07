@@ -321,13 +321,18 @@ $(function() {
   // Delete item da tabela e do hidden
   function Delete(element) {
     
-    let $tr = $(element).closest('tr');
+    let $tr = $(element).closest('tr'),
+      data = {zerarDesconto: true};
+
+    if ($tr.find('td:eq(9)').text() == 'alternativo') {
+      data = undefined;
+    }
     
     $tr.remove();
 
     transformarAlternativo($tr);
     SetInput();
-    calculaSubtotalCustotal({zerarDesconto: true});
+    calculaSubtotalCustotal(data);
   }
 
   // Seta no form o item clicado para editar, desabilita os botoes de acões deste item e seta o id desse item
@@ -567,6 +572,8 @@ $(function() {
         if (tdTipoMaterial != 'alternativo') {
           custototal = custototal + custoaux;
           precototal = precototal + precoaux;
+        } else {
+          zerarDesconto = undefined;
         }
 
       });
