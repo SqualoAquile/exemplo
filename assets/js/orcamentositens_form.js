@@ -324,13 +324,9 @@ $(function() {
     let $tr = $(element).closest('tr'),
       data = {zerarDesconto: true};
 
-    console.log($tr.find('td:eq(9)').text())
-
     if ($tr.find('td:eq(9)').text() == 'alternativo') {
       data = undefined;
     }
-
-    console.log(data)
     
     $tr.remove();
 
