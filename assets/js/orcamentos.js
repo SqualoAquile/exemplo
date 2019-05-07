@@ -855,6 +855,8 @@ $(function () {
       $msgAlert.removeClass("d-none");
     }
 
+    $('#desconto, #desconto_porcent').val(0);
+
     valorTotal();
     habilitaBotaoOrcamento();
     checarAlternativo();
