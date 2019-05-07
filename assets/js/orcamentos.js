@@ -846,7 +846,7 @@ $(function () {
 
   });
 
-  $("#itensOrcamento").on("alteracoes", function () {
+  $("#itensOrcamento").on("alteracoes", function (e, data) {
 
     let $msgAlert = $("#invalid-feedback-zero-itens");
 
@@ -855,7 +855,10 @@ $(function () {
       $msgAlert.removeClass("d-none");
     }
 
-    $('#desconto, #desconto_porcent').val(0);
+    if (data && data.zerarDesconto) {
+      $('#desconto, #desconto_porcent').val(0);
+    }
+
 
     valorTotal();
     habilitaBotaoOrcamento();
@@ -942,10 +945,6 @@ $(function () {
         $("#modalConfImp")
           .attr('data-model', 'ordemservico')
           .modal("show");
-
-        if ($('#form-principal #esquerda #status').val() == 'Em Espera') {
-          $('#modalConfImp .modal-footer [type="submit"]').text('Aprovar e Imprimir');
-        }
       }
     } else {
       // Necessário cadastrar o cliente antes de aprovar um orçamento
@@ -1192,6 +1191,17 @@ $(function () {
   $('#desconto').on('blur', function(){
     calculaDesconto();
   });
+
+  $('#modalConfImp').on('show.bs.modal', function (event) {
+    let $btnSubmitModal = $('#modalConfImp .modal-footer [type="submit"]');
+    $btnSubmitModal.text('Imprimir');
+    if (!$(event.relatedTarget).length) {
+      if ($('#form-principal #esquerda #status').val() == 'Em Espera') {
+        $btnSubmitModal.text('Aprovar Orçamento e Imprimir OS');
+      }
+    }
+  });
+
 });
 
 window.onload = function() {

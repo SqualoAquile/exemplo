@@ -327,7 +327,7 @@ $(function() {
 
     transformarAlternativo($tr);
     SetInput();
-    calculaSubtotalCustotal();
+    calculaSubtotalCustotal({zerarDesconto: true});
   }
 
   // Seta no form o item clicado para editar, desabilita os botoes de acões deste item e seta o id desse item
@@ -521,7 +521,7 @@ $(function() {
     ]);
 
     SetInput();
-    calculaSubtotalCustotal();
+    calculaSubtotalCustotal({zerarDesconto: true});
 
     $('#btn_incluir').html('<i class="fas fa-check"></i>');
       
@@ -532,7 +532,7 @@ $(function() {
   }
 
   // Toda movimentação que acontece na tabela ( adição, edição, exclusão ) dispara o cálculo do subtotal e custo total
-  function calculaSubtotalCustotal() {
+  function calculaSubtotalCustotal(zerarDesconto) {
 
     var custoaux, precoaux;
     var custototal = 0;
@@ -591,7 +591,7 @@ $(function() {
 
     }
 
-    $('#itensOrcamento').trigger('alteracoes');
+    $('#itensOrcamento').trigger('alteracoes', [zerarDesconto]);
 
   }
 
