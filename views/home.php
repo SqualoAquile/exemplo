@@ -5,8 +5,8 @@
 </script>
 
 <?php
-if (!extension_loaded('imagick')){
-    echo 'imagick not installed';
+if (extension_loaded('imagick')){
+    echo 'imagick installed';
 }
 ?>
 
