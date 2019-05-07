@@ -4,12 +4,6 @@
         currentModule = '<?php echo $modulo ?>'
 </script>
 
-<?php
-if (!extension_loaded('imagick')){
-    echo 'imagick not installed';
-}
-?>
-
 <?php if( in_array("relatoriofluxocaixa_ver", $infoUser["permissoesUsuario"]) && in_array("relatorioordensservico_ver", $infoUser["permissoesUsuario"]) ): ?>
 
 <script src="<?php echo BASE_URL?>/assets/js/home.js" type="text/javascript"></script>
