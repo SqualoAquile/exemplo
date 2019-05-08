@@ -287,7 +287,7 @@ $(function () {
     $('#collapseFluxocaixaResumo').on('shown.bs.collapse', function () {
         resumo();
         // dataTable.page.len(10).draw();
-        // dataTable.draw();
+        dataTable.draw();
         $('#relatorioorcamentoitens-section').removeClass('d-none');
       });
 
