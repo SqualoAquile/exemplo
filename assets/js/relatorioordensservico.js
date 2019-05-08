@@ -145,9 +145,11 @@ $(function () {
             }
         });
 
-        if (!pesquisar) {
+        if (pesquisar) {
+            dataTable.draw();
+        } else {
             alert("Aplique um filtro para emitir um relatório!");
-            event.stopPropagation(); 
+            event.stopPropagation();
         }
 
     });
