@@ -1,5 +1,4 @@
 var charts = [];
-
 var labelProdutosGlobal = [];
 var dataProdutosGlobal = [];
 
@@ -283,6 +282,8 @@ $(function () {
         $('#quantidadeProdutos').text(parseInt(quantidadeProdutos));
         $('#totalProdutos').text(floatParaPadraoBrasileiro(totalProdutos));
 
+        drawChart(id);
+
     };
 
     $('#relatorioorcamentoitens-section').addClass('d-none');
@@ -291,10 +292,9 @@ $(function () {
 
     $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
         //resumo();
-        dataTable.page.len(10).draw();
+        // dataTable.page.len(10).draw();
         // dataTable.draw();
         $('#relatorioorcamentoitens-section').removeClass('d-none');
-        drawChart(id);
       });
 
     $('#collapseFluxocaixaResumo').on('hidden.bs.collapse', function () {
@@ -324,7 +324,7 @@ $(function () {
 
     // fazer para o campo de input também
 
-    $('#botaoRelatorio[aria-expanded="false"]').on('click', function(){
+    $('#botaoRelatorio').on('click', function(){
 
         let pesquisar = false;
 
@@ -334,10 +334,8 @@ $(function () {
             }
         });
 
-        if (pesquisar) {
-            resumo();
-            $(this).addClass('active');
-        } else {
+        if (!pesquisar) {
+            // resumo();
             alert("Aplique um filtro para emitir um relatório!");
             event.stopPropagation();
         }
@@ -345,11 +343,9 @@ $(function () {
     });
     
     function drawChart(id) {
-        var titulo;
-
-        titulo = labelProdutosGlobal.length +' Produtos mais vendidos';
-            
-        var config = {
+        
+        var titulo = labelProdutosGlobal.length +' Produtos mais vendidos',
+        config = {
             type: 'doughnut',
             data: {
                 datasets: [{
