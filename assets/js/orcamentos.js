@@ -1702,10 +1702,14 @@ function valorTotal() {
   calculaDesconto();
   calculaCustoDeslocamento();
 
-  let deslocamento = $('#deslocamento').val();
-  let desconto = $('#deslocamento').val();
+  let deslocamento = $('#custo_deslocamento').val();
+  let desconto = $('#desconto').val();
+  console.log('deslocamento = ', parseFloat(deslocamento));
+  console.log('desconto = ', parseFloat(desconto));
 
-  somaTotal += parseFloat(deslocamento) - parseFloat(desconto);
+  somaTotal += parseFloat(parseFloat(floatParaPadraoInternacional(deslocamento)) - parseFloat(floatParaPadraoInternacional(desconto)));
+  somaTotal = parseFloat(somaTotal);
+  console.log('somaTotal = ', somaTotal);
 
   $('[name="valor_total"]').val(floatParaPadraoBrasileiro(somaTotal));
 
