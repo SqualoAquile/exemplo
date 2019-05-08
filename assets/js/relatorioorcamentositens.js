@@ -227,18 +227,20 @@ $(function () {
                         listaProdutos[m] = entrada;
                     }
                 }
+
+                console.log('tipo', tipo)
                 
                 // Calculo para os cards do relatorio
                 if(tipo=="Produtos"){
                     totalProdutos += parseFloat(valor);
                     quantidadeProdutos += parseInt(quantidade);
-                    console.log('quantidadeProdutos', quantidadeProdutos)
+                    // console.log('quantidadeProdutos', quantidadeProdutos)
                 }else if(tipo=="Servicos"){
-                    console.log('servicos')
+                    // console.log('servicos')
                     totalServicos += parseFloat(valor);
                     quantidadeServicos += parseInt(quantidade);
                 }else if(tipo=="Servicoscomplementares"){
-                    console.log('servicoscomplementares')
+                    // console.log('servicoscomplementares')
                     totalServicosCompl += parseFloat(valor);
                     quantidadeServicosCompl += parseInt(quantidade);
                 }
