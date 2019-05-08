@@ -329,7 +329,7 @@ $(function () {
         });
 
         if (pesquisar) {
-            resumo();
+            dataTable.draw();
         } else {
             alert("Aplique um filtro para emitir um relatório!");
             event.stopPropagation();
