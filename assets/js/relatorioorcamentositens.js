@@ -194,16 +194,15 @@ $(function () {
         quantidadeProduto = [],
         listaProdutos =[];
 
-        i = 0;
         k = 0;
 
         if (rowData) {
-            rowData.forEach(function () {
+            rowData.forEach(function (element) {
 
-                var valor = rowData[i][indexColumns.valor];
-                var quantidade = parseInt(rowData[i][indexColumns.quantidade]);
-                var tipo = rowData[i][indexColumns.tipo];
-                var produto = rowData[i][indexColumns.material_servico];
+                var valor = element[indexColumns.valor];
+                var quantidade = parseInt(element[indexColumns.quantidade]);
+                var tipo = element[indexColumns.tipo];
+                var produto = element[indexColumns.material_servico];
                 
                 valor = valor.replace('R$  ', '');
                 valor = floatParaPadraoInternacional(valor);
@@ -211,35 +210,38 @@ $(function () {
                 valor = valor * quantidade;
 
                 // Separando os dados para Top 5 Produtos mais vendidos
-                if (tipo == "Produtos" && exists(nomeProduto,produto) == false) {
-                    nomeProduto[k] = produto;
-                    quantidadeProduto[k] = quantidade;
-
-                    var entrada = [nomeProduto[k],quantidadeProduto[k]];
-                    listaProdutos[k]=entrada;
-
-                    k++;
-
-                }else if (tipo == "Produtos" && exists(nomeProduto,produto) == true) {
-                    var m = nomeProduto.indexOf(produto);
-                    quantidadeProduto[m] += parseInt(quantidade);
-                    var entrada = [nomeProduto[m],quantidadeProduto[m]];
-                    listaProdutos[m] = entrada;
+                if (tipo == "Produtos") {
+                    if (exists(nomeProduto,produto) == false) {
+                        nomeProduto[k] = produto;
+                        quantidadeProduto[k] = quantidade;
+    
+                        var entrada = [nomeProduto[k],quantidadeProduto[k]];
+                        listaProdutos[k]=entrada;
+    
+                        k++;
+    
+                    }else {
+                        var m = nomeProduto.indexOf(produto);
+                        quantidadeProduto[m] += parseInt(quantidade);
+                        var entrada = [nomeProduto[m],quantidadeProduto[m]];
+                        listaProdutos[m] = entrada;
+                    }
                 }
                 
                 // Calculo para os cards do relatorio
                 if(tipo=="Produtos"){
                     totalProdutos += parseFloat(valor);
                     quantidadeProdutos += parseInt(quantidade);
+                    console.log('quantidadeProdutos', quantidadeProdutos)
                 }else if(tipo=="Servicos"){
+                    console.log('servicos')
                     totalServicos += parseFloat(valor);
                     quantidadeServicos += parseInt(quantidade);
                 }else if(tipo=="Servicoscomplementares"){
+                    console.log('servicoscomplementares')
                     totalServicosCompl += parseFloat(valor);
                     quantidadeServicosCompl += parseInt(quantidade);
                 }
-
-                i++;
             });
         }
         
