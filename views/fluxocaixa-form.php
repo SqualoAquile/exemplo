@@ -217,6 +217,7 @@
                                         data-toggle="dropdown" 
                                         aria-haspopup="true" 
                                         aria-expanded="false"
+                                        tabindex="<?php echo isset($value["Comment"]["ordem_form"]) ? $value["Comment"]["ordem_form"] : "" ?>"
                                         maxlength="<?php echo $value["tamanhoMax"] ?>"
                                         value="<?php echo isset($item) && !empty($item) ? $item[$value["Field"]] : "" ?>"
                                         data-tabela="<?php echo $value["Comment"]["info_relacional"]["tabela"] ?>" 
