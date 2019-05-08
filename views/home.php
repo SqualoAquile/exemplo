@@ -39,7 +39,7 @@
                     </div>        
                 </div>
             </div>
-
+        
             <!-- Fluxo de caxia realizado -->
             <div class="card card-body my-3">
                 <div class="row">
@@ -87,7 +87,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-7" style="height: 70vh; min-height: 300px;">
+                    <div class="col-lg-7">
                         <canvas id="chart-div2"></canvas>
                     </div>
                 </div>
@@ -140,7 +140,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-7" style="height: 70vh; min-height: 300px;">
+                    <div class="col-lg-7">
                         <canvas id="chart-div3"></canvas>
                     </div>
                 </div>
@@ -164,7 +164,7 @@
             <!-- Gráfico de saldos do Ano -->
             <div class="card card-body my-3">
                 <div class="row">
-                    <div class="col-lg" style="height: 70vh; min-height: 300px;">
+                    <div class="col-lg" >
                         <canvas id="graf_saldosAno"></canvas>
                     </div>
                 </div>

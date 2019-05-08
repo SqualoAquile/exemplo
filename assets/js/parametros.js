@@ -56,7 +56,9 @@ const parametrosSemAcoes = [
     'M²',
     'm²',
     'ml',
-    'ML'
+    'ML',
+    'Contato',
+    'contato'
 ];
 
 function Ajax(url, callback, send = {}) {
