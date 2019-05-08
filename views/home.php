@@ -4,6 +4,15 @@
         currentModule = '<?php echo $modulo ?>'
 </script>
 
+<style>
+    @media (max-width: 768px) {
+        .col-charts {
+            height: 70vh;
+            min-height: 300px;
+        }
+    }
+</style>
+
 <?php if( in_array("relatoriofluxocaixa_ver", $infoUser["permissoesUsuario"]) && in_array("relatorioordensservico_ver", $infoUser["permissoesUsuario"]) ): ?>
 
 <script src="<?php echo BASE_URL?>/assets/js/home.js" type="text/javascript"></script>
@@ -87,7 +96,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-7">
+                    <div class="col-lg-7 col-charts">
                         <canvas id="chart-div2"></canvas>
                     </div>
                 </div>
@@ -140,7 +149,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-7">
+                    <div class="col-lg-7 col-charts">
                         <canvas id="chart-div3"></canvas>
                     </div>
                 </div>

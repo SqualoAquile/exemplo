@@ -210,6 +210,12 @@
       <link href="<?php echo BASE_URL?>/assets/css/style.css" rel="stylesheet" type="text/css"/>
       <link href="<?php echo BASE_URL?>/assets/css/vendor/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css"/>
 
+      <style>
+         .form-control.is-invalid ~ .invalid-feedback:nth-of-type(2) {
+            display: none!important;
+         }
+      </style>
+
       <script src="<?php echo BASE_URL?>/assets/js/vendor/jquery-3.3.1.min.js" type="text/javascript"></script>
       <script src="<?php echo BASE_URL?>/assets/js/vendor/jquery.mask.js" type="text/javascript"></script>
       <script src="<?php echo BASE_URL?>/assets/js/vendor/jquery.dataTables.min.js" type="text/javascript"></script>

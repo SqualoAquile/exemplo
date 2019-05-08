@@ -194,7 +194,7 @@ $(function () {
     // Sem Mascara
     //
     $('[data-mascara_validacao="false"]')
-        .on('blur touchstart', function () {
+        .on('blur touchstart keyup', function () {
 
             var $this = $(this);
 
@@ -242,13 +242,13 @@ $(function () {
                     }
                 }
             }
-        });
+        })
 
     //
     // Campo Nome
     //
     $('[data-mascara_validacao="nome"]')
-        .on('blur touchstart', function () {
+        .on('blur touchstart keyup', function () {
 
             var $this = $(this);
 
@@ -299,7 +299,7 @@ $(function () {
     //
     $('[data-mascara_validacao="rg"]')
         .mask('0000000000')
-        .on('blur touchstart', function () {
+        .on('blur touchstart keyup', function () {
 
             var $this = $(this),
                 text_label = $this.siblings('label').find('span').text();
@@ -360,7 +360,7 @@ $(function () {
     //
     $('[data-mascara_validacao="cpf"]')
         .mask('000.000.000-00')
-        .on('blur touchstart', function () {
+        .on('blur touchstart keyup', function () {
 
             var $this = $(this),
                 text_label = $this.siblings('label').find('span').text();
@@ -423,7 +423,7 @@ $(function () {
     //
     $('[data-mascara_validacao="cnpj"]')
         .mask('00.000.000/0000-00')
-        .on('blur touchstart', function () {
+        .on('blur touchstart keyup', function () {
 
             var $this = $(this),
                 text_label = $this.siblings('label').find('span').text();
@@ -615,7 +615,7 @@ $(function () {
     // Campo Email
     //
     $('[data-mascara_validacao="email"]')
-        .on('blur touchstart', function () {
+        .on('blur touchstart keyup', function () {
 
             var $this = $(this),
                 text_label = $this.siblings('label').find('span').text();;
