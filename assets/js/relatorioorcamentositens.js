@@ -243,11 +243,14 @@ $(function () {
                 i++;
             });
         }
+        
+        
 
         listaProdutos = listaProdutos.sort(function(a,b) {
             return b[1]-a[1];
         });
 
+        
         var dataProdutos = [];
         var labelProdutos = [];
 
@@ -263,6 +266,8 @@ $(function () {
 
         labelProdutosGlobal = labelProdutos;
         dataProdutosGlobal = dataProdutos;
+
+        drawChart(id);
 
         totalItens = parseFloat(totalProdutos) + parseFloat(totalServicos) + parseFloat(totalServicosCompl);
        
