@@ -358,6 +358,7 @@ $(function () {
                 labels: labelProdutosGlobal
             },
             options: {
+                animation: false,
                 responsive: true,
                 maintainAspectRatio: true,
                 title: {
