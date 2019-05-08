@@ -335,7 +335,6 @@ $(function () {
         });
 
         if (!pesquisar) {
-            // resumo();
             alert("Aplique um filtro para emitir um relatório!");
             event.stopPropagation();
         }
