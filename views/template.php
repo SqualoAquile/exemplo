@@ -211,7 +211,7 @@
       <link href="<?php echo BASE_URL?>/assets/css/vendor/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css"/>
 
       <style>
-         .form-group .invalid-feedback:nth-child(2) {
+         .form-control.is-invalid ~ .invalid-feedback:nth-child(2) {
             display: none;
          }
       </style>
