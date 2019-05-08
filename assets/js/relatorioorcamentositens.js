@@ -285,9 +285,9 @@ $(function () {
     $('#graficos').addClass('d-none');
 
     $('#collapseFluxocaixaResumo').on('shown.bs.collapse', function () {
-        resumo();
+        // resumo();
         // dataTable.page.len(10).draw();
-        dataTable.draw();
+        // dataTable.draw();
         $('#relatorioorcamentoitens-section').removeClass('d-none');
       });
 
@@ -328,7 +328,9 @@ $(function () {
             }
         });
 
-        if (!pesquisar) {
+        if (pesquisar) {
+            resumo();
+        } else {
             alert("Aplique um filtro para emitir um relatório!");
             event.stopPropagation();
         }
