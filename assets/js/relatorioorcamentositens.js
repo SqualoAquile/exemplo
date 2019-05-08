@@ -177,12 +177,18 @@ $(function () {
     dataTable.draw();
     $('#relatorioorcamentoitens-section').addClass('d-none');
 
-    function resumo () {
-        
-        dataTable.page.len(-1).draw();
-        dataTable.draw();
+    dataTable.on('xhr.dt', function (e, settings, json, xhr) {
+        // console.log(dataTable.rows({search: 'applied'}));
+        console.log(dataTable.$('tr', {"filter":"applied"}))
+        resumo(json.data);
+    });
 
-        var rowData = dataTable.rows().data(),
+    function resumo (jsonData) {
+        
+        // dataTable.page.len(-1).draw();
+        // dataTable.draw();
+
+        var rowData = jsonData,
         quantidadeProdutos = 0,
         quantidadeServicos = 0,
         quantidadeServicosCompl = 0,
@@ -197,12 +203,14 @@ $(function () {
         i = 0;
         k = 0;
 
-        rowData.each(function () {
-            var valor = rowData[i][indexColumns.valor];
-            var quantidade = parseInt(rowData[i][indexColumns.quantidade]);
-            var tipo = rowData[i][indexColumns.tipo];
-            var produto = rowData[i][indexColumns.material_servico];          
-            
+        if (rowData) {
+            rowData.forEach(function () {
+
+                var valor = rowData[i][indexColumns.valor];
+                var quantidade = parseInt(rowData[i][indexColumns.quantidade]);
+                var tipo = rowData[i][indexColumns.tipo];
+                var produto = rowData[i][indexColumns.material_servico];
+                
                 valor = valor.replace('R$  ', '');
                 valor = floatParaPadraoInternacional(valor);
     
@@ -236,8 +244,10 @@ $(function () {
                     totalServicosCompl += parseFloat(valor);
                     quantidadeServicosCompl += parseInt(quantidade);
                 }
-            i++;
-        });
+
+                i++;
+            });
+        }
 
         listaProdutos = listaProdutos.sort(function(a,b) {
             return b[1]-a[1];
@@ -282,7 +292,7 @@ $(function () {
     $('#collapseFluxocaixaResumo').on('shown.bs.collapse', function () {
         //resumo();
         dataTable.page.len(10).draw();
-        dataTable.draw();
+        // dataTable.draw();
         $('#relatorioorcamentoitens-section').removeClass('d-none');
         drawChart(id);
       });
@@ -325,13 +335,13 @@ $(function () {
         });
 
         if (pesquisar) {
-            setTimeout(function(){
-                resumo();
-            }, 1000);
+            resumo();
+            // setTimeout(function(){
+            // }, 1000);
         } else {
-            setTimeout(function(){ 
-                alert("Aplique um filtro para emitir um relatório!");
-            }, 1000);
+            // setTimeout(function(){ 
+            // }, 1000);
+            alert("Aplique um filtro para emitir um relatório!");
             event.stopPropagation();
         }
 
