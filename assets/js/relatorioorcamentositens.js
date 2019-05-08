@@ -284,7 +284,7 @@ $(function () {
     // $('#relatorioorcamentoitens-section').addClass('d-none');
     $('#graficos').addClass('d-none');
 
-    $('#collapseFluxocaixaResumo').on('shown.bs.collapse', function () {
+    $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
         // resumo();
         // dataTable.page.len(10).draw();
         // dataTable.draw();
