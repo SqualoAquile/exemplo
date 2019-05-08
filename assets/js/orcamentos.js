@@ -1640,6 +1640,9 @@ function valorTotal() {
     }
   });
 
+  calculaDesconto();
+  calculaCustoDeslocamento();
+
 
   let deslocamento = $('#deslocamento').val();
   let desconto = $('#deslocamento').val();
@@ -1648,8 +1651,6 @@ function valorTotal() {
 
   $('[name="valor_total"]').val(floatParaPadraoBrasileiro(somaTotal));
 
-  calculaCustoDeslocamento();
-  calculaDesconto();
   resumoItens();
 }
 
