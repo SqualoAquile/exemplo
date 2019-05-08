@@ -1,4 +1,7 @@
 <?php
+
+// use mikehaertl\wkhtmlto\Image;
+
 class orcamentosController extends controller{
 
     // Protected - estas variaveis só podem ser usadas nesse arquivo
@@ -582,12 +585,15 @@ class orcamentosController extends controller{
 
         ';
 
-        //arranjar outro jeito de direcionar o require
+        // Este é o bloco que está funcionando
         $mpdf->WriteHTML($html);
         $mpdf->Output('Orcamento.pdf','I');
+
+        // teste pegar binário do pdf para transformar em JPG
         //$pdfOutput = $mpdf->Output('Orcamento.pdf','S');
         //print_r($pdfOutput);exit;
         
+        // Teste Imagick
         // create Imagick object
         // $imagick = new Imagick();
         // // Reads image from PDF
@@ -595,6 +601,33 @@ class orcamentosController extends controller{
         // // Writes an image or image sequence Example- converted-0.jpg, converted-1.jpg
         // $imagick->writeImages($converted, false);
 
+
+        // Teste WKHTMLtoImage
+        //------------------------------------------------------------------------------------------
+        //use mikehaertl\wkhtmlto\Image;
+
+        // You can pass a filename, a HTML string, an URL or an options array to the constructor
+
+        //$image = new Image($html);
+
+        // $image = new Image(array(
+        //     'binary' => __DIR__ . '/../vendor/vendor/mikehaertl/phpwkhtmltopdf',
+        //     //'ignoreWarnings' => true,
+        //     'commandOptions' => array(
+        //         'useExec' => true,
+        //     )
+        // ));
+
+        // $image->setPage($html);
+        // $image->send('page.png');
+
+        // $image->send('page.png');
+
+        // ... or send to client as file download
+        // if (!$image->send('page.png')) {
+        //     $error = $image->getError();
+        //     print_r($error);
+        // }
     }
 }   
             
