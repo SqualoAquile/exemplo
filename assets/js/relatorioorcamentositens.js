@@ -161,12 +161,12 @@ $(function () {
         $cardBodyFiltros = $('#card-body-filtros'),
         indexColumns = {
             acoes: 0,
-            tipo:3,
-            material_servico:4,
+            tipo: 3,
+            material_servico: 4,
             valor: 8,
             quantidade: 9,
-            data_aprov:14
-        }
+            data_aprov: 14
+        };
 
     // exibir tudo
     // dataTable.page.len(-1).draw();
@@ -296,7 +296,7 @@ $(function () {
     // $('#relatorioorcamentoitens-section').addClass('d-none');
     $('#graficos').addClass('d-none');
 
-    $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
+    $('#collapseFluxocaixaResumo').on('shown.bs.collapse', function () {
         //resumo();
         // dataTable.page.len(10).draw();
         // dataTable.draw();
