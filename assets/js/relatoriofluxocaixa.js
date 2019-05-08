@@ -53,17 +53,21 @@ $(function () {
         }
     
     
-    dataTable.page.len(-1).draw();
-    dataTable.draw();
+    // dataTable.page.len(-1).draw();
+    // dataTable.draw();
     $('#DataTables_Table_0_length').addClass('d-none');
 
+    dataTable.on('xhr.dt', function (e, settings, json, xhr) {
+        resumo(json.dataSemPaginacao);
+    });
 
-    function resumo () {
 
-        dataTable.page.len(-1).draw();
-        dataTable.draw();
+    function resumo (jsonData) {
 
-        var rowData = dataTable.rows().data(),
+        // dataTable.page.len(-1).draw();
+        // dataTable.draw();
+
+        var rowData = jsonData,
         somasDespesasQ = 0,
         somasReceitasQ = 0,
         somasDespesasAQ = 0,
@@ -80,7 +84,7 @@ $(function () {
     
     
         i = 0;
-        rowData.each(function () {
+        rowData.forEach(function () {
             if (rowData[i][indexColumns.movimentacoes].toLowerCase() == 'despesa') {
                                
                 var despesa = rowData[i][indexColumns.valor_total];
@@ -99,7 +103,7 @@ $(function () {
         });
 
         i = 0;
-        rowData.each(function () {
+        rowData.forEach(function () {
             if (rowData[i][indexColumns.movimentacoes].toLowerCase() == 'receita') {
                                
                 var receita = rowData[i][indexColumns.valor_total];
@@ -175,13 +179,13 @@ $(function () {
   
     };
 
-    $('#DataTables_Table_0_length').addClass('d-none');
+    // $('#DataTables_Table_0_length').addClass('d-none');
     $('#DataTables_Table_0_wrapper').addClass('d-none');
 
-    $('#collapseFluxocaixaResumo').on('shown.bs.collapse', function () {
+    $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
         //resumo();
-        dataTable.page.len(10).draw();
-        dataTable.draw();
+        // dataTable.page.len(10).draw();
+        // dataTable.draw();
         $('#DataTables_Table_0_wrapper').removeClass('d-none');
         $('#collapseMeta').removeClass('show').addClass('hide');
         $('#collapseGraficos2').removeClass('show').addClass('hide');
@@ -234,13 +238,9 @@ $(function () {
         });
 
         if (pesquisar) {
-            setTimeout(function(){
-                resumo();
-            }, 500);  
+            dataTable.draw();
         } else {
-            setTimeout(function(){ 
-                alert("Aplique um filtro para emitir um relatório!");
-            }, 500);
+            alert("Aplique um filtro para emitir um relatório!");
             event.stopPropagation();
         }
 

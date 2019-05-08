@@ -51,21 +51,25 @@ $(function () {
         }
     
     
-    dataTable.page.len(-1).draw();
-    dataTable.draw();
-    $('#DataTables_Table_0_length').addClass('d-none');
+    // dataTable.page.len(-1).draw();
+    // dataTable.draw();
+    // $('#DataTables_Table_0_length').addClass('d-none');
 
-    function resumo () {
+    dataTable.on('xhr.dt', function (e, settings, json, xhr) {
+        resumo(json.dataSemPaginacao);
+    });
 
-        dataTable.page.len(-1).draw();
-        dataTable.draw();
+    function resumo (jsonData) {
+
+        // dataTable.page.len(-1).draw();
+        // dataTable.draw();
         
-        var rowData = dataTable.rows().data(),
+        var rowData = jsonData,
         quantidadeOrcamentos = 0,
         totalOrcado = 0;
     
         i = 0;
-        rowData.each(function () {
+        rowData.forEach(function () {
             // if (rowData[i][indexColumns.status].toLowerCase() == 'ativo') {
                                               
                 var valor = rowData[i][indexColumns.valor_total];
@@ -90,10 +94,10 @@ $(function () {
 
     // EVENTOS -----------------------------------------------------------------
 
-    $('#collapseFluxocaixaResumo').on('shown.bs.collapse', function () {
+    $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
         //resumo();
-        dataTable.page.len(10).draw();
-        dataTable.draw();
+        // dataTable.page.len(10).draw();
+        // dataTable.draw();
         $('#DataTables_Table_0_wrapper').removeClass('d-none');
       });
 
@@ -130,14 +134,10 @@ $(function () {
         });
 
         if (pesquisar) {
-            setTimeout(function(){
-                resumo();
-            }, 500);         
+            dataTable.draw();
         } else {
-            setTimeout(function(){ 
-                alert("Aplique um filtro para emitir um relatório!");
-            }, 500);
-                event.stopPropagation(); 
+            alert("Aplique um filtro para emitir um relatório!");
+            event.stopPropagation(); 
         }
 
     });
