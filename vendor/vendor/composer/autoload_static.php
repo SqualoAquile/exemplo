@@ -15,6 +15,12 @@ class ComposerStaticInit572f89b714e923f12a1c4b2312533779
         array (
             'setasign\\Fpdi\\' => 14,
         ),
+        'm' => 
+        array (
+            'mikehaertl\\wkhtmlto\\' => 20,
+            'mikehaertl\\tmp\\' => 15,
+            'mikehaertl\\shellcommand\\' => 24,
+        ),
         'P' => 
         array (
             'Psr\\Log\\' => 8,
@@ -33,6 +39,18 @@ class ComposerStaticInit572f89b714e923f12a1c4b2312533779
         'setasign\\Fpdi\\' => 
         array (
             0 => __DIR__ . '/..' . '/setasign/fpdi/src',
+        ),
+        'mikehaertl\\wkhtmlto\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mikehaertl/phpwkhtmltopdf/src',
+        ),
+        'mikehaertl\\tmp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mikehaertl/php-tmpfile/src',
+        ),
+        'mikehaertl\\shellcommand\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mikehaertl/php-shellcommand/src',
         ),
         'Psr\\Log\\' => 
         array (
