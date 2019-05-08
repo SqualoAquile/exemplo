@@ -127,7 +127,7 @@ $(function () {
 
             $this.removeClass('is-valid is-invalid');
             $this.siblings('.invalid-feedback').remove();
-            $this[0].setCustomValidity('');
+            // $this[0].setCustomValidity('');
 
             if ($this.val()) {
                 if ($this.attr('data-anterior') != $this.val()) {
