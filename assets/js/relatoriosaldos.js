@@ -246,7 +246,7 @@ $(function () {
 
         $('.input-filtro-faixa').siblings('.max').val($('#selectMesesMax').val()).change();
         $('.input-filtro-faixa').siblings('.min').val($('#selectMesesMin').val()).change();
-        resumo();
+        // resumo();
 
     });
 
@@ -284,7 +284,7 @@ $(function () {
             alert("Selecione um período de meses para gerar um gráfico!");
             event.stopPropagation();
         }else{
-            resumo();
+            // resumo();
             $('#collapseGraficos2').collapse('show');
         }
 
