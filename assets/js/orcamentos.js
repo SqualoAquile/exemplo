@@ -1246,8 +1246,9 @@ function calculaDesconto() {
     if( $custo.val() != '' && $custo.val() != undefined && $subtotal.val() != '' && $subtotal.val() != undefined){
 
       precoaux = parseFloat( parseFloat( parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) - parseFloat( parseFloat( floatParaPadraoInternacional( $desconto.val() ) ) ) ).toFixed(2) );
+      console.log('precoaux = ', precoaux);
       custoaux = parseFloat( parseFloat( floatParaPadraoInternacional( $custo.val() ) ).toFixed(2) );
-
+      console.log('custoaux = ', custoaux);
       if( precoaux < custoaux ){
         if (precoaux && custoaux) {
             alert( 'O desconto dado faz o valor final ser menor do que custo total.' );
@@ -1639,6 +1640,9 @@ function valorTotal() {
     }
   });
 
+  calculaDesconto();
+  calculaCustoDeslocamento();
+
 
   let deslocamento = $('#deslocamento').val();
   let desconto = $('#deslocamento').val();
@@ -1647,8 +1651,6 @@ function valorTotal() {
 
   $('[name="valor_total"]').val(floatParaPadraoBrasileiro(somaTotal));
 
-  calculaCustoDeslocamento();
-  calculaDesconto();
   resumoItens();
 }
 
