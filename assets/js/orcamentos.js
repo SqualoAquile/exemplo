@@ -1226,9 +1226,7 @@ $(function () {
     if( $custo.val() != '' && $custo.val() != undefined && $subtotal.val() != '' && $subtotal.val() != undefined){
 
       precoaux = parseFloat( parseFloat( parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) - parseFloat( parseFloat( floatParaPadraoInternacional( $desconto.val() ) ) ) ).toFixed(2) );
-      console.log('precoaux = ', precoaux);
       custoaux = parseFloat( parseFloat( floatParaPadraoInternacional( $custo.val() ) ).toFixed(2) );
-      console.log('custoaux = ', custoaux);
       if( precoaux < custoaux ){
         if (precoaux && custoaux) {
             alert( 'O desconto dado faz o valor final ser menor do que custo total.' );
@@ -1305,9 +1303,7 @@ function calculaDesconto() {
   //   if( $custo.val() != '' && $custo.val() != undefined && $subtotal.val() != '' && $subtotal.val() != undefined){
 
   //     precoaux = parseFloat( parseFloat( parseFloat( floatParaPadraoInternacional( $subtotal.val() ) ) - parseFloat( parseFloat( floatParaPadraoInternacional( $desconto.val() ) ) ) ).toFixed(2) );
-  //     console.log('precoaux = ', precoaux);
   //     custoaux = parseFloat( parseFloat( floatParaPadraoInternacional( $custo.val() ) ).toFixed(2) );
-  //     console.log('custoaux = ', custoaux);
   //     if( precoaux < custoaux ){
   //       if (precoaux && custoaux) {
   //           alert( 'O desconto dado faz o valor final ser menor do que custo total.' );
@@ -1704,12 +1700,9 @@ function valorTotal() {
 
   let deslocamento = $('#custo_deslocamento').val();
   let desconto = $('#desconto').val();
-  console.log('deslocamento = ', parseFloat(deslocamento));
-  console.log('desconto = ', parseFloat(desconto));
 
   somaTotal += parseFloat(parseFloat(floatParaPadraoInternacional(deslocamento)) - parseFloat(floatParaPadraoInternacional(desconto)));
   somaTotal = parseFloat(somaTotal);
-  console.log('somaTotal = ', somaTotal);
 
   $('[name="valor_total"]').val(floatParaPadraoBrasileiro(somaTotal));
 
