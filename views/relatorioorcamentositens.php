@@ -13,7 +13,7 @@
 require "_header_browser_relatorios.php";
 ?>
 
-<div class="collapse mb-5" id="collapseFluxocaixaResumo">
+<div class="collapse mb-5" id="collapseFluxocaixaResumo" >
     <div class="row" height="100px">
         
     </div>
