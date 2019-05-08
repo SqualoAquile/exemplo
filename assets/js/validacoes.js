@@ -299,7 +299,7 @@ $(function () {
     //
     $('[data-mascara_validacao="rg"]')
         .mask('0000000000')
-        .on('blur touchstart', function () {
+        .on('blur touchstart validar', function () {
 
             var $this = $(this),
                 text_label = $this.siblings('label').find('span').text();
@@ -353,14 +353,19 @@ $(function () {
                     }
                 }
             }
-        });
+        })
+        .on('keyup', function() {
+            if ($(this).validationLength(10)) {
+                $(this).trigger('validar');
+            }
+        });;
 
     //
     // Campo CPF
     //
     $('[data-mascara_validacao="cpf"]')
         .mask('000.000.000-00')
-        .on('blur touchstart', function () {
+        .on('blur touchstart validar', function () {
 
             var $this = $(this),
                 text_label = $this.siblings('label').find('span').text();
@@ -415,6 +420,11 @@ $(function () {
                     }
                 }
             }
+        })
+        .on('keyup', function() {
+            if ($(this).validationLength(14)) {
+                $(this).trigger('validar');
+            }
         });
 
 
@@ -423,7 +433,7 @@ $(function () {
     //
     $('[data-mascara_validacao="cnpj"]')
         .mask('00.000.000/0000-00')
-        .on('blur touchstart', function () {
+        .on('blur touchstart validar', function () {
 
             var $this = $(this),
                 text_label = $this.siblings('label').find('span').text();
@@ -478,6 +488,11 @@ $(function () {
                         $this.after('<div class="invalid-feedback">Preencha o campo no formato: 00.000.000/0000-00</div>');
                     }
                 }
+            }
+        })
+        .on('keyup', function() {
+            if ($(this).validationLength(18)) {
+                $(this).trigger('validar');
             }
         });
 
