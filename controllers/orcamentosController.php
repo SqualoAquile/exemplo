@@ -1,6 +1,6 @@
 <?php
 
-use mikehaertl\wkhtmlto\Image;
+// use mikehaertl\wkhtmlto\Image;
 
 class orcamentosController extends controller{
 
