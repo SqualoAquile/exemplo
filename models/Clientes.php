@@ -193,7 +193,7 @@ class Clientes extends model {
             $dt2 = explode('-', $dt2);
 
             // busca as despesas relacionadas a O.S. lançadas no fluxo de caixa
-            $sql1 = "SELECT `id`, `nome`, `data_nascimento`, `celular`, `email` FROM `clientes` WHERE situacao = 'ativo' AND MONTH(data_nascimento) IN('$dt1[1]', '$dt2[1]') ORDER BY data_nascimento ASC";
+            $sql1 = "SELECT `id`, `nome`, `data_nascimento`, `celular`, `email` FROM `clientes` WHERE situacao = 'ativo' AND MONTH(data_nascimento) IN('$dt1[1]', '$dt2[1]') ORDER BY MONTH(data_nascimento), DAY(data_nascimento) ASC";
 
             $sql1 = self::db()->query($sql1);
             $anivers = array();

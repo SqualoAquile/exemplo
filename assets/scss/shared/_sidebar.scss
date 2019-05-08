@@ -103,7 +103,7 @@ $width-closed: calc(30px + 2rem);
 		}
 	}
 }
-@include media-breakpoint-up(md) {
+@include media-breakpoint-up(lg) {
 	#wrapper {
 		&.aberto {
 			padding-left: $sidebar-width;

@@ -1,4 +1,6 @@
 $(function() {
+
+  calculaSubtotalCustotal();
   
   var $tableItensOrcamento = $('#itensOrcamento'),
     lastInsertId = 0,
@@ -319,13 +321,18 @@ $(function() {
   // Delete item da tabela e do hidden
   function Delete(element) {
     
-    let $tr = $(element).closest('tr');
+    let $tr = $(element).closest('tr'),
+      data = {zerarDesconto: true};
+
+    if ($tr.find('td:eq(9)').text() == 'alternativo') {
+      data = undefined;
+    }
     
     $tr.remove();
 
     transformarAlternativo($tr);
     SetInput();
-    calculaSubtotalCustotal();
+    calculaSubtotalCustotal(data);
   }
 
   // Seta no form o item clicado para editar, desabilita os botoes de acões deste item e seta o id desse item
@@ -468,7 +475,7 @@ $(function() {
 
     $('#col-cancelar_edicao').removeClass('d-none');
 
-    calculaSubtotalCustotal();
+    // calculaSubtotalCustotal();
     changeTipoServicoProduto(tdMaterialServico);
     toggleTipoMaterial(tdUnidade);
 
@@ -502,6 +509,11 @@ $(function() {
 
     }
 
+    let data = {zerarDesconto: true};
+    if (tipo_material == 'alternativo') {
+      data = undefined;
+    }
+
     Popula([
       $("[name=descricao_item]").val(),
       $("[name=descricao_subitem]").val(),
@@ -519,7 +531,7 @@ $(function() {
     ]);
 
     SetInput();
-    calculaSubtotalCustotal();
+    calculaSubtotalCustotal(data);
 
     $('#btn_incluir').html('<i class="fas fa-check"></i>');
       
@@ -530,7 +542,7 @@ $(function() {
   }
 
   // Toda movimentação que acontece na tabela ( adição, edição, exclusão ) dispara o cálculo do subtotal e custo total
-  function calculaSubtotalCustotal() {
+  function calculaSubtotalCustotal(zerarDesconto) {
 
     var custoaux, precoaux;
     var custototal = 0;
@@ -577,15 +589,19 @@ $(function() {
 
       $custotot.val(custototal);
       $subtot.val(precototal);
+
     } else {
+
       $custotot.val("0,00");
       $subtot.val("0,00");
 
-      $('#desconto_porcent, #desconto').val("0,00");
+      if (!$('#desconto_porcent').attr('data-anterior') && !$('#desconto').attr('data-anterior')) {
+        $('#desconto_porcent, #desconto').val("0,00");
+      }
 
     }
 
-    $('#itensOrcamento').trigger('alteracoes');
+    $('#itensOrcamento').trigger('alteracoes', [zerarDesconto]);
 
   }
 
