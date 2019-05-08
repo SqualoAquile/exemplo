@@ -1629,7 +1629,7 @@ function valorTotal() {
   $("#itensOrcamento tbody tr").each(function () {
     let $this = $(this),
       tdPrecoTotal = $this.find("td:eq(12)").text(),
-      tdTipoMaterial = $this.find("td:eq(9)").text(),
+      tdTipoMaterial = $this.find("td:eq(9)").text(), 
       precoTotalFormatado = parseFloat(
         floatParaPadraoInternacional(tdPrecoTotal)
       );
@@ -1638,6 +1638,12 @@ function valorTotal() {
       somaTotal += precoTotalFormatado;
     }
   });
+
+
+  let deslocamento = $('#deslocamento').val();
+  let desconto = $('#deslocamento').val();
+
+  somaTotal += parseFloat(deslocamento) - parseFloat(desconto);
 
   $('[name="valor_total"]').val(floatParaPadraoBrasileiro(somaTotal));
 

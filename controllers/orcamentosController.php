@@ -593,6 +593,7 @@ class orcamentosController extends controller{
         //$pdfOutput = $mpdf->Output('Orcamento.pdf','S');
         //print_r($pdfOutput);exit;
         
+        // Teste Imagick
         // create Imagick object
         // $imagick = new Imagick();
         // // Reads image from PDF
@@ -601,6 +602,7 @@ class orcamentosController extends controller{
         // $imagick->writeImages($converted, false);
 
 
+        // Teste WKHTMLtoImage
         //------------------------------------------------------------------------------------------
         //use mikehaertl\wkhtmlto\Image;
 
