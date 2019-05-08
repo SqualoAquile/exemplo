@@ -1,4 +1,3 @@
-
 var charts = [];
 
 var labelProdutosGlobal = [];
@@ -104,6 +103,10 @@ function number_format( numero, decimal, decimal_separador, milhar_separador ){
         return s.join(dec);
 }
 
+function exists(arr, search) {
+    return arr.some(row => row.includes(search));
+}
+
 $(function () {
 
     var dataTable = $('.dataTableRelatorioOrcamentosItens').DataTable(
@@ -155,7 +158,6 @@ $(function () {
     var id = "#chart-div";
     var ctx = document.getElementById(id.substr(1)).getContext('2d');
 
-
     var $collapse = $('#collapseFluxocaixaResumo'),
         $cardBodyFiltros = $('#card-body-filtros'),
         indexColumns = {
@@ -166,21 +168,14 @@ $(function () {
             quantidade: 9,
             data_aprov:14
         }
-    
-        
-    function exists(arr, search) {
-        return arr.some(row => row.includes(search));
-    }
 
     // exibir tudo
-    dataTable.page.len(-1).draw();
-    dataTable.draw();
-    $('#relatorioorcamentoitens-section').addClass('d-none');
+    // dataTable.page.len(-1).draw();
+    // dataTable.draw();
+    // $('#relatorioorcamentoitens-section').addClass('d-none');
 
     dataTable.on('xhr.dt', function (e, settings, json, xhr) {
-        // console.log(dataTable.rows({search: 'applied'}));
-        console.log(dataTable.$('tr', {"filter":"applied"}))
-        resumo(json.data);
+        resumo(json.dataSemPaginacao);
     });
 
     function resumo (jsonData) {
@@ -286,10 +281,10 @@ $(function () {
     };
 
     $('#relatorioorcamentoitens-section').addClass('d-none');
-    $('#relatorioorcamentoitens-section').addClass('d-none');
+    // $('#relatorioorcamentoitens-section').addClass('d-none');
     $('#graficos').addClass('d-none');
 
-    $('#collapseFluxocaixaResumo').on('shown.bs.collapse', function () {
+    $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
         //resumo();
         dataTable.page.len(10).draw();
         // dataTable.draw();
@@ -318,13 +313,13 @@ $(function () {
     $('#card-body-filtros').on('change', function () {
         $('#collapseFluxocaixaResumo').collapse('hide');
         $('#relatorioorcamentoitens-section').addClass('d-none');
-        resumo();
+        // resumo();
     });
 
 
     // fazer para o campo de input também
 
-    $('#botaoRelatorio').on('click', function(){
+    $('#botaoRelatorio[aria-expanded="false"]').on('click', function(){
 
         let pesquisar = false;
 
@@ -336,11 +331,8 @@ $(function () {
 
         if (pesquisar) {
             resumo();
-            // setTimeout(function(){
-            // }, 1000);
+            $(this).addClass('active');
         } else {
-            // setTimeout(function(){ 
-            // }, 1000);
             alert("Aplique um filtro para emitir um relatório!");
             event.stopPropagation();
         }
