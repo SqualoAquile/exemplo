@@ -327,11 +327,11 @@ $(function () {
         if (pesquisar) {
             setTimeout(function(){
                 resumo();
-            }, 500);
+            }, 1000);
         } else {
             setTimeout(function(){ 
                 alert("Aplique um filtro para emitir um relatório!");
-            }, 500);
+            }, 1000);
             event.stopPropagation();
         }
 
