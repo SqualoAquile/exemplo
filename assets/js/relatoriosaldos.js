@@ -111,7 +111,7 @@ $(function () {
         totalFinal = parseFloat(floatParaPadraoInternacional(rowData[lastRow][indexColumns.ctotalFinal].replace('R$','')));
 
         i = 0;
-        rowData.each(function () {
+        rowData.forEach(function () {
             totalEntradas += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.ctotalEntradas].replace('R$','')));
             totalSaidas += parseFloat(floatParaPadraoInternacional(rowData[i][indexColumns.ctotalSaidas].replace('R$','')));
             i++;
