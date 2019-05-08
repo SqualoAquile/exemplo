@@ -212,7 +212,7 @@
 
       <style>
          .form-control.is-invalid ~ .invalid-feedback:nth-child(2) {
-            display: none;
+            display: none!important;
          }
       </style>
 
