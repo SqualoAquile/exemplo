@@ -197,6 +197,9 @@ $(function () {
         k = 0;
 
         if (rowData) {
+
+            console.log('rowData', rowData);
+
             rowData.forEach(function (element) {
 
                 var valor = element[indexColumns.valor];
@@ -227,25 +230,29 @@ $(function () {
                         listaProdutos[m] = entrada;
                     }
                 }
+
+                // console.log('tipo', tipo)
                 
                 // Calculo para os cards do relatorio
                 if (tipo=="Produtos") {
                     totalProdutos += parseFloat(valor);
                     quantidadeProdutos += parseInt(quantidade);
                     // console.log('quantidadeProdutos', quantidadeProdutos)
-                    console.log('tipo', quantidadeProdutos)
+                    // console.log('tipo', quantidadeProdutos)
                 } else if(tipo=="Servicoscomplementares") {
                     // console.log('servicoscomplementares')
                     totalServicosCompl += parseFloat(valor);
                     quantidadeServicosCompl += parseInt(quantidade);
-                    console.log('tipo', tipo)
+                    // console.log('tipo', tipo)
                 } else {
                     // console.log('servicos')
                     totalServicos += parseFloat(valor);
                     quantidadeServicos += parseInt(quantidade);
-                    console.log('tipo', tipo)
+                    // console.log('tipo', tipo)
                 }
             });
+        } else {
+            console.log('else', rowData)
         }
 
         listaProdutos = listaProdutos.sort(function(a,b) {
