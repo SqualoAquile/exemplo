@@ -227,22 +227,23 @@ $(function () {
                         listaProdutos[m] = entrada;
                     }
                 }
-
-                console.log('tipo', tipo)
                 
                 // Calculo para os cards do relatorio
-                if(tipo=="Produtos"){
+                if (tipo=="Produtos") {
                     totalProdutos += parseFloat(valor);
                     quantidadeProdutos += parseInt(quantidade);
                     // console.log('quantidadeProdutos', quantidadeProdutos)
-                }else if(tipo=="Servicos"){
-                    // console.log('servicos')
-                    totalServicos += parseFloat(valor);
-                    quantidadeServicos += parseInt(quantidade);
-                }else if(tipo=="Servicoscomplementares"){
+                    console.log('tipo', tipo)
+                } else if(tipo=="Servicoscomplementares") {
                     // console.log('servicoscomplementares')
                     totalServicosCompl += parseFloat(valor);
                     quantidadeServicosCompl += parseInt(quantidade);
+                    console.log('tipo', tipo)
+                } else {
+                    // console.log('servicos')
+                    totalServicos += parseFloat(valor);
+                    quantidadeServicos += parseInt(quantidade);
+                    console.log('tipo', tipo)
                 }
             });
         }
