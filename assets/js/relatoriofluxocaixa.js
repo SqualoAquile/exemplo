@@ -132,7 +132,6 @@ $(function () {
         totalAQ = numReceitasAQ + numDespesasAQ;
         total = totalQ + totalAQ;
        
-
         $('#despesasQuitadas').text(floatParaPadraoBrasileiro(somasDespesasQ));
         $('#despesasAQuitar').text(floatParaPadraoBrasileiro(somasDespesasAQ));
 

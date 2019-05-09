@@ -118,7 +118,7 @@ $(function () {
         });
 
         resultado = parseFloat(totalEntradas-totalSaidas);
-        diferenca = parseFloat(resultado-totalFinal);
+        diferenca = parseFloat(totalInicial+resultado-totalFinal);
 
         $('#totalInicial').text(floatParaPadraoBrasileiro(totalInicial));
         $('#totalEntradas').text(floatParaPadraoBrasileiro(totalEntradas));

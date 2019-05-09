@@ -56,11 +56,11 @@ $(function () {
     // $('#DataTables_Table_0_length').addClass('d-none');
 
     dataTable.on('xhr.dt', function (e, settings, json, xhr) {
+        console.log('xhr trigger');
         resumo(json.dataSemPaginacao);
     });
 
     function resumo (jsonData) {
-
         // dataTable.page.len(-1).draw();
         // dataTable.draw();
         
@@ -94,7 +94,7 @@ $(function () {
 
     // EVENTOS -----------------------------------------------------------------
 
-    $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
+    $('#collapseFluxocaixaResumo').on('shown.bs.collapse', function () {
         //resumo();
         // dataTable.page.len(10).draw();
         // dataTable.draw();
@@ -112,15 +112,15 @@ $(function () {
         $('#DataTables_Table_0_wrapper').addClass('d-none');
     });
 
-    $('#graficos').on('click', function () {
-        $('#collapseFiltros').collapse('hide');
-        $('#collapseFluxocaixaResumo').collapse('hide');
-        $('#DataTables_Table_0_wrapper').addClass('d-none');
-    });
+    // $('#graficos').on('click', function () {
+    //     $('#collapseFiltros').collapse('hide');
+    //     $('#collapseFluxocaixaResumo').collapse('hide');
+    //     $('#DataTables_Table_0_wrapper').addClass('d-none');
+    // });
 
     $('#card-body-filtros').on('change', function () {
         $('#collapseFluxocaixaResumo').collapse('hide');
-        $('#DataTables_Table_0_wrapper').addClass('d-none');
+        // $('#DataTables_Table_0_wrapper').addClass('d-none');
     });
 
     $('#botaoRelatorio').on('click', function(){
