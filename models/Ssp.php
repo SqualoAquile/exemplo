@@ -900,6 +900,14 @@ class SSP {
 			 $order
 			 $limit"
 		);
+
+		// Main query to actually get the data
+		$dataSemPaginacao = self::sql_exec( $db, $bindings,
+			"SELECT `".implode("`, `", self::pluck($columns, 'db'))."`
+			 FROM `$table`
+			 $where
+			 $order"
+		);
 		
 		// Data set length after filtering
 		$resFilterLength = self::sql_exec( $db, $bindings,
@@ -926,7 +934,8 @@ class SSP {
 				0,
 			"recordsTotal"    => intval( $recordsTotal ),
 			"recordsFiltered" => intval( $recordsFiltered ),
-			"data"            => self::data_output( $columns, $data )
+			"data"            => self::data_output( $columns, $data ),
+			"dataSemPaginacao" => self::data_output( $columns, $dataSemPaginacao )
 		);
 	}
 

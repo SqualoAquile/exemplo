@@ -86,7 +86,7 @@ $(function () {
             var $this = $(this),
                 $pai = $this.parents('.input-group'),
                 $inputs = $pai.find('input[type=text]');
-
+                
             $inputs.change();
 
             removeMask($inputs);

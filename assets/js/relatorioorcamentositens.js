@@ -1,6 +1,4 @@
-
 var charts = [];
-
 var labelProdutosGlobal = [];
 var dataProdutosGlobal = [];
 
@@ -104,6 +102,10 @@ function number_format( numero, decimal, decimal_separador, milhar_separador ){
         return s.join(dec);
 }
 
+function exists(arr, search) {
+    return arr.some(row => row.includes(search));
+}
+
 $(function () {
 
     var dataTable = $('.dataTableRelatorioOrcamentosItens').DataTable(
@@ -155,32 +157,24 @@ $(function () {
     var id = "#chart-div";
     var ctx = document.getElementById(id.substr(1)).getContext('2d');
 
-
     var $collapse = $('#collapseFluxocaixaResumo'),
         $cardBodyFiltros = $('#card-body-filtros'),
         indexColumns = {
             acoes: 0,
-            tipo:3,
-            material_servico:4,
+            tipo: 3,
+            material_servico: 4,
             valor: 8,
             quantidade: 9,
-            data_aprov:14
-        }
-    
-        
-    function exists(arr, search) {
-        return arr.some(row => row.includes(search));
-    }
+            data_aprov: 14
+        };
 
     // exibir tudo
-    dataTable.page.len(-1).draw();
-    dataTable.draw();
-    $('#relatorioorcamentoitens-section').addClass('d-none');
+    // dataTable.page.len(-1).draw();
+    // dataTable.draw();
+    // $('#relatorioorcamentoitens-section').addClass('d-none');
 
     dataTable.on('xhr.dt', function (e, settings, json, xhr) {
-        // console.log(dataTable.rows({search: 'applied'}));
-        console.log(dataTable.$('tr', {"filter":"applied"}))
-        resumo(json.data);
+        resumo(json.dataSemPaginacao);
     });
 
     function resumo (jsonData) {
@@ -189,27 +183,27 @@ $(function () {
         // dataTable.draw();
 
         var rowData = jsonData,
-        quantidadeProdutos = 0,
-        quantidadeServicos = 0,
-        quantidadeServicosCompl = 0,
-        totalServicos = 0,
-        totalServicosCompl = 0,
-        totalProdutos = 0,
-        totalItens = 0,
-        nomeProduto = [],
-        quantidadeProduto = [],
-        listaProdutos =[];
+            quantidadeProdutos = 0,
+            quantidadeServicos = 0,
+            quantidadeServicosCompl = 0,
+            totalServicos = 0,
+            totalServicosCompl = 0,
+            totalProdutos = 0,
+            totalItens = 0,
+            nomeProduto = [],
+            quantidadeProduto = [],
+            listaProdutos =[];
 
-        i = 0;
         k = 0;
 
         if (rowData) {
-            rowData.forEach(function () {
 
-                var valor = rowData[i][indexColumns.valor];
-                var quantidade = parseInt(rowData[i][indexColumns.quantidade]);
-                var tipo = rowData[i][indexColumns.tipo];
-                var produto = rowData[i][indexColumns.material_servico];
+            rowData.forEach(function (element) {
+
+                var valor = element[indexColumns.valor];
+                var quantidade = parseInt(element[indexColumns.quantidade]);
+                var tipo = element[indexColumns.tipo];
+                var produto = element[indexColumns.material_servico];
                 
                 valor = valor.replace('R$  ', '');
                 valor = floatParaPadraoInternacional(valor);
@@ -217,35 +211,35 @@ $(function () {
                 valor = valor * quantidade;
 
                 // Separando os dados para Top 5 Produtos mais vendidos
-                if (tipo == "Produtos" && exists(nomeProduto,produto) == false) {
-                    nomeProduto[k] = produto;
-                    quantidadeProduto[k] = quantidade;
-
-                    var entrada = [nomeProduto[k],quantidadeProduto[k]];
-                    listaProdutos[k]=entrada;
-
-                    k++;
-
-                }else if (tipo == "Produtos" && exists(nomeProduto,produto) == true) {
-                    var m = nomeProduto.indexOf(produto);
-                    quantidadeProduto[m] += parseInt(quantidade);
-                    var entrada = [nomeProduto[m],quantidadeProduto[m]];
-                    listaProdutos[m] = entrada;
+                if (tipo == "Produtos") {
+                    if (exists(nomeProduto,produto) == false) {
+                        nomeProduto[k] = produto;
+                        quantidadeProduto[k] = quantidade;
+    
+                        var entrada = [nomeProduto[k],quantidadeProduto[k]];
+                        listaProdutos[k]=entrada;
+    
+                        k++;
+    
+                    }else {
+                        var m = nomeProduto.indexOf(produto);
+                        quantidadeProduto[m] += parseInt(quantidade);
+                        var entrada = [nomeProduto[m],quantidadeProduto[m]];
+                        listaProdutos[m] = entrada;
+                    }
                 }
                 
                 // Calculo para os cards do relatorio
-                if(tipo=="Produtos"){
+                if (tipo=="Produtos") {
                     totalProdutos += parseFloat(valor);
                     quantidadeProdutos += parseInt(quantidade);
-                }else if(tipo=="Servicos"){
-                    totalServicos += parseFloat(valor);
-                    quantidadeServicos += parseInt(quantidade);
-                }else if(tipo=="Servicoscomplementares"){
+                } else if(tipo=="Servicoscomplementares") {
                     totalServicosCompl += parseFloat(valor);
                     quantidadeServicosCompl += parseInt(quantidade);
+                } else {
+                    totalServicos += parseFloat(valor);
+                    quantidadeServicos += parseInt(quantidade);
                 }
-
-                i++;
             });
         }
 
@@ -279,22 +273,22 @@ $(function () {
         $('#quantidadeServicosCompl').text(parseInt(quantidadeServicosCompl));
         $('#totalServicosCompl').text(floatParaPadraoBrasileiro(totalServicosCompl));
 
-
         $('#quantidadeProdutos').text(parseInt(quantidadeProdutos));
         $('#totalProdutos').text(floatParaPadraoBrasileiro(totalProdutos));
+
+        drawChart(id);
 
     };
 
     $('#relatorioorcamentoitens-section').addClass('d-none');
-    $('#relatorioorcamentoitens-section').addClass('d-none');
+    // $('#relatorioorcamentoitens-section').addClass('d-none');
     $('#graficos').addClass('d-none');
 
-    $('#collapseFluxocaixaResumo').on('shown.bs.collapse', function () {
-        //resumo();
-        dataTable.page.len(10).draw();
+    $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
+        // resumo();
+        // dataTable.page.len(10).draw();
         // dataTable.draw();
         $('#relatorioorcamentoitens-section').removeClass('d-none');
-        drawChart(id);
       });
 
     $('#collapseFluxocaixaResumo').on('hidden.bs.collapse', function () {
@@ -318,7 +312,7 @@ $(function () {
     $('#card-body-filtros').on('change', function () {
         $('#collapseFluxocaixaResumo').collapse('hide');
         $('#relatorioorcamentoitens-section').addClass('d-none');
-        resumo();
+        // resumo();
     });
 
 
@@ -335,12 +329,8 @@ $(function () {
         });
 
         if (pesquisar) {
-            resumo();
-            // setTimeout(function(){
-            // }, 1000);
+            dataTable.draw();
         } else {
-            // setTimeout(function(){ 
-            // }, 1000);
             alert("Aplique um filtro para emitir um relatório!");
             event.stopPropagation();
         }
@@ -348,11 +338,9 @@ $(function () {
     });
     
     function drawChart(id) {
-        var titulo;
-
-        titulo = labelProdutosGlobal.length +' Produtos mais vendidos';
-            
-        var config = {
+        
+        var titulo = labelProdutosGlobal.length +' Produtos mais vendidos',
+        config = {
             type: 'doughnut',
             data: {
                 datasets: [{

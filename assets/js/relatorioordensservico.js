@@ -52,16 +52,20 @@ $(function () {
             dataFim: 9
         }
         
-    dataTable.page.len(-1).draw();
-    dataTable.draw();
-    $('#DataTables_Table_0_length').addClass('d-none');
+    // dataTable.page.len(-1).draw();
+    // dataTable.draw();
+    // $('#DataTables_Table_0_length').addClass('d-none');
 
-    function resumo () {
+    dataTable.on('xhr.dt', function (e, settings, json, xhr) {
+        resumo(json.dataSemPaginacao);
+    });
 
-        dataTable.page.len(-1).draw();
-        dataTable.draw();
+    function resumo (jsonData) {
+
+        // dataTable.page.len(-1).draw();
+        // dataTable.draw();
         
-        var rowData = dataTable.rows().data(),
+        var rowData = jsonData,
         somasSubtotal = 0,
         somasDesconto = 0,
         somasValor = 0,
@@ -71,25 +75,28 @@ $(function () {
         quantidadeOperacoes = 0;
         
         i = 0;
-        rowData.each(function () {               
-            subtotal = rowData[i][indexColumns.csubtotal];
-            subtotal = subtotal.replace('R$  ', '');
-            subtotal = floatParaPadraoInternacional(subtotal);
-            somasSubtotal += parseFloat(subtotal);
 
-            desconto = rowData[i][indexColumns.cdesconto];
-            desconto = desconto.replace('R$  ', '');
-            desconto = floatParaPadraoInternacional(desconto);
-            somasDesconto += parseFloat(desconto);
+        if (rowData) {
+            rowData.forEach(function () {
+                subtotal = rowData[i][indexColumns.csubtotal];
+                subtotal = subtotal.replace('R$  ', '');
+                subtotal = floatParaPadraoInternacional(subtotal);
+                somasSubtotal += parseFloat(subtotal);
 
-            valor = rowData[i][indexColumns.cvalor];
-            valor = valor.replace('R$  ', '');
-            valor = floatParaPadraoInternacional(valor);
-            somasValor += parseFloat(valor);
+                desconto = rowData[i][indexColumns.cdesconto];
+                desconto = desconto.replace('R$  ', '');
+                desconto = floatParaPadraoInternacional(desconto);
+                somasDesconto += parseFloat(desconto);
 
-            quantidadeOperacoes++;
-            i++;
-        });    
+                valor = rowData[i][indexColumns.cvalor];
+                valor = valor.replace('R$  ', '');
+                valor = floatParaPadraoInternacional(valor);
+                somasValor += parseFloat(valor);
+
+                quantidadeOperacoes++;
+                i++;
+            });
+        }
 
         $('#subtotal').text(floatParaPadraoBrasileiro(somasSubtotal));
         $('#desconto').text(floatParaPadraoBrasileiro(somasDesconto));
@@ -99,14 +106,15 @@ $(function () {
 
     };
 
-    $('#DataTables_Table_0_length').addClass('d-none');
+    // $('#DataTables_Table_0_length').addClass('d-none');
     $('#DataTables_Table_0_wrapper').addClass('d-none');
     $('#graficos').addClass('d-none');
 
-    $('#collapseFluxocaixaResumo').on('shown.bs.collapse', function () {
+    $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
+        // console.log('collapseFluxocaixaResumo show');
         //resumo();
-        dataTable.page.len(10).draw();
-        dataTable.draw();
+        // dataTable.page.len(10).draw();
+        // dataTable.draw();
         $('#DataTables_Table_0_wrapper').removeClass('d-none');
       });
 
@@ -138,14 +146,10 @@ $(function () {
         });
 
         if (pesquisar) {
-            setTimeout(function(){
-                resumo();
-            }, 500);         
+            dataTable.draw();
         } else {
-            setTimeout(function(){ 
-                alert("Aplique um filtro para emitir um relatório!");
-            }, 500);
-                event.stopPropagation(); 
+            alert("Aplique um filtro para emitir um relatório!");
+            event.stopPropagation();
         }
 
     });

@@ -51,21 +51,25 @@ $(function () {
         }
     
     
-    dataTable.page.len(-1).draw();
-    dataTable.draw();
-    $('#DataTables_Table_0_length').addClass('d-none');
+    // dataTable.page.len(-1).draw();
+    // dataTable.draw();
+    // $('#DataTables_Table_0_length').addClass('d-none');
 
-    function resumo () {
+    dataTable.on('xhr.dt', function (e, settings, json, xhr) {
+        console.log('xhr trigger');
+        resumo(json.dataSemPaginacao);
+    });
 
-        dataTable.page.len(-1).draw();
-        dataTable.draw();
+    function resumo (jsonData) {
+        // dataTable.page.len(-1).draw();
+        // dataTable.draw();
         
-        var rowData = dataTable.rows().data(),
+        var rowData = jsonData,
         quantidadeOrcamentos = 0,
         totalOrcado = 0;
     
         i = 0;
-        rowData.each(function () {
+        rowData.forEach(function () {
             // if (rowData[i][indexColumns.status].toLowerCase() == 'ativo') {
                                               
                 var valor = rowData[i][indexColumns.valor_total];
@@ -92,8 +96,8 @@ $(function () {
 
     $('#collapseFluxocaixaResumo').on('shown.bs.collapse', function () {
         //resumo();
-        dataTable.page.len(10).draw();
-        dataTable.draw();
+        // dataTable.page.len(10).draw();
+        // dataTable.draw();
         $('#DataTables_Table_0_wrapper').removeClass('d-none');
       });
 
@@ -108,15 +112,15 @@ $(function () {
         $('#DataTables_Table_0_wrapper').addClass('d-none');
     });
 
-    $('#graficos').on('click', function () {
-        $('#collapseFiltros').collapse('hide');
-        $('#collapseFluxocaixaResumo').collapse('hide');
-        $('#DataTables_Table_0_wrapper').addClass('d-none');
-    });
+    // $('#graficos').on('click', function () {
+    //     $('#collapseFiltros').collapse('hide');
+    //     $('#collapseFluxocaixaResumo').collapse('hide');
+    //     $('#DataTables_Table_0_wrapper').addClass('d-none');
+    // });
 
     $('#card-body-filtros').on('change', function () {
         $('#collapseFluxocaixaResumo').collapse('hide');
-        $('#DataTables_Table_0_wrapper').addClass('d-none');
+        // $('#DataTables_Table_0_wrapper').addClass('d-none');
     });
 
     $('#botaoRelatorio').on('click', function(){
@@ -130,14 +134,10 @@ $(function () {
         });
 
         if (pesquisar) {
-            setTimeout(function(){
-                resumo();
-            }, 500);         
+            dataTable.draw();
         } else {
-            setTimeout(function(){ 
-                alert("Aplique um filtro para emitir um relatório!");
-            }, 500);
-                event.stopPropagation(); 
+            alert("Aplique um filtro para emitir um relatório!");
+            event.stopPropagation(); 
         }
 
     });
