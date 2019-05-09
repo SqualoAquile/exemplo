@@ -56,7 +56,6 @@ $(function () {
     // $('#DataTables_Table_0_length').addClass('d-none');
 
     dataTable.on('xhr.dt', function (e, settings, json, xhr) {
-        console.log('xhr trigger');
         resumo(json.dataSemPaginacao);
     });
 
