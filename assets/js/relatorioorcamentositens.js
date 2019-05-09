@@ -150,7 +150,16 @@ $(function () {
                     'sLast': 'Último'
                 }
             },
-            dom: '<"limit-header-browser"l><t><p><r><i>'
+            dom: '<"limit-header-browser"l><t><p><r><i>',
+            "rowCallback": function(row, data, index) {
+                
+                let $tdLargura = $('td', row).eq(10),
+                    $tdComprimento = $('td', row).eq(11);
+
+                $tdLargura.text($tdLargura.text().replace('R$ ', ''));
+                $tdComprimento.text($tdComprimento.text().replace('R$ ', ''));
+
+            }
         }
     );
 
@@ -168,21 +177,13 @@ $(function () {
             data_aprov: 14
         };
 
-    // exibir tudo
-    // dataTable.page.len(-1).draw();
-    // dataTable.draw();
-    // $('#relatorioorcamentoitens-section').addClass('d-none');
-
     dataTable.on('xhr.dt', function (e, settings, json, xhr) {
         resumo(json.dataSemPaginacao);
     });
 
     function resumo (jsonData) {
-        
-        // dataTable.page.len(-1).draw();
-        // dataTable.draw();
 
-        var rowData = jsonData,
+        let rowData = jsonData,
             quantidadeProdutos = 0,
             quantidadeServicos = 0,
             quantidadeServicosCompl = 0,
@@ -198,12 +199,12 @@ $(function () {
 
         if (rowData) {
 
-            rowData.forEach(function (element) {
+            rowData.forEach(function (element, index) {
 
-                var valor = element[indexColumns.valor];
-                var quantidade = parseInt(element[indexColumns.quantidade]);
-                var tipo = element[indexColumns.tipo];
-                var produto = element[indexColumns.material_servico];
+                let valor = element[indexColumns.valor],
+                    quantidade = parseInt(element[indexColumns.quantidade]),
+                    tipo = element[indexColumns.tipo],
+                    produto = element[indexColumns.material_servico];
                 
                 valor = valor.replace('R$  ', '');
                 valor = floatParaPadraoInternacional(valor);
@@ -240,6 +241,7 @@ $(function () {
                     totalServicos += parseFloat(valor);
                     quantidadeServicos += parseInt(quantidade);
                 }
+
             });
         }
 
@@ -247,8 +249,8 @@ $(function () {
             return b[1]-a[1];
         });
 
-        var dataProdutos = [];
-        var labelProdutos = [];
+        let dataProdutos = [],
+            labelProdutos = [];
 
         for (let i = 0; i < listaProdutos.length; i++) {
             labelProdutos[i] = listaProdutos[i][0];
@@ -281,22 +283,15 @@ $(function () {
     };
 
     $('#relatorioorcamentoitens-section').addClass('d-none');
-    // $('#relatorioorcamentoitens-section').addClass('d-none');
     $('#graficos').addClass('d-none');
 
     $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
-        // resumo();
-        // dataTable.page.len(10).draw();
-        // dataTable.draw();
         $('#relatorioorcamentoitens-section').removeClass('d-none');
       });
 
     $('#collapseFluxocaixaResumo').on('hidden.bs.collapse', function () {
         $('#relatorioorcamentoitens-section').addClass('d-none');
-        // dataTable.page.len(-1).draw();
-        // dataTable.draw();
     });
-
 
     $('#limpar-filtro').on('click', function () {
         $('#collapseFluxocaixaResumo').collapse('hide');
@@ -312,7 +307,6 @@ $(function () {
     $('#card-body-filtros').on('change', function () {
         $('#collapseFluxocaixaResumo').collapse('hide');
         $('#relatorioorcamentoitens-section').addClass('d-none');
-        // resumo();
     });
 
 
@@ -544,4 +538,5 @@ $(function () {
                 .draw();
 
         });
+
 });
