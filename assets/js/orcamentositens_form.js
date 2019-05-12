@@ -625,9 +625,9 @@ $(function() {
 
         if ($indexFirstTr != $indexOtherTr) {
           
-          if ($item.text() == $itemComparar.text()) {
+          if ($item.text().toLowerCase().trim() == $itemComparar.text().toLowerCase().trim()) {
 
-            if ($subitem.text() == $subitemComparar.text()) {
+            if ($subitem.text().toLowerCase().trim() == $subitemComparar.text().toLowerCase().trim()) {
 
               $otherTr.after($firstTr);
 
