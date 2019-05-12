@@ -299,7 +299,6 @@ class Ordemservico extends model {
             $infos['cliente'] = ucwords($informacoes['nome_razao_social']);
             $infos['tecnico'] = ucwords($informacoes['tec_responsavel']);
             $infos['vendedor'] = ucwords($informacoes['vendedor']);
-            $infos['observacao'] = $informacoes['observacao'];
             $dataAux1 = explode('-',$informacoes['data_inicio']);
             $informacoes['data_inicio'] != "0000-00-00" ? $infos['data_inicio'] = $dataAux1[2]."/".$dataAux1[1]. "/".$dataAux1[0] : $infos['data_inicio'] = "" ;
             $dataAux2 = explode('-',$informacoes['data_fim']);
@@ -357,7 +356,7 @@ class Ordemservico extends model {
             $desconto = $informacoes['desconto'];
             $infos['desconto'] =  number_format($informacoes['desconto'],2,",",".");
             $infos["preco_total"] =  number_format($informacoes['sub_total'],2,",",".");
-
+            $infos['observacao'] = $informacoes['observacao'];
 
             //---------------------------------------------------------------------------------------------
             $custoDeslocamento = $this->custoDeslocamento();
@@ -513,6 +512,7 @@ class Ordemservico extends model {
             ';
     
             $mpdf->SetHTMLHeader($htmlHeader);
+            $mpdf->SetHTMLFooter('Página {PAGENO} de {nb}');
     
             $html ='
             <table width="800" style="border:1px solid #000000;" cellPadding="9"><thead></thead>
@@ -536,8 +536,9 @@ class Ordemservico extends model {
                 <tbody>
                     <tr>                
                         <td>
-                            <p> <b>Descrição: </b> '.$infos["descricao"].'</p>
-                            <p> <b>Forma de Pagamento: </b> '.$infos['forma_pagamento'].' </p>  
+                            <p> <b>Título: </b> '.$infos["descricao"].'</p>
+                            <p> <b>Código do Orçamento: </b> '.$id_orcamento.'</p>
+                            <p> <b>Código da Ordem de Serviço: </b> '.$id.'</p>
                             <p> <b>Vendedor: </b> '.$infos['vendedor'].'  </p>
                             <p> <b>Técnico: </b> '.$infos['tecnico'].'  </p>
                         </td>
@@ -551,7 +552,8 @@ class Ordemservico extends model {
                         </td>   
 
                         <td>
-                            <p> <b>Prazo de Entrega: </b> '.$infos['prazo_entrega'].' </p>  
+                            <p> <b>Prazo de Entrega: </b> '.$infos['prazo_entrega'].' </p>
+                            <p> <b>Forma de Pagamento: </b> '.$infos['forma_pagamento'].' </p>    
                             <p> <b>Data de Aprovação: </b> '.$infos['data_aprovacao'].' </p>
                             <p> <b>Data de Inicio: </b> '.$infos['data_inicio'].'  </p>
                             <p> <b>Data de Finalização: </b> '.$infos['data_fim'].'  </p>
@@ -659,7 +661,6 @@ class Ordemservico extends model {
             <br></br>
             ';
 
-
             // BLOCO COM PREÇO TOTAL
 
             if(isset($mostraPrecos) && $mostraPrecos==true ){
@@ -679,9 +680,33 @@ class Ordemservico extends model {
                 ';
             }
 
+            // BLOCO COM OBSERVAÇÕES - VEM DO ORÇAMENTO
+
+            if (isset($infos['observacao']) && !empty($infos['observacao']))  {
+                $html.='
+                <table style="border:1px solid #000000; line-height:100%; font-size:10pt" width="800" cellPadding="9">
+                    <thead>
+                        <tr>
+                            <td align="center">
+                                <h4>OBSERVAÇÕES</h4>
+                            </td>
+                        </tr>
+                    </thead>    
+            
+                    <tr>
+                        <td>
+                            <p> '.$infos['observacao'].' <p> 
+                        </td>
+                    </tr>
+                </table>
+                <br></br>
+            ';
+            }
+            
+
             // BLOCO COM AVISOS
 
-        if ($mostraAvisos==true) {
+        if ($mostraAvisos==true && !empty($avisos)) {
             $html .='
             <table style="border:1px solid #000000; line-height:120%; font-size:10pt" width="800" cellPadding="9">
                 <thead>
@@ -747,7 +772,6 @@ class Ordemservico extends model {
     $mpdf->WriteHTML($html);
     $mpdf->Output('OrdemServico.pdf','I');
     
-
         }
 
     }

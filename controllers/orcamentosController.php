@@ -297,6 +297,7 @@ class orcamentosController extends controller{
         ';
 
         $mpdf->SetHTMLHeader($htmlHeader);
+        $mpdf->SetHTMLFooter('Página {PAGENO} de {nb}');
 
         $html ='
         <table width="800" style="border:1px solid #000000;" cellPadding="9"><thead></thead>
@@ -326,7 +327,7 @@ class orcamentosController extends controller{
 
                     <td>
                         <p> <b>Cliente: </b>'.$infos['cliente'].' </p>
-                        <p> <b>Descrição: </b> '.$infos['descricao'].'  </p>
+                        <p> <b>Título: </b> '.$infos['descricao'].'  </p>
                         <p> <b>Contato vendedor: </b> '.$infos['tecnico'].' </p>
                     </td>
 
@@ -530,7 +531,7 @@ class orcamentosController extends controller{
 
         // BLOCO COM AVISOS
 
-        if ($mostraAvisos==true) {
+        if ($mostraAvisos==true && !empty($avisos)) {
             $html .='
             <table style="border:1px solid #000000; line-height:120%; font-size:10pt" width="800" cellPadding="9">
                 <thead>
@@ -563,71 +564,32 @@ class orcamentosController extends controller{
 
         // BLOCO COM NOTIFICAÇÕES
 
-        $html.='
+        // $html.='
 
-        <table style="border:1px solid #000000; line-height:120%; font-size:9pt" width="800" cellPadding="9">
-            <tr>
-                <td>
-                    <p class = "small">Obs.: Os itens em vermelho são feitos com material alternativo.</p>
-                    <p class = "small">* O desconto é referente aos itens descritos em preto.</p>
-                    <p class = "small">* Este trabalho tem 1 ano de garantia de aplicação.</p>
-                    <p class = "small">* O pagamento pode ser feito em até 6x sem juros no cartão</p>
-                    <p class = "small">* Este orçamento tem validade de 15 dias, a partir da sua data de emissão</p>
-                </td>
-                <td>
-                    <p class = "small">* Material importado tradicional, tem 5 anos de garantia de durabilidade.</p>
-                    <p class = "small">* Material nacional, tem 2 anos de garantia de durabilidade (externo)</p>
-                    <p class = "small">* Para confirmar o agendamento, solicitamos uma entrada de 30% do preço final do trabalho</p>
-                    <p class = "small">* Não aceitamos pagamentos com cheque</p>
-                </td>
-            </tr>
-        </table>
+        // <table style="border:1px solid #000000; line-height:120%; font-size:9pt" width="800" cellPadding="9">
+        //     <tr>
+        //         <td>
+        //             <p class = "small">Obs.: Os itens em vermelho são feitos com material alternativo.</p>
+        //             <p class = "small">* O desconto é referente aos itens descritos em preto.</p>
+        //             <p class = "small">* Este trabalho tem 1 ano de garantia de aplicação.</p>
+        //             <p class = "small">* O pagamento pode ser feito em até 6x sem juros no cartão</p>
+        //             <p class = "small">* Este orçamento tem validade de 15 dias, a partir da sua data de emissão</p>
+        //         </td>
+        //         <td>
+        //             <p class = "small">* Material importado tradicional, tem 5 anos de garantia de durabilidade.</p>
+        //             <p class = "small">* Material nacional, tem 2 anos de garantia de durabilidade (externo)</p>
+        //             <p class = "small">* Para confirmar o agendamento, solicitamos uma entrada de 30% do preço final do trabalho</p>
+        //             <p class = "small">* Não aceitamos pagamentos com cheque</p>
+        //         </td>
+        //     </tr>
+        // </table>
 
-        ';
+        // ';
 
-        // Este é o bloco que está funcionando
         $mpdf->WriteHTML($html);
         $mpdf->Output('Orcamento.pdf','I');
 
-        // teste pegar binário do pdf para transformar em JPG
-        //$pdfOutput = $mpdf->Output('Orcamento.pdf','S');
-        //print_r($pdfOutput);exit;
-        
-        // Teste Imagick
-        // create Imagick object
-        // $imagick = new Imagick();
-        // // Reads image from PDF
-        // $converted = $imagick->readImage($mpdf->Output('Orcamento.pdf','S'));
-        // // Writes an image or image sequence Example- converted-0.jpg, converted-1.jpg
-        // $imagick->writeImages($converted, false);
-
-
-        // Teste WKHTMLtoImage
-        //------------------------------------------------------------------------------------------
-        //use mikehaertl\wkhtmlto\Image;
-
-        // You can pass a filename, a HTML string, an URL or an options array to the constructor
-
-        //$image = new Image($html);
-
-        // $image = new Image(array(
-        //     'binary' => __DIR__ . '/../vendor/vendor/mikehaertl/phpwkhtmltopdf',
-        //     //'ignoreWarnings' => true,
-        //     'commandOptions' => array(
-        //         'useExec' => true,
-        //     )
-        // ));
-
-        // $image->setPage($html);
-        // $image->send('page.png');
-
-        // $image->send('page.png');
-
-        // ... or send to client as file download
-        // if (!$image->send('page.png')) {
-        //     $error = $image->getError();
-        //     print_r($error);
-        // }
+    
     }
 }   
             
