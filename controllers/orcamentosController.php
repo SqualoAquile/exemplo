@@ -269,7 +269,7 @@ class orcamentosController extends controller{
             'margin_left' => 10,
             'margin_right' => 10,
             'margin_top' => 40,
-            'margin_bottom' => 25,
+            'margin_bottom' => 10,
             'margin_header' => 10,
             'margin_footer' => 10,
             'setAutoTopMargin' => 'false'
