@@ -319,7 +319,7 @@ class Ordemservico extends model {
             $informacoes = $sql[0];
 
             $infos['endereco'] = $informacoes['endereco'] .",". $informacoes['numero'];
-            empty($informacoes['complemento']) ? $infos['endereco'] = $infos['endereco'] .",". $informacoes['complemento'] : $infos['endereco'] = $infos['endereco'] ;
+            !empty($informacoes['complemento']) ? $infos['endereco'] = $infos['endereco'] .",". $informacoes['complemento'] : $infos['endereco'] = $infos['endereco'] ;
             $infos['endereco'] = $infos['endereco'] .",". $informacoes['bairro'] .",". $informacoes['cidade'];
             $infos['email'] = $informacoes['email'];
             if(empty($informacoes['telefone'])){
@@ -512,7 +512,7 @@ class Ordemservico extends model {
             ';
     
             $mpdf->SetHTMLHeader($htmlHeader);
-            $mpdf->SetHTMLFooter('Página {PAGENO} de {nb}');
+            $mpdf->SetFooter('Página {PAGENO} de {nb}');
     
             $html ='
             <table width="800" style="border:1px solid #000000;" cellPadding="9"><thead></thead>

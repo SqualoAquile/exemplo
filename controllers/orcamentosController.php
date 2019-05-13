@@ -297,7 +297,7 @@ class orcamentosController extends controller{
         ';
 
         $mpdf->SetHTMLHeader($htmlHeader);
-        $mpdf->SetHTMLFooter('Página {PAGENO} de {nb}');
+        $mpdf->SetFooter('Página {PAGENO} de {nb}');
 
         $html ='
         <table width="800" style="border:1px solid #000000;" cellPadding="9"><thead></thead>
