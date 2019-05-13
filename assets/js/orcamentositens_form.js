@@ -206,110 +206,114 @@ $(function() {
       // Auto incrementa os ID's dos itens
       lastInsertId += 1;
 
-      let item = values[0],
-        subitem = values[1],
-        tipo = values[6],
-        tipoTransform = tipo.toLowerCase().trim(),
-        unidade = values[9],
-        $produtosMl = [],
-        $produtos = [],
-        $servicos = [],
-        $servicoscomplementares = [],
-        $equals = $('#itensOrcamento tbody tr').filter(function() {
-
-          let $tr = $(this),
-            $item = $tr.find('td:eq(1)'),
-            $subitem = $tr.find('td:eq(2)'),
-            $tipo = $tr.find('td:eq(7)'),
-            $unidade = $tr.find('td:eq(10)'),
-            tipoTransformEqual = $tipo.text().toLowerCase().trim();
-
-          if (($item.text().toLowerCase().trim() == item.toLowerCase().trim()) && ($subitem.text().toLowerCase().trim() == subitem.toLowerCase().trim())) {
-
-            if (tipoTransformEqual == 'produtos') {
-              if ($unidade.text().toLowerCase().trim() == 'ml') {
-                $produtosMl.push($tr);
-              } else {
-                $produtos.push($tr);
-              }
-            } else if(tipoTransformEqual == 'servicos') {
-              $servicos.push($tr);
-            } else {
-              $servicoscomplementares.push($tr);
-            }
-
-            return $tr;
-          }
-
-        });
-
-      if ($equals.length) {
-
-        // Adicionar após o ultimo do grupo
-
-        if (tipoTransform == 'produtos') {
-          if (unidade.toLowerCase().trim() == 'ml') {
-            if ($produtosMl.length) {
-              $produtosMl[$produtosMl.length - 1].after('<tr data-id="' + lastInsertId + '">' + botoes + tds + '</tr>');
-            } else {
-              $equals.first().before('<tr data-id="' + lastInsertId + '">' + botoes + tds + '</tr>');
-            }
-          } else {
-            if ($produtos.length) {
-              $produtos[$produtos.length - 1].after('<tr data-id="' + lastInsertId + '">' + botoes + tds + '</tr>');
-            } else {
-              if ($produtosMl.length) {
-                $produtosMl[$produtosMl.length - 1].after('<tr data-id="' + lastInsertId + '">' + botoes + tds + '</tr>');
-              } else {
-                $equals.first().before('<tr data-id="' + lastInsertId + '">' + botoes + tds + '</tr>');
-              }
-            }
-          }
-        } else if (tipoTransform == 'servicos') {
-          if ($servicos.length) {
-            $servicos[$servicos.length - 1].after('<tr data-id="' + lastInsertId + '">' + botoes + tds + '</tr>');
-          } else {
-            if ($produtosMl.length) {
-              if ($produtos.length) {
-                $produtos[$produtos.length - 1].after('<tr data-id="' + lastInsertId + '">' + botoes + tds + '</tr>');
-              } else {
-                $produtosMl[$produtosMl.length - 1].after('<tr data-id="' + lastInsertId + '">' + botoes + tds + '</tr>');
-              }
-            } else {
-              if ($produtos.length) {
-                $produtos[$produtos.length - 1].after('<tr data-id="' + lastInsertId + '">' + botoes + tds + '</tr>');
-              } else {
-                $equals.first().before('<tr data-id="' + lastInsertId + '">' + botoes + tds + '</tr>');
-              }
-            }
-          }
-        } else {
-            if ($servicoscomplementares.length) {
-              $servicoscomplementares[$servicoscomplementares.length - 1].after('<tr data-id="' + lastInsertId + '">' + botoes + tds + '</tr>');
-            } else {
-              $equals.last().after('<tr data-id="' + lastInsertId + '">' + botoes + tds + '</tr>');
-            }
-        }
-        
-      } else {
-
-        // Primeiro do grupo
-
-        $("#itensOrcamento tbody").append('<tr data-id="' + lastInsertId + '">' + botoes + tds + '</tr>');
-
-      }
+      currentId = lastInsertId;
 
     } else {
       // Caso tenha algum valor é por que o item está sendo editado
 
-      $('#itensOrcamento tbody tr[data-id="' + currentId + '"]').html(
-        botoes + tds
-      );
+      // $('#itensOrcamento tbody tr[data-id="' + currentId + '"]').html(
+      //   botoes + tds
+      // );
+
+      $('#itensOrcamento tbody tr[data-id="' + currentId + '"]').remove();
 
       // Seta o data id como undefined para novos itens poderem ser cadastrados
       $tableItensOrcamento.removeAttr("data-current-id");
 
       $('#col-cancelar_edicao').addClass('d-none');
+
+    }
+
+    let item = values[0],
+      subitem = values[1],
+      tipo = values[6],
+      tipoTransform = tipo.toLowerCase().trim(),
+      unidade = values[9],
+      $produtosMl = [],
+      $produtos = [],
+      $servicos = [],
+      $servicoscomplementares = [],
+      $equals = $('#itensOrcamento tbody tr').filter(function() {
+
+        let $tr = $(this),
+          $item = $tr.find('td:eq(1)'),
+          $subitem = $tr.find('td:eq(2)'),
+          $tipo = $tr.find('td:eq(7)'),
+          $unidade = $tr.find('td:eq(10)'),
+          tipoTransformEqual = $tipo.text().toLowerCase().trim();
+
+        if (($item.text().toLowerCase().trim() == item.toLowerCase().trim()) && ($subitem.text().toLowerCase().trim() == subitem.toLowerCase().trim())) {
+
+          if (tipoTransformEqual == 'produtos') {
+            if ($unidade.text().toLowerCase().trim() == 'ml') {
+              $produtosMl.push($tr);
+            } else {
+              $produtos.push($tr);
+            }
+          } else if(tipoTransformEqual == 'servicos') {
+            $servicos.push($tr);
+          } else {
+            $servicoscomplementares.push($tr);
+          }
+
+          return $tr;
+        }
+
+      });
+
+    if ($equals.length) {
+
+      // Adicionar após o ultimo do grupo
+
+      if (tipoTransform == 'produtos') {
+        if (unidade.toLowerCase().trim() == 'ml') {
+          if ($produtosMl.length) {
+            $produtosMl[$produtosMl.length - 1].after('<tr data-id="' + currentId + '">' + botoes + tds + '</tr>');
+          } else {
+            $equals.first().before('<tr data-id="' + currentId + '">' + botoes + tds + '</tr>');
+          }
+        } else {
+          if ($produtos.length) {
+            $produtos[$produtos.length - 1].after('<tr data-id="' + currentId + '">' + botoes + tds + '</tr>');
+          } else {
+            if ($produtosMl.length) {
+              $produtosMl[$produtosMl.length - 1].after('<tr data-id="' + currentId + '">' + botoes + tds + '</tr>');
+            } else {
+              $equals.first().before('<tr data-id="' + currentId + '">' + botoes + tds + '</tr>');
+            }
+          }
+        }
+      } else if (tipoTransform == 'servicos') {
+        if ($servicos.length) {
+          $servicos[$servicos.length - 1].after('<tr data-id="' + currentId + '">' + botoes + tds + '</tr>');
+        } else {
+          if ($produtosMl.length) {
+            if ($produtos.length) {
+              $produtos[$produtos.length - 1].after('<tr data-id="' + currentId + '">' + botoes + tds + '</tr>');
+            } else {
+              $produtosMl[$produtosMl.length - 1].after('<tr data-id="' + currentId + '">' + botoes + tds + '</tr>');
+            }
+          } else {
+            if ($produtos.length) {
+              $produtos[$produtos.length - 1].after('<tr data-id="' + currentId + '">' + botoes + tds + '</tr>');
+            } else {
+              $equals.first().before('<tr data-id="' + currentId + '">' + botoes + tds + '</tr>');
+            }
+          }
+        }
+      } else {
+          if ($servicoscomplementares.length) {
+            $servicoscomplementares[$servicoscomplementares.length - 1].after('<tr data-id="' + currentId + '">' + botoes + tds + '</tr>');
+          } else {
+            $equals.last().after('<tr data-id="' + currentId + '">' + botoes + tds + '</tr>');
+          }
+      }
+      
+    } else {
+
+      // Primeiro do grupo
+
+      $("#itensOrcamento tbody").append('<tr data-id="' + currentId + '">' + botoes + tds + '</tr>');
 
     }
 
