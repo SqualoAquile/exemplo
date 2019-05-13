@@ -206,9 +206,34 @@ $(function() {
       // Auto incrementa os ID's dos itens
       lastInsertId += 1;
 
-      $("#itensOrcamento tbody").prepend(
-        '<tr data-id="' + lastInsertId + '">' + botoes + tds + "</tr>"
-      );
+      let item = values[0],
+        subitem = values[1],
+        $equals = $('#itensOrcamento tbody tr').filter(function() {
+
+          let $tr = $(this),
+            $item = $tr.find('td:eq(1)'),
+            $subitem = $tr.find('td:eq(2)');
+
+          if (($item.text().toLowerCase().trim() == item.toLowerCase().trim()) && ($subitem.text().toLowerCase().trim() == subitem.toLowerCase().trim())) {
+            return $tr;
+          }
+
+        });
+
+      if ($equals.length) {
+
+        // Adicionar após o ultimo do grupo
+
+        $equals.last().after('<tr data-id="' + lastInsertId + '">' + botoes + tds + '</tr>');
+        
+      } else {
+
+        // Primeiro do grupo
+
+        $("#itensOrcamento tbody").append('<tr data-id="' + lastInsertId + '">' + botoes + tds + '</tr>');
+
+      }
+
     } else {
       // Caso tenha algum valor é por que o item está sendo editado
 
@@ -229,7 +254,6 @@ $(function() {
     var desc_max_porcent = parseFloat($desconPorcentagem.attr('data-descontomax'));
     var desc_max_abs = parseFloat( parseFloat(subtotal) * parseFloat(parseFloat(desc_max_porcent)/parseFloat(100))).toFixed(2);
     $('#desconto').attr('data-desconto_maximo',desc_max_abs);
-    agruparTabela();
 
   }
 
@@ -603,43 +627,6 @@ $(function() {
 
     $('#itensOrcamento').trigger('alteracoes', [zerarDesconto]);
 
-  }
-
-  function agruparTabela() {
-    
-    let $trs = $('#itensOrcamento').find('tbody tr');
-
-    $trs.each(function() {
-
-      let $firstTr = $(this),
-        $indexFirstTr = $firstTr.index(),
-        $item = $firstTr.find('td:eq(1)'),
-        $subitem = $firstTr.find('td:eq(2)');
-
-      $trs.each(function() {
-        
-        let $otherTr = $(this),
-          $indexOtherTr = $otherTr.index(),
-          $itemComparar = $otherTr.find('td:eq(1)'),
-          $subitemComparar = $otherTr.find('td:eq(2)');
-
-        if ($indexFirstTr != $indexOtherTr) {
-          
-          if ($item.text().toLowerCase().trim() == $itemComparar.text().toLowerCase().trim()) {
-
-            if ($subitem.text().toLowerCase().trim() == $subitemComparar.text().toLowerCase().trim()) {
-
-              $otherTr.after($firstTr);
-
-            }
-
-          }
-          
-        }
-
-      });
-
-    });
   }
 
   function alertDismissible(texto, classes = 'tipo-material-repetido mt-3') {
