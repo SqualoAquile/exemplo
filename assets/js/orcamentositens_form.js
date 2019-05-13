@@ -43,11 +43,11 @@ $(function() {
           materialServicoFilter = $(this).find('td:eq(8)');
 
         if (itemFilter && itemFilter.text() && $descricaoItemForm && $descricaoItemForm.val()) {
-          if (itemFilter.text().toLowerCase() == $descricaoItemForm.val().toLowerCase()) {
+          if (itemFilter.text().toLowerCase().trim() == $descricaoItemForm.val().toLowerCase().trim()) {
             if (subItemFilter && subItemFilter.text() && $descricaoSubItemForm && $descricaoSubItemForm.val()) {
-              if (subItemFilter.text().toLowerCase() == $descricaoSubItemForm.val().toLowerCase()) {
+              if (subItemFilter.text().toLowerCase().trim() == $descricaoSubItemForm.val().toLowerCase().trim()) {
                 if (materialServicoFilter && materialServicoFilter.text() && $materialServicoForm && $materialServicoForm.val()) {
-                  if (materialServicoFilter.text().toLowerCase() == $materialServicoForm.val().toLowerCase()) {
+                  if (materialServicoFilter.text().toLowerCase().trim() == $materialServicoForm.val().toLowerCase().trim()) {
                     return this;
                   }
                 }
@@ -63,10 +63,10 @@ $(function() {
           $subItemFilterByTipo = $(this).find('td:eq(2)'),
           $tipoMaterialFilterByTipo = $(this).find('td:eq(9)');
 
-        if ($itemFilterByTipo.text() == $descricaoItemForm.val()) {
-          if ($subItemFilterByTipo.text() == $descricaoSubItemForm.val()) {
+        if ($itemFilterByTipo.text().toLowerCase().trim() == $descricaoItemForm.val().toLowerCase().trim()) {
+          if ($subItemFilterByTipo.text().toLowerCase().trim() == $descricaoSubItemForm.val().toLowerCase().trim()) {
             if ($tipoMaterial.is(':visible')) {
-              if ($tipoMaterial.val() == $tipoMaterialFilterByTipo.text()) {
+              if ($tipoMaterial.val().toLowerCase().trim() == $tipoMaterialFilterByTipo.text().toLowerCase().trim()) {
                 return this;
               }
             }
@@ -81,9 +81,9 @@ $(function() {
           $subItemFilterByTipo = $(this).find('td:eq(2)'),
           $tipoMaterialFilterByTipo = $(this).find('td:eq(9)');
 
-        if ($itemFilterByTipo.text() == $descricaoItemForm.val()) {
-          if ($subItemFilterByTipo.text() == $descricaoSubItemForm.val()) {
-            if ($tipoMaterialFilterByTipo.text() == 'principal') {
+        if ($itemFilterByTipo.text().toLowerCase().trim() == $descricaoItemForm.val().toLowerCase().trim()) {
+          if ($subItemFilterByTipo.text().toLowerCase().trim() == $descricaoSubItemForm.val().toLowerCase().trim()) {
+            if ($tipoMaterialFilterByTipo.text().toLowerCase().trim() == 'principal') {
               return this;
             }
           }
@@ -93,11 +93,11 @@ $(function() {
 
       $('.alert-danger').hide();
 
-      if (!$elsFiltereds.length || ($table.attr('data-current-id') && $materialServicoForm.val() == $('#itensOrcamento tbody tr.disabled td:eq(8)').text())) {
+      if (!$elsFiltereds.length || ($table.attr('data-current-id') && $materialServicoForm.val().toLowerCase().trim() == $('#itensOrcamento tbody tr.disabled td:eq(8)').text().toLowerCase().trim())) {
 
-        if (!$elsFilteredsByTipoProduto.length || ($table.attr('data-current-id') && $tipoMaterial.val() == $('#itensOrcamento tbody tr.disabled td:eq(9)').text())) {
+        if (!$elsFilteredsByTipoProduto.length || ($table.attr('data-current-id') && $tipoMaterial.val().toLowerCase().trim() == $('#itensOrcamento tbody tr.disabled td:eq(9)').text().toLowerCase().trim())) {
         
-          if ($tipoMaterial.val() == 'principal' || ($tipoMaterial.val() == 'alternativo' && $elFilteredPrincipal.length)) {
+          if ($tipoMaterial.val().toLowerCase().trim() == 'principal' || ($tipoMaterial.val().toLowerCase().trim() == 'alternativo' && $elFilteredPrincipal.length)) {
         
             Save();
 
