@@ -178,7 +178,7 @@ $(function () {
     });
 
     function resumo (jsonData) {
-        
+        console.log('disparou o resumo');
         // dataTable.page.len(-1).draw();
         // dataTable.draw();
 
@@ -243,13 +243,11 @@ $(function () {
             });
         }
         
-        
-
         listaProdutos = listaProdutos.sort(function(a,b) {
             return b[1]-a[1];
         });
 
-        
+            
         var dataProdutos = [];
         var labelProdutos = [];
 
@@ -266,10 +264,8 @@ $(function () {
         labelProdutosGlobal = labelProdutos;
         dataProdutosGlobal = dataProdutos;
 
-        drawChart(id);
-
         totalItens = parseFloat(totalProdutos) + parseFloat(totalServicos) + parseFloat(totalServicosCompl);
-       
+    
         $('#totalItens').text(floatParaPadraoBrasileiro(totalItens));
 
         $('#quantidadeServicos').text(parseInt(quantidadeServicos));
@@ -282,6 +278,14 @@ $(function () {
         $('#quantidadeProdutos').text(parseInt(quantidadeProdutos));
         $('#totalProdutos').text(floatParaPadraoBrasileiro(totalProdutos));
 
+        // console.log('totalItens: ', totalItens);
+        // console.log('quantidadeServicos: ', quantidadeServicos);
+        // console.log('totalServicos: ', totalServicos);
+        // console.log('quantidadeServicosCompl: ', quantidadeServicosCompl);
+        // console.log('totalServicosCompl: ', totalServicosCompl);
+        // console.log('quantidadeProdutos: ', quantidadeProdutos);
+        // console.log('totalProdutos: ', totalProdutos);
+        
         drawChart(id);
 
     };
@@ -337,6 +341,8 @@ $(function () {
         if (!pesquisar) {
             alert("Aplique um filtro para emitir um relatório!");
             event.stopPropagation();
+        }else{
+            DataTable.trigger('xhr.dt');
         }
 
     });
