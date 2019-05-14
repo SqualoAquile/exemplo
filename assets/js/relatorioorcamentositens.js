@@ -150,7 +150,16 @@ $(function () {
                     'sLast': 'Último'
                 }
             },
-            dom: '<"limit-header-browser"l><t><p><r><i>'
+            dom: '<"limit-header-browser"l><t><p><r><i>',
+            "rowCallback": function(row, data, index) {
+                
+                let $tdLargura = $('td', row).eq(10),
+                    $tdComprimento = $('td', row).eq(11);
+
+                $tdLargura.text($tdLargura.text().replace('R$ ', ''));
+                $tdComprimento.text($tdComprimento.text().replace('R$ ', ''));
+
+            }
         }
     );
 
@@ -161,49 +170,41 @@ $(function () {
         $cardBodyFiltros = $('#card-body-filtros'),
         indexColumns = {
             acoes: 0,
-            tipo:3,
-            material_servico:4,
+            tipo: 3,
+            material_servico: 4,
             valor: 8,
             quantidade: 9,
-            data_aprov:14
-        }
-
-    // exibir tudo
-    // dataTable.page.len(-1).draw();
-    // dataTable.draw();
-    // $('#relatorioorcamentoitens-section').addClass('d-none');
+            data_aprov: 14
+        };
 
     dataTable.on('xhr.dt', function (e, settings, json, xhr) {
         resumo(json.dataSemPaginacao);
     });
 
     function resumo (jsonData) {
-        console.log('disparou o resumo');
-        // dataTable.page.len(-1).draw();
-        // dataTable.draw();
 
-        var rowData = jsonData,
-        quantidadeProdutos = 0,
-        quantidadeServicos = 0,
-        quantidadeServicosCompl = 0,
-        totalServicos = 0,
-        totalServicosCompl = 0,
-        totalProdutos = 0,
-        totalItens = 0,
-        nomeProduto = [],
-        quantidadeProduto = [],
-        listaProdutos =[];
+        let rowData = jsonData,
+            quantidadeProdutos = 0,
+            quantidadeServicos = 0,
+            quantidadeServicosCompl = 0,
+            totalServicos = 0,
+            totalServicosCompl = 0,
+            totalProdutos = 0,
+            totalItens = 0,
+            nomeProduto = [],
+            quantidadeProduto = [],
+            listaProdutos =[];
 
-        i = 0;
         k = 0;
 
         if (rowData) {
-            rowData.forEach(function () {
 
-                var valor = rowData[i][indexColumns.valor];
-                var quantidade = parseInt(rowData[i][indexColumns.quantidade]);
-                var tipo = rowData[i][indexColumns.tipo];
-                var produto = rowData[i][indexColumns.material_servico];
+            rowData.forEach(function (element, index) {
+
+                let valor = element[indexColumns.valor],
+                    quantidade = parseInt(element[indexColumns.quantidade]),
+                    tipo = element[indexColumns.tipo],
+                    produto = element[indexColumns.material_servico];
                 
                 valor = valor.replace('R$  ', '');
                 valor = floatParaPadraoInternacional(valor);
@@ -211,35 +212,36 @@ $(function () {
                 valor = valor * quantidade;
 
                 // Separando os dados para Top 5 Produtos mais vendidos
-                if (tipo == "Produtos" && exists(nomeProduto,produto) == false) {
-                    nomeProduto[k] = produto;
-                    quantidadeProduto[k] = quantidade;
-
-                    var entrada = [nomeProduto[k],quantidadeProduto[k]];
-                    listaProdutos[k]=entrada;
-
-                    k++;
-
-                }else if (tipo == "Produtos" && exists(nomeProduto,produto) == true) {
-                    var m = nomeProduto.indexOf(produto);
-                    quantidadeProduto[m] += parseInt(quantidade);
-                    var entrada = [nomeProduto[m],quantidadeProduto[m]];
-                    listaProdutos[m] = entrada;
+                if (tipo == "Produtos") {
+                    if (exists(nomeProduto,produto) == false) {
+                        nomeProduto[k] = produto;
+                        quantidadeProduto[k] = quantidade;
+    
+                        var entrada = [nomeProduto[k],quantidadeProduto[k]];
+                        listaProdutos[k]=entrada;
+    
+                        k++;
+    
+                    }else {
+                        var m = nomeProduto.indexOf(produto);
+                        quantidadeProduto[m] += parseInt(quantidade);
+                        var entrada = [nomeProduto[m],quantidadeProduto[m]];
+                        listaProdutos[m] = entrada;
+                    }
                 }
                 
                 // Calculo para os cards do relatorio
-                if(tipo=="Produtos"){
+                if (tipo=="Produtos") {
                     totalProdutos += parseFloat(valor);
                     quantidadeProdutos += parseInt(quantidade);
-                }else if(tipo=="Servicos"){
-                    totalServicos += parseFloat(valor);
-                    quantidadeServicos += parseInt(quantidade);
-                }else if(tipo=="Servicoscomplementares"){
+                } else if(tipo=="Servicoscomplementares") {
                     totalServicosCompl += parseFloat(valor);
                     quantidadeServicosCompl += parseInt(quantidade);
+                } else {
+                    totalServicos += parseFloat(valor);
+                    quantidadeServicos += parseInt(quantidade);
                 }
 
-                i++;
             });
         }
         
@@ -247,9 +249,8 @@ $(function () {
             return b[1]-a[1];
         });
 
-            
-        var dataProdutos = [];
-        var labelProdutos = [];
+        let dataProdutos = [],
+            labelProdutos = [];
 
         for (let i = 0; i < listaProdutos.length; i++) {
             labelProdutos[i] = listaProdutos[i][0];
@@ -274,7 +275,6 @@ $(function () {
         $('#quantidadeServicosCompl').text(parseInt(quantidadeServicosCompl));
         $('#totalServicosCompl').text(floatParaPadraoBrasileiro(totalServicosCompl));
 
-
         $('#quantidadeProdutos').text(parseInt(quantidadeProdutos));
         $('#totalProdutos').text(floatParaPadraoBrasileiro(totalProdutos));
 
@@ -291,22 +291,15 @@ $(function () {
     };
 
     $('#relatorioorcamentoitens-section').addClass('d-none');
-    // $('#relatorioorcamentoitens-section').addClass('d-none');
     $('#graficos').addClass('d-none');
 
     $('#collapseFluxocaixaResumo').on('show.bs.collapse', function () {
-        //resumo();
-        // dataTable.page.len(10).draw();
-        // dataTable.draw();
         $('#relatorioorcamentoitens-section').removeClass('d-none');
       });
 
     $('#collapseFluxocaixaResumo').on('hidden.bs.collapse', function () {
         $('#relatorioorcamentoitens-section').addClass('d-none');
-        // dataTable.page.len(-1).draw();
-        // dataTable.draw();
     });
-
 
     $('#limpar-filtro').on('click', function () {
         $('#collapseFluxocaixaResumo').collapse('hide');
@@ -322,7 +315,6 @@ $(function () {
     $('#card-body-filtros').on('change', function () {
         $('#collapseFluxocaixaResumo').collapse('hide');
         $('#relatorioorcamentoitens-section').addClass('d-none');
-        // resumo();
     });
 
 
@@ -338,7 +330,9 @@ $(function () {
             }
         });
 
-        if (!pesquisar) {
+        if (pesquisar) {
+            dataTable.draw();
+        } else {
             alert("Aplique um filtro para emitir um relatório!");
             event.stopPropagation();
         }else{
@@ -394,7 +388,7 @@ $(function () {
     };    
     
     $(this)
-        .on('change blur', '.filtros-faixa .input-filtro-faixa', function () {
+        .on('change', '.filtros-faixa .input-filtro-faixa', function () {
 
             // Filtros Faixa
 
@@ -477,7 +471,7 @@ $(function () {
                 }
             });
         })
-        .on('change blur', '.filtros-texto .input-filtro-texto', function () {
+        .on('change', '.filtros-texto .input-filtro-texto', function () {
 
             // Filtros Texto
 
@@ -554,4 +548,5 @@ $(function () {
                 .draw();
 
         });
+
 });

@@ -36,8 +36,8 @@
                     </span>
                 Filtros</h5>
                 <div>
-                    <button id="limpar-filtro" type="button" class="btn cursor-pointer btn-outline-warning btn-sm">Limpar Filtros</button>
-                    <button id="criar-filtro" type="button" class="btn cursor-pointer btn-outline-secondary btn-sm">Mais Filtros</button>
+                    <button id="limpar-filtro" type="button" class="btn cursor-pointer btn-outline-secondary btn-sm">Limpar Filtros</button>
+                    <button id="criar-filtro" type="button" class="btn cursor-pointer btn-outline-success btn-sm">Mais Filtros</button>
                 </div>
             </div>
 
@@ -62,7 +62,7 @@
                     <?php endif ?>
                     <div class="filtros-wrapper">
                         <div class="filtros row mb-3">
-                            <div class="filtros-faixa col-lg">
+                            <div class="filtros-faixa col-lg-6">
                                 <div class="input-group">
                                     <select class="custom-select input-filtro-faixa">
                                         <option selected disabled value="">Filtrar por...</option>
@@ -81,7 +81,7 @@
                                     <input type="text" class="form-control input-filtro-faixa max" placeholder="até...">
                                 </div>
                             </div>
-                            <div class="filtros-texto col-lg">
+                            <div class="filtros-texto col-lg-6">
                                 <div class="input-group">
                                     <select class="custom-select input-filtro-texto">
                                         <option selected disabled value="">Filtrar por...</option>
@@ -99,8 +99,8 @@
                                     <input type="text" class="form-control input-filtro-texto texto">
                                 </div>
                             </div>
-                            <div class="col-lg flex-grow-0 col-excluir-linha">
-                                <button class="btn btn-danger btn-block" id="excluir-linha">
+                            <div class="col-excluir-linha col-lg-1">
+                                <button class="btn btn-outline-danger btn-block" id="excluir-linha">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>
