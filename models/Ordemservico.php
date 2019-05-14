@@ -299,6 +299,7 @@ class Ordemservico extends model {
             $infos['cliente'] = ucwords($informacoes['nome_razao_social']);
             $infos['tecnico'] = ucwords($informacoes['tec_responsavel']);
             $infos['vendedor'] = ucwords($informacoes['vendedor']);
+            $infos['observacao'] = $informacoes['observacao'];
             $dataAux1 = explode('-',$informacoes['data_inicio']);
             $informacoes['data_inicio'] != "0000-00-00" ? $infos['data_inicio'] = $dataAux1[2]."/".$dataAux1[1]. "/".$dataAux1[0] : $infos['data_inicio'] = "" ;
             $dataAux2 = explode('-',$informacoes['data_fim']);
@@ -356,7 +357,6 @@ class Ordemservico extends model {
             $desconto = $informacoes['desconto'];
             $infos['desconto'] =  number_format($informacoes['desconto'],2,",",".");
             $infos["preco_total"] =  number_format($informacoes['sub_total'],2,",",".");
-            $infos['observacao'] = $informacoes['observacao'];
 
             //---------------------------------------------------------------------------------------------
             $custoDeslocamento = $this->custoDeslocamento();
@@ -496,17 +496,15 @@ class Ordemservico extends model {
             $htmlHeader = '
             <table width="800" style="border:1px solid #000000; font-size:10pt;" cellPadding="9"><thead></thead>
                 <tbody>
-                <tr>
-                    <td><img class="card-img-left img-fluid" src="' . __DIR__ . '/../assets/images/IDFX.png" width = "20%" height = "auto"></td>
-                    <td>
-                        <h2><b>Identifixe</b></h2>
-                        <p class="small text-center"> AV. TERESÓPOLIS, 2547 - TERESÓPOLIS - PORTO ALEGRE - RS </p>
-                        <p class="small"> CNPJ: 10.639.459/0001-93 | CEP: 90.870-001 | (51) 3109 - 2500 </p>
-                        <p class="small"> www.identifixe.com.br | contato@identifixe.com.br</p>
-                    </td>
-                    <td></td>
-                </tr>
-    
+                    <tr>
+                        <td align="center">
+                            <img class="card-img-center img-fluid" src="' . __DIR__ . '/../assets/images/IDFX.png" width = "50%" height = "auto">
+                            <p class="small"> AV. TERESÓPOLIS, 2547 - TERESÓPOLIS - PORTO ALEGRE - RS </p>
+                            <p class="small"> CNPJ: 10.639.459/0001-93 | CEP: 90.870-001 | (51) 3109 - 2500 </p>
+                            <p class="small"> www.identifixe.com.br | contato@identifixe.com.br</p>
+                        </td>
+                        <td></td>
+                    </tr>
                 </tbody>
             </table>
             ';

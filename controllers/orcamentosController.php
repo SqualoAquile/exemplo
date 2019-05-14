@@ -135,6 +135,7 @@ class orcamentosController extends controller{
         $infos["cliente"] = $informacoes[0]['nome_cliente'];
         $infos["tecnico"] = $informacoes[0]['funcionario'];
         $infos["descricao"] = $informacoes[0]['titulo_orcamento'];
+        $infos["observacao"] = $informacoes[0]['observacao'];
         $infos["prazo_entrega"] = $informacoes[0]['prazo_entrega'];
         $infos["forma_pagamento"] = $informacoes[0]['forma_pgto_descricao'];
         $dataAux1 = explode("-",$informacoes[0]['data_emissao']);
@@ -281,17 +282,15 @@ class orcamentosController extends controller{
         $htmlHeader = '
         <table width="800" style="border:1px solid #000000; font-size:10pt;" cellPadding="9"><thead></thead>
             <tbody>
-            <tr>
-                <td><img class="card-img-left img-fluid" src="' . __DIR__ . '/../assets/images/IDFX.png" width = "20%" height = "auto"></td>
-                <td>
-                    <h2><b>Identifixe</b></h2>
-                    <p class="small text-center"> AV. TERESÓPOLIS, 2547 - TERESÓPOLIS - PORTO ALEGRE - RS </p>
-                    <p class="small"> CNPJ: 10.639.459/0001-93 | CEP: 90.870-001 | (51) 3109 - 2500 </p>
-                    <p class="small"> www.identifixe.com.br | contato@identifixe.com.br</p>
-                </td>
-                <td></td>
-            </tr>
-
+                <tr>
+                    <td align="center">
+                        <img class="card-img-center img-fluid" src="' . __DIR__ . '/../assets/images/IDFX.png" width = "50%" height = "auto">
+                        <p class="small"> AV. TERESÓPOLIS, 2547 - TERESÓPOLIS - PORTO ALEGRE - RS </p>
+                        <p class="small"> CNPJ: 10.639.459/0001-93 | CEP: 90.870-001 | (51) 3109 - 2500 </p>
+                        <p class="small"> www.identifixe.com.br | contato@identifixe.com.br</p>
+                    </td>
+                    <td></td>
+                </tr>
             </tbody>
         </table>
         ';
@@ -528,6 +527,29 @@ class orcamentosController extends controller{
             </table>
             <br></br>
                 ';
+
+            // BLOCO COM OBSERVAÇÕES - VEM DO ORÇAMENTO
+
+            if (isset($infos['observacao']) && !empty($infos['observacao']))  {
+                $html.='
+                <table style="border:1px solid #000000; line-height:100%; font-size:10pt" width="800" cellPadding="9">
+                    <thead>
+                        <tr>
+                            <td align="center">
+                                <h4>OBSERVAÇÕES</h4>
+                            </td>
+                        </tr>
+                    </thead>    
+            
+                    <tr>
+                        <td>
+                            <p> '.$infos['observacao'].' <p> 
+                        </td>
+                    </tr>
+                </table>
+                <br></br>
+            ';
+            }
 
         // BLOCO COM AVISOS
 
