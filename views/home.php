@@ -393,6 +393,7 @@
                                             <tr>
                                                 <th class="border-top-0">Ações</th>
                                                 <th class="border-top-0">Data de Aprovação </th>
+                                                <th class="border-top-0">Data da Revisão </th>
                                                 <th class="border-top-0">Título </th>
                                                 <th class="border-top-0">Valor </th>
                                                 <th class="border-top-0">Cliente </th>

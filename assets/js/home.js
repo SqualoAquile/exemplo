@@ -676,7 +676,7 @@ $(function () {
             success: function (resultado) { 
                 if(resultado){
                     
-                    var dataAux, emprod = [];
+                    var dataAux, dataRevAux, emprod = [];
 
                     emprod = Object.values(resultado['emproducao']);
 
@@ -720,6 +720,12 @@ $(function () {
                         dataAux = dataAux[2] + '/' + dataAux[1] + '/' + dataAux[0];
                         linha += "<td>" + dataAux + "</td>";
 
+                        dataRevAux = '';
+                        dataRevAux = rev15dias[i]['data_revisao_1'];
+                        dataRevAux = dataRevAux.split('-');
+                        dataRevAux = dataRevAux[2] + '/' + dataRevAux[1] + '/' + dataRevAux[0];
+                        linha += "<td>" + dataRevAux + "</td>";
+
                         linha += "<td>" + rev15dias[i]['titulo_orcamento'] + "</td>";
 
                         linha += "<td>" + floatParaPadraoBrasileiro( rev15dias[i]['valor_final'] )  + "</td>";
@@ -743,6 +749,12 @@ $(function () {
                         dataAux = dataAux[2] + '/' + dataAux[1] + '/' + dataAux[0];
                         linha += "<td>" + dataAux + "</td>";
 
+                        dataRevAux = '';
+                        dataRevAux = rev30dias[i]['data_revisao_2'];
+                        dataRevAux = dataRevAux.split('-');
+                        dataRevAux = dataRevAux[2] + '/' + dataRevAux[1] + '/' + dataRevAux[0];
+                        linha += "<td>" + dataRevAux + "</td>";
+
                         linha += "<td>" + rev30dias[i]['titulo_orcamento'] + "</td>";
 
                         linha += "<td>" + floatParaPadraoBrasileiro( rev30dias[i]['valor_final'] )  + "</td>";
@@ -765,6 +777,12 @@ $(function () {
                         dataAux = dataAux.split('-');
                         dataAux = dataAux[2] + '/' + dataAux[1] + '/' + dataAux[0];
                         linha += "<td>" + dataAux + "</td>";
+
+                        dataRevAux = '';
+                        dataRevAux = rev6meses[i]['data_revisao_3'];
+                        dataRevAux = dataRevAux.split('-');
+                        dataRevAux = dataRevAux[2] + '/' + dataRevAux[1] + '/' + dataRevAux[0];
+                        linha += "<td>" + dataRevAux + "</td>";
 
                         linha += "<td>" + rev6meses[i]['titulo_orcamento'] + "</td>";
 
