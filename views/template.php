@@ -214,6 +214,16 @@
          .form-control.is-invalid ~ .invalid-feedback:nth-of-type(2) {
             display: none!important;
          }
+         
+         .navbar-brand > img {
+            width: 200px;
+         }
+         @media (max-width: 425px) {
+            .navbar-brand > img {
+               width: 100px;
+            }
+         }
+
       </style>
 
       <script src="<?php echo BASE_URL?>/assets/js/vendor/jquery-3.3.1.min.js" type="text/javascript"></script>
@@ -242,8 +252,11 @@
                   </span>
                </button>
             </li>
-            <li> <!--Nome da Empresa-->
-               <a class="navbar-brand mx-3" href="<?php echo BASE_URL ?>/home"><?php echo trim(NOME_EMPRESA);?></a>
+            <li class="flex-grow-0"> <!--Nome da Empresa-->
+               <!-- <a class="navbar-brand mx-3" href="<?php //echo BASE_URL ?>/home"><?php //echo trim(NOME_EMPRESA);?></a> -->
+               <a class="navbar-brand mx-3" href="<?php echo BASE_URL ?>/home">
+                  <img class="" src="<?php echo BASE_URL?>/assets/images/IDFX.png">
+               </a>
             </li>
          </ul>
          <ul class="navbar-nav">
