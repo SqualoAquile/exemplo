@@ -38,7 +38,7 @@
     <script src="<?php echo BASE_URL;?>/assets/js/vendor/bootstrap.min.js" type="text/javascript"></script>
   </head>
 
-  <body class="text-center h-100 d-flex align-items-center bg-light">
+  <body class="text-center h-100 d-flex align-items-center">
     <div class="container">
         <div class="row">
             <div class="col-lg-4 mx-auto">
